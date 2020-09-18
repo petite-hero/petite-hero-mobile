@@ -1,1 +1,0 @@
-# petite-hero-mobile
