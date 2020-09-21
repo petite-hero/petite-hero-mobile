@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
   container : {
@@ -7,42 +8,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight,
-    paddingLeft: 50,
-    paddingRight: 50,
+    paddingLeft: wp('10%'),
+    paddingRight: wp('10%'),
   },
   btnRegister : {
-    marginTop: 50,
-    width: 220,
-    height: 50,
-    borderRadius: 25,
+    marginTop: hp('7%'),
+    width: wp('55%'),
+    height: hp('7%'),
+    borderRadius: hp('3.5%'),
     backgroundColor: "#00c4fa",
     justifyContent: "center",
     alignItems: "center",
   },
   btnLogin : {
-    marginTop: 10,
-    width: 220,
-    height: 50,
-    borderRadius: 25,
+    marginTop: hp('1%'),
+    width: wp('55%'),
+    height: hp('7%'),
+    borderRadius: hp('3.5%'),
     backgroundColor: "#00c4fa",
     justifyContent: "center",
     alignItems: "center",
   },
   txtHello : {
-    fontSize: 55,
+    // fontSize: 55,
+    fontSize: hp('7%'),
     fontWeight: "bold",
   },
   txtMessage : {
-    fontSize: 15
+    // fontSize: 15
+    fontSize: hp('2%'),
   },
   txtButton : {
-    fontSize: 15
+    // fontSize: 15
+    fontSize: hp('2%')
   },
   circle : {
-    marginTop: 50,
-    width: 300,
-    height: 300,
-    borderRadius: 150
+    marginTop: hp('7%'),
+    width: hp('40%'),
+    height: hp('40%'),
+    borderRadius: hp('20%')
   }
 });
 
