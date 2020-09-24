@@ -1,4 +1,5 @@
 {
-  "hero-test" : "my friend",
-  "welcome-test" : "Welcome"
+  "hero-test" : "Full name",
+  "welcome-test" : "Welcome",
+  "profile-lorem" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 }

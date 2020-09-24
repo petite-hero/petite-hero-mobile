@@ -5,6 +5,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import LoginScreen from "../LoginScreen/index";
 import RegisterScreen from "../RegisterScreen/index";
 import styles from './styles/index.css';
+import ProfileScreen from '../ProfileScreen';
+import WelcomeScreen from '../WelcomeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,15 +58,15 @@ const MainScreen = ({route}) => {
       <Tab.Screen 
         name="Task" 
         component={RegisterScreen}
-        // initialParams={{ AuthContext: route.params.AuthContext }}
+        initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen name="Quest" 
-        component={RegisterScreen}
-        // initialParams={{ role: route.params.role }}
+        component={WelcomeScreen}
+        initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen name="Profile" 
-        component={RegisterScreen}
-        // initialParams={{ role: route.params.role }}
+        component={ProfileScreen}
+        initialParams={{ locale: route.params.locale }}
       />
     </Tab.Navigator>
   );

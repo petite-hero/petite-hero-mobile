@@ -13,8 +13,12 @@ const styles = StyleSheet.create({
   },
   bottomTab : {
     height: hp('8%'),
-    borderRadius: hp('2%'),
-    backgroundColor: "#333333"
+    borderRadius: hp('3%'),
+    marginLeft: wp('5%'),
+    marginRight: wp('5%'),
+    paddingLeft: wp('5%'),
+    paddingRight: wp('5%'),
+    backgroundColor: "#ffffff",
   },
   tabItem : {
     // paddingBottom: hp('1%')

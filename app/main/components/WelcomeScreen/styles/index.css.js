@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: "#00c4fa",
+    backgroundColor: "#e5834c",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: "#00c4fa",
+    backgroundColor: "#e5834c",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
   },
   txtButton : {
     // fontSize: 15
-    fontSize: hp('2%')
+    fontSize: hp('2%'),
+    color: "#ffffff"
   },
   circle : {
     marginTop: hp('7%'),

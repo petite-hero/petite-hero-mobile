@@ -1,4 +1,6 @@
 import React, { useMemo, useReducer, useState } from 'react';
+import { View, Text } from 'react-native';
+import { YellowBox } from 'react-native';
 import * as Localization from 'expo-localization';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -7,14 +9,17 @@ import { translationMessages } from './app/i18n';
 import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
 import LoginScreen from "./app/main/components/LoginScreen/index";
 import RegisterScreen from "./app/main/components/RegisterScreen/index";
-import { View, Text } from 'react-native';
 import MainScreen from './app/main/components/MainScreen';
+import ProfileScreen from './app/main/components/ProfileScreen';
+
+YellowBox.ignoreWarnings([
+  'Non-serializable values were found in the navigation state',
+]);
 
 const Context = React.createContext();
 const Stack = createStackNavigator();
 
 // Set the locale once at the beginning of your app.
-// i18n.locale = Localization.locale;
 i18n.fallbacks = true;
 i18n.translations = translationMessages;
 
@@ -93,6 +98,4 @@ const App = () => {
   )
 };
 
-export default () => (
-  <App />
-);
+export default App;
