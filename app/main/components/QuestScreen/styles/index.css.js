@@ -4,10 +4,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-nativ
 
 const styles = StyleSheet.create({
   container : {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: Constants.statusBarHeight
+    flex: 1
   },
   avatar : {
     width: wp("12%"),
@@ -29,39 +26,63 @@ const styles = StyleSheet.create({
     marginLeft: wp("10%"),
     fontSize: hp("2%")
   },
-  circle : {
-    width: hp("6.5%"),
-    height: hp("6.5%"),
-    borderRadius: hp("3.25%"),
-    marginBottom: hp("2%"),
-    marginTop: hp("3%"),
-    marginLeft: hp("4%")
+  dateList : {
+    marginTop: hp("4%"),
+    marginLeft: wp("10%"),
+    marginRight: wp("10%")
   },
-  name : {
+  dateContainer : {
+    width: wp("18%"),
+    height: wp("28%"),
+    marginRight: wp("2%"),
+    borderRadius: wp("5%"),
+    backgroundColor: '#ffffff',
+    elevation: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#e5834c",
+  },
+  dateText : {
+    fontSize: wp("7%"),
+    fontWeight: "bold",
+    color: "white"
+  },
+  titleContainer : {
+    marginLeft: wp("10%"),
+    marginRight: wp("10%"),
+    marginBottom: hp("2%"),
+    marginTop: hp("5%"),
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  title : {
     fontSize: hp("5%"),
     fontWeight: "bold"
   },
-  message : {
-    fontSize: hp("1.8%"),
-    textAlign: "center"
-  },
-  informationContainer : {
-    paddingLeft: wp("12%"),
-    paddingRight: wp("12%"),
-    paddingBottom: hp("2%"),
+  btnAddQuest : {
+    width: hp("7%"),
+    height: hp("7%"),
+    borderRadius: hp("3.5%"),
+    backgroundColor: "#e5834c",
     alignItems: "center",
     justifyContent: "center"
   },
-  settingItem : {
+  txtAddQuest : {
+    fontSize: hp("7%"),
+    color: "white",
+    marginBottom: hp("0.8%")
+  },
+  questItem : {
     width: wp("74%"),
     height: hp("6.5%"),
     borderRadius: hp("3.25%"),
     marginBottom: hp("2%"),
     marginLeft: hp("4%")
   },
-  profileBoard : {
+  questBoard : {
     width: wp("90%"),
     height: hp("50%"),
+    alignSelf: "center",
     borderTopRightRadius: hp("6%"),
     borderTopLeftRadius: hp("6%"),
     backgroundColor: "#e5834c"
