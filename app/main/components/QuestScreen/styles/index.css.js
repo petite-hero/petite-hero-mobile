@@ -10,18 +10,24 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight
   },
   avatar : {
-    marginTop: hp("8%"),
-    width: hp("25%"),
-    height: hp("25%"),
-    borderRadius: hp("12.5%"),
-    marginBottom: hp("1%")
+    width: wp("12%"),
+    height: wp("12%"),
+    marginTop: hp("7%"),
+    marginLeft: wp("10%"),
+    borderRadius: wp("6%"),
+    marginBottom: hp("1%"),
   },
-  avatarContainer : {
+  header : {
     width: "100%",
-    alignItems: "center",
+    height: hp("34%"),
     backgroundColor: "#ffe3c1",
     borderBottomLeftRadius: wp("50%"),
     borderBottomRightRadius: wp("50%"),
+  },
+  monthPicker : {
+    width: wp("30%"),
+    marginLeft: wp("10%"),
+    fontSize: hp("2%")
   },
   circle : {
     width: hp("6.5%"),

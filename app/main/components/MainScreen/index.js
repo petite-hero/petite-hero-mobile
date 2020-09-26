@@ -1,14 +1,15 @@
 import React from 'react';
 import { Image } from 'react-native';
-import { createBottomTabNavigator  } from '@react-navigation/bottom-tabs';
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+// import FontAwesome from "react-native-vector-icons/FontAwesome";
 import LoginScreen from "../LoginScreen/index";
 import RegisterScreen from "../RegisterScreen/index";
 import styles from './styles/index.css';
 import ProfileScreen from '../ProfileScreen';
 import WelcomeScreen from '../WelcomeScreen';
+import QuestScreen from '../QuestScreen';
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 const MainScreen = ({route}) => {
   return(
@@ -43,12 +44,13 @@ const MainScreen = ({route}) => {
         }
       })}
       tabBarOptions={{
-        activeTintColor: '#00c4fa',
-        inactiveTintColor: 'gray',
         showLabel: false,
         style: styles.bottomTab,
-        tabStyle: styles.tabItem
+        tabStyle: styles.tabItem,
+        indicatorStyle: styles.indicator,
+        showIcon: true
       }}
+      tabBarPosition="bottom"
     >
       <Tab.Screen 
         name="Tracking" 
@@ -61,7 +63,7 @@ const MainScreen = ({route}) => {
         initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen name="Quest" 
-        component={WelcomeScreen}
+        component={QuestScreen}
         initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen name="Profile" 

@@ -13,20 +13,29 @@ const styles = StyleSheet.create({
   },
   bottomTab : {
     height: hp('8%'),
-    borderRadius: hp('3%'),
+    borderRadius: hp('4%'),
     marginLeft: wp('5%'),
     marginRight: wp('5%'),
-    paddingLeft: wp('5%'),
-    paddingRight: wp('5%'),
     backgroundColor: "#ffffff",
+    justifyContent: "center",
   },
   tabItem : {
-    // paddingBottom: hp('1%')
+    alignSelf: "center",
+    marginBottom: hp('2%'),
   },
   tabIcon : {
-    width: hp('6%'),
-    height: hp('6%'),
-    borderRadius: hp('3%')
+    width: hp('5%'),
+    height: hp('5%'),
+    
+    borderRadius: hp('2.5%'),
+    alignSelf: "center",
+  },
+  indicator : {
+    width: wp('10%'),
+    height: 3,
+    marginLeft: wp("6.25%"),
+    marginBottom: hp('0.5%'),
+    backgroundColor: "#e5834c",
   }
 });
 
