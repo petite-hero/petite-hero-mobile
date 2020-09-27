@@ -69,11 +69,16 @@ const App = () => {
         <NavigationContainer>
           {/* {state.userToken == null ? ( */}
             <Stack.Navigator 
-              initialRouteName="Main"
+              initialRouteName="Welcome"
               screenOptions={{
                 headerShown: false
               }}
               >
+              <Stack.Screen 
+                name="Welcome"
+                component={WelcomeScreen}
+                initialParams={{ locale: Context }}
+              />
               <Stack.Screen 
                 name="Main"
                 component={MainScreen}

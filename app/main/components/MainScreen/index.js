@@ -8,6 +8,7 @@ import styles from './styles/index.css';
 import ProfileScreen from '../ProfileScreen';
 import WelcomeScreen from '../WelcomeScreen';
 import QuestScreen from '../QuestScreen';
+import TaskScreen from '../TaskScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -59,7 +60,7 @@ const MainScreen = ({route}) => {
       />
       <Tab.Screen 
         name="Task" 
-        component={RegisterScreen}
+        component={TaskScreen}
         initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen name="Quest" 

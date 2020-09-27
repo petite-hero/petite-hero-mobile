@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './styles/index.css';
 
-const WelcomeScreen = ({navigation}) => {
+const WelcomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -22,7 +22,7 @@ const WelcomeScreen = ({navigation}) => {
       <TouchableOpacity style={styles.btnRegister}>
         <Text style={styles.txtButton}>Create an Account</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnLogin}>
+      <TouchableOpacity style={styles.btnLogin} onPress={() => navigation.navigate("Main")}>
         <Text style={styles.txtButton}>Sign in</Text>
       </TouchableOpacity>
     </SafeAreaView>

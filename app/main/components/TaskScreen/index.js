@@ -53,7 +53,7 @@ const DATA = [
       dayOfWeek: "Sun", 
     }
   }
-]
+];
 
 const Date = ({ title }) => (
   title.date === "12" ? (
@@ -69,13 +69,23 @@ const Date = ({ title }) => (
   )
 );
 
-const QuestScreen = (props) => {
+const Task = ({ title }) => (
+  <TouchableOpacity style={styles.taskItem}>
+    {/* <Text>{title.date}</Text>
+    <Text>{title.dayOfWeek}</Text> */}
+  </TouchableOpacity>
+);
+
+const TaskScreen = (props) => {
   const { t } = useContext(props.route.params.locale);
 
-  const renderItem = ({ item }) => (
+  const DateItem = ({ item }) => (
     <Date title={item.title} />
   );
 
+  const TaskItem = ({ item }) => (
+    <Task title={item.title}/>
+  );
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -90,7 +100,7 @@ const QuestScreen = (props) => {
         <View style={styles.dateList}>
           <FlatList
             data={DATA}
-            renderItem={renderItem}
+            renderItem={DateItem}
             keyExtractor={item => item.id}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -99,35 +109,26 @@ const QuestScreen = (props) => {
       </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
-          Quests
+          Tasks
         </Text>
-        <TouchableOpacity style={styles.btnAddQuest}>
-          <Text style={styles.txtAddQuest}>
+        <TouchableOpacity style={styles.btnAddTask}>
+          <Text style={styles.txtAddTask}>
             +
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.questBoard}>
-        {/* <Image
-            style={styles.questItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
+      <View style={styles.taskBoard}>
+        <View style={styles.separator}/>
+        <FlatList
+          data={DATA}
+          renderItem={TaskItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
         />
-        <Image 
-            style={styles.questItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image 
-            style={styles.questItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image 
-            style={styles.questItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        /> */}
       </View>
     </SafeAreaView>
   );
 };
 
 
-export default QuestScreen;
+export default TaskScreen;

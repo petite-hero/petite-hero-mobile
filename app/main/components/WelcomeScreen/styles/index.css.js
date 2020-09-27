@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { COLORS } from "../../../../const/color"; 
 
 const styles = StyleSheet.create({
   container : {
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: "#e5834c",
+    backgroundColor: COLORS.STRONG_ORANGE,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: "#e5834c",
+    backgroundColor: COLORS.STRONG_ORANGE,
     justifyContent: "center",
     alignItems: "center",
   },

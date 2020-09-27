@@ -8,7 +8,7 @@ const LoginScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text>This is LoginScreen</Text>
+        <Text>This is TrackingScreen</Text>
         <Text>{t('welcome-test') + ", " + t('hero-test')}</Text>
       </View>
     </SafeAreaView>

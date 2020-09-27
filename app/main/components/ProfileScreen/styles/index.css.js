@@ -1,25 +1,22 @@
 import {StyleSheet} from "react-native";
-import Constants from "expo-constants";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import { COLORS } from "../../../../const/color"; 
 
 const styles = StyleSheet.create({
   container : {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: Constants.statusBarHeight
+    flex: 1
   },
   avatar : {
     marginTop: hp("8%"),
     width: hp("25%"),
     height: hp("25%"),
-    borderRadius: hp("12.5%"),
-    marginBottom: hp("1%")
+    borderRadius: hp("12.5%")
   },
-  avatarContainer : {
+  header : {
     width: "100%",
+    height: hp("34%"),
     alignItems: "center",
-    backgroundColor: "#ffe3c1",
+    backgroundColor: COLORS.LIGHT_ORANGE,
     borderBottomLeftRadius: wp("50%"),
     borderBottomRightRadius: wp("50%"),
   },
@@ -56,9 +53,10 @@ const styles = StyleSheet.create({
   profileBoard : {
     width: wp("90%"),
     height: hp("50%"),
+    alignSelf: "center",
     borderTopRightRadius: hp("6%"),
     borderTopLeftRadius: hp("6%"),
-    backgroundColor: "#e5834c"
+    backgroundColor: COLORS.STRONG_ORANGE
   },
 });
 

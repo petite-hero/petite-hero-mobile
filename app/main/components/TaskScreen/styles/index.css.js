@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native"
+import {StyleSheet} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { COLORS } from "../../../../const/color"; 
 
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   dateText : {
     fontSize: wp("7%"),
     fontWeight: "bold",
-    color: "#bbc0c4"
+    color: COLORS.GREY
   },
   dateTextActive : {
     color: COLORS.WHITE
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: hp("5%"),
     fontWeight: "bold"
   },
-  btnAddQuest : {
+  btnAddTask : {
     width: hp("7%"),
     height: hp("7%"),
     borderRadius: hp("3.5%"),
@@ -72,19 +72,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  txtAddQuest : {
+  txtAddTask : {
     fontSize: hp("7%"),
     color: "white",
     marginBottom: hp("0.8%")
   },
-  questItem : {
-    width: wp("74%"),
-    height: hp("6.5%"),
-    borderRadius: hp("3.25%"),
+  taskItem : {
+    width: wp("82%"),
+    height: hp("13%"),
+    borderRadius: hp("3%"),
+    marginLeft: hp("2%"),
     marginBottom: hp("2%"),
-    marginLeft: hp("4%")
+    backgroundColor: COLORS.WHITE
   },
-  questBoard : {
+  taskBoard : {
     width: wp("90%"),
     height: hp("50%"),
     alignSelf: "center",
@@ -92,6 +93,15 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: hp("6%"),
     backgroundColor: COLORS.STRONG_ORANGE
   },
+  separator : {
+    width: wp("25%"),
+    height: hp("0.5%"),
+    borderRadius: hp("0.25%"),
+    alignSelf: "center",
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+    backgroundColor: COLORS.WHITE
+  }
 });
 
 export default styles;
