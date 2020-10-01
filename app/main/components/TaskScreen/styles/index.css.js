@@ -86,18 +86,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE
   },
   taskBoard : {
+    position: "absolute",
+    bottom: 0,
     width: wp("90%"),
-    height: hp("50%"),
     alignSelf: "center",
     borderTopRightRadius: hp("6%"),
     borderTopLeftRadius: hp("6%"),
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: COLORS.STRONG_ORANGE,
+  },
+  separatorContainer : {
+    width: "100%",
+    height: hp("4%"),
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent"
   },
   separator : {
     width: wp("25%"),
     height: hp("0.5%"),
     borderRadius: hp("0.25%"),
-    alignSelf: "center",
     marginTop: hp("1%"),
     marginBottom: hp("1%"),
     backgroundColor: COLORS.WHITE

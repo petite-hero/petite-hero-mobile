@@ -1,7 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import Animated, { Easing } from 'react-native-reanimated';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { COLORS } from '../../../const/color';
 
 const DATA = [
   {
@@ -55,6 +59,22 @@ const DATA = [
   }
 ];
 
+const CalendarPicker = ({ isShowed }) => (
+  isShowed ? (
+  <Calendar
+    firstDay={1}
+    style={{
+      position: "absolute", 
+      top: -hp("28%"), 
+      alignSelf: "center",
+      width: wp("90%"),
+      elevation: 10,
+      // backgroundColor: COLORS.LIGHT_ORANGE
+    }}
+  />
+  ) : (true)
+)
+
 const Date = ({ title }) => (
   title.date === "12" ? (
     <TouchableOpacity style={[styles.dateContainer, styles.dateActive]}>
@@ -78,6 +98,33 @@ const Task = ({ title }) => (
 
 const TaskScreen = (props) => {
   const { t } = useContext(props.route.params.locale);
+  const [isDragged, setDragged] = useState(false);
+  const [isShowed, setShowed] = useState(false);
+
+  const heightIncrease = useRef(new Animated.Value(hp("47.5%"))).current;
+
+  const changeHeight = () => {
+    setDragged(!isDragged)
+    if (isDragged) {
+      Animated.timing(
+        heightIncrease,
+        {
+          toValue: hp("82%"),
+          duration: 400,
+          easing: Easing.ease
+        }
+      ).start();
+    } else {
+      Animated.timing(
+        heightIncrease,
+        {
+          toValue: hp("47.5%"),
+          duration: 400,
+          easing: Easing.ease
+        }
+      ).start();
+    }
+  }
 
   const DateItem = ({ item }) => (
     <Date title={item.title} />
@@ -90,10 +137,13 @@ const TaskScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Image
-          style={styles.avatar}
-          source={{uri: "https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.15752-9/118881393_430697914571214_4949863648741553269_n.jpg?_nc_cat=107&_nc_sid=ae9488&_nc_ohc=CRL20t0CXSoAX-UGsNg&_nc_ht=scontent.fsgn2-3.fna&oh=8a78db6a5556a3e8d4039464250d0c91&oe=5F91B50E"}}
+          style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+          // source={{uri: "https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.15752-9/118881393_430697914571214_4949863648741553269_n.jpg?_nc_cat=107&_nc_sid=ae9488&_nc_ohc=CRL20t0CXSoAX-UGsNg&_nc_ht=scontent.fsgn2-3.fna&oh=8a78db6a5556a3e8d4039464250d0c91&oe=5F91B50E"}}
         />
-        <TouchableOpacity style={styles.monthPicker}>
+        <TouchableOpacity 
+          style={styles.monthPicker}
+          onPress={() => {setShowed(!isShowed)}}
+        >
           <Text>September</Text>
           <Text style={{fontWeight: "bold"}}>2020</Text>
         </TouchableOpacity>
@@ -117,15 +167,23 @@ const TaskScreen = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.taskBoard}>
-        <View style={styles.separator}/>
+      <Animated.View style={[styles.taskBoard, {height: heightIncrease}]}>
+        <View
+          style={styles.separatorContainer}
+          onTouchEnd={(e) => {
+            changeHeight();
+          }}
+        >
+          <View style={styles.separator}/>
+        </View>
         <FlatList
           data={DATA}
           renderItem={TaskItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
         />
-      </View>
+      </Animated.View>
+      <CalendarPicker isShowed={isShowed}/>
     </SafeAreaView>
   );
 };
