@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { COLORS } from '../../../const/color';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 const DATA = [
   {
@@ -108,7 +109,7 @@ const QuestScreen = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.questBoard}>
+      <View style={[styles.questBoard, {height: heightPercentageToDP("52%")}]}>
         {/* <Image
             style={styles.questItem}
             source={{uri: "https://jooinn.com/images/white-11.jpg"}}

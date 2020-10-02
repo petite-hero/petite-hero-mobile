@@ -3,6 +3,10 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const styles = StyleSheet.create({
   bottomTab : {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
     height: hp('8%'),
     borderRadius: hp('4%'),
     marginLeft: wp('5%'),

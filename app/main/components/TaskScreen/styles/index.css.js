@@ -87,11 +87,14 @@ const styles = StyleSheet.create({
   },
   taskBoard : {
     position: "absolute",
-    bottom: 0,
+    bottom: hp("4%"),
+    // bottom: 0,
     width: wp("90%"),
     alignSelf: "center",
     borderTopRightRadius: hp("6%"),
     borderTopLeftRadius: hp("6%"),
+    // borderRadius: hp("6%"),
+    paddingBottom: hp("3%"),
     backgroundColor: COLORS.STRONG_ORANGE,
   },
   separatorContainer : {

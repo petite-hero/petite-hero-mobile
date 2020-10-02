@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp, heightPercentageToDP} from "react-native-responsive-screen";
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -101,7 +101,7 @@ const TaskScreen = (props) => {
   const [isDragged, setDragged] = useState(false);
   const [isShowed, setShowed] = useState(false);
 
-  const heightIncrease = useRef(new Animated.Value(hp("47.5%"))).current;
+  const heightIncrease = useRef(new Animated.Value(hp("52%"))).current;
 
   const changeHeight = () => {
     setDragged(!isDragged)
@@ -109,7 +109,7 @@ const TaskScreen = (props) => {
       Animated.timing(
         heightIncrease,
         {
-          toValue: hp("82%"),
+          toValue: hp("80%"),
           duration: 400,
           easing: Easing.ease
         }
@@ -118,7 +118,7 @@ const TaskScreen = (props) => {
       Animated.timing(
         heightIncrease,
         {
-          toValue: hp("47.5%"),
+          toValue: hp("52%"),
           duration: 400,
           easing: Easing.ease
         }
@@ -181,6 +181,10 @@ const TaskScreen = (props) => {
           renderItem={TaskItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          style={{
+            // backgroundColor: "black",
+            // borderRadius: heightPercentageToDP("5%"),
+          }}
         />
       </Animated.View>
       <CalendarPicker isShowed={isShowed}/>

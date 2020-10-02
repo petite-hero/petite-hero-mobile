@@ -11,6 +11,8 @@ import QuestScreen from '../QuestScreen';
 import TaskScreen from '../TaskScreen';
 import { COLORS } from '../../../const/color';
 
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+
 const Tab = createMaterialTopTabNavigator();
 
 const MainScreen = ({route}) => {
@@ -45,7 +47,6 @@ const MainScreen = ({route}) => {
           )
         }
       })}
-      style={{backgroundColor: "transparent", elevation: 0}}
       tabBarOptions={{
         showLabel: false,
         style: styles.bottomTab,
