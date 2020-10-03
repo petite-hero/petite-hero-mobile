@@ -1,5 +1,6 @@
 import React from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { COLORS } from '../../../const/color';
 import styles from './styles/index.css';
 
 const WelcomeScreen = ({ navigation }) => {
@@ -16,8 +17,8 @@ const WelcomeScreen = ({ navigation }) => {
         </Text>
       </View>
       <Image 
-        style={styles.circle}
-        source={{uri: "https://media.thethao247.vn/upload/cuongnm/2020/04/28/guc-nga-truoc-nhan-sac-cua-hot-girl-bong-ro-xinh-dep-nhat-trung-quoc1588047165.jpg"}}
+        style={[styles.circle, {backgroundColor: COLORS.STRONG_ORANGE}]}
+        // source={{uri: "https://media.thethao247.vn/upload/cuongnm/2020/04/28/guc-nga-truoc-nhan-sac-cua-hot-girl-bong-ro-xinh-dep-nhat-trung-quoc1588047165.jpg"}}
       />
       <TouchableOpacity style={styles.btnRegister}>
         <Text style={styles.txtButton}>Create an Account</Text>

@@ -1,17 +1,12 @@
 import {StyleSheet} from 'react-native';
-import Constants from 'expo-constants';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
-    paddingLeft: wp('10%'),
-    paddingRight: wp('10%'),
-  },
   bottomTab : {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
     height: hp('8%'),
     borderRadius: hp('4%'),
     marginLeft: wp('5%'),
@@ -26,7 +21,6 @@ const styles = StyleSheet.create({
   tabIcon : {
     width: hp('5%'),
     height: hp('5%'),
-    
     borderRadius: hp('2.5%'),
     alignSelf: "center",
   },

@@ -1,5 +1,15 @@
 {
   "hero-test" : "Full name",
   "welcome-test" : "Welcome",
-  "profile-lorem" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  "profile-lorem" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "petitehero-task-title" : "Tasks",
+
+
+
+
+
+
+
+
+  "petitehero-quest-title" : "Quests"
 }

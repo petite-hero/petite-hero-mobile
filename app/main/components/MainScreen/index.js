@@ -9,6 +9,9 @@ import ProfileScreen from '../ProfileScreen';
 import WelcomeScreen from '../WelcomeScreen';
 import QuestScreen from '../QuestScreen';
 import TaskScreen from '../TaskScreen';
+import { COLORS } from '../../../const/color';
+
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -38,8 +41,8 @@ const MainScreen = ({route}) => {
           // return <FontAwesome name={iconName} size={25} color={color}/>
           return (
             <Image
-              style={styles.tabIcon}
-              source={{uri: "https://i.kym-cdn.com/photos/images/newsfeed/001/880/651/374.png"}}
+              style={[styles.tabIcon, {backgroundColor: COLORS.STRONG_ORANGE}]}
+              // source={{uri: "https://i.kym-cdn.com/photos/images/newsfeed/001/880/651/374.png"}}
             />
           )
         }

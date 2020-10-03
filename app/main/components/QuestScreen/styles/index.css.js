@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   dateText : {
     fontSize: wp("7%"),
     fontWeight: "bold",
-    color: "#bbc0c4"
+    color: COLORS.GREY
   },
   dateTextActive : {
     color: COLORS.WHITE
@@ -85,13 +85,29 @@ const styles = StyleSheet.create({
     marginLeft: hp("4%")
   },
   questBoard : {
+    position: "absolute",
+    bottom: hp("4%"),
     width: wp("90%"),
-    height: hp("50%"),
     alignSelf: "center",
     borderTopRightRadius: hp("6%"),
     borderTopLeftRadius: hp("6%"),
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: COLORS.STRONG_ORANGE,
   },
+  separatorContainer : {
+    width: "100%",
+    height: hp("4%"),
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent"
+  },
+  separator : {
+    width: wp("25%"),
+    height: hp("0.5%"),
+    borderRadius: hp("0.25%"),
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+    backgroundColor: COLORS.WHITE
+  }
 });
 
 export default styles;
