@@ -16,6 +16,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "softwareKeyboardLayoutMode": "pan"
+    },
     "ios": {
       "supportsTablet": true
     },

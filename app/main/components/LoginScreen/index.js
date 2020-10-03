@@ -40,37 +40,43 @@ const LoginScreen = (props) => {
         </MapView>
       </View>
 
-      {/* search bar */}
-      <View style={searchBarFocused ? styles.searchBarContainerFocused : styles.searchBarContainer}>
-        <GooglePlacesAutocomplete
-          ref={(instance) => { setSearchBar(instance) }}
-          styles={searchBarFocused ?
-            {textInputContainer: styles.textInputContainerFocused, textInput: styles.textInput, listView: styles.listView} :
-            {textInputContainer: styles.textInputContainer, textInput: styles.textInput, listView: styles.listView}}
-          placeholder='Search'
-          fetchDetails={true}
-          onPress={(data, details = null) => {
-            setLocation({latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
-            setSearchBarFocused(false);
-            searchBar.setAddressText("");
-          }}
-          textInputProps={{
-            onFocus: () => setSearchBarFocused(true),
-          }}
-          query={{key: 'AIzaSyBvfVumttk96MLwUy-oLqaz3OqtGSIAejk', components: 'country:vn',}}
-          debounce={150}
-        />
-      </View>
-      <View style={searchBarFocused ? styles.searchBackBtnFocused : styles.searchBackBtn}>
-        <Icon name='arrow-left' type='font-awesome'
-          onPress={() => {
-            setSearchBarFocused(false);
-            Keyboard.dismiss();
-          }}/>
-      </View>
+      {/* control panel */}
+      <View style={searchBarFocused ? styles.controlPanelFocused : styles.controlPanel}>
 
-      <View style={styles.controlPanel}>
-        <Text>Control Panel</Text>
+        {/* search bar */}
+        <View style={searchBarFocused ? styles.searchBarContainerFocused : styles.searchBarContainer}>
+          <GooglePlacesAutocomplete
+            ref={(instance) => { setSearchBar(instance) }}
+            styles={searchBarFocused ?
+              {textInputContainer: styles.textInputContainerFocused, textInput: styles.textInputFocused} :
+              {textInputContainer: styles.textInputContainer, textInput: styles.textInput}}
+            placeholder='Search'
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+              setLocation({latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
+              setSearchBarFocused(false);
+              searchBar.setAddressText("");
+            }}
+            textInputProps={{
+              onFocus: () => setSearchBarFocused(true),
+            }}
+            query={{key: 'AIzaSyBvfVumttk96MLwUy-oLqaz3OqtGSIAejk', components: 'country:vn',}}
+            debounce={150}
+          />
+        </View>
+        <View style={searchBarFocused ? styles.searchBackBtnFocused : styles.searchBackBtn}>
+          <Icon name='arrow-left' type='font-awesome'
+            onPress={() => {
+              setSearchBarFocused(false);
+              Keyboard.dismiss();
+            }}/>
+        </View>
+
+        {/* location list */}
+        <View style={searchBarFocused ? styles.locListFocused : styles.locList}>
+          <Text>Control Panel</Text>
+        </View>
+
       </View>
 
     </SafeAreaView>
