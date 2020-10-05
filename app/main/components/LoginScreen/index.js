@@ -13,7 +13,6 @@ const LoginScreen = (props) => {
 
   [mapLoc, setMapLoc] = React.useState({latitude: 10.8413525, longitude: 106.8108569});  // FPT University location
   [searchBarFocused, setSearchBarFocused] = React.useState(false);
-  // [searchBar, setSearchBar] = React.useState(null);
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC, SETTING_ZONE
   [locList, setLocList] = React.useState([]);
   [settingLoc, setSettingLoc] = React.useState({});
@@ -65,6 +64,14 @@ const LoginScreen = (props) => {
             <Circle center={{latitude: settingLoc.latitude, longitude: settingLoc.longitude}}
               radius={lRadius} fillColor={"rgba(87, 245, 66, 0.4)"} strokeWidth={0}/>
             : null}
+          {status === "VIEWING" ? locList.map((loc, index) => {
+            return (
+              <Marker coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
+                <View style={styles.safeLoc}/>
+              </Marker>
+            )
+          })
+          : null}
         </MapView>
       </View>
 
@@ -117,9 +124,12 @@ const LoginScreen = (props) => {
           {/* panel content */}
           <ScrollView style={searchBarFocused ? styles.panelContentFocused : styles.panelContent}>
 
-            <View>
-              <Text>1. Control Panel</Text>
-            </View>
+            {status === "VIEWING" ? locList.map((loc, index) => {
+              return (
+                <Text>{index+1}. {loc.name}</Text>
+              )
+            })
+            : null}
 
           </ScrollView>
 
@@ -131,6 +141,7 @@ const LoginScreen = (props) => {
         <View style={styles.setLocBtnsContainer}>
           <TouchableOpacity style={styles.btnSetLoc} onPress={() => {
             setSettingLoc(mapLoc);
+            setLName(mapLoc.name);
             setStatus("SETTING_LOC_NEW");
             setMapLoc({latitude: mapLoc.latitude-MAP_DELTA/4, longitude: mapLoc.longitude});
           }}>
@@ -144,45 +155,96 @@ const LoginScreen = (props) => {
 
       {/* setting location */}
       {status === "SETTING_LOC_NEW" || status === "SETTING_LOC" ?
-        <View style={styles.controlPanel}>
-          <Text>Name: </Text>
+        <View style={styles.locSettingPanel}>
+
           <TextInput
             onChangeText={(text) => setLName(text)}
             defaultValue={settingLoc.name}
-            style={{backgroundColor: "white"}}
+            style={{paddingLeft: 10, marginTop: 10, borderRadius: 20, backgroundColor: "white"}}
           />
-          <Text>Radius (m): </Text>
-          <Slider
-            style={{width: 250, height: 40}}
-            minimumValue={5}
-            maximumValue={200}
-            onValueChange={(value) => setLRadius(value)}
-          />
-          <Text>In Time: </Text>
-          <Text onPress={() => setLShowInTimePicker(true)}>{lInTime.hour}:{lInTime.minute}</Text>
-          {lShowInTimePicker ?
-            <DateTimePicker
-              value={new Date()}
-              mode={"time"}
-              onChange={(event, time) => {
-                setLShowInTimePicker(false);
-                setLInTime({hour: time.getHours(), minutess: time.getMinutes()});
-              }}
+
+          <View style={{flexDirection: "row", marginTop: 10, borderWidth: 1}}>
+            <Text style={{flex: 2}}>Radius: </Text>
+            <Slider
+              style={{flex: 6, height: 20}}
+              minimumValue={5}
+              maximumValue={200}
+              onValueChange={(value) => setLRadius(value)}
             />
-          : null}
-          <Text>In Time Padding: </Text>
-          <Picker
-            selectedValue={lInPadding}
-            style={{height: 50, width: 100}}
-            onValueChange={(itemValue, itemIndex) => setLInPadding(itemValue)}>
-            <Picker.Item label={"5"} value={5} />
-            <Picker.Item label={"10"} value={10} />
-            <Picker.Item label={"15"} value={15} />
-            <Picker.Item label={"20"} value={20} />
-            <Picker.Item label={"30"} value={30} />
-            <Picker.Item label={"60"} value={60} />
-            <Picker.Item label={"120"} value={120} />
-          </Picker>
+            <Text style={{flex: 2}}>{Math.round(lRadius)} m</Text>
+          </View>
+
+          <View style={{flexDirection: "row", marginTop: 10,  borderWidth: 1}}>
+            <Text style={{flex: 3}}>In Time: </Text>
+            <Text style={{flex: 2}} onPress={() => setLShowInTimePicker(true)}>{lInTime.hour}:{lInTime.minute}</Text>
+            {lShowInTimePicker ?
+              <DateTimePicker
+                value={new Date()}
+                mode={"time"}
+                onChange={(event, time) => {
+                  setLShowInTimePicker(false);
+                  setLInTime({hour: time.getHours(), minute: time.getMinutes()});
+                }}
+              />
+            : null}
+            <Text style={{flex: 2.5}}>Padding: </Text>
+            <View style={{flex: 3.5}}>
+            <Picker
+              selectedValue={lInPadding}
+              style={{height: 20, width: 100, fontSize: 16, justifyContent: 'center'}}
+              onValueChange={(itemValue, itemIndex) => setLInPadding(itemValue)}>
+              <Picker.Item label={"5 mins"} value={5} />
+              <Picker.Item label={"10 mins"} value={10} />
+              <Picker.Item label={"15 mins"} value={15} />
+              <Picker.Item label={"20 mins"} value={20} />
+              <Picker.Item label={"30 mins"} value={30} />
+              <Picker.Item label={"60 mins"} value={60} />
+              <Picker.Item label={"120 mins"} value={120} />
+            </Picker>
+            </View>
+          </View>
+
+          <View style={{flexDirection: "row", marginTop: 10,  borderWidth: 1}}>
+            <Text style={{flex: 3}}>Out Time: </Text>
+            <Text style={{flex: 2}} onPress={() => setLShowOutTimePicker(true)}>{lOutTime.hour}:{lOutTime.minute}</Text>
+            {lShowOutTimePicker ?
+              <DateTimePicker
+                value={new Date()}
+                mode={"time"}
+                onChange={(event, time) => {
+                  setLShowOutTimePicker(false);
+                  setLOutTime({hour: time.getHours(), minute: time.getMinutes()});
+                }}
+              />
+            : null}
+            <Text style={{flex: 2.5}}>Padding: </Text>
+            <View style={{flex: 3.5}}>
+            <Picker
+              selectedValue={lOutPadding}
+              style={{height: 20, width: 100, fontSize: 16, justifyContent: 'center'}}
+              onValueChange={(itemValue, itemIndex) => setLOutPadding(itemValue)}>
+              <Picker.Item label={"5 mins"} value={5} />
+              <Picker.Item label={"10 mins"} value={10} />
+              <Picker.Item label={"15 mins"} value={15} />
+              <Picker.Item label={"20 mins"} value={20} />
+              <Picker.Item label={"30 mins"} value={30} />
+              <Picker.Item label={"60 mins"} value={60} />
+              <Picker.Item label={"120 mins"} value={120} />
+            </Picker>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.btnSaveLoc} onPress={() => {
+            locList.push({name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude, radius: lRadius,
+                          inTime: lInTime, inPadding: lInPadding, outTime: lOutTime, outPadding: lOutPadding});
+            setStatus("VIEWING");
+          }}>
+            <Text>SAVE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnSaveLoc} onPress={() => setStatus("VIEWING")}>
+        <Text>{status === "SETTING_LOC_NEW" ? "DISCARD" : "BACK"}</Text>
+          </TouchableOpacity>
+
         </View>
       : null}
 

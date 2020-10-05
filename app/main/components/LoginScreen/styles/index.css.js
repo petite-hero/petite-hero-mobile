@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: 20,
     borderRadius: 20,
     borderColor: "green",
-    borderWidth: 5
+    borderWidth: 5,
   },
 
   // control panel
@@ -151,6 +151,26 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 20,
     backgroundColor: COLORS.STRONG_ORANGE,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  locSettingPanel:{
+    position: "absolute",
+    top: "auto",
+    bottom: 0,
+    left: wp('5%'),
+    right: wp('5%'),
+    height: hp('45%'),
+    borderRadius: hp('4%'),  // same as nav bar
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: COLORS.STRONG_ORANGE
+  },
+  btnSaveLoc : {
+    width: 200,
+    height: 40,
+    marginTop: 10,
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
   },
