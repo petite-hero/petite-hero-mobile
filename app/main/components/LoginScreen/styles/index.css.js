@@ -31,62 +31,22 @@ const styles = StyleSheet.create({
   },
 
   // gg maps
-  // searchBarContainer: {
-  //   // height: 74,
-  //   flex: 
-  //   backgroundColor: 'rgba(0, 0, 0, 0)'
-  // },
-  // searchBarContainerFocused:{
-  //   position: "absolute",
-  //   top: 0,
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  //   height: "auto",
-  //   backgroundColor: 'white'
-  // },
-  // textInputContainer: {
-  //   marginLeft: 0,
-  //   marginRight: 0,
-  //   marginTop: 0,
-  //   backgroundColor: 'rgba(0, 0, 0, 0)',
-  //   borderTopWidth: 0,
-  //   borderBottomWidth: 0
-  // },
-  // textInputContainerFocused: {
-  //   marginLeft: 50,
-  //   marginRight: 0,
-  //   marginTop: 0,
-  //   backgroundColor: 'white',
-  //   height: 74,
-  //   borderTopWidth: 0,
-  //   borderBottomWidth: 0,
-  // },
-  // textInput: {
-  //   marginLeft: 0,
-  //   marginRight: 0,
-  //   marginTop: 0,
-  //   marginBottom: 0,
-  //   paddingLeft: 15,
-  //   borderWidth: 1,
-  //   borderColor: 'rgb(200, 200, 200)',
-  //   borderRadius: 20,
-  //   height: 36,
-  //   fontSize: 16,
-  // },
-  // listView: {
-  //   backgroundColor: 'white'
-  // },
-  // searchBackBtn: {
-  //   display: "none"
-  // },
-  // searchBackBtnFocused: {
-  //   position: "absolute",
-  //   top: 40,
-  //   left: 10,
-  //   height: 25,
-  //   width: 25
-  // },
+  fixedPin: {
+    position: "absolute",
+    top: "auto",
+    bottom: hp('50%'),
+    left: wp('50%') - 13,
+    right: "auto",
+    width: 26,
+    height: 41
+  },
+  safeLoc: {
+    height: 20,
+    width: 20,
+    borderRadius: 20,
+    borderColor: "green",
+    borderWidth: 5
+  },
 
   // control panel
   controlPanel:{
@@ -95,16 +55,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: wp('5%'),
     right: wp('5%'),
-    height: 200,
-    borderRadius: 20,
+    height: hp('45%'),
+    borderRadius: hp('4%'),  // same as nav bar
     backgroundColor: COLORS.STRONG_ORANGE
   },
   controlPanelFocused:{
     position: "absolute",
-    top: 0,
+    top: "auto",
     bottom: 0,
     left: 0,
-    right: 0
+    right: 0,
+    height: hp('100%'),
   },
   searchBarContainer: {
     borderWidth: 1,
@@ -116,7 +77,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "white"
+    backgroundColor: "rgba(255, 255, 255, 0.6)"
+    // backgroundColor: "white"
   },
   textInputContainer: {
     height: 36,  // equals to textInput
@@ -128,26 +90,28 @@ const styles = StyleSheet.create({
     height: 36,  // equals to textInput
     backgroundColor: "rgba(0, 0, 0, 0)",
     marginTop: 40,
-    marginLeft: 50,
+    marginLeft: 45,
     borderTopWidth: 0,
-    // borderBottomWidth: 0
+    borderBottomWidth: 0
   },
   textInput: {
     marginTop: 10,
     marginRight: 10,
     marginBottom: 10,
     marginLeft: 10,
+    paddingLeft: 15,
     height: 36,  // equals to textInputContainer
     borderRadius: 20
   },
   textInputFocused: {
     marginTop: 0,
     marginRight: 10,
-    marginLeft: 10,
     marginBottom: 0,
+    marginLeft: 0,
+    paddingLeft: 15,
     height: 36,  // equals to textInputContainer
     borderRadius: 20,
-    borderColor: "rgb(200, 200, 200)",
+    borderColor: "rgb(210, 210, 210)",
     borderWidth: 1
   },
   searchBackBtn: {
@@ -156,19 +120,40 @@ const styles = StyleSheet.create({
   searchBackBtnFocused: {
     position: "absolute",
     top: 40,
-    left: 10,
+    left: 0,
     height: 36,
-    width: 36,
-    // borderWidth: 1,
+    width: 45,
     justifyContent: 'center', 
   },
+  listView: {
+    backgroundColor: 'rgba(255, 255, 255, 0.6)'
+  },
 
-  locList: {
+  panelContent: {
     borderWidth: 1
   },
-  locListFocused: {
+  panelContentFocused: {
     display: "none"
-  }
+  },
+
+  setLocBtnsContainer: {
+    position: "absolute",
+    top: "auto",
+    bottom: 0,
+    left: wp('5%'),
+    right: wp('5%'),
+    height: hp('30%'),
+    borderRadius: hp('4%'),  // same as nav bar
+    backgroundColor: 'rgba(0, 0, 0, 0)'
+  },
+  btnSetLoc : {
+    width: 200,
+    height: 40,
+    marginTop: 20,
+    backgroundColor: COLORS.STRONG_ORANGE,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
 });
 
