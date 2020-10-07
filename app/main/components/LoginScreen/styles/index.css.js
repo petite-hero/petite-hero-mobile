@@ -5,7 +5,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const styles = StyleSheet.create({
 
-  // copy
+  // original
   container : {
     flex: 1,
     justifyContent: 'center',
@@ -46,6 +46,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "green",
     borderWidth: 5,
+  },
+  rectPoint: {
+    height: 15,
+    width: 15,
+    borderRadius: 15,
+    borderColor: "white",
+    borderWidth: 2,
+    backgroundColor: "violet"
   },
 
   // control panel
