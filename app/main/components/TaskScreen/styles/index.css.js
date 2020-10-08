@@ -4,22 +4,22 @@ import { COLORS } from "../../../../const/color";
 
 const styles = StyleSheet.create({
   container : {
-    flex: 1
+    flex: 1,
+    backgroundColor: COLORS.NUDE
   },
   avatar : {
     width: wp("12%"),
     height: wp("12%"),
-    marginTop: hp("7%"),
-    marginLeft: wp("10%"),
     borderRadius: wp("6%"),
-    marginBottom: hp("1%"),
   },
   header : {
     width: "100%",
-    height: hp("34%"),
-    backgroundColor: COLORS.LIGHT_ORANGE,
-    borderBottomLeftRadius: wp("50%"),
-    borderBottomRightRadius: wp("50%"),
+    height: hp("35%"),
+    marginBottom: hp("1%"),
+    backgroundColor: COLORS.STRONG_ORANGE,
+    borderBottomLeftRadius: wp("5%"),
+    borderBottomRightRadius: wp("5%"),
+    elevation: 10
   },
   monthPicker : {
     width: wp("30%"),
@@ -27,55 +27,86 @@ const styles = StyleSheet.create({
     fontSize: hp("2%")
   },
   dateList : {
-    marginTop: hp("4%"),
+    marginTop: hp("3%"),
     marginLeft: wp("10%"),
-    marginRight: wp("10%")
+    marginRight: wp("10%"),
   },
   dateContainer : {
-    width: wp("18%"),
-    height: wp("28%"),
-    marginRight: wp("2%"),
-    borderRadius: wp("5%"),
-    elevation: 1,
+    width: wp("13%"),
+    height: wp("13%"),
+    marginRight: wp("3.75%"),
+    borderRadius: wp("6.5%"),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.WHITE
   },
+  dateActiveContainer : {
+    width: wp("13%"),
+    height: wp("23%"),
+    justifyContent: "flex-start",
+    backgroundColor: COLORS.WHITE
+  },
   dateActive : {
-    backgroundColor: COLORS.STRONG_ORANGE
+    width: wp("11%"),
+    height: wp("11%"),
+    marginTop: wp("1%"),
+    borderRadius: wp("5.5%"),
+    backgroundColor: COLORS.STRONG_ORANGE,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   dateText : {
-    fontSize: wp("7%"),
+    fontSize: hp("2%"),
     fontWeight: "bold",
-    color: COLORS.GREY
+    color: COLORS.STRONG_ORANGE
   },
   dateTextActive : {
     color: COLORS.WHITE
   },
   titleContainer : {
-    marginLeft: wp("10%"),
-    marginRight: wp("10%"),
-    marginBottom: hp("2%"),
-    marginTop: hp("5%"),
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    marginTop: hp("5%"),
+    marginLeft: wp("10%"),
+    marginBottom: hp("1%"),
+    marginRight: wp("10%")
   },
   title : {
     fontSize: hp("5%"),
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: COLORS.WHITE
   },
   btnAddTask : {
     width: hp("7%"),
     height: hp("7%"),
+    marginRight: wp("10%"),
     borderRadius: hp("3.5%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.WHITE,
     alignItems: "center",
     justifyContent: "center"
   },
   txtAddTask : {
     fontSize: hp("7%"),
-    color: "white",
+    color: COLORS.STRONG_ORANGE,
     marginBottom: hp("0.8%")
+  },
+  tabActive : {
+    borderBottomWidth: 2, 
+    borderColor: COLORS.STRONG_ORANGE
+  },
+  tabText : {
+    fontSize: hp("2%"),
+  },
+  tabTextActive : {
+    color: COLORS.STRONG_ORANGE,
+    paddingBottom: hp("1%")
+  },
+  taskBoard : {
+    position: "absolute",
+    bottom: hp("7%"),
+    width: wp("90%"),
+    height: hp("50%"),
+    alignSelf: "center"
   },
   taskItem : {
     width: wp("82%"),
@@ -83,35 +114,10 @@ const styles = StyleSheet.create({
     borderRadius: hp("3%"),
     marginLeft: hp("2%"),
     marginBottom: hp("2%"),
+    elevation: 6,
     backgroundColor: COLORS.WHITE
   },
-  taskBoard : {
-    position: "absolute",
-    bottom: hp("4%"),
-    // bottom: 0,
-    width: wp("90%"),
-    alignSelf: "center",
-    borderTopRightRadius: hp("6%"),
-    borderTopLeftRadius: hp("6%"),
-    // borderRadius: hp("6%"),
-    paddingBottom: hp("3%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
-  },
-  separatorContainer : {
-    width: "100%",
-    height: hp("4%"),
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "transparent"
-  },
-  separator : {
-    width: wp("25%"),
-    height: hp("0.5%"),
-    borderRadius: hp("0.25%"),
-    marginTop: hp("1%"),
-    marginBottom: hp("1%"),
-    backgroundColor: COLORS.WHITE
-  }
+  
 });
 
 export default styles;
