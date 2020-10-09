@@ -16,9 +16,9 @@ const LoginScreen = (props) => {
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC, SETTING_ZONE
 
   // map positioning & zooming
-  [mapLoc, setMapLoc] = React.useState({latitude: 10.8414846, longitude: 106.8100464});  // FPT University location
-  [latitudeDelta, setLatitudeDelta] = React.useState(0.008);
-  [longitudeDelta, setLongitudeDelta] = React.useState(0.004);
+  [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
+  [latitudeDelta, setLatitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.latitudeDelta);
+  [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
   
   // location & safe zone list
   // [locList, setLocList] = React.useState([]);
@@ -158,6 +158,8 @@ const LoginScreen = (props) => {
                   longitude: details.geometry.location.lng});
                 setSearchBarFocused(false);
                 // searchBar.setAddressText("");
+                setLatitudeDelta(Drawer.LOCATION_ZOOM.latitudeDelta);
+                setLongitudeDelta(Drawer.LOCATION_ZOOM.longitudeDelta);
                 setStatus("PINNING");
               }}
               textInputProps={{
@@ -196,6 +198,8 @@ const LoginScreen = (props) => {
                         setLOutTime(loc.outTime);
                         setLOutPadding(loc.outPadding);
                         setLIndex(index);
+                        setLatitudeDelta(Drawer.LOCATION_ZOOM.latitudeDelta);
+                        setLongitudeDelta(Drawer.LOCATION_ZOOM.longitudeDelta);
                         setStatus("SETTING_LOC");
                       }}
                     >{index+1}. {loc.name}</Text>

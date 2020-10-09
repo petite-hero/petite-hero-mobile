@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
     right: wp('5%'),
     height: hp('45%'),
     borderRadius: hp('4%'),  // same as nav bar
-    backgroundColor: COLORS.STRONG_ORANGE
+    // backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: "#feefdd"
   },
   controlPanelFocused:{
     position: "absolute",
