@@ -13,18 +13,16 @@ import styles from './styles/index.css';
 const LoginScreen = (props) => {
 
   [searchBarFocused, setSearchBarFocused] = React.useState(false);
-  [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC, SETTING_ZONE
+  [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
 
   // map positioning & zooming
   [mapLoc, setMapLoc] = React.useState({latitude: 10.8414846, longitude: 106.8100464});  // FPT University location
   [latitudeDelta, setLatitudeDelta] = React.useState(0.008);
   [longitudeDelta, setLongitudeDelta] = React.useState(0.004);
   
-  // location & safe zone list
+  // location list
   // [locList, setLocList] = React.useState([]);
-  // [zoneList, setZoneList] = React.useState([]);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
-  [zoneList, setZoneList] = React.useState([Drawer.zoneFPTLandmark]);  // testing
 
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});
@@ -37,12 +35,6 @@ const LoginScreen = (props) => {
   [lShowInTimePicker, setLShowInTimePicker] = React.useState(false);
   [lShowOutTimePicker, setLShowOutTimePicker] = React.useState(false);
   [lIndex, setLIndex] = React.useState(0);
-
-  // attributes for setting a safe zone
-  [zPointC, setzPointC] = React.useState({});
-  [zPointD, setzPointD] = React.useState({});
-  [zPointE, setzPointE] = React.useState({});
-  [zPointF, setzPointF] = React.useState({});
 
   // get user location
   // navigator.geolocation.getCurrentPosition(
@@ -95,33 +87,6 @@ const LoginScreen = (props) => {
                     radius={lRadius} fillColor={"rgba(87, 245, 66, 0.4)"} strokeWidth={0}/>
             ]
             : null}
-
-          {/* rectangle safe zone area & 2 locations */}
-          {status === "SETTING_ZONE" ? [
-              // 2 locations
-              <Marker key={lIndex-1} coordinate={{latitude: locList[lIndex-1].latitude, longitude: locList[lIndex-1].longitude}} anchor={{x: 0.5, y: 0.5}}>
-                <View style={styles.safeLoc}/>
-              </Marker>,
-              <Marker key={lIndex} coordinate={{latitude: locList[lIndex].latitude, longitude: locList[lIndex].longitude}} anchor={{x: 0.5, y: 0.5}}>
-                <View style={styles.safeLoc}/>
-              </Marker>,
-              // rectangle
-              <Polygon key={-1} strokeWidth={0} fillColor={"rgba(87, 245, 66, 0.4)"} coordinates={[zPointC, zPointD, zPointE, zPointF]}/>,
-              // rectangle points
-              <Marker key={-2} coordinate={zPointC} anchor={{x: 0.5, y: 0.5}} draggable onDrag={(coordinate) => setzPointC(coordinate.nativeEvent.coordinate)}>
-                <View style={styles.rectPoint}><Text>C</Text></View>
-              </Marker>,
-              <Marker key={-3} coordinate={zPointD} anchor={{x: 0.5, y: 0.5}} draggable onDrag={(coordinate) => setzPointD(coordinate.nativeEvent.coordinate)}>
-                <View style={styles.rectPoint}><Text>D</Text></View>
-              </Marker>,
-              <Marker key={-4} coordinate={zPointE} anchor={{x: 0.5, y: 0.5}} draggable onDrag={(coordinate) => setzPointE(coordinate.nativeEvent.coordinate)}>
-                <View style={styles.rectPoint}><Text>E</Text></View>
-              </Marker>,
-              <Marker key={-5} coordinate={zPointF} anchor={{x: 0.5, y: 0.5}} draggable onDrag={(coordinate) => setzPointF(coordinate.nativeEvent.coordinate)}>
-                <View style={styles.rectPoint}><Text>F</Text></View>
-              </Marker>
-            ]
-          : null}
 
         </MapView>
       </View>
@@ -204,32 +169,6 @@ const LoginScreen = (props) => {
                 : null}
               </View>
 
-              {/* zone list */}
-              <View style={{flex: 2}}>
-                {status === "VIEWING" ? locList.map((loc, index) => {
-                  if (index != 0)
-                  return (
-                    <Text
-                      key={index}
-                      style={{marginTop: index==1?20:10, backgroundColor: "gray"}}
-                      onPress={() => {
-                        setMapLoc({latitude: (loc.latitude+locList[index-1].latitude)/2,
-                                   longitude: (loc.longitude+locList[index-1].longitude)/2});
-                        setLatitudeDelta(Math.abs(loc.latitude-locList[index-1].latitude)*1.8);
-                        setLongitudeDelta(Math.abs(loc.longitude-locList[index-1].longitude)*1.8);
-                        setLIndex(index);
-                        setzPointC(zoneList[index-1][0]);
-                        setzPointD(zoneList[index-1][1]);
-                        setzPointE(zoneList[index-1][2]);
-                        setzPointF(zoneList[index-1][3]);
-                        setStatus("SETTING_ZONE");
-                      }}
-                    >{index}-{">"}{index+1}</Text>
-                  )
-                })
-                : null}
-              </View>
-
             </View>
           </ScrollView>
 
@@ -292,21 +231,6 @@ const LoginScreen = (props) => {
                 }}
               />
             : null}
-            <Text style={{flex: 2.5}}>Padding: </Text>
-            <View style={{flex: 3.5}}>
-            <Picker
-              selectedValue={lInPadding}
-              style={{height: 20, width: 100, fontSize: 16, justifyContent: 'center'}}
-              onValueChange={(itemValue, itemIndex) => setLInPadding(itemValue)}>
-              <Picker.Item label={"5 mins"} value={5} />
-              <Picker.Item label={"10 mins"} value={10} />
-              <Picker.Item label={"15 mins"} value={15} />
-              <Picker.Item label={"20 mins"} value={20} />
-              <Picker.Item label={"30 mins"} value={30} />
-              <Picker.Item label={"60 mins"} value={60} />
-              <Picker.Item label={"120 mins"} value={120} />
-            </Picker>
-            </View>
           </View>
 
           <View style={{flexDirection: "row", marginTop: 10,  borderWidth: 1}}>
@@ -322,45 +246,16 @@ const LoginScreen = (props) => {
                 }}
               />
             : null}
-            <Text style={{flex: 2.5}}>Padding: </Text>
-            <View style={{flex: 3.5}}>
-            <Picker
-              selectedValue={lOutPadding}
-              style={{height: 20, width: 100, fontSize: 16, justifyContent: 'center'}}
-              onValueChange={(itemValue, itemIndex) => setLOutPadding(itemValue)}>
-              <Picker.Item label={"5 mins"} value={5} />
-              <Picker.Item label={"10 mins"} value={10} />
-              <Picker.Item label={"15 mins"} value={15} />
-              <Picker.Item label={"20 mins"} value={20} />
-              <Picker.Item label={"30 mins"} value={30} />
-              <Picker.Item label={"60 mins"} value={60} />
-              <Picker.Item label={"120 mins"} value={120} />
-            </Picker>
-            </View>
           </View>
 
           <TouchableOpacity style={styles.btnSaveLoc} onPress={() => {
-            const tmpLoc = {name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude, radius: lRadius,
-                            inTime: lInTime, inPadding: lInPadding, outTime: lOutTime, outPadding: lOutPadding};
+            const tmpLoc = {name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude,
+                            radius: lRadius, inTime: lInTime, outTime: lOutTime};
             let newLocList = [...locList];
             if (status === "SETTING_LOC_NEW") newLocList.push(tmpLoc);
             else newLocList[lIndex] = tmpLoc;
             setLocList(newLocList);
-            if (newLocList.length === 1 || status === "SETTING_LOC") setStatus("VIEWING");
-            else{  // switch to setting new safe zone
-              setLIndex(newLocList.length-1);
-              prevLoc = newLocList[newLocList.length-2];
-              setMapLoc({latitude: (tmpLoc.latitude+prevLoc.latitude)/2, longitude: (tmpLoc.longitude+prevLoc.longitude)/2});
-              setLatitudeDelta(Math.abs(tmpLoc.latitude-prevLoc.latitude)*1.8);
-              setLongitudeDelta(Math.abs(tmpLoc.longitude-prevLoc.longitude)*1.8);
-              let rectPointArr = Drawer.getZoneFromLoc(prevLoc.latitude, prevLoc.longitude,
-                                      tmpLoc.latitude, tmpLoc.longitude, (tmpLoc.latitude+prevLoc.latitude)/2);
-              setzPointC(rectPointArr[0]);
-              setzPointD(rectPointArr[1]);
-              setzPointE(rectPointArr[2]);
-              setzPointF(rectPointArr[3]);
-              setStatus("SETTING_ZONE");
-            }
+            setStatus("VIEWING");
           }}>
             <Text>SAVE</Text>
           </TouchableOpacity>
@@ -372,31 +267,6 @@ const LoginScreen = (props) => {
       : null}
 
       {/* ===================== END LOCATION SETTING SECTION ===================== */}
-
-      {/* ===================== ZONE SETTING SECTION ===================== */}
-
-      {/* set zone buttons */}
-      {status === "SETTING_ZONE" ?
-        <View style={styles.setLocBtnsContainer}>
-          <TouchableOpacity style={styles.btnSetLoc} onPress={() => {
-            const tmpZone = [zPointC, zPointD, zPointE, zPointF];
-            let newZoneList = [...zoneList];
-            if (newZoneList.length < lIndex) newZoneList.push(tmpZone);
-            else newZoneList[lIndex-1] = tmpZone;
-            setZoneList(newZoneList);
-            setStatus("VIEWING");
-          }}>
-            <Text>SAVE</Text>
-          </TouchableOpacity>
-          {zoneList.length >= lIndex ?
-            <TouchableOpacity style={styles.btnSetLoc} onPress={() => setStatus("VIEWING")}>
-              <Text>DISCARD</Text>
-            </TouchableOpacity>
-          : null}
-        </View>
-      : null}
-
-      {/* ===================== END ZONE SETTING SECTION ===================== */}
 
     </SafeAreaView>
 
