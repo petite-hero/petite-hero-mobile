@@ -9,6 +9,7 @@ import ProfileScreen from '../ProfileScreen';
 import WelcomeScreen from '../WelcomeScreen';
 import QuestScreen from '../QuestScreen';
 import TaskScreen from '../TaskScreen';
+import TrackingStatusScreen from '../TrackingStatusScreen';
 import { COLORS } from '../../../const/color';
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
@@ -25,11 +26,11 @@ const MainScreen = ({route}) => {
             iconName = focused
               ? 'list-ul'
               : 'list-alt'
-          } else if (route.name == 'Task') {
+          } else if (route.name == 'Tasks') {
             iconName = focused
               ? 'tasks'
               : 'tasks'
-          } else if (route.name == 'Quest') {
+          } else if (route.name == 'Quests') {
             iconName = focused
               ? 'user-circle'
               : 'user-circle-o'
@@ -48,25 +49,31 @@ const MainScreen = ({route}) => {
         }
       })}
       tabBarOptions={{
-        showLabel: false,
+        labelStyle: {
+          fontSize: 10,
+          fontWeight: "bold",
+          textTransform: "none"
+        },
         style: styles.bottomTab,
         tabStyle: styles.tabItem,
         indicatorStyle: styles.indicator,
-        showIcon: true
+        showIcon: true,
+        activeTintColor: COLORS.STRONG_ORANGE,
+        inactiveTintColor: COLORS.GREY,
       }}
       tabBarPosition="bottom"
     >
       <Tab.Screen 
         name="Tracking" 
-        component={LoginScreen}
+        component={TrackingStatusScreen}
         initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen 
-        name="Task" 
+        name="Tasks" 
         component={TaskScreen}
         initialParams={{ locale: route.params.locale }}
       />
-      <Tab.Screen name="Quest" 
+      <Tab.Screen name="Quests" 
         component={QuestScreen}
         initialParams={{ locale: route.params.locale }}
       />

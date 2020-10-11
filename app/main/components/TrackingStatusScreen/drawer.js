@@ -1,7 +1,6 @@
-class Drawer{
+import { Picker } from "@react-native-community/picker";
 
-  static LOC_FPT = {latitude: 10.8414846, longitude: 106.8100464};
-  static LOCATION_ZOOM = {latitudeDelta: 0.008, longitudeDelta: 0.004};
+class Drawer{
 
   static lngLatToXY(lng, lat, midLat){
     let x = lng*Math.cos(midLat*Math.PI/180);
@@ -15,18 +14,18 @@ class Drawer{
     return [lng, lat];
   }
 
-  static getPointFromPointAngleDistDir(x0, y0, k, t, x1){
-    let X = t/Math.sqrt(k*k+1);
-    if (x0-x1 < 0) X = -X;
-    let Y = k*X ;
-    return [X+x0, Y+y0];
+  static getPointFromPointAngleDistDir(x0, y0, k, t, xB){
+    let x = t/Math.sqrt(k*k+1);
+    if (xB-x0 > 0) x = -x;
+    let y = k*x ;
+    return [x+x0, y+y0];
   }
 
-  static getPointsFromPointAngleDistDir(x0, y0, m, d, y1){
-    let X = d/Math.sqrt(m*m+1);
-    if (y0-y1 < 0) X = -X;
-    let Y = m*X ;
-    return  [X+x0, Y+y0, -X+x0, -Y+y0];
+  static getPointsFromPointAngleDistDir(x0, y0, k, t, yB){
+    let x = t/Math.sqrt(k*k+1);
+    if (yB-y0 > 0) x = -x;
+    let y = k*x ;
+    return  [x+x0, y+y0, -x+x0, -y+y0];
   }
 
   static getZoneFromLoc(latA, lngA, latB, lngB, midLat){
@@ -44,7 +43,7 @@ class Drawer{
     let k = (yB-yA)/(xB-xA);  // tan(alpha)
     let m = -1/k;  // tan (beta)
     let t = lengthAB*0.2;  // top & bottom padding
-    let d = lengthAB*0.2;  // left & right padding
+    let d = t*1;  // left & right padding
 
     // calculate points
     let [xA_, yA_] = this.getPointFromPointAngleDistDir(xA, yA, k, t, xB);
@@ -63,6 +62,7 @@ class Drawer{
     result.push({latitude: latD, longitude: lngD});
     result.push({latitude: latE, longitude: lngE});
     result.push({latitude: latF, longitude: lngF});
+    console.log(result);
     return result;
 
   }

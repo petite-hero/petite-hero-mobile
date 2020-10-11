@@ -1,9 +1,10 @@
 import React from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 const WelcomeScreen = ({ navigation }) => {
+  navigation.navigate("Main");  // hung - test
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -16,7 +17,7 @@ const WelcomeScreen = ({ navigation }) => {
           ea commodo consequat
         </Text>
       </View>
-      <Image 
+      <Image
         style={[styles.circle, {backgroundColor: COLORS.STRONG_ORANGE}]}
         // source={{uri: "https://media.thethao247.vn/upload/cuongnm/2020/04/28/guc-nga-truoc-nhan-sac-cua-hot-girl-bong-ro-xinh-dep-nhat-trung-quoc1588047165.jpg"}}
       />

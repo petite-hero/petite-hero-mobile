@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
-import { COLORS } from "../../../../const/color"; 
+import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
@@ -44,16 +44,7 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     borderRadius: 20,
-    borderColor: "green",
-    borderWidth: 5,
-  },
-  rectPoint: {
-    height: 15,
-    width: 15,
-    borderRadius: 15,
-    borderColor: "white",
-    borderWidth: 2,
-    backgroundColor: "violet"
+    backgroundColor: COLORS.STRONG_ORANGE,
   },
 
   // control panel
@@ -77,7 +68,7 @@ const styles = StyleSheet.create({
     height: hp('100%'),
   },
   searchBarContainer: {
-    borderWidth: 1,
+    // borderWidth: 1,
     height: 56,  // equals to textInput + margins
   },
   searchBarContainerFocused:{
@@ -139,7 +130,7 @@ const styles = StyleSheet.create({
   },
 
   panelContent: {
-    borderWidth: 1
+    // borderWidth: 1
   },
   panelContentFocused: {
     display: "none"

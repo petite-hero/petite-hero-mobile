@@ -1,62 +1,35 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { SafeAreaView, View, Text, Image, Animated } from 'react-native';
+import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 
-const DATA = [
-  {
-    id: "1",
-    title: {
-      date: "12",
-      dayOfWeek: "Mon", 
-    }
-  },
-  {
-    id: "2",
-    title: {
-      date: "13",
-      dayOfWeek: "Tue", 
-    }
-  },
-  {
-    id: "3",
-    title: {
-      date: "14",
-      dayOfWeek: "Wed", 
-    }
-  },
-  {
-    id: "4",
-    title: {
-      date: "15",
-      dayOfWeek: "Thu", 
-    }
-  },
-  {
-    id: "5",
-    title: {
-      date: "16",
-      dayOfWeek: "Fri", 
-    }
-  },
-  {
-    id: "6",
-    title: {
-      date: "17",
-      dayOfWeek: "Sat", 
-    }
-  },
-  {
-    id: "7",
-    title: {
-      date: "18",
-      dayOfWeek: "Sun", 
-    }
+const getDaysInMonth = (month, year) => {
+  const date = new Date(year, month, 1);
+  const dates = [];
+  while (date.getMonth() === month) {
+    const tmp = new Date(date).toDateString().split(" ");
+    dates.push({
+      dayOfWeek: tmp[0],
+      month: tmp[1],
+      day: tmp[2],
+      year: tmp[3]
+    });
+    date.setDate(date.getDate() + 1);
   }
-];
+  return dates;
+}
+
+const getCurrentDateIndex = (dates) => {
+  const date = new Date().toDateString()
+  const month = date.split(" ")[1];
+  const day = date.split(" ")[2];
+  const year = date.split(" ")[3];
+  const index = dates.findIndex(x => x.year === year && x.month === month && x.day === day);
+  return index > (dates.length - 3) ? dates.length - 5 : index - 2;
+}
 
 const CalendarPicker = ({ isShowed }) => (
   isShowed ? (
@@ -72,37 +45,6 @@ const CalendarPicker = ({ isShowed }) => (
   />
   ) : (true)
 )
-
-const Date = ({ title, index, scrollX }) => {
-  const width = wp("13%");
-  const inputRange = [(index - 2) * width, (index - 1) * width, index * width, (index + 1) * width, (index + 2) * width];
-  const scale = scrollX.interpolate({
-    inputRange,
-    outputRange: [0, 0, 1, 0, 0]
-  })
-
-  return (
-  <Animated.View>
-    {title.date === "14" ? (
-      <TouchableOpacity style={[styles.dateContainer, styles.dateActiveContainer]}>
-        <View style={styles.dateActive}>
-          <Text style={[styles.dateText, styles.dateTextActive]}>{title.date}</Text>
-        </View>
-        <Text style={styles.dateText}>{title.dayOfWeek}</Text>
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity style={styles.dateContainer}>
-        <Text style={styles.dateText}>{title.date}</Text>
-      </TouchableOpacity>
-    )}
-  </Animated.View>
-  );
-};
-
-const Task = ({ title }) => (
-  <TouchableOpacity style={styles.taskItem}>
-  </TouchableOpacity>
-);
 
 const Tabs = () => {
   const [tabs, setTabs] = useState(
@@ -139,17 +81,61 @@ const Tabs = () => {
 const TaskScreen = (props) => {
   const { t } = useContext(props.route.params.locale);
   const [isShowed, setShowed] = useState(false);
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const [date, setDate] = useState(new Date().toDateString());
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+  const refDateFlatlist = useRef(null);
+  const dates = getDaysInMonth(month, year);
+  const currentDateIndex = getCurrentDateIndex(dates) + 2;
+  const [currentIndex, setCurrentIndex] = useState(currentDateIndex);
+  
+  // check valid index
+  const isValidIndex = (index, length) => {
+    return !(index < 0 || index >= length);
+  }
 
+  // handle scroll event of date list
+  const handleScroll = (contentOffset) => {
+    if(refDateFlatlist.current) {
+      const width = wp("16.8%"); // item width + margin
+      let nextIndex;
+      nextIndex = Math.round(contentOffset / width);
+      if (isValidIndex(nextIndex, dates.length)) {
+        refDateFlatlist.current.scrollToIndex({ animated: true, index: nextIndex });
+        setCurrentIndex(nextIndex + 2);
+      } else {
+        // do nothing
+      }
+    }
+  };
 
+  // represent an item in date list
   const DateItem = ({ item, index }) => {
     return (
-      <Date title={item.title} index={index} scrollX={scrollX}/>
+      // <Date title={item.title} index={index}/>
+      <View style={styles.dateContainer}>
+        {index !== currentIndex ?
+          (<TouchableOpacity style={styles.dateInactiveContainer}
+            onPress={() => {
+              refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
+              setCurrentIndex(index);
+            }}>
+            <Text style={styles.dateText}>{item.day}</Text>
+          </TouchableOpacity>)
+        : (<TouchableOpacity style={styles.dateActiveContainer}>
+            <View style={styles.dateActive}>
+              <Text style={[styles.dateText, styles.dateTextActive]}>{item.day}</Text>
+            </View>
+            <Text style={styles.dateText}>{item.dayOfWeek}</Text>
+          </TouchableOpacity>)}
+      </View>
     )
   };
 
+  // represent an item in task list
   const TaskItem = ({ item }) => (
-    <Task title={item.title}/>
+    <TouchableOpacity style={styles.taskItem}>
+    </TouchableOpacity>
   );
 
   return (
@@ -171,23 +157,35 @@ const TaskScreen = (props) => {
           >
             <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>Dec 2020</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
-              {`Today`}
-            </Text>
-          </TouchableOpacity>
+          { 
+            currentIndex !== (currentDateIndex) &&
+            <TouchableOpacity 
+              onPress={() => {
+                refDateFlatlist.current.scrollToIndex({index: (currentDateIndex - 2)})
+                setCurrentIndex(currentDateIndex);
+              }}>
+              <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
+                Today
+              </Text>
+            </TouchableOpacity>
+          }
         </View>
         <View style={styles.dateList}>
-          <Animated.FlatList
-            data={DATA}
-            renderItem={DateItem}
-            keyExtractor={item => item.id}
+          <FlatList
+            data={dates}
+            renderItem={DateItem}            
+            keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            onScroll={Animated.event(
-              [{nativeEvent: { contentOffset: { x: scrollX }}}],
-              { useNativeDriver: true}
-            )}
+            ItemSeparatorComponent={() => <Text style={{marginRight: wp("3.8%")}}></Text>}
+            ref={refDateFlatlist}
+            initialNumToRender={31}
+            onLayout={() => {
+              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2})
+            }}
+            onMomentumScrollEnd={({nativeEvent}) => {
+              handleScroll(nativeEvent.contentOffset.x);
+            }}
           />
         </View>
         <View style={{alignItems: "flex-end"}}>
@@ -201,14 +199,14 @@ const TaskScreen = (props) => {
       <View style={{flexDirection: "row", justifyContent: "space-evenly", marginTop: hp("3%")}}>
         <Tabs/>
       </View>
-      <View style={styles.taskBoard}>
+      {/* <View style={styles.taskBoard}>
         <FlatList
           data={DATA}
           renderItem={TaskItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
         />
-      </View>
+      </View> */}
       <CalendarPicker isShowed={isShowed}/>
     </SafeAreaView>
   );

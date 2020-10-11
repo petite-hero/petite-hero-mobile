@@ -1,6 +1,6 @@
 import {StyleSheet} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { COLORS } from "../../../../const/color"; 
+import { COLORS } from "../../../../const/const"; 
 
 const styles = StyleSheet.create({
   container : {
@@ -29,21 +29,27 @@ const styles = StyleSheet.create({
   dateList : {
     marginTop: hp("3%"),
     marginLeft: wp("10%"),
-    marginRight: wp("10%"),
+    marginRight: wp("10%")
   },
   dateContainer : {
     width: wp("13%"),
-    height: wp("13%"),
-    marginRight: wp("3.75%"),
-    borderRadius: wp("6.5%"),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.WHITE
+    height: wp("23%"),
+    alignItems: 'center'
   },
   dateActiveContainer : {
     width: wp("13%"),
     height: wp("23%"),
     justifyContent: "flex-start",
+    alignItems: 'center',
+    borderRadius: wp("6.5%"),
+    backgroundColor: COLORS.WHITE
+  },
+  dateInactiveContainer : {
+    width: wp("13%"),
+    height: wp("13%"),
+    borderRadius: wp("6.5%"),
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: COLORS.WHITE
   },
   dateActive : {
@@ -83,7 +89,8 @@ const styles = StyleSheet.create({
     borderRadius: hp("3.5%"),
     backgroundColor: COLORS.WHITE,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    elevation: 10
   },
   txtAddTask : {
     fontSize: hp("7%"),
