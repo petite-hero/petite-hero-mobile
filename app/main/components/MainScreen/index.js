@@ -25,11 +25,11 @@ const MainScreen = ({route}) => {
             iconName = focused
               ? 'list-ul'
               : 'list-alt'
-          } else if (route.name == 'Task') {
+          } else if (route.name == 'Tasks') {
             iconName = focused
               ? 'tasks'
               : 'tasks'
-          } else if (route.name == 'Quest') {
+          } else if (route.name == 'Quests') {
             iconName = focused
               ? 'user-circle'
               : 'user-circle-o'
@@ -48,11 +48,17 @@ const MainScreen = ({route}) => {
         }
       })}
       tabBarOptions={{
-        showLabel: false,
+        labelStyle: {
+          fontSize: 10,
+          fontWeight: "bold",
+          textTransform: "none"
+        },
         style: styles.bottomTab,
         tabStyle: styles.tabItem,
         indicatorStyle: styles.indicator,
-        showIcon: true
+        showIcon: true,
+        activeTintColor: COLORS.STRONG_ORANGE,
+        inactiveTintColor: COLORS.GREY,
       }}
       tabBarPosition="bottom"
     >
@@ -62,11 +68,11 @@ const MainScreen = ({route}) => {
         initialParams={{ locale: route.params.locale }}
       />
       <Tab.Screen 
-        name="Task" 
+        name="Tasks" 
         component={TaskScreen}
         initialParams={{ locale: route.params.locale }}
       />
-      <Tab.Screen name="Quest" 
+      <Tab.Screen name="Quests" 
         component={QuestScreen}
         initialParams={{ locale: route.params.locale }}
       />

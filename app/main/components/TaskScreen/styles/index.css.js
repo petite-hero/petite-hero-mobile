@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     borderRadius: hp("3.5%"),
     backgroundColor: COLORS.WHITE,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    elevation: 10
   },
   txtAddTask : {
     fontSize: hp("7%"),

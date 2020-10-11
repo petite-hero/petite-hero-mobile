@@ -1,46 +1,70 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Text, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
+
+const SettingItem = ({title, icon}) => {
+  const [isDropdown, setDropdown] = useState(false);
+  return (
+    <View style={{
+      flexDirection: "row", 
+      paddingLeft: wp("10%"), 
+      paddingRight: wp("10%"),
+      paddingTop: hp("2.5%"),
+      paddingBottom: hp("2.5%")
+    }}>
+      <View style={{width: hp("5%"), height: hp("5%"), borderRadius: hp("2.5%"), marginRight: wp("5%"), backgroundColor: COLORS.STRONG_ORANGE}}></View>
+      <View style={styles.settingItem}>
+        <Text style={{fontSize: hp("3%")}}>{title}</Text>
+        <Image source={{uri: icon}}/>
+      </View>
+    </View>
+  )
+}
 
 const ProfileScreen = (props) => {
   const { t } = useContext(props.route.params.locale);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Image 
-          style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
-          // source={{uri: "https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.15752-9/118881393_430697914571214_4949863648741553269_n.jpg?_nc_cat=107&_nc_sid=ae9488&_nc_ohc=CRL20t0CXSoAX-UGsNg&_nc_ht=scontent.fsgn2-3.fna&oh=8a78db6a5556a3e8d4039464250d0c91&oe=5F91B50E"}}
-        />
+        <View style={{
+          flexDirection: "row", 
+          justifyContent: "space-between",
+          marginTop: hp("10%")
+        }}>
+          <View>
+            <Text style={styles.name}>An Khang</Text>
+            <View style={{
+              width: wp("35%"), 
+              height: hp("3.5%"), 
+              backgroundColor: COLORS.STRONG_ORANGE,
+              borderRadius: hp("1.75%"),
+              marginTop: hp("1%"),
+              justifyContent: "center"
+            }}>
+              <Text style={{
+                alignSelf: "center",
+                color: COLORS.WHITE,
+                fontWeight: "bold"
+              }}>
+                Subscribed
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View style={styles.avatar}></View>
+          </View>
+        </View>
       </View>
-      <View style={styles.informationContainer}>
-        <Text style={styles.name}>{t('hero-test')}</Text>
-        <Text style={styles.message}>
-          {t("profile-lorem")}
-        </Text>
-      </View>
-      <View style={styles.profileBoard}>
-        <Image 
-            style={styles.circle}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image
-            style={styles.settingItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image 
-            style={styles.settingItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image 
-            style={styles.settingItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-        <Image 
-            style={styles.settingItem}
-            source={{uri: "https://jooinn.com/images/white-11.jpg"}}
-        />
-      </View>
+      <ScrollView>
+        <SettingItem title="Personal Profile" icon="abc"/>
+        <SettingItem title="Collaborators" icon="abc"/>
+        <SettingItem title="Subscription" icon="abc"/>
+        <SettingItem title="Setting" icon="abc"/>
+        <SettingItem title="Logout" icon="abc"/>
+      </ScrollView>
     </SafeAreaView>
   );
 };

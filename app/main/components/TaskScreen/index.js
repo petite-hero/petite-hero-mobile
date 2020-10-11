@@ -86,7 +86,8 @@ const TaskScreen = (props) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const refDateFlatlist = useRef(null);
   const dates = getDaysInMonth(month, year);
-  const [currentIndex, setCurrentIndex] = useState(getCurrentDateIndex(dates) + 2);
+  const currentDateIndex = getCurrentDateIndex(dates) + 2;
+  const [currentIndex, setCurrentIndex] = useState(currentDateIndex);
   
   // check valid index
   const isValidIndex = (index, length) => {
@@ -156,11 +157,18 @@ const TaskScreen = (props) => {
           >
             <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>Dec 2020</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
-              {`Today`}
-            </Text>
-          </TouchableOpacity>
+          { 
+            currentIndex !== (currentDateIndex) &&
+            <TouchableOpacity 
+              onPress={() => {
+                refDateFlatlist.current.scrollToIndex({index: (currentDateIndex - 2)})
+                setCurrentIndex(currentDateIndex);
+              }}>
+              <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
+                Today
+              </Text>
+            </TouchableOpacity>
+          }
         </View>
         <View style={styles.dateList}>
           <FlatList
@@ -173,7 +181,7 @@ const TaskScreen = (props) => {
             ref={refDateFlatlist}
             initialNumToRender={31}
             onLayout={() => {
-              refDateFlatlist.current.scrollToIndex({index: getCurrentDateIndex(dates)})
+              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2})
             }}
             onMomentumScrollEnd={({nativeEvent}) => {
               handleScroll(nativeEvent.contentOffset.x);
