@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 const WelcomeScreen = ({ navigation }) => {

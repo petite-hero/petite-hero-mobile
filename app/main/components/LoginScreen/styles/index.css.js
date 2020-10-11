@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
-import { COLORS } from "../../../../const/color"; 
+import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({

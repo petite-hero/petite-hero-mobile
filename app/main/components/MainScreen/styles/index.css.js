@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   tabIcon : {
-    width: hp('5%'),
-    height: hp('5%'),
-    borderRadius: hp('2.5%'),
+    width: hp('4%'),
+    height: hp('4%'),
+    borderRadius: hp('2%'),
     alignSelf: "center",
   },
   indicator : {
