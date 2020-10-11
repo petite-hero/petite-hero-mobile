@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { SafeAreaView, View, Text, Image } from 'react-native';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 const ProfileScreen = (props) => {

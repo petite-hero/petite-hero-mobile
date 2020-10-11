@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 const DATA = [
