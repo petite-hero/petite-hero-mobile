@@ -11,6 +11,8 @@ import LoginScreen from "./app/main/components/LoginScreen/index";
 import RegisterScreen from "./app/main/components/RegisterScreen/index";
 import MainScreen from './app/main/components/MainScreen';
 import ProfileScreen from './app/main/components/ProfileScreen';
+import TrackingSettingsScreen from './app/main/components/TrackingSettingsScreen';
+import TrackingEmergencyScreen from './app/main/components/TrackingEmergencyScreen';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
@@ -82,6 +84,16 @@ const App = () => {
               <Stack.Screen 
                 name="Main"
                 component={MainScreen}
+                initialParams={{ locale: Context }}
+              />
+              <Stack.Screen
+                name="TrackingSettings"
+                component={TrackingSettingsScreen}
+                initialParams={{ locale: Context }}
+              />
+              <Stack.Screen
+                name="TrackingEmergency"
+                component={TrackingEmergencyScreen}
                 initialParams={{ locale: Context }}
               />
             </Stack.Navigator>

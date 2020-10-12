@@ -1,12 +1,12 @@
 import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
-import { COLORS } from "../../../../const/color"; 
+import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
 
   // original
-  container : {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -15,7 +15,25 @@ const styles = StyleSheet.create({
     paddingRight: wp('10%'),
   },
   
-  btnSettings : {
+  statusContainer: {
+    height: wp('80%'),
+    width: wp('80%'),
+    borderRadius: wp('80%'),
+    marginBottom: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.STRONG_ORANGE
+  },
+  locationStatus: {
+    color: 'white',
+    fontSize: 24
+  },
+
+  datePickerContainer: {
+    marginTop: 30
+  },
+
+  btnSettings: {
     width: 200,
     height: 40,
     marginTop: 20,
