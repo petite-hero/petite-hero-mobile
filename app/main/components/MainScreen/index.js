@@ -10,7 +10,7 @@ import WelcomeScreen from '../WelcomeScreen';
 import QuestScreen from '../QuestScreen';
 import TaskScreen from '../TaskScreen';
 import TrackingStatusScreen from '../TrackingStatusScreen';
-import { COLORS } from '../../../const/color';
+import { COLORS } from '../../../const/const';
 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 

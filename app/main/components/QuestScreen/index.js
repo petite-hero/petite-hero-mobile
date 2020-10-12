@@ -6,7 +6,55 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { COLORS } from '../../../const/const';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 
-const Tabs = () => {
+const DATA = [
+  {
+    id: "3",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Undone",
+    date: "2020/10/12"
+  },
+  {
+    id: "4",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Undone",
+    date: "2020/10/12"
+  },
+  {
+    id: "5",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Undone",
+    date: "2020/10/11"
+  },
+  {
+    id: "6",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Undone",
+    date: "2020/10/11"
+  }
+]
+
+const DATA_1 = [
+  {
+    id: "1",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Coming",
+    date: "2020/10/14"
+  },
+  {
+    id: "2",
+    title: "Get 8 points at Math",
+    time: "13:00 - 17:00",
+    status: "Coming",
+    date: "2020/10/14"
+  }
+]
+
+const QuestBoard = () => {
   const [tabs, setTabs] = useState(
     [
       {title: "In Progress", active : true},
@@ -23,25 +71,50 @@ const Tabs = () => {
   }
 
   return (
-    tabs.map((value, index) => {
-      return (
-        value.active ? (
-          <TouchableOpacity key={index} style={styles.tabActive}>
-            <Text style={[styles.tabText, styles.tabTextActive]}>{value.title}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity key={index} onPress={() => toggleTab(index)}>
-            <Text style={styles.tabText}>{value.title}</Text>
-          </TouchableOpacity>
-        ));
-    })
+    <>
+      <View style={{flexDirection: "row", justifyContent: "space-evenly", marginTop: hp("3%")}}>
+        {tabs.map((value, index) => {
+          return (
+            value.active ? (
+              <TouchableOpacity key={index} style={styles.tabActive}>
+                <Text style={[styles.tabText, styles.tabTextActive]}>{value.title}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity key={index} onPress={() => toggleTab(index)}>
+                <Text style={styles.tabText}>{value.title}</Text>
+              </TouchableOpacity>
+            ));
+        })}
+      </View>
+      <View style={styles.questBoard}>
+        <FlatList
+          data={tabs[0].active ? DATA_1 : DATA}
+          renderItem={QuestItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center"
+          }}
+          numColumns={2}
+        />
+      </View>
+    </>
   );
 };
 
+const QuestItem = ({ item }) => (
+  <TouchableOpacity style={styles.questItem}>
+    <Text style={{
+      fontSize: hp("3%"),
+      fontWeight: "bold"
+    }}>
+      {item.title}
+    </Text>
+  </TouchableOpacity>
+)
+
 const QuestScreen = (props) => {
   const { t } = useContext(props.route.params.locale);
-
-  const QuestItem = ({ item }) => {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,9 +136,7 @@ const QuestScreen = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{flexDirection: "row", justifyContent: "space-evenly", marginTop: hp("3%")}}>
-        <Tabs/>
-      </View>
+      <QuestBoard/>
     </SafeAreaView>
   );
 };

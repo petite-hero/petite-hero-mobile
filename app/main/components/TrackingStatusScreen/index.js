@@ -3,9 +3,6 @@ import { SafeAreaView, Text, TouchableOpacity } from 'react-native'
 import styles from './styles/index.css';
 
 const TrackingStatusScreen = (props) => {
-
-  console.log(props);
-
   return (
 
     <SafeAreaView style={styles.container}>

@@ -62,7 +62,6 @@ class Drawer{
     result.push({latitude: latD, longitude: lngD});
     result.push({latitude: latE, longitude: lngE});
     result.push({latitude: latF, longitude: lngF});
-    console.log(result);
     return result;
 
   }

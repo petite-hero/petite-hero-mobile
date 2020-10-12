@@ -5,4 +5,5 @@ export const COLORS = {
   STRONG_ORANGE : "#f47e3e",
   LIGHT_ORANGE : "#ffe3c1",
   NUDE: "#fff9f2",
+  RED: "#f32b2b",
 }
