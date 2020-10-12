@@ -4,55 +4,7 @@ import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
-import { COLORS } from '../../../const/const';
-
-const DATA = [
-  {
-    id: "3",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/12"
-  },
-  {
-    id: "4",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/12"
-  },
-  {
-    id: "5",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/11"
-  },
-  {
-    id: "6",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/11"
-  }
-]
-
-const DATA_1 = [
-  {
-    id: "1",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Coming",
-    date: "2020/10/14"
-  },
-  {
-    id: "2",
-    title: "Wash the dishes",
-    time: "13:00 - 17:00",
-    status: "Coming",
-    date: "2020/10/14"
-  }
-]
+import { COLORS, IP, PORT } from '../../../const/const';
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
@@ -94,13 +46,30 @@ const CalendarPicker = ({ isShowed }) => (
   ) : (true)
 )
 
-const TaskBoard = () => {
+const TaskBoard = (date) => {
   const [tabs, setTabs] = useState(
     [
       {title: "In Progress", active : true},
       {title: "Finished", active : false}
     ]
   );
+  const [list, setList] = useState([]);
+
+  const groupTasksByStatus = (list) => {
+    let tmp = list.reduce((r, a) => {
+      r[a.status] = [...r[a.status] || [], a];
+      return r;
+    }, {})
+    return Object.values(tmp);
+  }
+  
+  useEffect(() => {
+    (async() => {
+      const response = await fetch('http://' + IP + PORT + '/task/list/1?date=' + 1601510400);
+      const result = await response.json();
+      setList(groupTasksByStatus(result.data));
+    })()
+  }, []);
 
   const toggleTab = (tabIndex) => {
     let tmp = [...tabs];
@@ -129,9 +98,9 @@ const TaskBoard = () => {
       </View>
       <View style={styles.taskBoard}>
         <FlatList
-          data={tabs[0].active ? DATA_1 : DATA}
+          data={tabs[0].active ? list[0] : list[1]}
           renderItem={TaskItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.taskId + ""}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: "center"
@@ -156,7 +125,7 @@ const TaskItem = ({ item }) => (
         flexShrink: 1
       }}>
         <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>
-          {item.title}
+          {item.name}
         </Text>
       </View>
       <View style={{
@@ -167,7 +136,10 @@ const TaskItem = ({ item }) => (
         justifyContent: "center",
         alignItems: "center"
       }}>
-        <Text style={{color: COLORS.WHITE}}>
+        <Text style={{
+          color: COLORS.WHITE,
+          textTransform: "capitalize"
+        }}>
           {item.status}
         </Text>
       </View>

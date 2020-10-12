@@ -7,3 +7,7 @@ export const COLORS = {
   NUDE: "#fff9f2",
   RED: "#f32b2b",
 }
+
+export const IP = "192.168.1.108";
+
+export const PORT = ":8080";

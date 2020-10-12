@@ -1,66 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { COLORS } from '../../../const/const';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
-
-const DATA = [
-  {
-    id: "3",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/12"
-  },
-  {
-    id: "4",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/12"
-  },
-  {
-    id: "5",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/11"
-  },
-  {
-    id: "6",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Undone",
-    date: "2020/10/11"
-  }
-]
-
-const DATA_1 = [
-  {
-    id: "1",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Coming",
-    date: "2020/10/14"
-  },
-  {
-    id: "2",
-    title: "Get 8 points at Math",
-    time: "13:00 - 17:00",
-    status: "Coming",
-    date: "2020/10/14"
-  }
-]
+import { COLORS, IP, PORT } from '../../../const/const';
 
 const QuestBoard = () => {
+  const [list, setList] = useState([]);
   const [tabs, setTabs] = useState(
     [
       {title: "In Progress", active : true},
       {title: "Finished", active : false}
     ]
   );
+
+  useEffect(() => {
+    (async() => {
+      const response = await fetch('http://' + IP + PORT + '/quest/list/1');
+      const result = await response.json();
+      console.log(result.data);
+      setList(result.data);
+    })()
+  }, []);
 
   const toggleTab = (tabIndex) => {
     let tmp = [...tabs];
@@ -88,9 +49,9 @@ const QuestBoard = () => {
       </View>
       <View style={styles.questBoard}>
         <FlatList
-          data={tabs[0].active ? DATA_1 : DATA}
+          data={tabs[0].active ? list : null}
           renderItem={QuestItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.questId}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: "center"
@@ -108,7 +69,7 @@ const QuestItem = ({ item }) => (
       fontSize: hp("3%"),
       fontWeight: "bold"
     }}>
-      {item.title}
+      {item.name}
     </Text>
   </TouchableOpacity>
 )
