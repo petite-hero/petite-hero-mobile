@@ -62,20 +62,25 @@ const styles = StyleSheet.create({
     paddingBottom: hp("1%")
   },
   questItem : {
-    width: wp("74%"),
-    height: hp("6.5%"),
-    borderRadius: hp("3.25%"),
+    width: wp("40%"),
+    height: wp("40%"),
+    borderRadius: hp("3%"),
     marginBottom: hp("2%"),
-    marginLeft: hp("4%")
+    marginLeft: wp("2%"),
+    marginRight: wp("2%"),
+    paddingLeft: wp("2%"),
+    paddingRight: wp("2%"),
+    paddingTop: hp("3%"),
+    paddingBottom: hp("3%"),
+    alignItems: "center",
+    elevation: 8,
+    backgroundColor: COLORS.WHITE
   },
   questBoard : {
-    position: "absolute",
-    bottom: hp("4%"),
     width: wp("90%"),
+    height: hp("60%"),
+    marginTop: hp("5%"),
     alignSelf: "center",
-    borderTopRightRadius: hp("6%"),
-    borderTopLeftRadius: hp("6%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
   }
 });
 

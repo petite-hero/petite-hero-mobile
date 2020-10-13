@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
     width: wp("82%"),
     height: hp("13%"),
     borderRadius: hp("3%"),
-    marginLeft: hp("2%"),
     marginBottom: hp("2%"),
+    justifyContent: "center",
     elevation: 6,
     backgroundColor: COLORS.WHITE
   },
