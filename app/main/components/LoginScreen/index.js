@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 
@@ -11,7 +10,7 @@ const LoginScreen = (props) => {
   const { signIn } = React.useContext(props.route.params.authContext);
   const localizationContext = React.useContext(props.route.params.localizationContext);
 
-  const getUserInfo = async() => {
+  const login = async() => {
     try {
       const response = await fetch("http://" + IP + PORT + "/account/login", {
         method: "POST",
@@ -61,7 +60,7 @@ const LoginScreen = (props) => {
           backgroundColor: COLORS.STRONG_ORANGE,
           elevation: 10
         }}
-          onPress={() => {getUserInfo(username, password)}}
+          onPress={() => {login(username, password)}}
         >
           <Text style={{fontSize: 40, color: COLORS.WHITE}}> &gt; </Text>
         </TouchableOpacity>
