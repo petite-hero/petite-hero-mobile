@@ -86,7 +86,7 @@ const ProfileScreenContent = (props) => {
           marginTop: hp("10%")
         }}>
           <View>
-            <Text style={styles.name}>An Khang</Text>
+            <Text style={styles.name}>Red Sus</Text>
             <View style={{
               width: wp("35%"), 
               height: hp("3.5%"), 
