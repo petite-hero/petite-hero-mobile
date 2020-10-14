@@ -3,17 +3,19 @@ import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import Drawer from './drawer';
 import styles from './styles/index.css';
+import { COLORS, IP, PORT } from '../../../const/const';
 
 const TrackingEmergencyScreen = (props) => {
 
   // map positioning & zooming
-  // [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
+  [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
   [latitudeDelta, setLatitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.latitudeDelta);
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
 
   // reported location list
   [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
+  [currentLoc, setCurrentLoc] = React.useState(Drawer.locFPT);
 
   // get user location
   // navigator.geolocation.getCurrentPosition(
@@ -23,10 +25,21 @@ const TrackingEmergencyScreen = (props) => {
   //     }
   // );
 
-  [mapLoc, setMapLoc] = React.useState({
-    latitude: realLocList[realLocList.length-1].latitude,
-    longitude: realLocList[realLocList.length-1].longitude});  // test
+  // [mapLoc, setMapLoc] = React.useState({
+  //   latitude: realLocList[realLocList.length-1].latitude,
+  //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
+
+  React.useEffect(() => {
+    // this.timer = setInterval(()=> updateLoc(), 10000);
+  }, []);
+
+  const updateLoc = async() => {
+    const response = await fetch('http://' + IP + PORT + '/location/latest/5');
+    const result = await response.json();
+    setCurrentLoc(result.data);
+    setMapLoc(result.data);
+  }
 
   return (
 
@@ -52,7 +65,11 @@ const TrackingEmergencyScreen = (props) => {
           showsUserLocation={true}
           showsMyLocationButton={false}>
 
-          {locList.map((loc, index) => {
+          <Marker coordinate={{latitude: currentLoc.latitude, longitude: currentLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
+            <View style={styles.safeLoc}/>
+          </Marker>
+
+          {/* {locList.map((loc, index) => {
             return (
               <Marker key={index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
                 <View style={styles.safeLoc}/>
@@ -74,7 +91,7 @@ const TrackingEmergencyScreen = (props) => {
                 : null
               ]
             )
-          })}
+          })} */}
           
 
         </MapView>

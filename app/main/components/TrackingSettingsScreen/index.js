@@ -220,7 +220,7 @@ const TrackingSettingsScreen = (props) => {
               minimumTrackTintColor={COLORS.STRONG_ORANGE}
               thumbTintColor={COLORS.STRONG_ORANGE}
               minimumValue={50}
-              maximumValue={1000}
+              maximumValue={10000}
               value={lRadius}
               onValueChange={(value) => setLRadius(value)}
             />
