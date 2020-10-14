@@ -65,9 +65,13 @@ const TaskBoard = (date) => {
   
   useEffect(() => {
     (async() => {
-      const response = await fetch('http://' + IP + PORT + '/task/list/1?date=' + 1601510400);
+      const response = await fetch('http://' + IP + PORT + '/task/list/2');
       const result = await response.json();
-      setList(groupTasksByStatus(result.data));
+      if (result.code === 200) {
+        setList(groupTasksByStatus(result.data));
+      } else {
+        
+      }
     })()
   }, []);
 
@@ -111,7 +115,7 @@ const TaskBoard = (date) => {
   );
 };
 
-  // represent an item in task list
+// represent an item in task list
 const TaskItem = ({ item }) => (
   <TouchableOpacity style={styles.taskItem}>
     <View style={{
@@ -129,7 +133,7 @@ const TaskItem = ({ item }) => (
         </Text>
       </View>
       <View style={{
-        width: wp("15%"),
+        width: wp("20%"),
         height: hp("2.5%"),
         borderRadius: hp("0.5%"),
         backgroundColor: item.status === "Undone" ? COLORS.RED : COLORS.STRONG_ORANGE,
@@ -174,7 +178,7 @@ const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex) =
 };
 
 const TaskScreen = (props) => {
-  const { t } = useContext(props.route.params.locale);
+  const { t } = useContext(props.route.params.localizationContext);
   const [isShowed, setShowed] = useState(false);
   const [date, setDate] = useState(new Date().toDateString());
   const [month, setMonth] = useState(new Date().getMonth());

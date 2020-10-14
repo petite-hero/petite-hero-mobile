@@ -4,12 +4,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const styles = StyleSheet.create({
   container : {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
-    paddingLeft: wp('10%'),
-    paddingRight: wp('10%'),
+    flex: 1
   }
 });
 

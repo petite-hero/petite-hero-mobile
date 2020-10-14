@@ -12,8 +12,6 @@ import TaskScreen from '../TaskScreen';
 import TrackingStatusScreen from '../TrackingStatusScreen';
 import { COLORS } from '../../../const/const';
 
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-
 const Tab = createMaterialTopTabNavigator();
 
 const MainScreen = ({route}) => {
@@ -66,20 +64,20 @@ const MainScreen = ({route}) => {
       <Tab.Screen 
         name="Tracking" 
         component={TrackingStatusScreen}
-        initialParams={{ locale: route.params.locale }}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Tab.Screen 
         name="Tasks" 
         component={TaskScreen}
-        initialParams={{ locale: route.params.locale }}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Tab.Screen name="Quests" 
         component={QuestScreen}
-        initialParams={{ locale: route.params.locale }}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Tab.Screen name="Profile" 
         component={ProfileScreen}
-        initialParams={{ locale: route.params.locale }}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Tab.Navigator>
   );
