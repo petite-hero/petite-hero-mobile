@@ -25,7 +25,7 @@ const SettingItem = ({title, icon}) => {
 }
 
 const ProfileScreen = (props) => {
-  const { t } = useContext(props.route.params.locale);
+  const { t } = useContext(props.route.params.localizationContext);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

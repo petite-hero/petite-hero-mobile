@@ -18,8 +18,9 @@ const QuestBoard = () => {
     (async() => {
       const response = await fetch('http://' + IP + PORT + '/quest/list/1');
       const result = await response.json();
-      console.log(result.data);
-      setList(result.data);
+      if (result.code === 200) {
+        setList(result.data);
+      }
     })()
   }, []);
 
@@ -75,7 +76,7 @@ const QuestItem = ({ item }) => (
 )
 
 const QuestScreen = (props) => {
-  const { t } = useContext(props.route.params.locale);
+  const { t } = useContext(props.route.params.localizationContext);
 
   return (
     <SafeAreaView style={styles.container}>

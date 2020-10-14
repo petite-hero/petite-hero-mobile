@@ -16,7 +16,8 @@ YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
 ]);
 
-const Context = React.createContext();
+const LocalizationContext = React.createContext();
+const AuthContext = React.createContext();
 const Stack = createStackNavigator();
 
 // Set the locale once at the beginning of your app.
@@ -45,7 +46,7 @@ const App = () => {
     }
   );
 
-  const authContext = React.useMemo(
+  const authContext = useMemo(
     () => ({
       signIn: async data => {
         dispatch({ type: 'SIGN_IN', token: data });
@@ -65,9 +66,10 @@ const App = () => {
   );
 
   return (
-    <Context.Provider value={authContext, localizationContext}>
+    <AuthContext.Provider value={authContext}>
+      <LocalizationContext.Provider value={localizationContext}>
         <NavigationContainer>
-          {/* {state.userToken == null ? ( */}
+          {state.userToken == null ? (
             <Stack.Navigator 
               initialRouteName="Welcome"
               screenOptions={{
@@ -77,16 +79,11 @@ const App = () => {
               <Stack.Screen 
                 name="Welcome"
                 component={WelcomeScreen}
-                initialParams={{ locale: Context }}
-              />
-              <Stack.Screen 
-                name="Main"
-                component={MainScreen}
-                initialParams={{ locale: Context }}
+                initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext }}
               />
             </Stack.Navigator>
-            {/* ) : ( */}
-            {/* <Stack.Navigator 
+            ) : (
+            <Stack.Navigator 
               initialRouteName="Main"
               screenOptions={{
                 headerShown: false
@@ -94,12 +91,13 @@ const App = () => {
               <Stack.Screen
                 name="Main"
                 component={MainScreen}
-                initialParams={{ AuthContext: AuthContext, role: state.userToken.role}}
+                initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
               />
-            </Stack.Navigator> */}
-          {/* )} */}
+            </Stack.Navigator>
+          )}
         </NavigationContainer>
-    </Context.Provider>
+      </LocalizationContext.Provider>
+    </AuthContext.Provider>
   )
 };
 
