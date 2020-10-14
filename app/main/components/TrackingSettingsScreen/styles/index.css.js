@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: wp("50%"),
   },
   avatar : {
+    position: "absolute",
     width: wp("12%"),
     height: wp("12%"),
-    marginTop: hp("7%"),
-    marginLeft: wp("10%"),
-    borderRadius: wp("6%"),
-    marginBottom: hp("1%"),
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("10%"),
   },
 
   // gg maps
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     left: wp('5%'),
     right: wp('5%'),
     height: hp('45%'),
-    paddingTop: 10,
     borderRadius: hp('4%'),  // same as nav bar
     backgroundColor: COLORS.NUDE
   },
@@ -68,8 +67,7 @@ const styles = StyleSheet.create({
     height: hp('100%'),
   },
   searchBarContainer: {
-    // borderWidth: 1,
-    height: 56,  // equals to textInput + margins
+    height: 64,  // equals to textInput + margins
   },
   searchBarContainerFocused:{
     position: "absolute",
@@ -81,15 +79,15 @@ const styles = StyleSheet.create({
     // backgroundColor: "white"
   },
   textInputContainer: {
-    height: 36,  // equals to textInput
+    height: 54,  // equals to textInput + margins
     backgroundColor: "rgba(0, 0, 0, 0)",
     borderTopWidth: 0,
-    borderBottomWidth: 0
+    borderBottomWidth: 0,
   },
   textInputContainerFocused: {
-    height: 36,  // equals to textInput
+    height: 54,  // equals to textInput + margins
     backgroundColor: "rgba(0, 0, 0, 0)",
-    marginTop: 40,
+    marginTop: 38,
     marginLeft: 45,
     borderTopWidth: 0,
     borderBottomWidth: 0
@@ -97,20 +95,20 @@ const styles = StyleSheet.create({
   textInput: {
     marginTop: 10,
     marginRight: 10,
-    marginBottom: 10,
     marginLeft: 10,
     paddingLeft: 15,
-    height: 36,  // equals to textInputContainer
-    borderRadius: 20
+    paddingTop: 4,
+    paddingBottom: 4,
+    height: 44,
+    borderRadius: 28,
   },
   textInputFocused: {
     marginTop: 0,
     marginRight: 10,
-    marginBottom: 0,
     marginLeft: 0,
     paddingLeft: 15,
-    height: 36,  // equals to textInputContainer
-    borderRadius: 20,
+    height: 44,
+    borderRadius: 28,
     borderColor: "rgb(210, 210, 210)",
     borderWidth: 1
   },
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
   },
   listView: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)'
+    backgroundColor: 'rgba(255, 255, 255, 0)'
   },
 
   panelContent: {
@@ -136,11 +134,11 @@ const styles = StyleSheet.create({
     display: "none"
   },
   locationContainer: {
-    paddingTop: 10,
     marginLeft: 20
   },
   locationName: {
     fontSize: 16,
+    fontWeight: "bold",
     marginBottom: 4,
   },
   locationTime: {
@@ -205,20 +203,21 @@ const styles = StyleSheet.create({
   saveLocBtnsContainer: {
     flexDirection: "row",
     position: "absolute",
-    top: -20,
+    top: -22,
     bottom: "auto",
     left: "auto",
     right: 20,
-    height: 30,
+    height: 44,
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    justifyContent: "center"
+    justifyContent: "center",
+    zIndex: 100
   },
   btnSaveLoc : {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-    marginLeft: 5,
-    marginRight: 5,
+    width: 44,
+    height: 44,
+    borderRadius: 44,
+    marginLeft: 7,
+    marginRight: 7,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
   },
   btnSaveLocCancel: {
     backgroundColor: 'white'
-  },
+  }
 
 });
 

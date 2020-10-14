@@ -86,16 +86,6 @@ const App = () => {
                 component={MainScreen}
                 initialParams={{ locale: Context }}
               />
-              <Stack.Screen
-                name="TrackingSettings"
-                component={TrackingSettingsScreen}
-                initialParams={{ locale: Context }}
-              />
-              <Stack.Screen
-                name="TrackingEmergency"
-                component={TrackingEmergencyScreen}
-                initialParams={{ locale: Context }}
-              />
             </Stack.Navigator>
             {/* ) : ( */}
             {/* <Stack.Navigator 

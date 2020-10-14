@@ -100,6 +100,13 @@ const TrackingSettingsScreen = (props) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
+      {searchBarFocused ? null :
+        <Image
+          style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+          source={{uri: "https://scontent-xsp1-2.xx.fbcdn.net/v/t1.15752-9/121241278_368219414303513_7668923031172678740_n.png?_nc_cat=109&_nc_sid=ae9488&_nc_ohc=vS8Yc-D_9NgAX_tVxWf&_nc_ht=scontent-xsp1-2.xx&oh=9f6d2cbef1346442fccb1eedad3ef1f0&oe=5FADE0B3"}}
+        />
+      }
+
       {/* ===================== CONTROL PANEL SECTION ===================== */}
 
       {/* control panel with search bar and location list */}
@@ -219,8 +226,8 @@ const TrackingSettingsScreen = (props) => {
               style={{flex: 8, height: 20}}
               minimumTrackTintColor={COLORS.STRONG_ORANGE}
               thumbTintColor={COLORS.STRONG_ORANGE}
-              minimumValue={50}
-              maximumValue={10000}
+              minimumValue={40}
+              maximumValue={1000}
               value={lRadius}
               onValueChange={(value) => setLRadius(value)}
             />

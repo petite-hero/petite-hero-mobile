@@ -30,16 +30,16 @@ const TrackingEmergencyScreen = (props) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
-  React.useEffect(() => {
-    // this.timer = setInterval(()=> updateLoc(), 10000);
-  }, []);
+  // React.useEffect(() => {
+  //   // this.timer = setInterval(()=> updateLoc(), 10000);
+  // }, []);
 
-  const updateLoc = async() => {
-    const response = await fetch('http://' + IP + PORT + '/location/latest/5');
-    const result = await response.json();
-    setCurrentLoc(result.data);
-    setMapLoc(result.data);
-  }
+  // const updateLoc = async() => {
+  //   const response = await fetch('http://' + IP + PORT + '/location/latest/5');
+  //   const result = await response.json();
+  //   setCurrentLoc(result.data);
+  //   setMapLoc(result.data);
+  // }
 
   return (
 

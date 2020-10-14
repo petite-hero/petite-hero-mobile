@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -14,14 +14,37 @@ const styles = StyleSheet.create({
     paddingLeft: wp('10%'),
     paddingRight: wp('10%'),
   },
-  
-  statusContainer: {
-    height: wp('80%'),
-    width: wp('80%'),
-    borderRadius: wp('80%'),
-    marginBottom: 50,
+  avatar : {
+    position: "absolute",
+    width: wp("12%"),
+    height: wp("12%"),
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("10%"),
+  },
+
+  warningBtn : {
+    position: "absolute",
+    width: wp("10%"),
+    height: wp("10%"),
+    borderRadius: wp("10%"),
+    top: hp("5%"),
+    right: wp("5%"),
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 0, 0, 0.5)'
+  },
+  
+  statusContainer: {
+    height: wp('100%'),
+    width: wp('100%'),
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  statusWave: {
+    position: "absolute",
+    borderRadius: wp('100%'),
     backgroundColor: COLORS.STRONG_ORANGE
   },
   locationStatus: {
