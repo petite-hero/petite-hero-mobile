@@ -105,7 +105,10 @@ const ProfileScreenContent = (props) => {
             </View>
           </View>
           <View>
-            <View style={styles.avatar}></View>
+            <Image
+              style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+              source={require('../../../../assets/parent-avatar.png')}
+            />
           </View>
         </View>
       </View>

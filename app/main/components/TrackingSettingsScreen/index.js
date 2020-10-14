@@ -95,7 +95,8 @@ const TrackingSettingsScreen = (props) => {
       {searchBarFocused ? null :
         <Image
           style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
-          source={{uri: "https://scontent-xsp1-2.xx.fbcdn.net/v/t1.15752-9/121241278_368219414303513_7668923031172678740_n.png?_nc_cat=109&_nc_sid=ae9488&_nc_ohc=vS8Yc-D_9NgAX_tVxWf&_nc_ht=scontent-xsp1-2.xx&oh=9f6d2cbef1346442fccb1eedad3ef1f0&oe=5FADE0B3"}}
+          source={require('../../../../assets/kid-avatar.png')}
+          // source={{uri: "https://scontent-xsp1-2.xx.fbcdn.net/v/t1.15752-9/121241278_368219414303513_7668923031172678740_n.png?_nc_cat=109&_nc_sid=ae9488&_nc_ohc=vS8Yc-D_9NgAX_tVxWf&_nc_ht=scontent-xsp1-2.xx&oh=9f6d2cbef1346442fccb1eedad3ef1f0&oe=5FADE0B3"}}
         />
       }
 
@@ -167,7 +168,7 @@ const TrackingSettingsScreen = (props) => {
                         {loc.inTime.hour}:{loc.inTime.minute} - {loc.outTime.hour}:{loc.outTime.minute}
                       </Text>
                       <View style={styles.rightIcon}>
-                        <Icon name='chevron-right' type='font-awesome' size={12}/>
+                        <Icon name='keyboard-arrow-right' type='material'/>
                       </View>
                     </TouchableOpacity>
                   )
@@ -267,9 +268,10 @@ const TrackingSettingsScreen = (props) => {
             <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}}>
               Mon, Tue, Fri
             </Text>
-            <View style={{flex: 1, width: 10, justifyContent: "center", alignItems: "flex-end"}}>
-              <Icon name='chevron-right' type='font-awesome' size={12} color={COLORS.STRONG_ORANGE}/>
-            </View>
+            <Icon style={{flex: 1, textAlign: "right"}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
+            {/* <View style={{flex: 1, width: 10, height: 16, flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end", borderWidth: 1}}>
+              <Icon name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
+            </View> */}
           </View>
 
           <View style={styles.saveLocBtnsContainer}>
