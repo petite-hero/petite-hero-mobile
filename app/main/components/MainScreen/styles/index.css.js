@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   tabItem : {
     alignSelf: "center",
-    marginBottom: hp('2%'),
+    paddingTop: 2,
   },
   tabIcon : {
     width: hp('4%'),
