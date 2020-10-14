@@ -1,12 +1,13 @@
 import {StyleSheet} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { COLORS } from '../../../../const/const';
 
 const styles = StyleSheet.create({
   bottomTab : {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 20,
     height: hp('8%'),
     borderRadius: hp('4%'),
     marginLeft: wp('5%'),
@@ -16,7 +17,6 @@ const styles = StyleSheet.create({
   },
   tabItem : {
     alignSelf: "center",
-    paddingTop: 2,
   },
   tabIcon : {
     width: hp('4%'),
@@ -25,11 +25,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   indicator : {
+    position: "absolute",
+    top: 0,
     width: wp('10%'),
     height: 3,
     marginLeft: wp("6.25%"),
-    marginBottom: hp('0.5%'),
-    backgroundColor: "#e5834c",
+    backgroundColor: COLORS.STRONG_ORANGE,
   }
 });
 
