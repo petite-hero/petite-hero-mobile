@@ -9,7 +9,6 @@ import styles from './styles/index.css';
 export const Stack = createStackNavigator();
 
 const WelcomeScreen = (props) => {
-  // navigation.navigate("Main");  // hung - test
   return (
     <Stack.Navigator 
       initialRouteName="Welcome"

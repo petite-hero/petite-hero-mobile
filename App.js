@@ -71,7 +71,19 @@ const App = () => {
     <AuthContext.Provider value={authContext}>
       <LocalizationContext.Provider value={localizationContext}>
         <NavigationContainer>
-          {state.userToken == null ? (
+          {/* hung - test */}
+          <Stack.Navigator 
+            initialRouteName="Main"
+            screenOptions={{
+              headerShown: false
+            }}>
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
+            />
+          </Stack.Navigator>
+          {/* {state.userToken == null ? (
             <Stack.Navigator 
               initialRouteName="Welcome"
               screenOptions={{
@@ -96,7 +108,7 @@ const App = () => {
                 initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
               />
             </Stack.Navigator>
-          )}
+          )} */}
         </NavigationContainer>
       </LocalizationContext.Provider>
     </AuthContext.Provider>

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   statusWave: {
     position: "absolute",
     borderRadius: wp('100%'),
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: "#31ae1f"
   },
   locationStatus: {
     color: 'white',

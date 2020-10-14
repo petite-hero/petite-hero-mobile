@@ -47,15 +47,6 @@ const TrackingSettingsScreen = (props) => {
 
     <SafeAreaView style={styles.container}>
 
-      {/* child img */}
-      {/* <View style={styles.header}>
-        <Image
-          style={styles.avatar}
-          source={{uri: "https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.15752-9/118881393_430697914571214_4949863648741553269_n.jpg?_nc_cat=107&_nc_sid=ae9488&_nc_ohc=CRL20t0CXSoAX-UGsNg&_nc_ht=scontent.fsgn2-3.fna&oh=8a78db6a5556a3e8d4039464250d0c91&oe=5F91B50E"}}
-        />
-      </View> */}
-
-
       {/* ===================== MAP SECTION ===================== */}
 
       {/* maps */}
@@ -100,6 +91,7 @@ const TrackingSettingsScreen = (props) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
+      {/* child avatar */}
       {searchBarFocused ? null :
         <Image
           style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}

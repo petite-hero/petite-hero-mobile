@@ -69,7 +69,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency")}>
-        <Icon name='exclamation' type='font-awesome' color='white' size={16}/>
+        <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
 
       <View style={styles.datePickerContainer}>

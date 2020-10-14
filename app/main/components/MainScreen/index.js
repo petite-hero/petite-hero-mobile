@@ -19,30 +19,26 @@ const MainScreen = ({route}) => {
     <Tab.Navigator
       screenOptions = {({route}) => ({
         tabBarIcon: ({ focused, color }) => {
-          let iconName;
+          let icon;
           if (route.name == 'Tracking') {
-            iconName = focused
-              ? 'list-ul'
-              : 'list-alt'
+            icon = focused
+              ? require('../../../../assets/nav-bar/tracking-active.png')
+              : require('../../../../assets/nav-bar/tracking.png')
           } else if (route.name == 'Tasks') {
-            iconName = focused
-              ? 'tasks'
-              : 'tasks'
+            icon = focused
+              ? require('../../../../assets/nav-bar/task-active.png')
+              : require('../../../../assets/nav-bar/task.png')
           } else if (route.name == 'Quests') {
-            iconName = focused
-              ? 'user-circle'
-              : 'user-circle-o'
+            icon = focused
+              ? require('../../../../assets/nav-bar/quest-active.png')
+              : require('../../../../assets/nav-bar/quest.png')
           } else if (route.name == 'Profile') {
-            iconName = focused
-              ? 'gears'
-              : 'gear'
+            icon = focused
+              ? require('../../../../assets/nav-bar/profile-active.png')
+              : require('../../../../assets/nav-bar/profile.png')
           }
-          // return <FontAwesome name={iconName} size={25} color={color}/>
           return (
-            <Image
-              style={[styles.tabIcon, {backgroundColor: COLORS.STRONG_ORANGE}]}
-              // source={{uri: "https://i.kym-cdn.com/photos/images/newsfeed/001/880/651/374.png"}}
-            />
+            <Image style={styles.tabIcon} source={icon}/>
           )
         }
       })}

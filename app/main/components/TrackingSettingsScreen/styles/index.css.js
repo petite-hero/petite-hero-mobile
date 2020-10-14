@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     height: 64,  // equals to textInput + margins
+    borderWidth: 1
   },
   searchBarContainerFocused:{
     position: "absolute",
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
     display: "none"
   },
   locationContainer: {
+    marginTop: 10,
     marginLeft: 20
   },
   locationName: {
