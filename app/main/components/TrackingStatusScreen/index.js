@@ -1,38 +1,78 @@
 import React from 'react';
 import { SafeAreaView, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
-
-import { createStackNavigator } from '@react-navigation/stack';
-import TrackingSettingsScreen from '../TrackingSettingsScreen/index';
-import TrackingEmergencyScreen from '../TrackingEmergencyScreen/index';
-
 import styles from './styles/index.css';
 import { COLORS, IP, PORT } from '../../../const/const';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import TaskScreen from '../TaskScreen';
+import QuestScreen from '../QuestScreen';
+import ProfileScreen from '../ProfileScreen';
 
-const Stack = createStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-const TrackingStatusScreen = () => {
+const TrackingStatusScreen = ({route}) => {
   return (
-    <Stack.Navigator 
-      initialRouteName="TrackingStatus"
-      screenOptions={{
-        headerShown: false
+    <Tab.Navigator
+      screenOptions = {({route}) => ({
+        tabBarIcon: ({ focused, color }) => {
+          let icon;
+          if (route.name == 'Tracking') {
+            icon = focused
+              ? require('../../../../assets/nav-bar/tracking-active.png')
+              : require('../../../../assets/nav-bar/tracking.png')
+          } else if (route.name == 'Tasks') {
+            icon = focused
+              ? require('../../../../assets/nav-bar/task-active.png')
+              : require('../../../../assets/nav-bar/task.png')
+          } else if (route.name == 'Quests') {
+            icon = focused
+              ? require('../../../../assets/nav-bar/quest-active.png')
+              : require('../../../../assets/nav-bar/quest.png')
+          } else if (route.name == 'Profile') {
+            icon = focused
+              ? require('../../../../assets/nav-bar/profile-active.png')
+              : require('../../../../assets/nav-bar/profile.png')
+          }
+          return (
+            <Image style={styles.tabIcon} source={icon}/>
+          )
+        }
+      })}
+      tabBarOptions={{
+        labelStyle: {
+          fontSize: 10,
+          fontWeight: "bold",
+          textTransform: "none"
+        },
+        style: styles.bottomTab,
+        tabStyle: styles.tabItem,
+        indicatorStyle: styles.indicator,
+        showIcon: true,
+        activeTintColor: COLORS.STRONG_ORANGE,
+        inactiveTintColor: COLORS.GREY,
       }}
-      >
-      <Stack.Screen 
-        name="TrackingStatus"
+      tabBarPosition="bottom"
+    >
+      <Tab.Screen 
+        name="Tracking" 
         component={TrackingStatusScreenContent}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
-      <Stack.Screen
-        name="TrackingSettings"
-        component={TrackingSettingsScreen}
+      <Tab.Screen 
+        name="Tasks" 
+        component={TaskScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
-      <Stack.Screen
-        name="TrackingEmergency"
-        component={TrackingEmergencyScreen}
+      <Tab.Screen name="Quests" 
+        component={QuestScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
-    </Stack.Navigator>
+      <Tab.Screen name="Profile" 
+        component={ProfileScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+    </Tab.Navigator>
   )
 }
 
