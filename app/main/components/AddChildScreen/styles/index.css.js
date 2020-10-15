@@ -5,7 +5,23 @@ const styles = StyleSheet.create({
   container : {
     flex : 1,
     backgroundColor: COLORS.NUDE
-  }
+  },
+
+  textInput : {
+    height: 50,
+    width: "80%",
+    marginBottom: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
+    flexDirection: "row",
+    alignContent: "space-between",
+    alignItems: "center",
+    backgroundColor: COLORS.NUDE,
+    borderRadius: 50,
+    elevation: 8
+  },
+
+  
 })
 
 export default styles;

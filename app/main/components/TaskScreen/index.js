@@ -3,7 +3,6 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-nativ
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { Calendar } from 'react-native-calendars';
 import { COLORS, IP, PORT } from '../../../const/const';
 
 const getDaysInMonth = (month, year) => {
@@ -30,21 +29,6 @@ const getCurrentDateIndex = (dates) => {
   const index = dates.findIndex(x => x.year === year && x.month === month && x.day === day);
   return index > (dates.length - 3) ? dates.length - 5 : index - 2;
 }
-
-const CalendarPicker = ({ isShowed }) => (
-  isShowed ? (
-  <Calendar
-    firstDay={1}
-    style={{
-      position: "absolute", 
-      top: -hp("28%"), 
-      alignSelf: "center",
-      width: wp("90%"),
-      elevation: 10
-    }}
-  />
-  ) : (true)
-)
 
 const TaskBoard = (date) => {
   const [tabs, setTabs] = useState(
@@ -223,7 +207,6 @@ const TaskScreen = (props) => {
         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
           <TouchableOpacity 
             style={styles.monthPicker}
-            onPress={() => {setShowed(!isShowed)}}
           >
             <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>Dec 2020</Text>
           </TouchableOpacity>
@@ -267,7 +250,6 @@ const TaskScreen = (props) => {
         </View>
       </View>
       <TaskBoard/>
-      <CalendarPicker isShowed={isShowed}/>
     </SafeAreaView>
   );
 };
