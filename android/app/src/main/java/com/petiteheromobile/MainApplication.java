@@ -22,6 +22,7 @@ import expo.modules.constants.ConstantsPackage;
 import expo.modules.permissions.PermissionsPackage;
 import expo.modules.filesystem.FileSystemPackage;
 import expo.modules.updates.UpdatesController;
+// import io.invertase.firebase.app.ReactNativeFireBaseAppPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;

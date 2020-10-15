@@ -8,6 +8,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import TaskScreen from '../TaskScreen';
 import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
+// import {fcmService} from '../../../../FCMService'
+// import {localNotificationService} from '../../../../LocalNotificationService'
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -82,6 +84,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   const CENTER_RATIO = 0.6;
 
   React.useEffect(() => {
+
     this.waveTimer = setInterval( () => {
       if (elapsedPercent >= 100) setElapsedPercent(0);
       setElapsedPercent(elapsedPercent+0.5);
@@ -129,3 +132,39 @@ const TrackingStatusScreenContent = ({ navigation }) => {
 };
 
 export default TrackingStatusScreen;
+
+
+
+// fcmService.registerAppWithFCM();
+// fcmService.register(onRegister, onNotification, onOpenNotification);
+// localNotificationService.configure(onOpenNotification);
+
+// function onRegister(token) {
+//   console.log("[Status] onRegister: ", token);
+// }
+
+// function onNotification(notify) {
+//   console.log("[Status] onNotification: ", notify);
+//   const options = {
+//     soundName: 'default',
+//     playSound: true
+//   }
+// }
+// localNotificationService.showNotification(
+//   0,
+//   notify.title,
+//   notify.body,
+//   notify,
+//   option
+// )
+
+// function onOpenNotification(notify) {
+//   console.log("[Status] onOpenNotification: ", notify);
+//   alert("Open Notification: " + notify.body);
+// }
+
+// return () => {
+//   console.log("[Status] unRegister");
+//   fcmService.unRegister();
+//   localNotificationService.unRegister();
+// }
