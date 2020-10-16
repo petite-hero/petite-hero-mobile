@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: wp("50%"),
   },
   avatar : {
+    position: "absolute",
     width: wp("12%"),
     height: wp("12%"),
-    marginTop: hp("7%"),
-    marginLeft: wp("10%"),
-    borderRadius: wp("6%"),
-    marginBottom: hp("1%"),
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("10%"),
   },
 
   // gg maps
@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
   },
   realLoc: {
-    height: 10,
-    width: 10,
-    borderRadius: 10 ,
+    height: 20,
+    width: 20,
+    borderRadius: 20 ,
     backgroundColor: COLORS.STRONG_ORANGE
   }
 

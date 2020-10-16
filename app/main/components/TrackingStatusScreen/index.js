@@ -84,7 +84,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   [elapsedPercent, setElapsedPercent] = React.useState(0);
   const CENTER_RATIO = 0.6;
 
-  [trackingActive, setTrackingActive] = React.useState(false);
+  [trackingStatus, setTrackingStatus] = React.useState("INACTIVE");  // INACTIVE, SAFE, NOT SAFE
+  const STATUS_COLORS = {"INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
 
   React.useEffect(() => {
 
@@ -104,14 +105,17 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       />
 
       <View style={styles.statusContainer}>
-        {[1, 2, 3].map((el, index) => {
+        {trackingStatus === "INACTIVE" ? null : [1, 2, 3].map((el, index) => {
           let ratio = CENTER_RATIO + ((elapsedPercent+33*index)%100)/100*(1-CENTER_RATIO);
           return (
-            <View key={index} style={[styles.statusWave, {width: wp("70%")*ratio, height: wp("70%")*ratio, opacity: 1-(ratio-CENTER_RATIO)/(1-CENTER_RATIO)}]}/>
+            <View key={index}
+                  style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
+                  {width: wp("70%")*ratio, height: wp("70%")*ratio, opacity: 1-(ratio-CENTER_RATIO)/(1-CENTER_RATIO)}]}/>
           )
         })}
-        <View style={[styles.statusWave, {width: wp("70%")*CENTER_RATIO, height: wp("70%")*CENTER_RATIO}]}/>
-        <Text style={styles.locationStatus}>SAFE</Text>
+        <View style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
+              {width: wp("70%")*CENTER_RATIO, height: wp("70%")*CENTER_RATIO}]}/>
+        <Text style={styles.locationStatus}>{trackingStatus}</Text>
       </View>
 
       <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency")}>
@@ -121,9 +125,12 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       {/* setting buttons */}
       <View style={styles.settingBtnsContainer}>
 
-        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingActive ? COLORS.STRONG_ORANGE : "white"}]}
-                          onPress={() => setTrackingActive(!trackingActive)}>
-          <Icon name="near-me" type="material" size={20} color={trackingActive ? "white" : "rgb(140, 140, 140)"}/>
+        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
+                          onPress={() => {
+                            if (trackingStatus === "INACTIVE") setTrackingStatus("SAFE");
+                            else (setTrackingStatus("INACTIVE"));
+                          }}>
+          <Icon name="near-me" type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingBtnContainer} onPress={() => navigation.navigate("TrackingSettings")}>
           <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>

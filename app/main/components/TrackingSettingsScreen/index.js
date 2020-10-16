@@ -22,8 +22,8 @@ const TrackingSettingsScreen = (props) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
   
   // location list
-  // [locList, setLocList] = React.useState([]);
-  [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
+  [locList, setLocList] = React.useState([]);
+  // [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
 
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});

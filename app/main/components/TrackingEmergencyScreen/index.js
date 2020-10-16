@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Dimensions, Image } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import Drawer from './drawer';
 import styles from './styles/index.css';
@@ -15,7 +15,7 @@ const TrackingEmergencyScreen = (props) => {
   // reported location list
   [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
-  [currentLoc, setCurrentLoc] = React.useState(Drawer.locFPT);
+  [currentLoc, setCurrentLoc] = React.useState(null);
 
   // get user location
   // navigator.geolocation.getCurrentPosition(
@@ -30,29 +30,20 @@ const TrackingEmergencyScreen = (props) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
-  // React.useEffect(() => {
-  //   // this.timer = setInterval(()=> updateLoc(), 10000);
-  // }, []);
+  React.useEffect(() => {
+    this.timer = setInterval(()=> updateLoc(), 10000);
+  }, []);
 
-  // const updateLoc = async() => {
-  //   const response = await fetch('http://' + IP + PORT + '/location/latest/5');
-  //   const result = await response.json();
-  //   setCurrentLoc(result.data);
-  //   setMapLoc(result.data);
-  // }
+  const updateLoc = async() => {
+    const response = await fetch('http://' + IP + PORT + '/location/latest/5');
+    const result = await response.json();
+    setCurrentLoc(result.data);
+    setMapLoc(result.data);
+  }
 
   return (
 
     <SafeAreaView style={styles.container}>
-
-      {/* child img */}
-      {/* <View style={styles.header}>
-        <Image
-          style={styles.avatar}
-          source={{uri: "https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.15752-9/118881393_430697914571214_4949863648741553269_n.jpg?_nc_cat=107&_nc_sid=ae9488&_nc_ohc=CRL20t0CXSoAX-UGsNg&_nc_ht=scontent.fsgn2-3.fna&oh=8a78db6a5556a3e8d4039464250d0c91&oe=5F91B50E"}}
-        />
-      </View> */}
-
 
       {/* ===================== MAP SECTION ===================== */}
 
@@ -65,9 +56,11 @@ const TrackingEmergencyScreen = (props) => {
           showsUserLocation={true}
           showsMyLocationButton={false}>
 
-          <Marker coordinate={{latitude: currentLoc.latitude, longitude: currentLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
-            <View style={styles.safeLoc}/>
-          </Marker>
+          {currentLoc === null ? null :
+            <Marker coordinate={{latitude: currentLoc.latitude, longitude: currentLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
+              <View style={styles.realLoc}/>
+            </Marker>
+          }
 
           {/* {locList.map((loc, index) => {
             return (
@@ -99,6 +92,12 @@ const TrackingEmergencyScreen = (props) => {
       </View>
 
       {/* ===================== END MAP SECTION ===================== */}
+
+      {/* child avatar */}
+      <Image
+        style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+        source={require('../../../../assets/kid-avatar.png')}
+      />
 
     </SafeAreaView>
 
