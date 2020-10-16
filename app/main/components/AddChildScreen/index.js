@@ -27,12 +27,23 @@ const AddChildScreen = (props) => {
         lastName   : lastName,
         nickName   : nickName,
         photo      : photo,
-        yob        : yob
+        yob        : yob,
+        phone      : "0938194701"
       })
     });
     const result = await response.json();
     if (result.code === 200 && result.msg === "OK") {
-      setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + result.data.token + "&amp;size=250x250");
+      const data = {
+        firstName  : firstName,
+        gender     : gender,
+        language   : language,
+        lastName   : lastName,
+        nickName   : nickName,
+        photo      : photo,
+        yob        : yob,
+        pushToken  : null
+      }
+      setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
     } else {
       // do something else later
     }
