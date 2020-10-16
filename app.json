@@ -18,7 +18,8 @@
     ],
     "android": {
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.petitehero.android"
+      "package": "com.petitehero.android",
+      "useNextNotificationsApi": true
     },
     "ios": {
       "supportsTablet": true,

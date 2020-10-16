@@ -116,3 +116,106 @@ const App = () => {
 };
 
 export default App;
+
+// import * as Permissions from 'expo-permissions';
+// import * as Notifications from 'expo-notifications';
+// import React, { useState, useEffect, useRef } from 'react';
+// import { Text, View, Button, Platform } from 'react-native';
+
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: false,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
+
+// export default function App() {
+//   const [expoPushToken, setExpoPushToken] = useState('');
+//   const [notification, setNotification] = useState(false);
+//   const notificationListener = useRef();
+//   const responseListener = useRef();
+
+//   useEffect(() => {
+//     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+//     // This listener is fired whenever a notification is received while the app is foregrounded
+//     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+//       setNotification(notification);
+
+//       if (notification.request.content.title === null) {
+//         console.log("Update child's location on Tracking screen please!");
+//         // insert codes to update child's location here
+//         // access location data by notification.request.content.data
+//       } else {
+//         // insert codes to handle something else here
+//       }
+//     });
+
+//     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+//     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
+//       console.log(response);
+//     });
+
+//     return () => {
+//       Notifications.removeNotificationSubscription(notificationListener);
+//       Notifications.removeNotificationSubscription(responseListener);
+//     };
+//   }, []);
+
+//   return (
+//     <View
+//       style={{
+//         flex: 1,
+//         alignItems: 'center',
+//         justifyContent: 'space-around',
+//       }}>
+//       <Text>Your expo push token: {expoPushToken}</Text>
+//       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+//         <Text>Title: {notification && notification.request.content.title} </Text>
+//         <Text>Body: {notification && notification.request.content.body}</Text>
+//         <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+//       </View>
+//       <Button
+//         title="Press to Send Notification"
+//         onPress={async () => {
+//           await sendPushNotification(expoPushToken);
+//         }}
+//       />
+//     </View>
+//   );
+// }
+
+// async function sendPushNotification(expoPushToken) {
+//   const message = {
+//     to: expoPushToken,
+//     sound: 'default',
+//     title: 'This is Title',
+//     body: 'And this is the body!',
+//     // android: {
+//     //   channelId: 'chat-messages'
+//     // },
+//     data: { name: 'Enri is struggling' },
+//   };
+
+//   await fetch('https://exp.host/--/api/v2/push/send', {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Accept-encoding': 'gzip, deflate',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(message),
+//   });
+// }
+
+// async function registerForPushNotificationsAsync() {
+//   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+//   if (status !== 'granted') {
+//     alert('You need to grant permission to receive Notifications!');
+//     return;
+//   }
+//   let token = (await Notifications.getExpoPushTokenAsync()).data;
+//   console.log("Your device token: ", token);
+//   return token;
+// }
