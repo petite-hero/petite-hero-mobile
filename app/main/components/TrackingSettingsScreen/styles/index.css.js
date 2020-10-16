@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "auto",
     bottom: hp('50%'),
-    left: wp('50%') - 13,
+    left: wp('50%') - 20,
     right: "auto",
-    width: 26,
-    height: 41
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40
   },
   safeLoc: {
     height: 20,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   controlPanel:{
     position: "absolute",
     top: "auto",
-    bottom: 0,
+    bottom: 10,
     left: wp('5%'),
     right: wp('5%'),
     height: hp('45%'),
@@ -66,6 +67,8 @@ const styles = StyleSheet.create({
     right: 0,
     height: hp('100%'),
   },
+
+  // search bar
   searchBarContainer: {
     height: 54,  // equals to textInput + margins
   },
@@ -127,6 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0)'
   },
 
+  // control panel content
   panelContent: {
     // borderWidth: 1
   },
@@ -154,6 +158,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
 
+  // set loc buttons
   setLocBtnsContainer: {
     flexDirection: "row",
     position: "absolute",
@@ -181,18 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
 
-  locSettingPanel:{
-    position: "absolute",
-    top: "auto",
-    bottom: 0,
-    left: wp('5%'),
-    right: wp('5%'),
-    height: hp('45%'),
-    borderRadius: hp('4%'),  // same as nav bar
-    paddingLeft: 15,
-    paddingRight: 15,
-    backgroundColor: COLORS.NUDE
-  },
+  // loc setting panel
   txtInputLocName: {
     paddingLeft: 14,
     paddingTop: 6,
@@ -201,17 +195,23 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "white"
   },
+  txtRepeatDay: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderColor: "rgb(200, 200, 200)"
+  },
+
   saveLocBtnsContainer: {
     flexDirection: "row",
     position: "absolute",
-    top: -22,
-    bottom: "auto",
+    top: "auto",
+    bottom: hp('45%')+10-22,
     left: "auto",
-    right: 20,
+    right: wp('5%')+20,
     height: 44,
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    justifyContent: "center",
-    zIndex: 100
+    justifyContent: "center"
   },
   btnSaveLoc : {
     width: 44,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     marginLeft: 7,
     marginRight: 7,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   btnSaveLocCheck: {
     backgroundColor: COLORS.STRONG_ORANGE,

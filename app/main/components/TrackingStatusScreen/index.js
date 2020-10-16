@@ -14,6 +14,7 @@ import ProfileScreen from '../ProfileScreen';
 const Tab = createMaterialTopTabNavigator();
 
 const TrackingStatusScreen = ({route}) => {
+
   return (
     <Tab.Navigator
       screenOptions = {({route}) => ({
@@ -83,6 +84,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   [elapsedPercent, setElapsedPercent] = React.useState(0);
   const CENTER_RATIO = 0.6;
 
+  [trackingActive, setTrackingActive] = React.useState(false);
+
   React.useEffect(() => {
 
     this.waveTimer = setInterval( () => {
@@ -104,10 +107,10 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         {[1, 2, 3].map((el, index) => {
           let ratio = CENTER_RATIO + ((elapsedPercent+33*index)%100)/100*(1-CENTER_RATIO);
           return (
-            <View key={index} style={[styles.statusWave, {width: wp("100%")*ratio, height: wp("100%")*ratio, opacity: 1-(ratio-CENTER_RATIO)/(1-CENTER_RATIO)}]}/>
+            <View key={index} style={[styles.statusWave, {width: wp("70%")*ratio, height: wp("70%")*ratio, opacity: 1-(ratio-CENTER_RATIO)/(1-CENTER_RATIO)}]}/>
           )
         })}
-        <View style={[styles.statusWave, {width: wp("100%")*CENTER_RATIO, height: wp("100%")*CENTER_RATIO}]}/>
+        <View style={[styles.statusWave, {width: wp("70%")*CENTER_RATIO, height: wp("70%")*CENTER_RATIO}]}/>
         <Text style={styles.locationStatus}>SAFE</Text>
       </View>
 
@@ -115,16 +118,27 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
 
-      <View style={styles.datePickerContainer}>
-        <Text>*Date Picker goes here*</Text>
-      </View>
+      {/* setting buttons */}
+      <View style={styles.settingBtnsContainer}>
 
-      <TouchableOpacity style={styles.btnSettings} onPress={() => {
-          navigation.navigate("TrackingSettings");
-        }}
-        >
-        <Text style={{color: 'white'}}>SETTINGS</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingActive ? COLORS.STRONG_ORANGE : "white"}]}
+                          onPress={() => setTrackingActive(!trackingActive)}>
+          <Icon name="near-me" type="material" size={20} color={trackingActive ? "white" : "rgb(140, 140, 140)"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingBtnContainer} onPress={() => navigation.navigate("TrackingSettings")}>
+          <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingBtnContainer} onPress={() => navigation.navigate("TrackingSettings")}>
+          <Icon name="today" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_ORANGE}]}>
+          <Icon name="add-location" type="material" size={20} color="white"/>
+        </TouchableOpacity>
+
+        <Text style={[styles.txtSettingBtnGuide, {top: 60}]}>Safe Zone for Selected Day</Text>
+        <Text style={[styles.txtSettingBtnGuide, {top: 110}]}>Safe Zone for Tomorrow</Text>
+
+      </View>
 
     </SafeAreaView>
 

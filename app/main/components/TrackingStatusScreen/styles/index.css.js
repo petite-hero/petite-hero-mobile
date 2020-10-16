@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     left: wp("10%"),
   },
 
+  // warning button
   warningBtn : {
     position: "absolute",
     width: wp("10%"),
@@ -35,36 +36,50 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 0, 0, 0.5)'
   },
   
+  // status animation
   statusContainer: {
+    position: "absolute",
+    top: 80,
     height: wp('100%'),
     width: wp('100%'),
-    marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
   statusWave: {
     position: "absolute",
     borderRadius: wp('100%'),
-    backgroundColor: "#31ae1f"
+    backgroundColor: "rgb(0, 154, 34)"
   },
   locationStatus: {
     color: 'white',
     fontSize: 24
   },
 
-  datePickerContainer: {
-    marginTop: 30
+  // setting buttons
+  settingBtnsContainer: {
+    position: "absolute",
+    right: wp("10%"),
+    bottom: 80,
+    // borderWidth: 1
   },
-
-  btnSettings: {
-    width: 200,
+  settingBtnContainer: {
     height: 40,
-    marginTop: 20,
-    backgroundColor: COLORS.STRONG_ORANGE,
-    justifyContent: "center",
-    alignItems: "center",
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+    backgroundColor: "white",
+    marginBottom: 10
+  },
+  txtSettingBtnGuide: {
+    position: "absolute",
+    right: 55,
+    width: 200,
+    textAlign: "right",
+    color: "rgb(140, 140, 140)",
   },
 
+  // nav bar
   bottomTab : {
     position: "absolute",
     left: 0,
