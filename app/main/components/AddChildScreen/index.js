@@ -33,7 +33,7 @@ const AddChildScreen = (props) => {
     });
     const result = await response.json();
     if (result.code === 200 && result.msg === "OK") {
-      const data = {
+      const data = JSON.stringify({
         firstName  : firstName,
         gender     : gender,
         language   : language,
@@ -42,7 +42,7 @@ const AddChildScreen = (props) => {
         photo      : photo,
         yob        : yob,
         pushToken  : null
-      }
+      });
       setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
     } else {
       // do something else later
