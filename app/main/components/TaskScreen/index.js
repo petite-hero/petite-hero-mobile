@@ -242,7 +242,10 @@ const TaskScreen = (props) => {
           />
         </View>
         <View style={{alignItems: "flex-end"}}>
-          <TouchableOpacity style={styles.btnAddTask}>
+          <TouchableOpacity
+            style={styles.btnAddTask}
+            onPress={() => {props.navigation.navigate("CreateTask")}}
+          >
             <Text style={styles.txtAddTask}>
               +
             </Text>

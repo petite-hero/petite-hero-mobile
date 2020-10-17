@@ -13,29 +13,40 @@ const AddChildScreen = (props) => {
   const [yob, setYob]             = useState("1999");
   const [qr, setQr]               = useState("");
 
-  const getToken = async() => {
-    const response = await fetch("http://" + IP + PORT + "/parent/0938194701/children", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+  const createQrCode = async() => {
+    // const response = await fetch("http://" + IP + PORT + "/parent/0938194701/children", {
+    //   method: "POST",
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     firstName  : firstName,
+    //     gender     : gender,
+    //     language   : language,
+    //     lastName   : lastName,
+    //     nickName   : nickName,
+    //     photo      : photo,
+    //     yob        : yob
+    //   })
+    // });
+    // const result = await response.json();
+    // if (result.code === 200 && result.msg === "OK") {
+      const data = JSON.stringify({
         firstName  : firstName,
-        gender     : gender,
-        language   : language,
         lastName   : lastName,
         nickName   : nickName,
+        gender     : gender,
+        language   : language,
         photo      : photo,
-        yob        : yob
-      })
-    });
-    const result = await response.json();
-    if (result.code === 200 && result.msg === "OK") {
-      setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + result.data.token + "&amp;size=250x250");
-    } else {
-      // do something else later
-    }
+        yob        : yob,
+        pushToken  : null,
+        phone      : "0938194701"
+      });
+      setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
+    // } else {
+    //   // do something else later
+    // }
   }
 
   return (
@@ -114,7 +125,7 @@ const AddChildScreen = (props) => {
               justifyContent: "center",
               alignItems: "center"
             }}
-            onPress={() => {getToken()}}
+            onPress={() => {createQrCode()}}
           >
             <Text style={{
               fontSize: 20

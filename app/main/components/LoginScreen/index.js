@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
+import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
 
 const LoginScreen = (props) => {
@@ -9,6 +11,16 @@ const LoginScreen = (props) => {
   const [secureText, setSecureText] = useState(true);
   const { signIn } = React.useContext(props.route.params.authContext);
   const localizationContext = React.useContext(props.route.params.localizationContext);
+
+  const registerForPushNotificationsAsync = async() => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== 'granted') {
+      alert('You need to grant permission to receive Notifications!');
+      return;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    return token;
+  }
 
   const login = async() => {
     try {
@@ -25,9 +37,35 @@ const LoginScreen = (props) => {
       });
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
+        const token = await registerForPushNotificationsAsync();
+        await sendToken(username, token);
         signIn({jwt: result.data.jwt});
       } else {
         // do something else later
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const sendToken = async(id, token) => {
+    try {
+      const response = await fetch("http://" + IP + PORT + "/parent/token", {
+        method: "PUT",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: id,
+          pushToken: token
+        })
+      });
+      const result = response.json();
+      if (result.code === 200 && result.msg === "OK") {
+        
+      } else {
+
       }
     } catch (error) {
       console.log(error);
