@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { SafeAreaView, View, StyleSheet, Dimensions, Image } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import Drawer from './drawer';
 import styles from './styles/index.css';
 import { COLORS, IP, PORT } from '../../../const/const';
+
+import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
 
 const TrackingEmergencyScreen = (props) => {
 
@@ -30,15 +33,69 @@ const TrackingEmergencyScreen = (props) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
+  // React.useEffect(() => {
+  //   this.timer = setInterval(()=> updateLoc(), 10000);
+  // }, []);
+
+  // const updateLoc = async() => {
+  //   const response = await fetch('http://' + IP + PORT + '/location/latest/5');
+  //   const result = await response.json();
+  //   setCurrentLoc(result.data);
+  //   setMapLoc(result.data);
+  // }
+
+  // Tuan
+  const [expoPushToken, setExpoPushToken] = React.useState('');
+  const [notification, setNotification] = React.useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  [newLoc, setNewLoc] = React.useState(null);
+
   React.useEffect(() => {
-    this.timer = setInterval(()=> updateLoc(), 10000);
+
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+
+      setNotification(notification);
+      
+      if (notification.request.content.title === null) {
+        console.log("Update child's location on Tracking screen please!");
+        // insert codes to update child's location here
+        // let tmpNewLoc = notification.request.content.data;
+        // if (tmpNewLoc.status === "1" && trackingStatus === "NOT SAFE") setTrackingStatus("SAFE");
+        // if (tmpNewLoc.status === "0" && trackingStatus === "SAFE") setTrackingStatus("NOT SAFE"); 
+        setNewLoc(notification.request.content.data);
+        setCurrentLoc(notification.request.content.data);
+        setMapLoc(notification.request.content.data);
+        console.log(notification.request.content.data);
+        // access location data by notification.request.content.data
+      } else {
+        // insert codes to handle something else here
+      }
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
+    //   console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
   }, []);
 
-  const updateLoc = async() => {
-    const response = await fetch('http://' + IP + PORT + '/location/latest/5');
-    const result = await response.json();
-    setCurrentLoc(result.data);
-    setMapLoc(result.data);
+  async function registerForPushNotificationsAsync() {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== 'granted') {
+      alert('You need to grant permission to receive Notifications!');
+      return;
+    }
+    let token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log("Your device token: ", token);
+    return token;
   }
 
   return (
@@ -56,7 +113,7 @@ const TrackingEmergencyScreen = (props) => {
           showsUserLocation={true}
           showsMyLocationButton={false}>
 
-          {currentLoc === null ? null :
+          {currentLoc == null ? null :
             <Marker coordinate={{latitude: currentLoc.latitude, longitude: currentLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
               <View style={styles.realLoc}/>
             </Marker>
@@ -86,7 +143,6 @@ const TrackingEmergencyScreen = (props) => {
             )
           })} */}
           
-
         </MapView>
 
       </View>

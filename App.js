@@ -137,7 +137,7 @@ export default App;
 //   const responseListener = useRef();
 
 //   useEffect(() => {
-//     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+//     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
 //     // This listener is fired whenever a notification is received while the app is foregrounded
 //     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -146,6 +146,7 @@ export default App;
 //       if (notification.request.content.title === null) {
 //         console.log("Update child's location on Tracking screen please!");
 //         // insert codes to update child's location here
+
 //         // access location data by notification.request.content.data
 //       } else {
 //         // insert codes to handle something else here
@@ -154,7 +155,7 @@ export default App;
 
 //     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
 //     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-//       console.log(response);
+//     //   console.log(response);
 //     });
 
 //     return () => {
