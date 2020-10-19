@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TrackingSettingsScreen from '../TrackingSettingsScreen';
 import TrackingEmergencyScreen from '../TrackingEmergencyScreen';
 import CreateTaskScreen from '../CreateTaskScreen';
+import TaskDetailsScreen from '../TaskDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,11 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="CreateTask"
         component={CreateTaskScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="TaskDetails"
+        component={TaskDetailsScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>
