@@ -4,6 +4,7 @@ import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
+
 import styles from './styles/index.css';
 
 const LoginScreen = (props) => {
@@ -41,6 +42,7 @@ const LoginScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         const token = await registerForPushNotificationsAsync();
         await sendToken(username, token);
+        await AsyncStorage.setItem("user_id", username);
         signIn({jwt: result.data.jwt});
       } else {
         // do something else later
