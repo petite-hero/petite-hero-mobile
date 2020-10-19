@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Text, SafeAreaView, TextInput, TouchableOpacity, View, Image } from "react-native";
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 
@@ -14,7 +15,8 @@ const AddChildScreen = (props) => {
   const [qr, setQr]               = useState("");
 
   const createQrCode = async() => {
-    // const response = await fetch("http://" + IP + PORT + "/parent/0938194701/children", {
+    // const ip = await AsyncStorage.getItem('IP');
+    // const response = await fetch("http://" + ip + PORT + "/parent/0938194701/children", {
     //   method: "POST",
     //   headers: {
     //     'Accept': 'application/json',

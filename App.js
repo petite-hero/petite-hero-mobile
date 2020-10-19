@@ -1,11 +1,16 @@
-import React, { useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { View, Text } from 'react-native';
 import { YellowBox } from 'react-native';
+import { AsyncStorage } from 'react-native';
+import { IP } from './app/const/const';
+
 import * as Localization from 'expo-localization';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import i18n from 'i18n-js';
 import { translationMessages } from './app/i18n';
+
 import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
 import LoginScreen from "./app/main/components/LoginScreen/index";
 import RegisterScreen from "./app/main/components/RegisterScreen/index";
@@ -27,6 +32,7 @@ i18n.fallbacks = true;
 i18n.translations = translationMessages;
 
 const App = () => {
+
   const [locale, setLocale] = useState(Localization.locale);
   const [state, dispatch] = useReducer(
     (prevState, action) => {
@@ -67,11 +73,33 @@ const App = () => {
     [locale]
   );
 
+  const checkApplicationSettings = async () => {
+    try {
+      const value = await AsyncStorage.getItem('IP');
+      if (value === null) {
+        await AsyncStorage.setItem('IP', IP);
+      }
+    } catch (error) {
+      console.log("Error while checking application settings");
+    }
+  }
+  useEffect(() => {checkApplicationSettings()}, []);
+
+  // const testSetApplicationSettings = async () => {
+  //   try {
+  //     await AsyncStorage.setItem('IP', IP);
+  //     await AsyncStorage.setItem('child_id', '2');
+  //   } catch (error) {
+  //     console.log("Error while testing application settings");
+  //   }
+  // }
+  // useEffect(() => {testSetApplicationSettings()}, []);
+
   return (
     <AuthContext.Provider value={authContext}>
       <LocalizationContext.Provider value={localizationContext}>
         <NavigationContainer>
-          {/* hung - test
+          {/* hung - test */}
           <Stack.Navigator 
             initialRouteName="Main"
             screenOptions={{
@@ -82,8 +110,8 @@ const App = () => {
               component={MainScreen}
               initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
             />
-          </Stack.Navigator> */}
-          {state.userToken == null ? (
+          </Stack.Navigator>
+          {/* {state.userToken == null ? (
             <Stack.Navigator 
               initialRouteName="Welcome"
               screenOptions={{
@@ -108,7 +136,7 @@ const App = () => {
                 initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
               />
             </Stack.Navigator>
-          )}
+          )} */}
         </NavigationContainer>
       </LocalizationContext.Provider>
     </AuthContext.Provider>

@@ -71,11 +71,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: 10
   },
-  txtSettingBtnGuide: {
+  txtSettingBtnGuideContainer: {
     position: "absolute",
     right: 55,
-    width: 200,
+    height: 20,
+    overflow: "hidden"
+  },
+  txtSettingBtnGuide: {
+    alignSelf: "flex-start",
     textAlign: "right",
+    width: 200,
     color: "rgb(140, 140, 140)",
   },
 

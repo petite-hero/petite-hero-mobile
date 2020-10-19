@@ -11,7 +11,7 @@ import Drawer from './drawer';
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const"; 
 
-const TrackingSettingsScreen = (props) => {
+const TrackingSettingsScreen = ({ route }) => {
 
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
   [substatus, setSubstatus] = React.useState("");  // "", REPEAT, SEARCH
@@ -22,8 +22,8 @@ const TrackingSettingsScreen = (props) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
   
   // location list
-  [locList, setLocList] = React.useState([]);
-  // [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
+  // [locList, setLocList] = React.useState([]);
+  [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
 
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});
@@ -37,6 +37,7 @@ const TrackingSettingsScreen = (props) => {
   [lIndex, setLIndex] = React.useState(0);
   [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
+  [lRepeatAll, setLRepeatAll] = React.useState(false);
 
   // get user location
   // navigator.geolocation.getCurrentPosition(
@@ -46,6 +47,7 @@ const TrackingSettingsScreen = (props) => {
   //     }
   // );
 
+  // handling inputs
   const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const WEEKDAYS_ABB = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const lRepeatToWeekdays = () => {
@@ -61,6 +63,16 @@ const TrackingSettingsScreen = (props) => {
     });
     return count === 0 ? "None" : result;
   }
+  const numberTo2Digits = (num) => {
+    return num < 10 ? "0"+num : num;
+  }
+  
+  // current date section
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const dateToStr = (date) => {
+    return MONTHS[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+  }
+  
 
   return (
 
@@ -115,11 +127,12 @@ const TrackingSettingsScreen = (props) => {
       {/* ===================== END MAP SECTION ===================== */}
 
       {/* child avatar */}
-      {substatus === "SEARCH" ? null :
-        <Image
+      {substatus === "SEARCH" ? null : [
+        <Image key={0}
           style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
           source={require('../../../../assets/kid-avatar.png')}
-        />
+        />,
+        <Text key={1} style={styles.date}>{dateToStr(route.params.date)}</Text>]
       }
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
@@ -252,7 +265,7 @@ const TrackingSettingsScreen = (props) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>From</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowInTimePicker(true)}>
-              {lInTime.hour}:{lInTime.minute}
+              {numberTo2Digits(lInTime.hour)}:{numberTo2Digits(lInTime.minute)}
             </Text>
             {lShowInTimePicker ?
               <DateTimePicker
@@ -270,7 +283,7 @@ const TrackingSettingsScreen = (props) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>To</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowOutTimePicker(true)}>
-              {lOutTime.hour}:{lOutTime.minute}
+              {numberTo2Digits(lOutTime.hour)}:{numberTo2Digits(lOutTime.minute)}
             </Text>
             {lShowOutTimePicker ?
               <DateTimePicker
@@ -299,22 +312,36 @@ const TrackingSettingsScreen = (props) => {
       {/* setting location repeat days */}
       {(status === "SETTING_LOC_NEW" || status === "SETTING_LOC") && substatus === "REPEAT" ?
         <View style={[styles.controlPanel, {paddingLeft: 15, paddingRight: 15}]}>
-          <Text style={{marginTop: 20, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>
-            Repeat on:
+          <Text style={{marginTop: 20, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>
+            Repeat on
           </Text>
           {WEEKDAYS.map((day, index) => {
             return (
               <TouchableOpacity key={index}
-                style={[styles.txtRepeatDay, {backgroundColor: lRepeatTmp[index] ? "rgba(244, 126, 62, 0.4)" : COLORS.NUDE}]}
+                style={styles.txtRepeatDayContainer}
                 onPress={() => {
                   let newLRepeat = [...lRepeatTmp];
                   newLRepeat[index] = !newLRepeat[index];
                   setLRepeatTmp(newLRepeat);
-              }}>
-                <Text>{day}</Text>
+                }}>
+                <Text style={{flex: 8, fontWeight: lRepeatTmp[index] ? "bold" : "normal", color: lRepeatTmp[index] ? COLORS.STRONG_ORANGE : "black"}}>
+                  Every {day}
+                </Text>
+                {lRepeatTmp[index] ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
               </TouchableOpacity>
             )
           })}
+          <TouchableOpacity
+            style={styles.txtRepeatDayContainer}
+            onPress={() => {
+              let newLRepeat = [...lRepeatTmp];
+              newLRepeat.map((day, index) => {newLRepeat[index] = !lRepeatAll});
+              setLRepeatTmp(newLRepeat);
+              setLRepeatAll(!lRepeatAll);
+            }}>
+            <Text style={{flex: 8, fontWeight: lRepeatAll ? "bold" : "normal", color: lRepeatAll ? COLORS.STRONG_ORANGE : "black"}}>All</Text>
+            {lRepeatAll ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
+          </TouchableOpacity>
         </View>
       : null}
 

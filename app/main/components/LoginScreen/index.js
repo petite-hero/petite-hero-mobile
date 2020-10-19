@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
@@ -24,7 +25,8 @@ const LoginScreen = (props) => {
 
   const login = async() => {
     try {
-      const response = await fetch("http://" + IP + PORT + "/account/login", {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch("http://" + ip + PORT + "/account/login", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -50,7 +52,8 @@ const LoginScreen = (props) => {
 
   const sendToken = async(id, token) => {
     try {
-      const response = await fetch("http://" + IP + PORT + "/parent/token", {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch("http://" + ip + PORT + "/parent/token", {
         method: "PUT",
         headers: {
           'Accept': 'application/json',

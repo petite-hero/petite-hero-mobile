@@ -3,6 +3,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-nativ
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 
 const getDaysInMonth = (month, year) => {
@@ -49,7 +50,8 @@ const TaskBoard = (date) => {
   
   useEffect(() => {
     (async() => {
-      const response = await fetch('http://' + IP + PORT + '/task/list/2');
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch('http://' + ip + PORT + '/task/list/2');
       const result = await response.json();
       if (result.code === 200) {
         setList(groupTasksByStatus(result.data));

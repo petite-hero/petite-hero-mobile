@@ -3,6 +3,7 @@ import { SafeAreaView, View, StyleSheet, Dimensions, Image } from 'react-native'
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import Drawer from './drawer';
 import styles from './styles/index.css';
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 
 import * as Permissions from 'expo-permissions';
@@ -38,7 +39,8 @@ const TrackingEmergencyScreen = (props) => {
   // }, []);
 
   // const updateLoc = async() => {
-  //   const response = await fetch('http://' + IP + PORT + '/location/latest/5');
+  //   const ip = await AsyncStorage.getItem('IP');
+  //   const response = await fetch('http://' + ip + PORT + '/location/latest/5');
   //   const result = await response.json();
   //   setCurrentLoc(result.data);
   //   setMapLoc(result.data);

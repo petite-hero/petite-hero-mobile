@@ -1,19 +1,19 @@
 import React, {useRef} from 'react';
 import { SafeAreaView, Text, TouchableOpacity, View, Image, Animated, Easing } from 'react-native';
 import { Icon } from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/index.css';
-import { COLORS, IP, PORT } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
+import { AsyncStorage } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import TaskScreen from '../TaskScreen';
 import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
-
-import * as Permissions from 'expo-permissions';
-import * as Notifications from 'expo-notifications';
+import { fetchUpdateAsync } from 'expo-updates';
 
 const Tab = createMaterialTopTabNavigator();
-
 const TrackingStatusScreen = ({route}) => {
 
   return (
@@ -80,75 +80,60 @@ const TrackingStatusScreen = ({route}) => {
   )
 }
 
+
+// screen content
 const TrackingStatusScreenContent = ({ navigation }) => {
- 
-  // Tuan
-  const [expoPushToken, setExpoPushToken] = React.useState('');
-  const [notification, setNotification] = React.useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-  [newLoc, setNewLoc] = React.useState(null);
 
-  // React.useEffect(() => {
+  // tracking status
+  [trackingStatus, setTrackingStatus] = React.useState("LOADING");  // LOADING, INACTIVE, SAFE, NOT SAFE
+  const STATUS_COLORS = {"LOADING": "rgb(140, 140, 140)", "INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
 
-  //   registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  // date picker for setting zone
+  [isPickingDate, setIsPickingDate] = React.useState(false);
 
-  //   // This listener is fired whenever a notification is received while the app is foregrounded
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-
-  //     setNotification(notification);
-      
-  //     if (notification.request.content.title === null) {
-  //       console.log("Update child's location on Tracking screen please!");
-  //       // insert codes to update child's location here
-  //       let tmpNewLoc = notification.request.content.data;
-  //       if (tmpNewLoc.status === "1" && trackingStatus === "NOT SAFE") setTrackingStatus("SAFE");
-  //       if (tmpNewLoc.status === "0" && trackingStatus === "SAFE") setTrackingStatus("NOT SAFE"); 
-  //       setNewLoc(notification.request.content.data);
-  //       console.log(notification.request.content.data);
-  //       // access location data by notification.request.content.data
-  //     } else {
-  //       // insert codes to handle something else here
-  //     }
-  //   });
-
-  //   // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-  //   //   console.log(response);
-  //   });
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener);
-  //     Notifications.removeNotificationSubscription(responseListener);
-  //   };
-  // }, []);
-
-  // async function registerForPushNotificationsAsync() {
-  //   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //   if (status !== 'granted') {
-  //     alert('You need to grant permission to receive Notifications!');
-  //     return;
-  //   }
-  //   let token = (await Notifications.getExpoPushTokenAsync()).data;
-  //   console.log("Your device token: ", token);
-  //   return token;
-  // }
-
-  // end Tuan
-
-
-  [trackingStatus, setTrackingStatus] = React.useState("NOT SAFE");  // INACTIVE, SAFE, NOT SAFE
-  const STATUS_COLORS = {"INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
-
-  // [elapsedPercent, setElapsedPercent] = React.useState(0);
+  // tracking status animation
   const CENTER_RATIO = 0.6;
   const DIAMETER = wp("70%");
-  const DURATION = 2000;
+  const STATUS_DURATION = 3000;
+  const animTrackingStatus = React.useRef(new Animated.Value(0)).current;
+  let animTrackingStatusScales = [];
+  animTrackingStatusScales.push(animTrackingStatus.interpolate({inputRange: [0, 1], outputRange: [CENTER_RATIO, 1]}));
+  animTrackingStatusScales.push(animTrackingStatus.interpolate({inputRange: [0, 1/3, 1/3+0.001, 1], outputRange: [CENTER_RATIO+2/3*(1-CENTER_RATIO), 1, CENTER_RATIO, CENTER_RATIO+2/3*(1-CENTER_RATIO)]}));
+  animTrackingStatusScales.push(animTrackingStatus.interpolate({inputRange: [0, 2/3, 2/3+0.001, 1], outputRange: [CENTER_RATIO+1/3*(1-CENTER_RATIO), 1, CENTER_RATIO, CENTER_RATIO+1/3*(1-CENTER_RATIO)]}));
+  let animTrackingStatusOpacs = [];
+  animTrackingStatusOpacs.push(animTrackingStatus.interpolate({inputRange: [0, 1], outputRange: [1, 0]}));
+  animTrackingStatusOpacs.push(animTrackingStatus.interpolate({inputRange: [0, 1/3, 1/3+0.001, 1], outputRange: [1/3, 0, 1, 1/3]}));
+  animTrackingStatusOpacs.push(animTrackingStatus.interpolate({inputRange: [0, 2/3, 2/3+0.001, 1], outputRange: [2/3, 0, 1, 2/3]}));
 
-  const timer = React.useRef(new Animated.Value(0)).current;
-  React.useEffect(() => {
-    Animated.loop(Animated.timing(timer, {toValue: 1000, duration: DURATION, easing: Easing.linear, useNativeDriver: true})).start();
-  });
+  // set safe zone animation
+  const FLY_TIME = 400;
+  [flied, setFlied] = React.useState(false);
+  const animSetZoneBtn = React.useRef(new Animated.Value(0)).current;
+  const animSetZoneBtnTopNav = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});
+  const animSetZoneBtnTopDay = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});
+  const animSetZoneBtnTopTomorrow = animSetZoneBtn.interpolate({inputRange: [0, 1/2, 1], outputRange: [50, 50, 0]});
+  const animSetZoneBtnTextWidth = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [0, 200]});
+
+  // fetching data
+  const fetchTrackingStatus = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const response = await fetch('http://' + ip + PORT + '/location/latest/2');
+    const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
+    if (result.code === 200) {
+      if (result.data.status){
+        setTrackingStatus("SAFE");
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
+      }
+      else{
+        setTrackingStatus("NOT SAFE");
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
+      }
+    } else {
+      console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
+    }
+  }
+
+  React.useEffect(() => {fetchTrackingStatus()}, []);
 
   return (
 
@@ -165,60 +150,89 @@ const TrackingStatusScreenContent = ({ navigation }) => {
 
       {/* status container */}
       <View style={styles.statusContainer}>
-        {trackingStatus === "INACTIVE" ?
-          [
-            <View key={-1} style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
-                  {width: DIAMETER*0.733, height: DIAMETER*0.733, opacity: 0.668}]}/>,
-            <View key={-2} style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
-                  {width: DIAMETER*0.867, height: DIAMETER*0.867, opacity: 0.333}]}/>
-          ]
-          :
-          [1, 2, 3].map((el, index) => {
-            let timerRatio = Animated.divide(Animated.modulo(Animated.add(timer, 1000*index/3), 1000), 1000);
-            let scale = Animated.add(1, Animated.multiply(timerRatio, 1/CENTER_RATIO-1));
-            let opac = Animated.subtract(1, timerRatio);
+        {animTrackingStatusScales.map((animScale, index) => {
             return (
               <Animated.View key={index} style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus],
-                             transform: [{scaleX: scale}, {scaleY: scale}],
-                             width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO, opacity: opac}]}/>
+                             transform: [{scaleX: animScale}, {scaleY: animScale}],
+                             width: DIAMETER, height: DIAMETER, opacity: animTrackingStatusOpacs[index]}]}/>
             )
-          })
-        }
-        <Animated.View style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
-                       {width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO}]}/>
+        })}
+        <View style={[styles.statusWave, {backgroundColor: STATUS_COLORS[trackingStatus]},
+                      {width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO}]}/>
         <Text style={styles.locationStatus}>{trackingStatus}</Text>
       </View>
 
       {/* setting buttons */}
       <View style={styles.settingBtnsContainer}>
 
-        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
-          onPress={() => {
-            if (trackingStatus === "INACTIVE"){
-              setTrackingStatus("SAFE");
-              timer.current = new Animated.Value(0);
-              Animated.loop(Animated.timing(timer, {toValue: 1000, duration: DURATION, easing: Easing.linear, useNativeDriver: true})).start();
-            }
-            else{
-              setTrackingStatus("INACTIVE");
-              timer.stopAnimation();
-            }
-          }}
-        >
-          <Icon name="near-me" type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.settingBtnContainer} onPress={() => navigation.navigate("TrackingSettings")}>
-          <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.settingBtnContainer} onPress={() => navigation.navigate("TrackingSettings")}>
-          <Icon name="today" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_ORANGE}]}>
+        <Animated.View style={{position: "relative", top: animSetZoneBtnTopNav}}>
+          <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
+            onPress={() => {
+              if (trackingStatus === "INACTIVE"){
+                setTrackingStatus("LOADING");
+                animTrackingStatus.setValue(0);
+                fetchTrackingStatus();
+              }
+              else{
+                setTrackingStatus("INACTIVE");
+                animTrackingStatus.stopAnimation();
+              }
+            }}
+          >
+            <Icon name="near-me" type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
+          </TouchableOpacity>
+        </Animated.View>
+        <Animated.View style={{position: "relative", top: animSetZoneBtnTopDay, opacity: animSetZoneBtn}}>
+          <TouchableOpacity style={styles.settingBtnContainer} onPress={() => setIsPickingDate(true)}>
+            <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+          </TouchableOpacity>
+        </Animated.View>
+        <Animated.View style={{position: "relative", top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn}}>
+          <TouchableOpacity style={styles.settingBtnContainer} onPress={() => {
+              navigation.navigate("TrackingSettings", {date: (() => {
+                let today = new Date();
+                today.setDate(today.getDate()+1);
+                return today;
+              })()});
+              animSetZoneBtn.setValue(0);
+            }}>
+            <Icon name="today" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+          </TouchableOpacity>
+        </Animated.View>
+        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_ORANGE}]} onPressIn={() => {
+          if (!flied){
+            animSetZoneBtn.setValue(0);
+            Animated.timing(animSetZoneBtn, {toValue: 1, duration: FLY_TIME, useNativeDriver: false}).start();
+          }
+          else{
+            animSetZoneBtn.setValue(1);
+            Animated.timing(animSetZoneBtn, {toValue: 0, duration: FLY_TIME, useNativeDriver: false}).start();
+          }
+          setFlied(!flied);
+        }}>
           <Icon name="add-location" type="material" size={20} color="white"/>
         </TouchableOpacity>
 
-        <Text style={[styles.txtSettingBtnGuide, {top: 60}]}>Safe Zone for Selected Day</Text>
-        <Text style={[styles.txtSettingBtnGuide, {top: 110}]}>Safe Zone for Tomorrow</Text>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 60, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+          <Text style={styles.txtSettingBtnGuide}>Safe Zone for Selected Day</Text>
+        </Animated.View>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 110, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+          <Text style={styles.txtSettingBtnGuide}>Safe Zone for Tomorrow</Text>
+        </Animated.View>
+
+        {isPickingDate ?
+          <DateTimePicker
+            value={(() => {let today = new Date(); today.setDate(today.getDate()+1); return today;})()}
+            minimumDate={new Date()}
+            mode={"date"}
+            onChange={(event, date) => {
+              setIsPickingDate(false);
+              if (date === null) return;
+              navigation.navigate("TrackingSettings", {date: date});
+              animSetZoneBtn.setValue(0);
+            }}
+          />
+        : null}
 
       </View>
 

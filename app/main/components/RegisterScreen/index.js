@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 
@@ -8,7 +9,8 @@ const RegisterScreen = (props) => {
 
   const register = async() => {
     try {
-      const response = await fetch("http://" + IP + PORT + "/account/parent/register", {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch("http://" + ip + PORT + "/account/parent/register", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

@@ -2,6 +2,7 @@ import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
 import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { withTheme } from 'react-native-elements';
 
 const styles = StyleSheet.create({
 
@@ -21,6 +22,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: wp("50%"),
     borderBottomRightRadius: wp("50%"),
   },
+
+  // avatar & date
   avatar : {
     position: "absolute",
     width: wp("12%"),
@@ -28,6 +31,18 @@ const styles = StyleSheet.create({
     borderRadius: wp("12%"),
     top: hp("5%"),
     left: wp("10%"),
+  },
+  date : {
+    position: "absolute",
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("27%"),
+    fontSize: wp("6%"),
+    fontWeight: "bold",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    color: 'white',
+    backgroundColor: COLORS.STRONG_ORANGE
   },
 
   // gg maps
@@ -195,11 +210,10 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "white"
   },
-  txtRepeatDay: {
+  txtRepeatDayContainer: {
+    flexDirection: "row",
     paddingTop: 5,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderColor: "rgb(200, 200, 200)"
+    paddingBottom: 5
   },
 
   saveLocBtnsContainer: {

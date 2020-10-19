@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, Image } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 
 const QuestBoard = () => {
@@ -16,7 +17,8 @@ const QuestBoard = () => {
 
   useEffect(() => {
     (async() => {
-      const response = await fetch('http://' + IP + PORT + '/quest/list/1');
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch('http://' + ip + PORT + '/quest/list/1');
       const result = await response.json();
       if (result.code === 200) {
         setList(result.data);
