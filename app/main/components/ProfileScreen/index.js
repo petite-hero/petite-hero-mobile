@@ -9,7 +9,7 @@ import styles from './styles/index.css';
 
 const Stack = createStackNavigator();
 
-const SettingItem = ({title, icon, subItems}) => {
+const SettingItem = ({title, icon, action, subItems}) => {
   const [isDropdown, setDropdown] = useState(false);
   
   return (
@@ -19,9 +19,10 @@ const SettingItem = ({title, icon, subItems}) => {
       paddingLeft: wp("10%"), 
       paddingRight: wp("10%"),
       paddingTop: hp("2.5%"),
-      paddingBottom: hp("2.5%")
+      paddingBottom: hp("2.5%"),
+      backgroundColor: COLORS.NUDE
     }}
-      onPress={() => {setDropdown(!isDropdown)}}
+      onPress={() => {action ? action() : setDropdown(!isDropdown)}}
     >
       <View style={{width: hp("5%"), height: hp("5%"), borderRadius: hp("2.5%"), marginRight: wp("5%"), backgroundColor: COLORS.STRONG_ORANGE}}></View>
       <View style={styles.settingItem}>
@@ -77,6 +78,7 @@ const ProfileScreen = ({route}) => (
 
 const ProfileScreenContent = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
+  const { signOut } = React.useContext(props.route.params.authContext);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -123,7 +125,7 @@ const ProfileScreenContent = (props) => {
         ]}/>
         <SettingItem title="Subscription" icon="abc"/>
         <SettingItem title="Setting" icon="abc"/>
-        <SettingItem title="Logout" icon="abc"/>
+        <SettingItem title="Logout" icon="abc" action={() => {signOut()}}/>
       </ScrollView>
     </SafeAreaView>
   );
