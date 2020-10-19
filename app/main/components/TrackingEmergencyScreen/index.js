@@ -17,7 +17,8 @@ const TrackingEmergencyScreen = (props) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
 
   // reported location list
-  [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
+  [realLocList, setRealLocList] = React.useState([]);
+  // [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
   [currentLoc, setCurrentLoc] = React.useState(null);
 
@@ -34,17 +35,32 @@ const TrackingEmergencyScreen = (props) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
-  // React.useEffect(() => {
-  //   this.timer = setInterval(()=> updateLoc(), 10000);
-  // }, []);
+  const updateLoc = async() => {
+    const ip = await AsyncStorage.getItem('IP');
+    const child_id = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
+    const result = await response.json();
+    // setCurrentLoc(result.data);
+    let realLocListTmp = [...realLocList];
+    realLocListTmp.push(result.data);
+    setRealLocList(realLocListTmp);
+    setMapLoc(result.data);
+  }
+  React.useEffect(() => {
+    this.timer = setInterval(()=> updateLoc(), 5000);
+  }, []);
 
-  // const updateLoc = async() => {
+  // const getInitialLoc = async() => {
   //   const ip = await AsyncStorage.getItem('IP');
-  //   const response = await fetch('http://' + ip + PORT + '/location/latest/5');
+  //   const child_id = await AsyncStorage.getItem('child_id');
+  //   const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
   //   const result = await response.json();
   //   setCurrentLoc(result.data);
   //   setMapLoc(result.data);
   // }
+  // React.useEffect(() => {
+  //   getInitialLoc();
+  // }, []);
 
   // Tuan
   const [expoPushToken, setExpoPushToken] = React.useState('');
@@ -115,11 +131,11 @@ const TrackingEmergencyScreen = (props) => {
           showsUserLocation={true}
           showsMyLocationButton={false}>
 
-          {currentLoc == null ? null :
+          {/* {currentLoc == null ? null :
             <Marker coordinate={{latitude: currentLoc.latitude, longitude: currentLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
               <View style={styles.realLoc}/>
             </Marker>
-          }
+          } */}
 
           {/* {locList.map((loc, index) => {
             return (
@@ -127,7 +143,7 @@ const TrackingEmergencyScreen = (props) => {
                 <View style={styles.safeLoc}/>
               </Marker>
             )
-          })}
+          })} */}
 
           {realLocList.map((loc, index) => {
             return (
@@ -143,7 +159,7 @@ const TrackingEmergencyScreen = (props) => {
                 : null
               ]
             )
-          })} */}
+          })}
           
         </MapView>
 
