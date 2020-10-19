@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { Image, SafeAreaView, Text, View, TextInput } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import { COLORS } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
 
-const CreateTaskScreen = (props) => {
+const TaskDetailsScreen = (props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [from, setFrom] = useState("");
@@ -36,11 +36,7 @@ const CreateTaskScreen = (props) => {
           paddingLeft: 30,
           backgroundColor: COLORS.LIGHT_ORANGE
         }}>
-          <TextInput
-            value={title}
-            onChangeText={(text) => {setTitle(text)}}
-            placeholder="Title"
-          />
+          <Text>{title}</Text>
         </View>
         {/* end title */}
         {/* description */}
@@ -51,11 +47,7 @@ const CreateTaskScreen = (props) => {
           paddingLeft: 30,
           backgroundColor: COLORS.LIGHT_ORANGE
         }}>
-          <TextInput
-            value={description}
-            onChangeText={(text) => {setDescription(text)}}
-            placeholder="Description..."
-          />
+          <Text>{description}</Text>
         </View>
         {/* end description */}
         {/* time setting */}
@@ -142,10 +134,10 @@ const CreateTaskScreen = (props) => {
               width: 70,
               height: 70,
               borderRadius: 35,
-              backgroundColor: COLORS.STRONG_ORANGE,
+              backgroundColor: COLORS.RED,
               elevation: 10
             }}>
-              <Icon name='check' type='material' color={COLORS.WHITE}/>
+              <Icon name='delete' type='material' color={COLORS.WHITE}/>
             </TouchableOpacity>
           </View>
         </View>
@@ -154,4 +146,4 @@ const CreateTaskScreen = (props) => {
   )
 }
 
-export default CreateTaskScreen;
+export default TaskDetailsScreen;
