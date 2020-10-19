@@ -117,7 +117,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   // fetching data
   const fetchTrackingStatus = async () => {
     const ip = await AsyncStorage.getItem('IP');
-    const response = await fetch('http://' + ip + PORT + '/location/latest/2');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/latest/' + childId);
     const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
     if (result.code === 200) {
       if (result.data.status){
@@ -166,6 +167,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       <View style={styles.settingBtnsContainer}>
 
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopNav}}>
+          {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
             onPress={() => {
               if (trackingStatus === "INACTIVE"){
@@ -182,11 +184,13 @@ const TrackingStatusScreenContent = ({ navigation }) => {
             <Icon name="near-me" type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
           </TouchableOpacity>
         </Animated.View>
+        {/* choose date for setting button */}
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopDay, opacity: animSetZoneBtn}}>
           <TouchableOpacity style={styles.settingBtnContainer} onPress={() => setIsPickingDate(true)}>
             <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
           </TouchableOpacity>
         </Animated.View>
+        {/* setting for tomorrow button */}
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn}}>
           <TouchableOpacity style={styles.settingBtnContainer} onPress={() => {
               navigation.navigate("TrackingSettings", {date: (() => {
@@ -195,10 +199,12 @@ const TrackingStatusScreenContent = ({ navigation }) => {
                 return today;
               })()});
               animSetZoneBtn.setValue(0);
+              setFlied(false);
             }}>
             <Icon name="today" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
           </TouchableOpacity>
         </Animated.View>
+        {/* setting animation button */}
         <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_ORANGE}]} onPressIn={() => {
           if (!flied){
             animSetZoneBtn.setValue(0);
@@ -230,6 +236,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
               if (date === null) return;
               navigation.navigate("TrackingSettings", {date: date});
               animSetZoneBtn.setValue(0);
+              setFlied(false);
             }}
           />
         : null}

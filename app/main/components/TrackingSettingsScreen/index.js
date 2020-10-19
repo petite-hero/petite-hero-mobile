@@ -8,13 +8,14 @@ import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-community/picker';
 import Drawer from './drawer';
+import { AsyncStorage } from 'react-native';
 import styles from './styles/index.css';
-import { COLORS } from "../../../const/const"; 
+import { COLORS, PORT } from "../../../const/const"; 
 
 const TrackingSettingsScreen = ({ route }) => {
 
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
-  [substatus, setSubstatus] = React.useState("");  // "", REPEAT, SEARCH
+  [substatus, setSubstatus] = React.useState("");  // "", TYPE, REPEAT, SEARCH
 
   // map positioning & zooming
   [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
@@ -28,6 +29,8 @@ const TrackingSettingsScreen = ({ route }) => {
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});
   [lName, setLName] = React.useState("");
+  [lType, setLType] = React.useState("None");  // None, Home, Education
+  [lTypeTmp, setLTypeTmp] = React.useState("None");
   [lRadius, setLRadius] = React.useState(0);
   [lInitialRadius, setLInitialRadius] = React.useState(0);
   [lInTime, setLInTime] = React.useState({hour: 0, minute: 0});
@@ -38,6 +41,15 @@ const TrackingSettingsScreen = ({ route }) => {
   [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatAll, setLRepeatAll] = React.useState(false);
+  
+  const dateToHour0 = (date) => {
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  }
+  const currentDate = dateToHour0(route.params.date);
 
   // get user location
   // navigator.geolocation.getCurrentPosition(
@@ -72,6 +84,24 @@ const TrackingSettingsScreen = ({ route }) => {
   const dateToStr = (date) => {
     return MONTHS[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
   }
+
+
+  // fetching data
+  const fetchLocList = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + currentDate.getTime());
+    const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
+    if (result.code === 200) {
+      setLocList(result.data);
+    } else {
+      console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
+    }
+  }
+
+  React.useEffect(() => {
+    fetchLocList()
+  }, []);
   
 
   return (
@@ -190,8 +220,9 @@ const TrackingSettingsScreen = ({ route }) => {
                         setLName(loc.name);
                         setLRadius(loc.radius);
                         setLInitialRadius(loc.radius);
-                        setLInTime(loc.inTime);
-                        setLOutTime(loc.outTime);
+                        setLInTime(loc.fromTime);
+                        setLOutTime(loc.toTime);
+                        setLType(loc.type)
                         setLIndex(index);
                         setLatitudeDelta(Drawer.LOCATION_ZOOM.latitudeDelta);
                         setLongitudeDelta(Drawer.LOCATION_ZOOM.longitudeDelta);
@@ -199,7 +230,7 @@ const TrackingSettingsScreen = ({ route }) => {
                       }}>
                       <Text style={styles.locationName}>{loc.name}</Text>
                       <Text style={styles.locationTime}>
-                        {loc.inTime.hour}:{loc.inTime.minute} - {loc.outTime.hour}:{loc.outTime.minute}
+                        {loc.fromTime} - {loc.toTime}
                       </Text>
                       <View style={styles.rightIcon}>
                         <Icon name='keyboard-arrow-right' type='material'/>
@@ -246,6 +277,14 @@ const TrackingSettingsScreen = ({ route }) => {
             defaultValue={settingLoc.name}
             style={styles.txtInputLocName}
           />
+
+          <View style={{flexDirection: "row", marginTop: 15}}>
+            <Text style={{flex: 4}}>Marked as</Text>
+            <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => {setSubstatus("TYPE"); setLTypeTmp(lType);}}>
+              {lType}
+            </Text>
+            <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
+          </View>
 
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>Radius</Text>
@@ -300,12 +339,33 @@ const TrackingSettingsScreen = ({ route }) => {
 
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>Repeat on</Text>
-            <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setSubstatus("REPEAT")}>
+            <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => {setSubstatus("REPEAT"); setLRepeatTmp([...lRepeat])}}>
               {lRepeatToWeekdays()}
             </Text>
             <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
           </View>
 
+        </View>
+      : null}
+
+      {/* setting location type */}
+      {(status === "SETTING_LOC_NEW" || status === "SETTING_LOC") && substatus === "TYPE" ?
+        <View style={[styles.controlPanel, {paddingLeft: 15, paddingRight: 15}]}>
+          <Text style={{marginTop: 20, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>
+            Marked as
+          </Text>
+          {["Home", "Education"].map((type, index) => {
+            return (
+              <TouchableOpacity key={index} style={styles.txtTypeContainer}
+                onPress={() => {
+                  if (lTypeTmp !== type) setLTypeTmp(type);
+                  else setLTypeTmp("None");
+                }}>
+                <Text style={{flex: 8, fontWeight: lTypeTmp === type ? "bold" : "normal", color: lTypeTmp === type ? COLORS.STRONG_ORANGE : "black"}}>{type}</Text>
+                {lTypeTmp === type ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
+              </TouchableOpacity>
+            )
+          })}
         </View>
       : null}
 
@@ -352,7 +412,7 @@ const TrackingSettingsScreen = ({ route }) => {
           {/* cancel button */}
           <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCancel]} onPress={() => {
             if (substatus === "") setStatus("VIEWING");
-            if (substatus === "REPEAT") setSubstatus("");
+            else if (substatus === "TYPE" || substatus === "REPEAT") setSubstatus("");
           }}>
             <Icon name='clear' type='material' color={COLORS.STRONG_ORANGE}/>
           </TouchableOpacity>
@@ -368,7 +428,11 @@ const TrackingSettingsScreen = ({ route }) => {
               setLocList(newLocList);
               setStatus("VIEWING");
             }
-            if (substatus === "REPEAT"){
+            else if (substatus === "TYPE"){
+              setLType(lTypeTmp);
+              setSubstatus("");
+            }
+            else if (substatus === "REPEAT"){
               setLRepeat(lRepeatTmp);
               setSubstatus("");
             }

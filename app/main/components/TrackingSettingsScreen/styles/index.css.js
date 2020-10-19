@@ -210,10 +210,16 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "white"
   },
+  txtTypeContainer: {
+    flexDirection: "row",
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginTop: 5
+  },
   txtRepeatDayContainer: {
     flexDirection: "row",
     paddingTop: 5,
-    paddingBottom: 5
+    paddingBottom: 5,
   },
 
   saveLocBtnsContainer: {

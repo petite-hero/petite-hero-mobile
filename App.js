@@ -85,15 +85,16 @@ const App = () => {
   }
   useEffect(() => {checkApplicationSettings()}, []);
 
-  // const testSetApplicationSettings = async () => {
-  //   try {
-  //     await AsyncStorage.setItem('IP', IP);
-  //     await AsyncStorage.setItem('child_id', '2');
-  //   } catch (error) {
-  //     console.log("Error while testing application settings");
-  //   }
-  // }
-  // useEffect(() => {testSetApplicationSettings()}, []);
+  const testSetApplicationSettings = async () => {
+    try {
+      await AsyncStorage.setItem('IP', IP);
+      await AsyncStorage.setItem('user_id', '2');
+      await AsyncStorage.setItem('child_id', '3');
+    } catch (error) {
+      console.log("Error while testing application settings");
+    }
+  }
+  useEffect(() => {testSetApplicationSettings()}, []);
 
   return (
     <AuthContext.Provider value={authContext}>
