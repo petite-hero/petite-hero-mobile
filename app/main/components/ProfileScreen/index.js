@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { Icon } from 'react-native-elements';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import AddChildScreen from '../AddChildScreen';
@@ -24,34 +25,57 @@ const SettingItem = ({title, icon, action, subItems}) => {
     }}
       onPress={() => {action ? action() : setDropdown(!isDropdown)}}
     >
-      <View style={{width: hp("5%"), height: hp("5%"), borderRadius: hp("2.5%"), marginRight: wp("5%"), backgroundColor: COLORS.STRONG_ORANGE}}></View>
+      <Icon 
+        name={icon}
+        type='material'
+        color={COLORS.WHITE}
+        style={{
+          width: hp("5%"), 
+          height: hp("5%"), 
+          borderRadius: hp("2.5%"), 
+          marginRight: wp("5%"), 
+          justifyContent: "center",
+          backgroundColor: COLORS.GREY
+        }}
+      />
       <View style={styles.settingItem}>
         <Text style={{fontSize: hp("3%")}}>{title}</Text>
-        <Image source={{uri: icon}}/>
+        {subItems && <Icon name={isDropdown ? "keyboard-arrow-up" : "keyboard-arrow-down"} type='material' color={COLORS.GREY}/>}
       </View>
     </TouchableOpacity>
     {
       isDropdown && subItems &&
-      <TouchableOpacity style={{
-        paddingLeft: wp("10%"), 
-        paddingRight: wp("10%"),
-        paddingTop: hp("2.5%"),
-        paddingBottom: hp("2.5%")
+      <View style={{
+        paddingLeft: wp("25%"), 
+        paddingRight: wp("12%"),
+        backgroundColor: COLORS.LIGHT_ORANGE
       }}>
         {
           subItems.map((value, index) => {
             return (
               <TouchableOpacity
                 key={index}
-                style={styles.settingItem}
+                style={[styles.settingItem, {
+                  width: "100%",
+                  paddingTop: hp("2.5%"),
+                  paddingBottom: hp("2.5%"),
+                }]}
                 onPress={value.action}
               >
-                <Text style={{fontSize: hp("2.5%")}}>{value.title}</Text>
+                
+                {value.text ? 
+                  <View style={{flexDirection: "column"}}>
+                    <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>{value.title}</Text>
+                    <Text style={{fontSize: hp("2.5%")}}>{value.text}</Text>
+                  </View> :
+                  <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>{value.title}</Text>
+                }
+                <Icon name="keyboard-arrow-right" type='material' color={COLORS.GREY}/>
               </TouchableOpacity>
             )
           })
         }
-      </TouchableOpacity>
+      </View>
     }
     </>
   )
@@ -115,17 +139,28 @@ const ProfileScreenContent = (props) => {
         </View>
       </View>
       <ScrollView>
-        <SettingItem title="Personal Profile" icon="abc"/>
-        <SettingItem title="Collaborators" icon="abc"/>
-        <SettingItem title="Children" icon="abc" subItems={[
+        <SettingItem title="Personal Profile" icon="face" subItems={[
+          {
+            title: "Your name",
+            text: "Nguyễn Phú Hưng",
+            action: null
+          }
+        ]}/>
+        <SettingItem title="Collaborators" icon="group-add" subItems={[
+          {
+            title: "Add collaborator",
+            action: null
+          }
+        ]}/>
+        <SettingItem title="Children" icon="child-care" subItems={[
           {
             title: "Add child",
             action: () => {props.navigation.navigate("Add Child")}
-          },
+          }
         ]}/>
-        <SettingItem title="Subscription" icon="abc"/>
-        <SettingItem title="Setting" icon="abc"/>
-        <SettingItem title="Logout" icon="abc" action={() => {signOut()}}/>
+        <SettingItem title="Subscription" icon="payment"/>
+        <SettingItem title="Setting" icon="settings"/>
+        <SettingItem title="Logout" icon="exit-to-app" action={() => {signOut()}}/>
       </ScrollView>
     </SafeAreaView>
   );
