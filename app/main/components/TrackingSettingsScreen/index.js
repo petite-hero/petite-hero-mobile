@@ -23,8 +23,8 @@ const TrackingSettingsScreen = ({ route }) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
   
   // location list
-  // [locList, setLocList] = React.useState([]);
-  [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
+  [locList, setLocList] = React.useState([]);
+  // [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
 
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});
@@ -33,8 +33,8 @@ const TrackingSettingsScreen = ({ route }) => {
   [lTypeTmp, setLTypeTmp] = React.useState("None");
   [lRadius, setLRadius] = React.useState(0);
   [lInitialRadius, setLInitialRadius] = React.useState(0);
-  [lInTime, setLInTime] = React.useState({hour: 0, minute: 0});
-  [lOutTime, setLOutTime] = React.useState({hour: 0, minute: 0});
+  [lInTime, setLInTime] = React.useState("None");  [lInTimeDate, setLInTimeDate] = React.useState(null);
+  [lOutTime, setLOutTime] = React.useState("None");  [lOutTimeDate, setLOutTimeDate] = React.useState(null);
   [lShowInTimePicker, setLShowInTimePicker] = React.useState(false);
   [lShowOutTimePicker, setLShowOutTimePicker] = React.useState(false);
   [lIndex, setLIndex] = React.useState(0);
@@ -98,10 +98,37 @@ const TrackingSettingsScreen = ({ route }) => {
       console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
     }
   }
-
   React.useEffect(() => {
     fetchLocList()
   }, []);
+
+  // add location setting
+  const addLocation = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const userId = await AsyncStorage.getItem('user_id');
+    const body = JSON.stringify({
+      childId: childId,
+      creatorId: userId,
+      date: currentDate.getTime(),
+      fromTime: lInTimeDate,
+      latitude: settingLoc.latitude,
+      longitude: settingLoc.longitude,
+      name: lName,
+      radius: lRadius,
+      repeatOn: "",
+      toTime: lOutTimeDate,
+      type: lType
+    });
+    console.log(body);
+    const response = await fetch('http://' + ip + PORT + '/location/safezone',
+      {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
+    const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
+    if (result.code === 200) {
+    } else {
+      console.log("Error while adding location. Server response: " + JSON.stringify(result));
+    }
+  }
   
 
   return (
@@ -230,7 +257,7 @@ const TrackingSettingsScreen = ({ route }) => {
                       }}>
                       <Text style={styles.locationName}>{loc.name}</Text>
                       <Text style={styles.locationTime}>
-                        {loc.fromTime} - {loc.toTime}
+                        {loc.fromTime.slice(0, -3)} - {loc.toTime.slice(0, -3)}
                       </Text>
                       <View style={styles.rightIcon}>
                         <Icon name='keyboard-arrow-right' type='material'/>
@@ -304,7 +331,7 @@ const TrackingSettingsScreen = ({ route }) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>From</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowInTimePicker(true)}>
-              {numberTo2Digits(lInTime.hour)}:{numberTo2Digits(lInTime.minute)}
+              {lInTime.slice(0, -3)}
             </Text>
             {lShowInTimePicker ?
               <DateTimePicker
@@ -313,7 +340,8 @@ const TrackingSettingsScreen = ({ route }) => {
                 onChange={(event, time) => {
                   setLShowInTimePicker(false);
                   if (time == null) return;
-                  setLInTime({hour: time.getHours(), minute: time.getMinutes()});
+                  setLInTime(numberTo2Digits(time.getHours()) + ":" + numberTo2Digits(time.getMinutes()) + ":00");
+                  setLInTimeDate(time);
                 }}
               />
             : null}
@@ -322,7 +350,7 @@ const TrackingSettingsScreen = ({ route }) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>To</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowOutTimePicker(true)}>
-              {numberTo2Digits(lOutTime.hour)}:{numberTo2Digits(lOutTime.minute)}
+              {lOutTime.slice(0, -3)}
             </Text>
             {lShowOutTimePicker ?
               <DateTimePicker
@@ -331,7 +359,8 @@ const TrackingSettingsScreen = ({ route }) => {
                 onChange={(event, time) => {
                   setLShowOutTimePicker(false);
                   if (time == null) return;
-                  setLOutTime({hour: time.getHours(), minute: time.getMinutes()});
+                  setLOutTime(numberTo2Digits(time.getHours()) + ":" + numberTo2Digits(time.getMinutes()) + ":00");
+                  setLOutTimeDate(time);
                 }}
               />
             : null}
@@ -420,13 +449,17 @@ const TrackingSettingsScreen = ({ route }) => {
           {/* save button */}
           <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCheck]} onPress={() => {
             if (substatus === ""){
-              const tmpLoc = {name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude,
-                              radius: lRadius, inTime: lInTime, outTime: lOutTime};
-              let newLocList = [...locList];
-              if (status === "SETTING_LOC_NEW") newLocList.push(tmpLoc);
-              else newLocList[lIndex] = tmpLoc;
-              setLocList(newLocList);
+              // const tmpLoc = {name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude,
+              //                 radius: lRadius, inTime: lInTime, outTime: lOutTime};
+              // let newLocList = [...locList];
+              // if (status === "SETTING_LOC_NEW") newLocList.push(tmpLoc);
+              // else newLocList[lIndex] = tmpLoc;
+              // setLocList(newLocList);
               setStatus("VIEWING");
+              (async() => {
+                if (status === "SETTING_LOC_NEW") await addLocation();
+                fetchLocList();
+              })();
             }
             else if (substatus === "TYPE"){
               setLType(lTypeTmp);

@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import { SafeAreaView, View, StyleSheet, Dimensions, Image } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
+import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
 import styles from './styles/index.css';
 import { AsyncStorage } from 'react-native';
@@ -9,7 +10,7 @@ import { COLORS, IP, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 
-const TrackingEmergencyScreen = (props) => {
+const TrackingEmergencyScreen = ({navigation}) => {
 
   // map positioning & zooming
   [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
@@ -80,15 +81,12 @@ const TrackingEmergencyScreen = (props) => {
       
       if (notification.request.content.title === null) {
         console.log("Update child's location on Tracking screen please!");
-        // insert codes to update child's location here
-        // let tmpNewLoc = notification.request.content.data;
-        // if (tmpNewLoc.status === "1" && trackingStatus === "NOT SAFE") setTrackingStatus("SAFE");
-        // if (tmpNewLoc.status === "0" && trackingStatus === "SAFE") setTrackingStatus("NOT SAFE"); 
-        setNewLoc(notification.request.content.data);
-        setCurrentLoc(notification.request.content.data);
+        let realLocListTmp = [...realLocList];
+        realLocListTmp.push(notification.request.content.data);
+        setRealLocList(realLocListTmp);
+        // setCurrentLoc(notification.request.content.data);
         setMapLoc(notification.request.content.data);
         console.log(notification.request.content.data);
-        // access location data by notification.request.content.data
       } else {
         // insert codes to handle something else here
       }
@@ -103,6 +101,7 @@ const TrackingEmergencyScreen = (props) => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
+
   }, []);
 
   async function registerForPushNotificationsAsync() {
@@ -114,6 +113,17 @@ const TrackingEmergencyScreen = (props) => {
     let token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log("Your device token: ", token);
     return token;
+  }
+
+  // request emergency mode
+  const requestEmergencyModeStop = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/emergency/' + childId + '/false');
+    const result = await response.json();
+    if (result.code !== 200) {
+      console.log("Error while requesting emergency mode. Server response: " + JSON.stringify(result));
+    }
   }
 
   return (
@@ -172,6 +182,15 @@ const TrackingEmergencyScreen = (props) => {
         style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
         source={require('../../../../assets/kid-avatar.png')}
       />
+
+      {/* back btn */}
+      <View style={styles.backBtn}>
+        <Icon name='arrow-back' type='material' size={34}
+          onPress={() => {
+            navigation.goBack();
+            requestEmergencyModeStop();
+          }}/>
+      </View>
 
     </SafeAreaView>
 

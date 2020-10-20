@@ -69,34 +69,22 @@ class Drawer{
 
   static locFPT = {
     "inPadding": 20,
-    "inTime": {
-      "hour": 19,
-      "minute": 33,
-    },
+    "fromTime": "19:33:00",
     "latitude": 10.8414846,
     "longitude": 106.8100464,
     "name": "Đại học FPT TP.HCM",
     "outPadding": 20,
-    "outTime": {
-      "hour": 20,
-      "minute": 33,
-    },
+    "toTime": "20:33:00",
     "radius": 59.375,
     };
   static locLandmark = {
     "inPadding": 20,
-    "inTime": {
-      "hour": 21,
-      "minute": 33,
-    },
+    "fromTime": "21:33:00",
     "latitude": 10.794886,
     "longitude": 106.7219853,
     "name": "Landmark 81",
     "outPadding": 20,
-    "outTime": {
-      "hour": 23,
-      "minute": 33,
-    },
+    "toTime": "23:33:00",
     "radius": 59.375,
   };
 

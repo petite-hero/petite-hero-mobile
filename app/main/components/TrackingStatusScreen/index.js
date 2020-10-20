@@ -122,19 +122,32 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
     if (result.code === 200) {
       if (result.data.status){
+        if (trackingStatus === "LOADING")
+          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
         setTrackingStatus("SAFE");
-        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
       }
       else{
+        if (trackingStatus === "LOADING")
+          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
         setTrackingStatus("NOT SAFE");
-        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
       }
     } else {
       console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
     }
   }
+  React.useEffect(() => {setInterval(fetchTrackingStatus, 5000)}, []);
+  // React.useEffect(() => {fetchTrackingStatus()}, []);
 
-  React.useEffect(() => {fetchTrackingStatus()}, []);
+  // request emergency mode
+  const requestEmergencyMode = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/emergency/' + childId + '/true');
+    const result = await response.json();
+    if (result.code !== 200) {
+      console.log("Error while requesting emergency mode. Server response: " + JSON.stringify(result));
+    }
+  }
 
   return (
 
@@ -145,7 +158,10 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         source={require('../../../../assets/kid-avatar.png')}
       />
 
-      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency")}>
+      <TouchableOpacity style={styles.warningBtn} onPress={() => {
+        navigation.navigate("TrackingEmergency");
+        requestEmergencyMode();
+      }}>
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
 
@@ -162,6 +178,12 @@ const TrackingStatusScreenContent = ({ navigation }) => {
                       {width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO}]}/>
         <Text style={styles.locationStatus}>{trackingStatus}</Text>
       </View>
+
+      {trackingStatus === "NOT SAFE" ?
+        <TouchableOpacity>
+          <Text>DISMISS</Text>
+        </TouchableOpacity>
+      : null}
 
       {/* setting buttons */}
       <View style={styles.settingBtnsContainer}>

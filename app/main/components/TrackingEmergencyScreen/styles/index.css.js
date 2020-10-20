@@ -21,13 +21,23 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: wp("50%"),
     borderBottomRightRadius: wp("50%"),
   },
+
   avatar : {
     position: "absolute",
     width: wp("12%"),
     height: wp("12%"),
     borderRadius: wp("12%"),
     top: hp("5%"),
-    left: wp("10%"),
+    right: wp("10%"),
+  },
+  backBtn : {
+    position: "absolute",
+    width: wp("12%"),
+    height: wp("12%"),
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("5%"),
+    justifyContent: 'center'
   },
 
   // gg maps
