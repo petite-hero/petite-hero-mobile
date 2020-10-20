@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
-import { COLORS, IP, PORT } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
@@ -27,7 +27,7 @@ const getCurrentDateIndex = (dates) => {
   const month = date.split(" ")[1];
   const day = date.split(" ")[2];
   const year = date.split(" ")[3];
-  const index = dates.findIndex(x => x.year === year && x.month === month && x.day === day);
+  const index = dates.findIndex(date => date.year === year && date.month === month && date.day === day);
   return index > (dates.length - 3) ? dates.length - 5 : index - 2;
 }
 
@@ -210,7 +210,9 @@ const TaskScreen = (props) => {
           <TouchableOpacity 
             style={styles.monthPicker}
           >
-            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>Dec 2020</Text>
+            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>
+              Oct 2020
+            </Text>
           </TouchableOpacity>
           { 
             currentIndex !== (currentDateIndex) &&
