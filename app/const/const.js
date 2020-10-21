@@ -8,5 +8,5 @@ export const COLORS = {
   RED: "#f32b2b",
 }
 
-export const IP = "192.168.1.4";
+export const IP = "192.168.100.33";
 export const PORT = ":8080";
