@@ -10,6 +10,29 @@ import { COLORS, IP, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 
+Notifications.setNotificationHandler({
+  handleNotification: async (notification) => {
+    let noti = notification.request.content;
+    if (noti.title == null) {
+      console.log("Do not show notification")
+      // return {
+      //   shouldShowAlert: false,
+      //   shouldPlaySound: false,
+      //   shouldSetBadge: false,
+      //   priority: Notifications.AndroidNotificationPriority.MIN
+      // }
+    } else {
+      console.log("Show notification")
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+        priority: Notifications.AndroidNotificationPriority.MAX
+      }
+    }
+  }
+})
+
 const TrackingEmergencyScreen = ({navigation}) => {
 
   // map positioning & zooming
@@ -72,28 +95,32 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
   React.useEffect(() => {
 
-    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
 
       setNotification(notification);
       
-      if (notification.request.content.title === null) {
+      if (notification.request.content.title === null && notification.request.content.body === null) { // Silent noti for updating child loc
         let realLocListTmp = [...realLocList];
         realLocListTmp.push(notification.request.content.data);
         setRealLocList(realLocListTmp);
         // setCurrentLoc(notification.request.content.data);
         setMapLoc(notification.request.content.data);
-        console.log(notification.request.content.data);
+        console.log("Foreground noti listener: ");
+        console.log(notification.request.content.data)
       } else {
         // insert codes to handle something else here
+        console.log("Foreground noti listener: ");
+        console.log(notification.request.content.data)
       }
     });
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-    //   console.log(response);
+      console.log("Background noti listener: ");
+      console.log(response.request.content.data)
     });
 
     return () => {
@@ -111,6 +138,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
     }
     let token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log("Your device token: ", token);
+
+    // if (Platform.OS === 'android') {
+    //   Notifications.createChannelAndroidAsync('sound-noti', {
+    //     name: 'Sound Notifcation',
+    //     sound: true,
+    //     vibrate: [0, 250, 500, 250]
+    //   });
+      
+    //   Notifications.createChannelAndroidAsync('silent-noti', {
+    //     name: 'Silent Notifcation',
+    //     vibrate: false,
+    //     sound: false,
+    //   });
+    // }
     return token;
   }
 
