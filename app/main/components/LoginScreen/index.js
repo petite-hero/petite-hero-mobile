@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
+import { Icon } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 
@@ -160,11 +161,21 @@ const LoginScreen = (props) => {
             <TouchableOpacity 
               style={{
                 width: "20%",
-                height: 30,
-                backgroundColor: COLORS.STRONG_ORANGE
+                height: 50
               }}
               onPress={() => {setSecureText(!secureText)}}
             >
+              <Icon
+                name={secureText ? "visibility" : "visibility-off"}
+                type="material"
+                color={COLORS.GREY}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  alignSelf: "center",
+                  justifyContent: "center"
+                }}
+              />
               {/* <Image source={{uri: ""}}/> */}
             </TouchableOpacity>
           </View>

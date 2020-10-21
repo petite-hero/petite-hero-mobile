@@ -5,6 +5,7 @@ import TrackingSettingsScreen from '../TrackingSettingsScreen';
 import TrackingEmergencyScreen from '../TrackingEmergencyScreen';
 import CreateTaskScreen from '../CreateTaskScreen';
 import TaskDetailsScreen from '../TaskDetailsScreen';
+import ChangeParentProfileScreen from '../ChangeParentProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,11 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="TaskDetails"
         component={TaskDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ChangeParentProfile"
+        component={ChangeParentProfileScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>
