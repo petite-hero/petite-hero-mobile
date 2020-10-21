@@ -87,6 +87,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   // tracking status
   [trackingStatus, setTrackingStatus] = React.useState("LOADING");  // LOADING, INACTIVE, SAFE, NOT SAFE
   const STATUS_COLORS = {"LOADING": "rgb(140, 140, 140)", "INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
+  [isDismissed, setIsDismissed] = React.useState(false);
 
   // date picker for setting zone
   [isPickingDate, setIsPickingDate] = React.useState(false);
@@ -121,22 +122,20 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     const response = await fetch('http://' + ip + PORT + '/location/latest/' + childId);
     const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
     if (result.code === 200) {
-      if (result.data.status){
-        if (trackingStatus === "LOADING")
-          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
+      if (result.data.status && trackingStatus !== "SAFE"){
+        animTrackingStatus.setValue(0);
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
         setTrackingStatus("SAFE");
       }
-      else{
-        if (trackingStatus === "LOADING")
-          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
+      else if (!result.data.status && trackingStatus !== "NOT SAFE"){
+        animTrackingStatus.setValue(0);
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
         setTrackingStatus("NOT SAFE");
       }
     } else {
       console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
     }
   }
-  React.useEffect(() => {setInterval(fetchTrackingStatus, 5000)}, []);
-  // React.useEffect(() => {fetchTrackingStatus()}, []);
 
   // request emergency mode
   const requestEmergencyMode = async () => {
@@ -149,6 +148,16 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     }
   }
 
+  // start on screen load
+  [fetchTrackingStatusTimer, setFetchTrackingStatusTimer] = React.useState(null);
+  React.useEffect(() => {
+    if (trackingStatus === "LOADING") Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
+    setFetchTrackingStatusTimer(setInterval(fetchTrackingStatus, 5000));
+    // fetchTrackingStatus();
+
+  }, []);
+  // React.useEffect(() => {fetchTrackingStatus()}, []);
+
   return (
 
     <SafeAreaView style={styles.container}>
@@ -158,6 +167,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         source={require('../../../../assets/kid-avatar.png')}
       />
 
+      {/* view map button */}
       <TouchableOpacity style={styles.warningBtn} onPress={() => {
         navigation.navigate("TrackingEmergency");
         requestEmergencyMode();
@@ -180,8 +190,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       </View>
 
       {trackingStatus === "NOT SAFE" ?
-        <TouchableOpacity>
-          <Text>DISMISS</Text>
+        <TouchableOpacity style={styles.dismissBtn} onPress={() => setIsDismissed(!isDismissed)}>
+          <Text style={styles.dismissBtnText}>{isDismissed ? "DISMISSED" : "DISMISS"}</Text>
         </TouchableOpacity>
       : null}
 
@@ -193,13 +203,15 @@ const TrackingStatusScreenContent = ({ navigation }) => {
           <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
             onPress={() => {
               if (trackingStatus === "INACTIVE"){
-                setTrackingStatus("LOADING");
                 animTrackingStatus.setValue(0);
+                Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
+                setTrackingStatus("LOADING");
                 fetchTrackingStatus();
               }
               else{
                 setTrackingStatus("INACTIVE");
                 animTrackingStatus.stopAnimation();
+                clearInterval(fetchTrackingStatusTimer);
               }
             }}
           >

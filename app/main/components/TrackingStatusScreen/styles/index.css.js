@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Size } from '@ui-kitten/components/devsupport';
 
 const styles = StyleSheet.create({
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     left: wp("10%"),
   },
 
-  // warning button
+  // warning & dismiss buttons
   warningBtn : {
     position: "absolute",
     width: wp("10%"),
@@ -33,7 +34,20 @@ const styles = StyleSheet.create({
     right: wp("5%"),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 0, 0, 0.5)'
+    backgroundColor: 'red'
+  },
+  dismissBtn : {
+    width: 200,
+    height: 30,
+    marginTop: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: 'rgba(0, 0, 0, 0)'
+  },
+  dismissBtnText : {
+    color: COLORS.STRONG_ORANGE,
+    fontSize: 20
   },
   
   // status animation

@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions, Image } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Dimensions, Image, FlatList } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
@@ -72,7 +72,7 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
   React.useEffect(() => {
 
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -80,7 +80,6 @@ const TrackingEmergencyScreen = ({navigation}) => {
       setNotification(notification);
       
       if (notification.request.content.title === null) {
-        console.log("Update child's location on Tracking screen please!");
         let realLocListTmp = [...realLocList];
         realLocListTmp.push(notification.request.content.data);
         setRealLocList(realLocListTmp);
@@ -155,6 +154,22 @@ const TrackingEmergencyScreen = ({navigation}) => {
             )
           })} */}
 
+          {/* {realLocList.map((loc, index) => {
+            return (
+              [
+                <Marker key={-index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
+                  <View style={[styles.realLoc, {height: 12*(index+1)/realLocList.length, width: 12*(index+1)/realLocList.length}]}/>
+                </Marker>,
+                index != 0 ?
+                  <Polyline key={index+realLocList.length}
+                            coordinates={[loc, realLocList[index-1]]}
+                            strokeWidth={6*(index+1)/realLocList.length}
+                            strokeColor="rgba(244, 126, 62, 0.5)"/>
+                : null
+              ]
+            )
+          })} */}
+
           {realLocList.map((loc, index) => {
             return (
               [
@@ -170,6 +185,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
               ]
             )
           })}
+
+          {/* <FlatList
+            data={realLocList}
+            renderItem={({ item }) => (
+              <ListItem
+                roundAvatar
+                title={`${item.name.first} ${item.name.last}`}
+                subtitle={item.email}
+                avatar={{ uri: item.picture.thumbnail }}
+                containerStyle={{ borderBottomWidth: 0 }}
+              />
+            )}
+            keyExtractor={item => item.email}
+          /> */}
           
         </MapView>
 
