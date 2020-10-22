@@ -139,10 +139,6 @@ const ProfileScreen = ({route}) => (
       component={ProfileScreenContent}
       initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
     />
-    <Stack.Screen
-      name="Add Child"
-      component={AddChildScreen}
-    />
   </Stack.Navigator>
 );
 
@@ -226,7 +222,7 @@ const ProfileScreenContent = (props) => {
           },
           {
             title: "Add child",
-            action: () => {props.navigation.navigate("Add Child")}
+            action: () => {props.navigation.navigate("AddChild")}
           }
         ]}/>
         <SettingItem key="4" title="Subscription" icon="payment" action={() => {}}/>
