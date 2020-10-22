@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions, Image, FlatList } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Dimensions, Image, FlatList, Text } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
@@ -10,6 +10,29 @@ import { COLORS, IP, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 
+Notifications.setNotificationHandler({
+  handleNotification: async (notification) => {
+    let noti = notification.request.content;
+    if (noti.title == null) {
+      console.log("Do not show notification")
+      // return {
+      //   shouldShowAlert: false,
+      //   shouldPlaySound: false,
+      //   shouldSetBadge: false,
+      //   priority: Notifications.AndroidNotificationPriority.MIN
+      // }
+    } else {
+      console.log("Show notification")
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+        priority: Notifications.AndroidNotificationPriority.MAX
+      }
+    }
+  }
+})
+
 const TrackingEmergencyScreen = ({navigation}) => {
 
   // map positioning & zooming
@@ -18,8 +41,8 @@ const TrackingEmergencyScreen = ({navigation}) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
 
   // reported location list
-  [realLocList, setRealLocList] = React.useState([]);
-  // [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
+  // [realLocList, setRealLocList] = React.useState([]);
+  [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
   [currentLoc, setCurrentLoc] = React.useState(null);
 
@@ -36,20 +59,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
-  const updateLoc = async() => {
-    const ip = await AsyncStorage.getItem('IP');
-    const child_id = await AsyncStorage.getItem('child_id');
-    const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
-    const result = await response.json();
-    // setCurrentLoc(result.data);
-    let realLocListTmp = [...realLocList];
-    realLocListTmp.push(result.data);
-    setRealLocList(realLocListTmp);
-    setMapLoc(result.data);
-  }
-  React.useEffect(() => {
-    this.timer = setInterval(()=> updateLoc(), 5000);
-  }, []);
+  // const updateLoc = async() => {
+  //   const ip = await AsyncStorage.getItem('IP');
+  //   const child_id = await AsyncStorage.getItem('child_id');
+  //   const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
+  //   const result = await response.json();
+  //   // setCurrentLoc(result.data);
+  //   let realLocListTmp = [...realLocList];
+  //   realLocListTmp.push(result.data);
+  //   setRealLocList(realLocListTmp);
+  //   setMapLoc(result.data);
+  // }
+  // React.useEffect(() => {
+  //   this.timer = setInterval(()=> updateLoc(), 5000);
+  // }, []);
 
   // const getInitialLoc = async() => {
   //   const ip = await AsyncStorage.getItem('IP');
@@ -72,28 +95,32 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
   React.useEffect(() => {
 
-    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
 
       setNotification(notification);
       
-      if (notification.request.content.title === null) {
+      if (notification.request.content.title === null && notification.request.content.body === null) { // Silent noti for updating child loc
         let realLocListTmp = [...realLocList];
         realLocListTmp.push(notification.request.content.data);
         setRealLocList(realLocListTmp);
         // setCurrentLoc(notification.request.content.data);
         setMapLoc(notification.request.content.data);
-        console.log(notification.request.content.data);
+        console.log("Foreground noti listener: ");
+        console.log(notification.request.content.data)
       } else {
         // insert codes to handle something else here
+        console.log("Foreground noti listener: ");
+        console.log(notification.request.content.data)
       }
     });
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-    //   console.log(response);
+      console.log("Background noti listener: ");
+      console.log(response.request.content.data)
     });
 
     return () => {
@@ -111,6 +138,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
     }
     let token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log("Your device token: ", token);
+
+    // if (Platform.OS === 'android') {
+    //   Notifications.createChannelAndroidAsync('sound-noti', {
+    //     name: 'Sound Notifcation',
+    //     sound: true,
+    //     vibrate: [0, 250, 500, 250]
+    //   });
+      
+    //   Notifications.createChannelAndroidAsync('silent-noti', {
+    //     name: 'Silent Notifcation',
+    //     vibrate: false,
+    //     sound: false,
+    //   });
+    // }
     return token;
   }
 
@@ -188,16 +229,12 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
           {/* <FlatList
             data={realLocList}
-            renderItem={({ item }) => (
-              <ListItem
-                roundAvatar
-                title={`${item.name.first} ${item.name.last}`}
-                subtitle={item.email}
-                avatar={{ uri: item.picture.thumbnail }}
-                containerStyle={{ borderBottomWidth: 0 }}
-              />
-            )}
-            keyExtractor={item => item.email}
+            renderItem={({ item, index }) => 
+              <Marker key={index} coordinate={{latitude: item.latitude, longitude: item.longitude}} anchor={{x: 0.5, y: 0.5}}/>
+                <View style={[styles.realLoc, {height: 12*(index+1)/realLocList.length, width: 12*(index+1)/realLocList.length}]}/>
+              </Marker>
+            }
+            keyExtractor={item => item.time+""}
           /> */}
           
         </MapView>
@@ -205,6 +242,17 @@ const TrackingEmergencyScreen = ({navigation}) => {
       </View>
 
       {/* ===================== END MAP SECTION ===================== */}
+
+      <View>
+        <Text>123</Text>
+        <FlatList
+            data={realLocList}
+            renderItem={({ item, index }) => 
+              <Text key={index}>{item.time}</Text>
+            }
+            keyExtractor={item => item.time+""}
+          />
+      </View>
 
       {/* child avatar */}
       <Image
