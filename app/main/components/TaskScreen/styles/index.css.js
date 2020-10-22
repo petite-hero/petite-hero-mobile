@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
   monthPicker : {
     width: wp("30%"),
     marginLeft: wp("10%"),
-    fontSize: hp("2%")
+    fontSize: hp("2%"),
+    fontFamily: "Acumin"
   },
   dateList : {
     marginTop: hp("3%"),
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   },
   dateText : {
     fontSize: hp("2%"),
-    fontWeight: "bold",
+    fontFamily: "AcuminBold",
     color: COLORS.STRONG_ORANGE
   },
   dateTextActive : {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title : {
     fontSize: hp("5%"),
-    fontWeight: "bold",
+    fontFamily: "AcuminBold",
     color: COLORS.WHITE
   },
   btnAddTask : {
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
   },
   txtAddTask : {
     fontSize: hp("7%"),
+    fontFamily: "Acumin",
     color: COLORS.STRONG_ORANGE,
     marginBottom: hp("0.8%")
   },

@@ -5,6 +5,7 @@ import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
+import { Icon } from 'react-native-elements';
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
@@ -250,9 +251,11 @@ const TaskScreen = (props) => {
             style={styles.btnAddTask}
             onPress={() => {props.navigation.navigate("CreateTask")}}
           >
-            <Text style={styles.txtAddTask}>
-              +
-            </Text>
+            <Icon
+              name="add"
+              type="material"
+              color={COLORS.STRONG_ORANGE}
+            />
           </TouchableOpacity>
         </View>
       </View>

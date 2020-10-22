@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
-
 import styles from './styles/index.css';
 
 const LoginScreen = (props) => {
@@ -77,7 +76,7 @@ const LoginScreen = (props) => {
       console.log(error);
     }
   }
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_ORANGE}}>
@@ -113,8 +112,8 @@ const LoginScreen = (props) => {
           marginBottom: "10%",
           marginLeft: "10%",
           fontSize: 40,
+          fontFamily: "MontserratBold",
           alignSelf: "baseline",
-          fontWeight: "bold",
           color: COLORS.STRONG_ORANGE
         }}>
           Sign in

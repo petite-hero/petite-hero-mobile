@@ -5,6 +5,7 @@ import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
+import { Icon } from 'react-native-elements';
 
 const QuestBoard = () => {
   const [list, setList] = useState([]);
@@ -94,9 +95,11 @@ const QuestScreen = (props) => {
         </View>
         <View style={{alignItems: "flex-end"}}>
           <TouchableOpacity style={styles.btnAddQuest}>
-            <Text style={styles.txtAddQuest}>
-              +
-            </Text>
+            <Icon
+              name="add"
+              type="material"
+              color={COLORS.STRONG_ORANGE}
+            />
           </TouchableOpacity>
         </View>
       </View>

@@ -64,7 +64,12 @@ const SettingItem = ({title, icon, action, subItems}) => {
           }}
         />
         <View style={styles.settingItem}>
-          <Text style={{fontSize: hp("3%")}}>{title}</Text>
+          <Text style={{
+            fontSize: hp("3%"),
+            fontFamily: "Acumin"
+          }}>
+            {title}
+          </Text>
           {subItems && <Icon name={isDropdown ? "keyboard-arrow-up" : "keyboard-arrow-down"} type='material' color={COLORS.GREY}/>}
         </View>
       </TouchableOpacity>
@@ -90,10 +95,26 @@ const SettingItem = ({title, icon, action, subItems}) => {
                 >
                   {value.text ? 
                     <View style={{flexDirection: "column"}}>
-                      <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>{value.title}</Text>
-                      <Text style={{fontSize: hp("2.5%"), color: COLORS.GREY}}>{value.text}</Text>
+                      <Text style={{
+                        fontSize: hp("2.5%"),
+                        fontFamily: "AcuminBold"
+                      }}>
+                        {value.title}
+                      </Text>
+                      <Text style={{
+                        fontSize: hp("2.5%"),
+                        fontFamily: "Acumin",
+                        color: COLORS.GREY
+                      }}>
+                        {value.text}
+                      </Text>
                     </View> :
-                    <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>{value.title}</Text>
+                    <Text style={{
+                      fontSize: hp("2.5%"),
+                      fontFamily: "AcuminBold"
+                    }}>
+                      {value.title}
+                    </Text>
                   }
                   <Icon name="keyboard-arrow-right" type='material' color={COLORS.GREY}/>
                 </TouchableOpacity>
@@ -147,9 +168,9 @@ const ProfileScreenContent = (props) => {
               justifyContent: "center"
             }}>
               <Text style={{
+                fontFamily: "AcuminBold",
                 alignSelf: "center",
-                color: COLORS.WHITE,
-                fontWeight: "bold"
+                color: COLORS.WHITE
               }}>
                 Subscribed
               </Text>

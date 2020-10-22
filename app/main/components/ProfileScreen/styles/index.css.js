@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   name : {
     fontSize: hp("3.5%"),
-    fontWeight: "bold"
+    fontFamily: "AcuminBold"
   },
   settings : {
     paddingLeft: wp("12%"),
