@@ -89,7 +89,7 @@ const App = () => {
     try {
       await AsyncStorage.setItem('IP', IP);
       await AsyncStorage.setItem('user_id', '0987654321');
-      await AsyncStorage.setItem('child_id', '3');
+      await AsyncStorage.setItem('child_id', '716');
     } catch (error) {
       console.log("Error while testing application settings");
     }
@@ -151,13 +151,37 @@ export default App;
 // import React, { useState, useEffect, useRef } from 'react';
 // import { Text, View, Button, Platform } from 'react-native';
 
+// // Notifications.setNotificationHandler({
+// //   handleNotification: async () => ({
+// //     shouldShowAlert: false,
+// //     shouldPlaySound: false,
+// //     shouldSetBadge: false,
+// //   }),
+// // });
+
 // Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: false,
-//     shouldPlaySound: false,
-//     shouldSetBadge: false,
-//   }),
-// });
+//   handleNotification: async (notification) => {
+//     let body = notification.request.content;
+
+//     if (body.title == null && body.body == null) {
+//       console.log("Do not show notification")
+//       // return {
+//       //   shouldShowAlert: false,
+//       //   shouldPlaySound: false,
+//       //   shouldSetBadge: false,
+//       //   priority: Notifications.AndroidNotificationPriority.MIN
+//       // }
+//     } else {
+//       console.log("Show notification")
+//       return {
+//         shouldShowAlert: true,
+//         shouldPlaySound: true,
+//         shouldSetBadge: false,
+//         priority: Notifications.AndroidNotificationPriority.MAX
+//       }
+//     }
+//   }
+// })
 
 // export default function App() {
 //   const [expoPushToken, setExpoPushToken] = useState('');
@@ -166,16 +190,15 @@ export default App;
 //   const responseListener = useRef();
 
 //   useEffect(() => {
-//     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+//     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
 //     // This listener is fired whenever a notification is received while the app is foregrounded
 //     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
 //       setNotification(notification);
 
+//       console.log("Foreground event");
 //       if (notification.request.content.title === null) {
-//         console.log("Update child's location on Tracking screen please!");
 //         // insert codes to update child's location here
-
 //         // access location data by notification.request.content.data
 //       } else {
 //         // insert codes to handle something else here
@@ -184,7 +207,7 @@ export default App;
 
 //     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
 //     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-//     //   console.log(response);
+//       console.log("Background event");
 //     });
 
 //     return () => {
@@ -206,37 +229,8 @@ export default App;
 //         <Text>Body: {notification && notification.request.content.body}</Text>
 //         <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
 //       </View>
-//       <Button
-//         title="Press to Send Notification"
-//         onPress={async () => {
-//           await sendPushNotification(expoPushToken);
-//         }}
-//       />
 //     </View>
 //   );
-// }
-
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: 'default',
-//     title: 'This is Title',
-//     body: 'And this is the body!',
-//     // android: {
-//     //   channelId: 'chat-messages'
-//     // },
-//     data: { name: 'Enri is struggling' },
-//   };
-
-//   await fetch('https://exp.host/--/api/v2/push/send', {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Accept-encoding': 'gzip, deflate',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(message),
-//   });
 // }
 
 // async function registerForPushNotificationsAsync() {
@@ -247,5 +241,20 @@ export default App;
 //   }
 //   let token = (await Notifications.getExpoPushTokenAsync()).data;
 //   console.log("Your device token: ", token);
+
+//   // if (Platform.OS === 'android') {
+//   //   Notifications.createChannelAndroidAsync('sound-noti', {
+//   //     name: 'Sound Notifcation',
+//   //     sound: true,
+//   //     vibrate: [0, 250, 500, 250]
+//   //   });
+    
+//   //   Notifications.createChannelAndroidAsync('silent-noti', {
+//   //     name: 'Silent Notifcation',
+//   //     vibrate: false,
+//   //     sound: false,
+//   //   });
+//   // }
+
 //   return token;
 // }
