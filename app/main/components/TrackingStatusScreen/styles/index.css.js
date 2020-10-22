@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   txtSettingBtnGuide: {
     alignSelf: "flex-start",
     textAlign: "right",
-    width: 200,
+    width: 180,
     color: "rgb(140, 140, 140)",
   },
 
