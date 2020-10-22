@@ -17,13 +17,13 @@ class Drawer{
 
   
   static realLocList = [
-    {"latitude": 10.8464846, "longitude": 106.8150464, "time": 123},
-    {"latitude": 10.8514846, "longitude": 106.8200464, "time": 123},
-    {"latitude": 10.8514846, "longitude": 106.8250464, "time": 123},
-    {"latitude": 10.8514846, "longitude": 106.8300464, "time": 123},
-    {"latitude": 10.8514846, "longitude": 106.8350464, "time": 123},
-    {"latitude": 10.8464846, "longitude": 106.8350464, "time": 123},
-    {"latitude": 10.8354846, "longitude": 106.8310464, "time": 123},
+    {"latitude": 10.8464846, "longitude": 106.8150464, "time": 123, "provider": "gps"},
+    {"latitude": 10.8514846, "longitude": 106.8200464, "time": 124, "provider": "gps"},
+    {"latitude": 10.8514846, "longitude": 106.8250464, "time": 125, "provider": "gps"},
+    {"latitude": 10.8514846, "longitude": 106.8300464, "time": 126, "provider": "gps"},
+    {"latitude": 10.8514846, "longitude": 106.8350464, "time": 127, "provider": "gps"},
+    {"latitude": 10.8464846, "longitude": 106.8350464, "time": 128, "provider": "gps"},
+    {"latitude": 10.8354846, "longitude": 106.8310464, "time": 129, "provider": "gps"},
   ]
   static locFPT = {
     "inPadding": 20,

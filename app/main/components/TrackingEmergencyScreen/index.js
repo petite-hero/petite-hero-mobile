@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions, Image, FlatList } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Dimensions, Image, FlatList, Text } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
@@ -18,8 +18,8 @@ const TrackingEmergencyScreen = ({navigation}) => {
   [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
 
   // reported location list
-  [realLocList, setRealLocList] = React.useState([]);
-  // [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
+  // [realLocList, setRealLocList] = React.useState([]);
+  [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
   [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
   [currentLoc, setCurrentLoc] = React.useState(null);
 
@@ -36,20 +36,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
   //   longitude: realLocList[realLocList.length-1].longitude});  // test
   // setMapLoc({latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude});
 
-  const updateLoc = async() => {
-    const ip = await AsyncStorage.getItem('IP');
-    const child_id = await AsyncStorage.getItem('child_id');
-    const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
-    const result = await response.json();
-    // setCurrentLoc(result.data);
-    let realLocListTmp = [...realLocList];
-    realLocListTmp.push(result.data);
-    setRealLocList(realLocListTmp);
-    setMapLoc(result.data);
-  }
-  React.useEffect(() => {
-    this.timer = setInterval(()=> updateLoc(), 5000);
-  }, []);
+  // const updateLoc = async() => {
+  //   const ip = await AsyncStorage.getItem('IP');
+  //   const child_id = await AsyncStorage.getItem('child_id');
+  //   const response = await fetch('http://' + ip + PORT + '/location/latest/' + child_id);
+  //   const result = await response.json();
+  //   // setCurrentLoc(result.data);
+  //   let realLocListTmp = [...realLocList];
+  //   realLocListTmp.push(result.data);
+  //   setRealLocList(realLocListTmp);
+  //   setMapLoc(result.data);
+  // }
+  // React.useEffect(() => {
+  //   this.timer = setInterval(()=> updateLoc(), 5000);
+  // }, []);
 
   // const getInitialLoc = async() => {
   //   const ip = await AsyncStorage.getItem('IP');
@@ -188,16 +188,12 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
           {/* <FlatList
             data={realLocList}
-            renderItem={({ item }) => (
-              <ListItem
-                roundAvatar
-                title={`${item.name.first} ${item.name.last}`}
-                subtitle={item.email}
-                avatar={{ uri: item.picture.thumbnail }}
-                containerStyle={{ borderBottomWidth: 0 }}
-              />
-            )}
-            keyExtractor={item => item.email}
+            renderItem={({ item, index }) => 
+              <Marker key={index} coordinate={{latitude: item.latitude, longitude: item.longitude}} anchor={{x: 0.5, y: 0.5}}/>
+                <View style={[styles.realLoc, {height: 12*(index+1)/realLocList.length, width: 12*(index+1)/realLocList.length}]}/>
+              </Marker>
+            }
+            keyExtractor={item => item.time+""}
           /> */}
           
         </MapView>
@@ -205,6 +201,17 @@ const TrackingEmergencyScreen = ({navigation}) => {
       </View>
 
       {/* ===================== END MAP SECTION ===================== */}
+
+      <View>
+        <Text>123</Text>
+        <FlatList
+            data={realLocList}
+            renderItem={({ item, index }) => 
+              <Text key={index}>{item.time}</Text>
+            }
+            keyExtractor={item => item.time+""}
+          />
+      </View>
 
       {/* child avatar */}
       <Image
