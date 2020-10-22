@@ -31,16 +31,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   txtHello : {
-    // fontSize: 55,
     fontSize: hp('7%'),
     fontWeight: "bold",
   },
   txtMessage : {
-    // fontSize: 15
     fontSize: hp('2%'),
   },
   txtButton : {
-    // fontSize: 15
     fontSize: hp('2%'),
     color: "#ffffff"
   },

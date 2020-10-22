@@ -71,7 +71,7 @@ const QuestItem = ({ item }) => (
   <TouchableOpacity style={styles.questItem}>
     <Text style={{
       fontSize: hp("3%"),
-      fontWeight: "bold"
+      fontFamily: "AcuminBold"
     }}>
       {item.name}
     </Text>

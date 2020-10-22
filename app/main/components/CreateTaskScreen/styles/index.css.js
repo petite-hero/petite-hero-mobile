@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   title : {
     fontSize: hp("5%"),
-    fontWeight: "bold",
+    fontFamily: "AcuminBold",
     color: COLORS.WHITE
   },
 });

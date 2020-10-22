@@ -31,7 +31,7 @@ const ChangeParentProfileScreen = (props) => {
         {/* title of the screen */}
         <Text style={{
           fontSize: 20,
-          fontWeight: "bold"
+          fontFamily: "AcuminBold"
         }}>
           {props.route.params.screenName}
         </Text>
@@ -40,6 +40,7 @@ const ChangeParentProfileScreen = (props) => {
         <TouchableOpacity>
           <Text style={{
             fontSize: 20,
+            fontFamily: "Acumin",
             color: COLORS.STRONG_ORANGE
           }}>Done</Text>
         </TouchableOpacity>
@@ -61,6 +62,7 @@ const ChangeParentProfileScreen = (props) => {
           onChangeText={(text) => {setName(text)}}
           style={{
             fontSize: 17,
+            fontFamily: "Acumin",
             width: "90%",
           }}
         />

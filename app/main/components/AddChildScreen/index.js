@@ -212,7 +212,8 @@ const AddChildScreen = (props) => {
             onPress={() => {createQrCode()}}
           >
             <Text style={{
-              fontSize: 20
+              fontSize: 20,
+              fontFamily: "Acumin"
             }}>
               Create
             </Text>
@@ -229,6 +230,7 @@ const AddChildScreen = (props) => {
           <Image style={{width: 250, height: 250}} source={{uri: qr}} />
           <Text style={{
             fontSize: 25,
+            fontFamily: "Acumin",
             textAlign: "center",
             marginTop: 20
           }}>

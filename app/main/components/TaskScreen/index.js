@@ -115,7 +115,7 @@ const TaskItem = ({ item }) => (
         width: "75%",
         flexShrink: 1
       }}>
-        <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>
+        <Text style={{fontSize: hp("2.5%"), fontFamily: "AcuminBold"}}>
           {item.name}
         </Text>
       </View>
@@ -135,7 +135,7 @@ const TaskItem = ({ item }) => (
         </Text>
       </View>
     </View>
-    <View style={{marginLeft: wp("5%"), fontSize: hp("2.5%"), marginTop: 10}}>
+    <View style={{marginLeft: wp("5%"), fontSize: hp("2.5%"), fontFamily: "Acumin",marginTop: 10}}>
       <Text>{item.time}</Text>
     </View>
   </TouchableOpacity>
@@ -211,7 +211,7 @@ const TaskScreen = (props) => {
           <TouchableOpacity 
             style={styles.monthPicker}
           >
-            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>
+            <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE}}>
               Oct 2020
             </Text>
           </TouchableOpacity>
@@ -222,7 +222,7 @@ const TaskScreen = (props) => {
                 refDateFlatlist.current.scrollToIndex({index: (currentDateIndex - 2)})
                 setCurrentIndex(currentDateIndex);
               }}>
-              <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
+              <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE, marginRight: wp("10%")}}>
                 Today
               </Text>
             </TouchableOpacity>
