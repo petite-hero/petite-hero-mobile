@@ -299,7 +299,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
             mode={"date"}
             onChange={(event, date) => {
               setIsPickingDate(false);
-              if (date === null) return;
+              if (date == null) return;
               navigation.navigate("TrackingSettings", {date: date});
               animSetZoneBtn.setValue(0);
               setFlied(false);

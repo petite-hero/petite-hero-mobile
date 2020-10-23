@@ -119,7 +119,6 @@ const TrackingSettingsScreen = ({ route }) => {
       toTime: lOutTimeDate,
       type: lType
     });
-    console.log(body);
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
     const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
@@ -238,7 +237,6 @@ const TrackingSettingsScreen = ({ route }) => {
               {/* location list */}
               <View style={{flex: 8}}>
                 {status === "VIEWING" ? locList.map((loc, index) => {
-                  console.log(loc);
                   return (
                     <TouchableOpacity key={index} style={styles.locationContainer}
                       onPress={() => {
@@ -331,7 +329,7 @@ const TrackingSettingsScreen = ({ route }) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>From</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowInTimePicker(true)}>
-              {lInTime.slice(0, -3)}
+              {lInTime == "None" ? lInTime : lInTime.slice(0, -3)}
             </Text>
             {lShowInTimePicker ?
               <DateTimePicker
@@ -350,7 +348,7 @@ const TrackingSettingsScreen = ({ route }) => {
           <View style={{flexDirection: "row", marginTop: 15}}>
             <Text style={{flex: 3}}>To</Text>
             <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowOutTimePicker(true)}>
-              {lOutTime.slice(0, -3)}
+              {lOutTime == "None" ? lOutTime : lOutTime.slice(0, -3)}
             </Text>
             {lShowOutTimePicker ?
               <DateTimePicker

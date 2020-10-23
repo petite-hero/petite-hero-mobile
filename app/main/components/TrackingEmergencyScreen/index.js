@@ -114,29 +114,14 @@ const TrackingEmergencyScreen = ({navigation}) => {
             setLongitudeDelta(region.longitudeDelta);
           }}>
 
-          {locList.map((loc, index) => {
+          {/* {locList.map((loc, index) => {
             return (
               <Marker key={index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
                 <View style={styles.safeLoc}/>
               </Marker>
             )
-          })}
-
-          {/* {realLocList.map((loc, index) => {
-            return (
-              [
-                <Marker key={-index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
-                  <View style={[styles.realLoc, {height: 12*(index+1)/realLocList.length, width: 12*(index+1)/realLocList.length}]}/>
-                </Marker>,
-                index != 0 ?
-                  <Polyline key={index+realLocList.length}
-                            coordinates={[loc, realLocList[index-1]]}
-                            strokeWidth={6*(index+1)/realLocList.length}
-                            strokeColor="rgba(244, 126, 62, 0.5)"/>
-                : null
-              ]
-            )
           })} */}
+
           {realLocList.length >= 1 ?
             <Marker coordinate={{latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude}} anchor={{x: 0.5, y: 0.5}}>
               <View style={[styles.realLoc, {height: 14, width: 14}]}/>
