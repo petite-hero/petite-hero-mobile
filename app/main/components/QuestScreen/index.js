@@ -16,13 +16,21 @@ const QuestBoard = () => {
     ]
   );
 
+  const groupQuestsByStatus = (list) => {
+    let tmp = list.reduce((r, a) => {
+      r[a.progress == a.criteria] = [...r[a.progress == a.criteria] || [], a];
+      return r;
+    }, {})
+    return Object.values(tmp);
+  }
+
   useEffect(() => {
     (async() => {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch('http://' + ip + PORT + '/quest/list/3?status=FINISHED');
+      const response = await fetch('http://' + ip + PORT + '/quest/list/3');
       const result = await response.json();
       if (result.code === 200) {
-        setList(result.data);
+        setList(groupQuestsByStatus(result.data));
       }
     })()
   }, []);
@@ -53,7 +61,7 @@ const QuestBoard = () => {
       </View>
       <View style={styles.questBoard}>
         <FlatList
-          data={tabs[0].active ? list : null}
+          data={tabs[0].active ? list[0] : list[1]}
           renderItem={QuestItem}
           keyExtractor={item => item.questId}
           showsVerticalScrollIndicator={false}
