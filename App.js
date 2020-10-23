@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import { View, Text } from 'react-native';
 import { YellowBox } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import { IP } from './app/const/const';
@@ -12,12 +11,9 @@ import i18n from 'i18n-js';
 import { translationMessages } from './app/i18n';
 
 import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
-import LoginScreen from "./app/main/components/LoginScreen/index";
-import RegisterScreen from "./app/main/components/RegisterScreen/index";
 import MainScreen from './app/main/components/MainScreen';
-import ProfileScreen from './app/main/components/ProfileScreen';
-import TrackingSettingsScreen from './app/main/components/TrackingSettingsScreen';
-import TrackingEmergencyScreen from './app/main/components/TrackingEmergencyScreen';
+import { useFonts } from 'expo-font';
+import { AppLoading } from 'expo';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
@@ -33,6 +29,14 @@ i18n.translations = translationMessages;
 
 const App = () => {
 
+  const [fontLoaded] = useFonts({
+    Montserrat:       require("./assets/fonts/Montserrat-Regular.ttf"),
+    MontserratBold:   require("./assets/fonts/Montserrat-Bold.ttf"),
+    MontserratItalic: require("./assets/fonts/Montserrat-Italic.ttf"),
+    Acumin:           require("./assets/fonts/Acumin-RPro.otf"),
+    AcuminBold:       require("./assets/fonts/Acumin-BdPro.otf"),
+    AcuminItalic:     require("./assets/fonts/Acumin-ItPro.otf"),
+  });
   const [locale, setLocale] = useState(Localization.locale);
   const [state, dispatch] = useReducer(
     (prevState, action) => {
@@ -96,6 +100,10 @@ const App = () => {
     }
   }
   useEffect(() => {testSetApplicationSettings()}, []);
+
+  if (!fontLoaded) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider value={authContext}>

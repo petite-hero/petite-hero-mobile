@@ -5,6 +5,7 @@ import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
+import { Icon } from 'react-native-elements';
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
@@ -114,7 +115,7 @@ const TaskItem = ({ item }) => (
         width: "75%",
         flexShrink: 1
       }}>
-        <Text style={{fontSize: hp("2.5%"), fontWeight: "bold"}}>
+        <Text style={{fontSize: hp("2.5%"), fontFamily: "AcuminBold"}}>
           {item.name}
         </Text>
       </View>
@@ -134,7 +135,7 @@ const TaskItem = ({ item }) => (
         </Text>
       </View>
     </View>
-    <View style={{marginLeft: wp("5%"), fontSize: hp("2.5%"), marginTop: 10}}>
+    <View style={{marginLeft: wp("5%"), fontSize: hp("2.5%"), fontFamily: "Acumin",marginTop: 10}}>
       <Text>{item.time}</Text>
     </View>
   </TouchableOpacity>
@@ -210,7 +211,7 @@ const TaskScreen = (props) => {
           <TouchableOpacity 
             style={styles.monthPicker}
           >
-            <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE}}>
+            <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE}}>
               Oct 2020
             </Text>
           </TouchableOpacity>
@@ -221,7 +222,7 @@ const TaskScreen = (props) => {
                 refDateFlatlist.current.scrollToIndex({index: (currentDateIndex - 2)})
                 setCurrentIndex(currentDateIndex);
               }}>
-              <Text style={{fontSize: wp("6%"), fontWeight: "bold", color: COLORS.WHITE, marginRight: wp("10%")}}>
+              <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE, marginRight: wp("10%")}}>
                 Today
               </Text>
             </TouchableOpacity>
@@ -250,9 +251,11 @@ const TaskScreen = (props) => {
             style={styles.btnAddTask}
             onPress={() => {props.navigation.navigate("CreateTask")}}
           >
-            <Text style={styles.txtAddTask}>
-              +
-            </Text>
+            <Icon
+              name="add"
+              type="material"
+              color={COLORS.STRONG_ORANGE}
+            />
           </TouchableOpacity>
         </View>
       </View>

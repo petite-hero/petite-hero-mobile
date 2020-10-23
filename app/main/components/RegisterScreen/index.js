@@ -67,11 +67,11 @@ const RegisterScreen = (props) => {
           marginBottom: "10%",
           marginLeft: "10%",
           fontSize: 40,
+          fontFamily: "MontserratBold",
           alignSelf: "baseline",
-          fontWeight: "bold",
           color: COLORS.STRONG_ORANGE
         }}>
-          Sign up
+          Sign Up
         </Text>
         <View style={{
           width: "80%",

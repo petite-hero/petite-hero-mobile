@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   title : {
     fontSize: hp("5%"),
-    fontWeight: "bold",
+    fontFamily: "AcuminBold",
     color: COLORS.WHITE
   },
   btnAddQuest : {
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   txtAddQuest : {
     fontSize: hp("7%"),
+    fontFamily: "Acumin",
     color: COLORS.STRONG_ORANGE,
     marginBottom: hp("0.8%")
   },
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
   },
   tabText : {
     fontSize: hp("2%"),
+    fontFamily: "Acumin"
   },
   tabTextActive : {
     color: COLORS.STRONG_ORANGE,

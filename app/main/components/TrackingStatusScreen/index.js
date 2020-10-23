@@ -76,6 +76,7 @@ const TrackingStatusScreen = ({route}) => {
         inactiveTintColor: COLORS.GREY,
       }}
       tabBarPosition="bottom"
+      backBehavior="initialRoute"
     >
       <Tab.Screen 
         name="Tracking" 
