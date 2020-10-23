@@ -15,6 +15,7 @@ const getDaysInMonth = (month, year) => {
     dates.push({
       dayOfWeek: tmp[0],
       month: tmp[1],
+      monthNum: date.getMonth(),
       day: tmp[2],
       year: tmp[3]
     });
@@ -32,35 +33,13 @@ const getCurrentDateIndex = (dates) => {
   return index > (dates.length - 3) ? dates.length - 5 : index - 2;
 }
 
-const TaskBoard = (date) => {
+const TaskBoard = ({ list, date }) => {
   const [tabs, setTabs] = useState(
     [
       {title: "In Progress", active : true},
       {title: "Finished", active : false}
     ]
   );
-  const [list, setList] = useState([]);
-
-  const groupTasksByStatus = (list) => {
-    let tmp = list.reduce((r, a) => {
-      r[a.status] = [...r[a.status] || [], a];
-      return r;
-    }, {})
-    return Object.values(tmp);
-  }
-  
-  useEffect(() => {
-    (async() => {
-      const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch('http://' + ip + PORT + '/task/list/3?date=1603375784000');
-      const result = await response.json();
-      if (result.code === 200) {
-        setList(groupTasksByStatus(result.data));
-      } else {
-        
-      }
-    })()
-  }, []);
 
   const toggleTab = (tabIndex) => {
     let tmp = [...tabs];
@@ -142,15 +121,16 @@ const TaskItem = ({ item }) => (
 );
 
 // represent an item in date list
-const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex) => {
+const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate) => {
   return (
-    // <Date title={item.title} index={index}/>
     <View style={styles.dateContainer}>
       {index !== currentIndex ?
         (<TouchableOpacity style={styles.dateInactiveContainer}
           onPress={() => {
             refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
             setCurrentIndex(index);
+            const tmp = item.year + "-" + (item.monthNum + 1) + "-" + item.day;
+            setDate((new Date(tmp).getTime()));
           }}>
           <Text style={styles.dateText}>{item.day}</Text>
         </TouchableOpacity>)
@@ -166,10 +146,10 @@ const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex) =
 
 const TaskScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
-  const [isShowed, setShowed] = useState(false);
-  const [date, setDate] = useState(new Date().toDateString());
+  const [date, setDate] = useState(new Date(new Date().toDateString()).getTime());
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
+  const [list, setList] = useState([]);
   const refDateFlatlist = useRef(null);
   const dates = getDaysInMonth(month, year);
   //
@@ -184,8 +164,7 @@ const TaskScreen = (props) => {
   const handleScroll = (contentOffset) => {
     if(refDateFlatlist.current) {
       const width = wp("16.8%"); // item width + margin
-      let nextIndex;
-      nextIndex = Math.round(contentOffset / width);
+      const nextIndex = Math.round(contentOffset / width);
       if (isValidIndex(nextIndex, dates.length)) {
         refDateFlatlist.current.scrollToIndex({ animated: true, index: nextIndex });
         setCurrentIndex(nextIndex + 2);
@@ -194,6 +173,28 @@ const TaskScreen = (props) => {
       }
     }
   };
+
+  // group tasks by status
+  const groupTasksByStatus = (list) => {
+    let tmp = list.reduce((r, a) => {
+      r[a.status] = [...r[a.status] || [], a];
+      return r;
+    }, {})
+    return Object.values(tmp);
+  }
+  
+  useEffect(() => {
+    (async() => {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch('http://' + ip + PORT + '/task/list/3?date=' + date);
+      const result = await response.json();
+      if (result.code === 200) {
+        setList(groupTasksByStatus(result.data));
+      } else {
+        // do something later
+      }
+    })()
+  }, [date]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -231,7 +232,7 @@ const TaskScreen = (props) => {
         <View style={styles.dateList}>
           <FlatList
             data={dates}
-            renderItem={({item, index}) => DateItem(item, index, currentIndex, refDateFlatlist, setCurrentIndex)}
+            renderItem={({item, index}) => DateItem(item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate)}
             keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -259,7 +260,7 @@ const TaskScreen = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <TaskBoard/>
+      <TaskBoard date={date} list={list}/>
     </SafeAreaView>
   );
 };
