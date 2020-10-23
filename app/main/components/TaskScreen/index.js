@@ -51,7 +51,7 @@ const TaskBoard = (date) => {
   useEffect(() => {
     (async() => {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch('http://' + ip + PORT + '/task/list/2');
+      const response = await fetch('http://' + ip + PORT + '/task/list/3?date=1603375784000');
       const result = await response.json();
       if (result.code === 200) {
         setList(groupTasksByStatus(result.data));

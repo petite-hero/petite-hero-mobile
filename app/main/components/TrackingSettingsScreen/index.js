@@ -6,7 +6,6 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { Icon } from 'react-native-elements';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-community/picker';
 import Drawer from './drawer';
 import { AsyncStorage } from 'react-native';
 import styles from './styles/index.css';
@@ -109,7 +108,7 @@ const TrackingSettingsScreen = ({ route }) => {
     const userId = await AsyncStorage.getItem('user_id');
     const body = JSON.stringify({
       childId: childId,
-      creatorId: userId,
+      creator: userId,
       date: currentDate.getTime(),
       fromTime: lInTimeDate,
       latitude: settingLoc.latitude,
@@ -239,6 +238,7 @@ const TrackingSettingsScreen = ({ route }) => {
               {/* location list */}
               <View style={{flex: 8}}>
                 {status === "VIEWING" ? locList.map((loc, index) => {
+                  console.log(loc);
                   return (
                     <TouchableOpacity key={index} style={styles.locationContainer}
                       onPress={() => {

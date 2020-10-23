@@ -18,7 +18,7 @@ const QuestBoard = () => {
   useEffect(() => {
     (async() => {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch('http://' + ip + PORT + '/quest/list/1');
+      const response = await fetch('http://' + ip + PORT + '/quest/list/3?status=FINISHED');
       const result = await response.json();
       if (result.code === 200) {
         setList(result.data);

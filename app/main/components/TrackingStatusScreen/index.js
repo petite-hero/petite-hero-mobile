@@ -246,7 +246,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
               }
             }}
           >
-            <Icon name="near-me" type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
+            <Icon name={trackingStatus === "INACTIVE" ? "explore" : "explore"} type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
           </TouchableOpacity>
         </Animated.View>
         {/* choose date for setting button */}

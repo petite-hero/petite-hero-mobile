@@ -91,11 +91,7 @@ const AddChildScreen = (props) => {
     });
     const result = await response.json();
     if (result.code === 200 && result.msg === "OK") {
-      const data = JSON.stringify({
-        childId: result.data.childId.toString(),
-        timestamp: new Date().getTime().toString(),
-        phone: id
-      });
+      const data = result.data.childId.toString();
       await AsyncStorage.setItem("child_id", result.data.childId + "");
       console.log("test");
       setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");

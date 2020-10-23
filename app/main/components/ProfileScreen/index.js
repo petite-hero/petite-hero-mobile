@@ -137,7 +137,7 @@ const ProfileScreenContent = (props) => {
           marginTop: hp("10%")
         }}>
           <View>
-            <Text style={styles.name}>Red Sus</Text>
+            <Text style={styles.name}>Hưng Nguyễn</Text>
             <View style={{
               width: wp("35%"), 
               height: hp("3.5%"), 
@@ -167,8 +167,8 @@ const ProfileScreenContent = (props) => {
         <SettingItem key="1" title="Personal Profile" icon="face" subItems={[
           {
             title: "Your name",
-            text: "Lâm Lệ Dương",
-            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Your name", value: "Lâm Lệ Dương"})
+            text: "Nguyễn Phú Hưng",
+            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Your name", value: "Nguyễn Phú Hưng"})
           },
           {
             title: "D.O.B",
@@ -177,19 +177,19 @@ const ProfileScreenContent = (props) => {
           },
           {
             title: "Phone",
-            text: "0938194701",
-            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Phone", value: "0938194701"})
+            text: "0987654321",
+            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Phone", value: "0987654321"})
           },
           {
             title: "Email",
-            text: "duongngonvl@gmail.com",
-            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Email", value: "duongngonvl@gmail.com"})
+            text: "hungng@gmail.com",
+            action: () => props.navigation.navigate("ChangeParentProfile", {screenName: "Email", value: "hungng@gmail.com"})
           }
         ]}/>
         <SettingItem key="2" title="Collaborators" icon="group-add" subItems={[
           {
             title: "Collaborator 1",
-            text: "Bùi Lê Minh Nguyệt",
+            text: "Lâm Lệ Dương",
             action: null
           },
           {
@@ -200,7 +200,7 @@ const ProfileScreenContent = (props) => {
         <SettingItem key="3" title="Children" icon="child-care" subItems={[
           {
             title: "Child 1",
-            text: "Lâm Lệ Dương Jr.",
+            text: "Nguyễn Phú Hưng Jr.",
             action: null
           },
           {
