@@ -5,6 +5,9 @@ import { COLORS, IP, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+import { Loader } from "../../../utils/loader";
+import { FetchWithTimeout } from "../../../utils/fetch";
+import { handleError } from "../../../utils/handleError";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -57,6 +60,9 @@ const ImagePickerComponent = (props) => {
       >
         <Text>Choose file</Text>
       </TouchableOpacity>
+      <Text style={{marginLeft: 15}}>
+        {props.data.name ? "..." + props.data.name.slice(props.data.name.length-11, props.data.name.length) : "No file selected"}
+      </Text>
     </View>
   )
 };
@@ -70,38 +76,45 @@ const AddChildScreen = (props) => {
   const [photo, setPhoto]         = useState({});
   const [yob, setYob]             = useState("");
   const [qr, setQr]               = useState("");
+  const [loading, setLoading]     = useState(false);
 
   const createQrCode = async() => {
-    const ip = await AsyncStorage.getItem('IP');
-    const id = await AsyncStorage.getItem('user_id');
-    const data = new FormData();
-    data.append("firstName", firstName);
-    data.append("lastName", lastName);
-    data.append("nickName", nickName);
-    data.append("language", language);
-    data.append("gender", gender);
-    data.append("childAvatar", photo);
-    data.append("yob", yob);
-    const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'multipart/form-data;'
-      },
-      body: data
-    });
-    const result = await response.json();
-    if (result.code === 200 && result.msg === "OK") {
-      const data = result.data.childId.toString();
-      await AsyncStorage.setItem("child_id", result.data.childId + "");
-      console.log("test");
-      setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
-    } else {
-      // do something else later
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const data = new FormData();
+      data.append("firstName", firstName);
+      data.append("lastName", lastName);
+      data.append("nickName", nickName);
+      data.append("language", language);
+      data.append("gender", gender);
+      data.append("childAvatar", photo);
+      data.append("yob", yob);
+      const response = await FetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/children", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'multipart/form-data;'
+        },
+        body: data
+      });
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+        const data = result.data.childId.toString();
+        await AsyncStorage.setItem("child_id", result.data.childId + "");
+        setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
+      } else {
+        handleError(resule.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <Loader loading={loading}/>
       {!qr ? <>
         <View style={{
           width: "100%",
@@ -205,7 +218,7 @@ const AddChildScreen = (props) => {
               justifyContent: "center",
               alignItems: "center"
             }}
-            onPress={() => {createQrCode()}}
+            onPress={() => {setLoading(true); createQrCode()}}
           >
             <Text style={{
               fontSize: 20,
@@ -216,14 +229,15 @@ const AddChildScreen = (props) => {
           </TouchableOpacity>
         </View>
       </> : 
-      <>
+      <View onLayout={() => setLoading(true)}>
+        <Loader loading={loading}/>
         <View style={{
           width: "100%",
           height: "100%",
           alignItems: "center",
           justifyContent: "center",
         }}>
-          <Image style={{width: 250, height: 250}} source={{uri: qr}} />
+          <Image style={{width: 250, height: 250}} source={{uri: qr}} onLoad={() => {setLoading(false)}} />
           <Text style={{
             fontSize: 25,
             fontFamily: "Acumin",
@@ -233,7 +247,7 @@ const AddChildScreen = (props) => {
             Please scan this QR using smartwatch
           </Text>
         </View>
-      </>}
+      </View>}
     </SafeAreaView>
   )
 }

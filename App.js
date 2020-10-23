@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import i18n from 'i18n-js';
-import { translationMessages } from './app/i18n';
+import { translationMessages } from './app/utils/i18n';
 
 import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
 import MainScreen from './app/main/components/MainScreen';

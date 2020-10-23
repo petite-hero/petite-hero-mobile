@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
-import { AsyncStorage } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput, ToastAndroid, AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
+import { FetchWithTimeout } from '../../../utils/fetch';
+import { handleError } from '../../../utils/handleError';
+import { Loader } from '../../../utils/loader';
 
 const LoginScreen = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
+  const [loading, setLoading]   = useState(false);
   const { signIn } = React.useContext(props.route.params.authContext);
   const localizationContext = React.useContext(props.route.params.localizationContext);
 
@@ -27,7 +30,7 @@ const LoginScreen = (props) => {
   const login = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch("http://" + ip + PORT + "/account/login", {
+      const response = await FetchWithTimeout("http://" + ip + PORT + "/account/login", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -45,17 +48,19 @@ const LoginScreen = (props) => {
         await AsyncStorage.setItem("user_id", username);
         signIn({jwt: result.data.jwt});
       } else {
-        // do something else later
+        handleError(result.msg);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
   const sendToken = async(id, token) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch("http://" + ip + PORT + "/parent/token", {
+      const response = await FetchWithTimeout("http://" + ip + PORT + "/parent/token", {
         method: "PUT",
         headers: {
           'Accept': 'application/json',
@@ -66,19 +71,14 @@ const LoginScreen = (props) => {
           pushToken: token
         })
       });
-      const result = response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        
-      } else {
-
-      }
     } catch (error) {
-      console.log(error);
+      handleError(error.message);
     }
   }
   
   return (
     <SafeAreaView style={styles.container}>
+      <Loader loading={loading}/>
       <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_ORANGE}}>
         
       </View>
@@ -103,7 +103,7 @@ const LoginScreen = (props) => {
           backgroundColor: COLORS.STRONG_ORANGE,
           elevation: 10
         }}
-          onPress={() => {login(username, password)}}
+          onPress={() => {setLoading(true); login(username, password)}}
         >
           <Text style={{fontSize: 40, color: COLORS.WHITE}}> &gt; </Text>
         </TouchableOpacity>
@@ -175,7 +175,6 @@ const LoginScreen = (props) => {
                   justifyContent: "center"
                 }}
               />
-              {/* <Image source={{uri: ""}}/> */}
             </TouchableOpacity>
           </View>
         </View>
