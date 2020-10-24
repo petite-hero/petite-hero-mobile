@@ -1,5 +1,5 @@
-import viTranslationMessages from './translations/vi.json';
-import enTranslationMessages from './translations/en.json';
+import viTranslationMessages from '../translations/vi.json';
+import enTranslationMessages from '../translations/en.json';
 
 const DEFAULT_LOCALE = 'en';
 
