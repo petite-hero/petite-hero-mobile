@@ -3,7 +3,7 @@ import { SafeAreaView, Text, TouchableOpacity, View, Image, Animated, Easing, Ap
 import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/index.css';
-import { COLORS, PORT } from '../../../const/const';
+import { COLORS, PORT, NOTI } from '../../../const/const';
 import { AsyncStorage } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
@@ -18,9 +18,9 @@ import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     let noti = notification.request.content;
-    if (noti.title == null) {
+    if (noti.title == NOTI.SILENT_NOTI) {
       // console.log("Do not show notification");
-    } else {
+    } else if (noti.title == NOTI.PETITE_HERO) {
       // console.log("Show notification")
       return {
         shouldShowAlert: true,
@@ -142,7 +142,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      if (notification.request.content.title === null && notification.request.content.body === null) { 
+      // if (notification.request.content.title == NOTI.SILENT_NOTI) {
         if (notification.request.content.data.status && trackingStatus !== "SAFE" && trackingStatus !== "INACTIVE"){
           animTrackingStatus.setValue(0);
           Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
@@ -153,8 +153,14 @@ const TrackingStatusScreenContent = ({ navigation }) => {
           Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
           setTrackingStatus("NOT SAFE");
         }
-      }
+      // }
     });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
+      console.log("Background noti listener");
+    });
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);

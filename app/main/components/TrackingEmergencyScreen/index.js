@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
 import styles from './styles/index.css';
 import { AsyncStorage } from 'react-native';
-import { COLORS, PORT } from '../../../const/const';
+import { COLORS, PORT, NOTI } from '../../../const/const';
 
 import * as Notifications from 'expo-notifications';
 
@@ -13,9 +13,9 @@ import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     let noti = notification.request.content;
-    if (noti.title == null) {
+    if (noti.title == NOTI.SILENT_NOTI) {
       // console.log("Do not show notification");
-    } else {
+    } else if (noti.title == NOTI.PETITE_HERO) {
       // console.log("Show notification")
       return {
         shouldShowAlert: true,
@@ -54,13 +54,18 @@ const TrackingEmergencyScreen = ({navigation}) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      if (notification.request.content.title === null && notification.request.content.body === null) { 
+      // if (notification.request.content.title == NOTI.SILENT_NOTI) { 
         const newLoc = notification.request.content.data;
         let realLocListTmp = [...realLocList];
         realLocListTmp.push(newLoc);
         setRealLocList(realLocListTmp);
         setMapLoc(newLoc);
-      }
+      // }
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
+      console.log("Background noti listener");
     });
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
