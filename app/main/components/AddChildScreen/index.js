@@ -72,6 +72,7 @@ const AddChildScreen = (props) => {
   const [qr, setQr]               = useState("");
 
   const createQrCode = async() => {
+    console.log("start create qr");
     const ip = await AsyncStorage.getItem('IP');
     const id = await AsyncStorage.getItem('user_id');
     const data = new FormData();
@@ -80,8 +81,9 @@ const AddChildScreen = (props) => {
     data.append("nickName", nickName);
     data.append("language", language);
     data.append("gender", gender);
-    data.append("childAvatar", photo);
+    // data.append("childAvatar", photo);
     data.append("yob", yob);
+    console.log("start get id")
     const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children", {
       method: "POST",
       headers: {
@@ -93,7 +95,6 @@ const AddChildScreen = (props) => {
     if (result.code === 200 && result.msg === "OK") {
       const data = result.data.childId.toString();
       await AsyncStorage.setItem("child_id", result.data.childId + "");
-      console.log("test");
       setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
     } else {
       // do something else later
