@@ -92,8 +92,8 @@ const App = () => {
   const testSetApplicationSettings = async () => {
     try {
       await AsyncStorage.setItem('IP', IP);
-      await AsyncStorage.setItem('user_id', '0987654321');
-      await AsyncStorage.setItem('child_id', '3');
+      await AsyncStorage.setItem('user_id', '0971143025');
+      await AsyncStorage.setItem('child_id', '716');
       await AsyncStorage.setItem('is_tracking', 'false');
       console.log(await AsyncStorage.setItem('IP', IP));
       console.log("test");
