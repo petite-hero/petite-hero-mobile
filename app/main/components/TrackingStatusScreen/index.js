@@ -18,7 +18,7 @@ import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     let noti = notification.request.content;
-    if (noti.title == null) {
+    if (noti.title == "silent-noti") {
       // console.log("Do not show notification");
     } else {
       // console.log("Show notification")
@@ -142,7 +142,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      if (notification.request.content.title === null && notification.request.content.body === null) { 
+      if (notification.request.content.title === "silent-noti" && notification.request.content.body === null) { 
         if (notification.request.content.data.status && trackingStatus !== "SAFE" && trackingStatus !== "INACTIVE"){
           animTrackingStatus.setValue(0);
           Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();

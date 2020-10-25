@@ -9,6 +9,26 @@ import { Loader } from "../../../utils/loader";
 import { FetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 
+import * as Notifications from 'expo-notifications';
+
+// silent notification for updating location
+Notifications.setNotificationHandler({
+  handleNotification: async (notification) => {
+    let noti = notification.request.content;
+    if (noti.title == null) {
+      // console.log("Do not show notification");
+    } else {
+      // console.log("Show notification")
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        priority: Notifications.AndroidNotificationPriority.MAX
+      }
+    }
+  }
+});
+
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -98,12 +118,13 @@ const AddChildScreen = (props) => {
         body: data
       });
       const result = await response.json();
+      // console.log(result);
       if (result.code === 200 && result.msg === "OK") {
         const data = result.data.childId.toString();
         await AsyncStorage.setItem("child_id", result.data.childId + "");
         setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
       } else {
-        handleError(resule.msg);
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error.message);
@@ -111,6 +132,29 @@ const AddChildScreen = (props) => {
       setLoading(false);
     }
   }
+
+  // listen to smartwatch QR scanning updates
+  const notificationListener = React.useRef();
+  const responseListener = React.useRef();
+  const listenQRScanned = () => {
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      // Silent noti for updating child loc
+      if (notification.request.content.title === "Petite Hero" && notification.request.content.body === "Done setting up child device") { 
+        props.navigation.goBack();
+      }
+    });
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  };
+
+  React.useEffect(() => {
+    // listen to location update from server
+    listenQRScanned();
+  }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>
