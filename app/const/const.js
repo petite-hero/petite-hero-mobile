@@ -4,11 +4,14 @@ export const COLORS = {
   BLACK : "#000000",
   STRONG_ORANGE : "#f47e3e",
   LIGHT_ORANGE : "#ffe3c1",
+  STRONG_CYAN : "#5ec7f9",
+  LIGHT_CYAN : "#ecf8fe",
   NUDE: "#feefdd",
   RED: "#f32b2b",
+  YELLOW: "#fbc424"
 }
 
-export const IP = "192.168.100.47";
+export const IP = "192.168.197.25";
 export const PORT = ":8080";
 
 export const NOTI = {

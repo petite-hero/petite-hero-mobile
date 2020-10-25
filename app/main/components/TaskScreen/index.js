@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { SafeAreaView, View, Text, Image } from 'react-native';
-import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import styles from './styles/index.css';
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
@@ -24,13 +25,12 @@ const getDaysInMonth = (month, year) => {
   return dates;
 }
 
-const getCurrentDateIndex = (dates) => {
-  const date = new Date().toDateString()
+const getDateIndex = (dates, date = new Date().toDateString()) => {
   const month = date.split(" ")[1];
   const day = date.split(" ")[2];
   const year = date.split(" ")[3];
   const index = dates.findIndex(date => date.year === year && date.month === month && date.day === day);
-  return index > (dates.length - 3) ? dates.length - 5 : index - 2;
+  return index > (dates.length - 1) ? dates.length - 5 : index - 2;
 }
 
 const TaskBoard = ({ list, date }) => {
@@ -94,7 +94,7 @@ const TaskItem = ({ item }) => (
         width: "75%",
         flexShrink: 1
       }}>
-        <Text style={{fontSize: hp("2.5%"), fontFamily: "AcuminBold"}}>
+        <Text style={{fontSize: hp("2.5%"), fontFamily: "AcuminBold", color: COLORS.WHITE}}>
           {item.name}
         </Text>
       </View>
@@ -102,7 +102,7 @@ const TaskItem = ({ item }) => (
         width: wp("20%"),
         height: hp("2.5%"),
         borderRadius: hp("0.5%"),
-        backgroundColor: item.status === "Undone" ? COLORS.RED : COLORS.STRONG_ORANGE,
+        backgroundColor: item.status === "Undone" ? COLORS.RED : COLORS.LIGHT_CYAN,
         justifyContent: "center",
         alignItems: "center"
       }}>
@@ -123,37 +123,39 @@ const TaskItem = ({ item }) => (
 // represent an item in date list
 const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate) => {
   return (
-    <View style={styles.dateContainer}>
+    <>
       {index !== currentIndex ?
-        (<TouchableOpacity style={styles.dateInactiveContainer}
+      (
+        <TouchableOpacity style={styles.dateContainer}
           onPress={() => {
             refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
             setCurrentIndex(index);
-            const tmp = item.year + "-" + (item.monthNum + 1) + "-" + item.day;
-            setDate((new Date(tmp).getTime()));
+            const tmp = item.year + "-" + (item.monthNum + 1 >= 10 ? item.monthNum + 1 : "0" + (item.monthNum + 1)) + "-" + item.day;
+            // console.log(item.year + "-" + (item.monthNum + 1 >= 10 ? item.monthNum + 1 : "0" + (item.monthNum + 1)) + "-" + item.day);
+            setDate(new Date((new Date(tmp).toDateString())).getTime());
           }}>
-          <Text style={styles.dateText}>{item.day}</Text>
-        </TouchableOpacity>)
-      : (<TouchableOpacity style={styles.dateActiveContainer}>
-          <View style={styles.dateActive}>
-            <Text style={[styles.dateText, styles.dateTextActive]}>{item.day}</Text>
-          </View>
           <Text style={styles.dateText}>{item.dayOfWeek}</Text>
-        </TouchableOpacity>)}
-    </View>
+          <Text style={styles.dateNum}>{item.day}</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={[styles.dateContainer, styles.dateActiveContainer]}>
+          <Text style={[styles.dateText, styles.dateTextActive]}>{item.dayOfWeek}</Text>
+          <Text style={[styles.dateNum, styles.dateTextActive]}>{item.day}</Text>
+        </TouchableOpacity>
+      )}
+    </>
   )
 };
 
 const TaskScreen = (props) => {
-  const { t } = useContext(props.route.params.localizationContext);
-  const [date, setDate] = useState(new Date(new Date().toDateString()).getTime());
-  const [month, setMonth] = useState(new Date().getMonth());
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [list, setList] = useState([]);
-  const refDateFlatlist = useRef(null);
-  const dates = getDaysInMonth(month, year);
+  const { t }                 = useContext(props.route.params.localizationContext);
+  const [date, setDate]       = useState(new Date().getTime());
+  const [list, setList]       = useState([]);
+  const [isShowed, setShowed] = useState(false);
+  const [dates, setDates]     = useState(getDaysInMonth(new Date().getMonth(), new Date().getFullYear()));
+  const refDateFlatlist       = useRef(null);
   //
-  const currentDateIndex = getCurrentDateIndex(dates) + 2;
+  const currentDateIndex = getDateIndex(dates) + 2;
   const [currentIndex, setCurrentIndex] = useState(currentDateIndex);
   // check valid index
   const isValidIndex = (index, length) => {
@@ -163,7 +165,7 @@ const TaskScreen = (props) => {
   // handle scroll event of date list
   const handleScroll = (contentOffset) => {
     if(refDateFlatlist.current) {
-      const width = wp("16.8%"); // item width + margin
+      const width = wp("16%"); // item width + margin
       const nextIndex = Math.round(contentOffset / width);
       if (isValidIndex(nextIndex, dates.length)) {
         refDateFlatlist.current.scrollToIndex({ animated: true, index: nextIndex });
@@ -180,7 +182,9 @@ const TaskScreen = (props) => {
       r[a.status] = [...r[a.status] || [], a];
       return r;
     }, {})
-    return Object.values(tmp);
+    let CREATED = tmp.CREATED ? tmp.CREATED : [];
+    let FINISHED = tmp.FINISHED ? tmp.FINISHED : [];
+    return [CREATED, FINISHED];
   }
   
   useEffect(() => {
@@ -198,36 +202,54 @@ const TaskScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {isShowed &&
+        <DateTimePicker
+          mode="date"
+          value={date}
+          onChange={(event, date) => {
+            setShowed(false);
+            if (date == null) return;
+            setDate(new Date((new Date(date).toDateString())).getTime());
+            setDates(getDaysInMonth(date.getMonth(), date.getFullYear()));
+            setCurrentIndex(getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) + 2);
+            refDateFlatlist.current.scrollToIndex({index: getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) - 2 > 0 ? getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) : 0})
+          }}
+        />
+      }
       <View style={styles.header}>
         <View style={styles.titleContainer}>
+          <Text style={styles.title}>
+            Tasks
+          </Text>
           <Image
             style={[styles.avatar, {backgroundColor: COLORS.WHITE}]}
             source={require('../../../../assets/kid-avatar.png')}
           />
-          <Text style={styles.title}>
-            Tasks
-          </Text>
         </View>
-        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+        <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
           <TouchableOpacity 
             style={styles.monthPicker}
+            onPress={() => {setShowed(true)}}
           >
-            <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE}}>
-              Oct 2020
+            <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.BLACK}}>
+              {new Date(date).toDateString().split(" ")[1] + " " + new Date(date).toDateString().split(" ")[3]}
             </Text>
+            <Icon
+              name="keyboard-arrow-down"
+              type="material"
+              color={COLORS.BLACK}
+            />
           </TouchableOpacity>
-          { 
-            currentIndex !== (currentDateIndex) &&
-            <TouchableOpacity 
-              onPress={() => {
-                refDateFlatlist.current.scrollToIndex({index: (currentDateIndex - 2)})
-                setCurrentIndex(currentDateIndex);
-              }}>
-              <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.WHITE, marginRight: wp("10%")}}>
-                Today
-              </Text>
-            </TouchableOpacity>
-          }
+          <TouchableOpacity
+            style={styles.btnAddTask}
+            onPress={() => {props.navigation.navigate("CreateTask")}}
+          >
+            <Icon
+              name="add"
+              type="material"
+              color={COLORS.WHITE}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.dateList}>
           <FlatList
@@ -236,28 +258,16 @@ const TaskScreen = (props) => {
             keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <Text style={{marginRight: wp("3.8%")}}></Text>}
+            ItemSeparatorComponent={() => <Text style={{marginRight: wp("2%")}}></Text>}
             ref={refDateFlatlist}
             initialNumToRender={31}
             onLayout={() => {
-              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2})
+              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
             }}
             onMomentumScrollEnd={({nativeEvent}) => {
               handleScroll(nativeEvent.contentOffset.x);
             }}
           />
-        </View>
-        <View style={{alignItems: "flex-end"}}>
-          <TouchableOpacity
-            style={styles.btnAddTask}
-            onPress={() => {props.navigation.navigate("CreateTask")}}
-          >
-            <Icon
-              name="add"
-              type="material"
-              color={COLORS.STRONG_ORANGE}
-            />
-          </TouchableOpacity>
         </View>
       </View>
       <TaskBoard date={date} list={list}/>
