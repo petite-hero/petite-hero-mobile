@@ -5,7 +5,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   avatar : {
     width: wp("12%"),
@@ -16,56 +16,43 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp("35%"),
     marginBottom: hp("1%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
     borderBottomRightRadius: wp("5%"),
     elevation: 10
   },
   monthPicker : {
-    width: wp("30%"),
+    flexDirection: "row",
+    alignItems: "center",
     marginLeft: wp("10%"),
     fontSize: hp("2%"),
     fontFamily: "Acumin"
   },
   dateList : {
-    marginTop: hp("3%"),
+    marginTop: hp("2%"),
     marginLeft: wp("10%"),
     marginRight: wp("10%")
   },
   dateContainer : {
-    width: wp("13%"),
-    height: wp("23%"),
-    alignItems: 'center'
+    width: wp("14.3%"),
+    height: wp("20%"),
+    justifyContent: "center",
+    alignItems: 'center',
+    borderRadius: wp("6%"),
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   dateActiveContainer : {
-    width: wp("13%"),
-    height: wp("23%"),
-    justifyContent: "flex-start",
-    alignItems: 'center',
-    borderRadius: wp("6.5%"),
-    backgroundColor: COLORS.WHITE
-  },
-  dateInactiveContainer : {
-    width: wp("13%"),
-    height: wp("13%"),
-    borderRadius: wp("6.5%"),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.WHITE
-  },
-  dateActive : {
-    width: wp("11%"),
-    height: wp("11%"),
-    marginTop: wp("1%"),
-    borderRadius: wp("5.5%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: COLORS.STRONG_CYAN
   },
   dateText : {
-    fontSize: hp("2%"),
+    fontSize: 15,
+    fontFamily: "Acumin",
+    color: COLORS.BLACK
+  },
+  dateNum : {
+    fontSize: 20,
     fontFamily: "AcuminBold",
-    color: COLORS.STRONG_ORANGE
+    color: COLORS.BLACK
   },
   dateTextActive : {
     color: COLORS.WHITE
@@ -75,39 +62,33 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: hp("5%"),
     marginLeft: wp("10%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("2%"),
     marginRight: wp("10%")
   },
   title : {
     fontSize: hp("5%"),
     fontFamily: "AcuminBold",
-    color: COLORS.WHITE
+    color: COLORS.BLACK
   },
   btnAddTask : {
-    width: hp("7%"),
-    height: hp("7%"),
-    marginRight: wp("10%"),
-    borderRadius: hp("3.5%"),
-    backgroundColor: COLORS.WHITE,
+    width: wp("20%"),
+    height: hp("6%"),
+    marginRight: "10%",
+    borderRadius: 15,
+    backgroundColor: COLORS.YELLOW,
     alignItems: "center",
     justifyContent: "center",
     elevation: 10
   },
-  txtAddTask : {
-    fontSize: hp("7%"),
-    fontFamily: "Acumin",
-    color: COLORS.STRONG_ORANGE,
-    marginBottom: hp("0.8%")
-  },
   tabActive : {
     borderBottomWidth: 2, 
-    borderColor: COLORS.STRONG_ORANGE
+    borderColor: COLORS.STRONG_CYAN
   },
   tabText : {
     fontSize: hp("2%"),
   },
   tabTextActive : {
-    color: COLORS.STRONG_ORANGE,
+    color: COLORS.STRONG_CYAN,
     paddingBottom: hp("1%")
   },
   taskBoard : {
@@ -124,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: hp("2%"),
     justifyContent: "center",
     elevation: 6,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.STRONG_CYAN
   },
   
 });
