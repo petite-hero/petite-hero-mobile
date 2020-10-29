@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { Text, TouchableOpacity, Animated } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
@@ -33,6 +33,12 @@ const TrackingSettingLocationSubProps = (props) => {
     props.substatus === "REPEAT" ?
       <Animated.View key={1} style={[styles.locSettingPanel, {left: props.animLeft}]}>
         <Text style={{marginTop: 20, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>Repeat on</Text>
+        <TouchableOpacity style={styles.txtRepeatDayContainer} onPress={props.onRepeatEntryAllSelected}>
+          <Text style={{flex: 8, fontWeight: props.lRepeatAll ? "bold" : "normal", color: props.lRepeatAll ? COLORS.STRONG_ORANGE : "black"}}>All</Text>
+          {props.lRepeatAll ?
+            <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/>
+          : null}
+        </TouchableOpacity>
         {WEEKDAYS.map((day, index) => {
           return (
             <TouchableOpacity key={index} style={styles.txtRepeatDayContainer} onPress={() => props.onRepeatEntrySelected(index)}>
@@ -45,12 +51,6 @@ const TrackingSettingLocationSubProps = (props) => {
             </TouchableOpacity>
           )
         })}
-        <TouchableOpacity style={styles.txtRepeatDayContainer} onPress={props.onRepeatEntryAllSelected}>
-          <Text style={{flex: 8, fontWeight: props.lRepeatAll ? "bold" : "normal", color: props.lRepeatAll ? COLORS.STRONG_ORANGE : "black"}}>All</Text>
-          {props.lRepeatAll ?
-            <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/>
-          : null}
-        </TouchableOpacity>
       </Animated.View>
     : null,
 

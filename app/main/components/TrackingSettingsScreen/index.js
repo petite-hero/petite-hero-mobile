@@ -48,9 +48,9 @@ const TrackingSettingsScreen = ({ route }) => {
   // animation
   const FLY_DURATION = 300;
   const animSettingLoc = React.useRef(new Animated.Value(0)).current;
-  const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("90%"), 0]});
+  const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
   const animSettingLocProps = React.useRef(new Animated.Value(0)).current;
-  const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("90%"), 0]});
+  const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
 
   // fetch location list
   const fetchLocList = async () => {
@@ -131,7 +131,8 @@ const TrackingSettingsScreen = ({ route }) => {
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
 
-      <View style={styles.controlPanelContainer}>
+      <View style={[substatus === "SEARCH" ? styles.controlPanelContainerFocused : styles.controlPanelContainer,
+                    status === "PINNING" ? {height: 0, width: 0, opacity: 0} : {}]}>
 
         {/* control panel with search bar and location list */}
         <TrackingSettingControlPanel
@@ -271,6 +272,7 @@ const TrackingSettingsScreen = ({ route }) => {
           setLInitialRadius(RADIUS_MIN);
           
           setStatus("SETTING_LOC_NEW");
+          animSettingLoc.setValue(1);
         }}
 
         onSettingCancel={() => {

@@ -66,13 +66,24 @@ const styles = StyleSheet.create({
   controlPanelContainer:{
     overflow: "hidden",
     position: "absolute",
-    top: "auto",
     bottom: 10,
+    top: hp('55%') - 10,
     left: wp('5%'),
     right: wp('5%'),
     height: hp('45%'),
     borderRadius: hp('4%'),  // same as nav bar
     backgroundColor: COLORS.NUDE
+  },
+  controlPanelContainerFocused:{
+    overflow: "hidden",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: "auto",
+    borderRadius: hp('4%'),  // same as nav bar
+    backgroundColor: 'rgba(0, 0, 0, 0)'
   },
   controlPanel:{
     position: "absolute",
@@ -84,11 +95,11 @@ const styles = StyleSheet.create({
   },
   controlPanelFocused:{
     position: "absolute",
-    top: "auto",
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: hp('100%'),
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)'
   },
   locSettingPanel:{
     position: "absolute",
