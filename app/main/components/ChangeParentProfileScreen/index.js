@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { SafeAreaView, TouchableOpacity, View, Text, TextInput } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
@@ -10,7 +10,7 @@ const ChangeParentProfileScreen = (props) => {
   const [name, setName] = useState(props.route.params.value);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -76,7 +76,7 @@ const ChangeParentProfileScreen = (props) => {
         </TouchableOpacity>
       </View>
       {/* end changed field */}
-    </SafeAreaView>
+    </View>
   )
 }
 

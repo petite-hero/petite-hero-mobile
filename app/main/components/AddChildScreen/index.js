@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Text, SafeAreaView, TextInput, TouchableOpacity, View, Image, AsyncStorage } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Image, AsyncStorage } from "react-native";
 import { RadioButton } from 'react-native-paper';
 import { COLORS, IP, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import { Loader } from "../../../utils/loader";
-import { FetchWithTimeout } from "../../../utils/fetch";
+import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 
 import * as Notifications from 'expo-notifications';
@@ -110,7 +110,7 @@ const AddChildScreen = (props) => {
       data.append("gender", gender);
       data.append("childAvatar", photo);
       data.append("yob", yob);
-      const response = await FetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/children", {
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/children", {
         method: "POST",
         headers: {
           'Content-Type': 'multipart/form-data;'
@@ -157,7 +157,7 @@ const AddChildScreen = (props) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Loader loading={loading}/>
       {!qr ? <>
         <View style={{
@@ -292,7 +292,7 @@ const AddChildScreen = (props) => {
           </Text>
         </View>
       </View>}
-    </SafeAreaView>
+    </View>
   )
 }
 

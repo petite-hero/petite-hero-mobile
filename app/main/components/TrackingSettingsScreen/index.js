@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Keyboard, Image, Text, AsyncStorage, View, Animated, Easing } from 'react-native';
+import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing } from 'react-native';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -95,7 +95,7 @@ const TrackingSettingsScreen = ({ route }) => {
 
   return (
 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
 
       {/* ===================== MAP SECTION ===================== */}
 
@@ -312,7 +312,7 @@ const TrackingSettingsScreen = ({ route }) => {
 
       />
 
-    </SafeAreaView>
+    </View>
 
   );
 };

@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { COLORS } from '../../../const/const';
 import LoginScreen from '../LoginScreen';
@@ -46,7 +46,7 @@ const Welcome = ({ navigation }) => {
   [isScanning, setIsScanning] = React.useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View>
         <Text style={styles.txtHello}>Hello!</Text>
         <Text style={styles.txtMessage}>
@@ -80,7 +80,7 @@ const Welcome = ({ navigation }) => {
         />
       : null}
 
-    </SafeAreaView>
+    </View>
   )
 }
 

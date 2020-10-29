@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 3,
     marginLeft: wp("6.25%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
   }
 
 });

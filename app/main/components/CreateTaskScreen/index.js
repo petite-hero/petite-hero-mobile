@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { Image, SafeAreaView, Text, View, TextInput } from 'react-native';
+import { Image, View, Text, TextInput } from 'react-native';
 import { COLORS } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
@@ -14,7 +14,7 @@ const CreateTaskScreen = (props) => {
   const [repeatOn, setRepeatOn] = useState([]);
 
   return(
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* header */}
       <View style={styles.header}>
         <View style={styles.titleContainer}>
@@ -150,7 +150,7 @@ const CreateTaskScreen = (props) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
