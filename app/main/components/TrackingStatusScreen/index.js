@@ -1,7 +1,8 @@
 import React, {useRef} from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, Image, Animated, Easing, AppState } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, Image, Animated, Easing, AppState, Arrow } from 'react-native';
 import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Calendar } from 'react-native-calendars';
 import styles from './styles/index.css';
 import { COLORS, PORT, NOTI } from '../../../const/const';
 import { AsyncStorage } from 'react-native';
@@ -155,12 +156,10 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         }
       // }
     });
-
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
       console.log("Background noti listener");
     });
-
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
@@ -298,22 +297,24 @@ const TrackingStatusScreenContent = ({ navigation }) => {
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Tomorrow</Text>
         </Animated.View>
 
-        {isPickingDate ?
-          <DateTimePicker
-            value={(() => {let today = new Date(); today.setDate(today.getDate()+1); return today;})()}
-            minimumDate={new Date()}
-            mode={"date"}
-            onChange={(event, date) => {
+      </View>
+
+      {/* select day calendar */}
+      {isPickingDate ?
+        <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
+          <Calendar
+            minDate={new Date()}
+            onDayPress={(day) => {
               setIsPickingDate(false);
-              if (date == null) return;
-              navigation.navigate("TrackingSettings", {date: date});
+              navigation.navigate("TrackingSettings", {date: new Date(day.timestamp)});
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}
+            // monthFormat={'yyyy MM'}  // TODO: change depending on language
+            hideExtraDays={true}
           />
-        : null}
-
-      </View>
+        </TouchableOpacity>
+      : null}
 
     </SafeAreaView>
 

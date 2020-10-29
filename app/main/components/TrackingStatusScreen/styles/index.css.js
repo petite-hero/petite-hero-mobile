@@ -97,6 +97,19 @@ const styles = StyleSheet.create({
     width: 180,
     color: "rgb(140, 140, 140)",
   },
+  calendarContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: hp("20%"),
+    paddingLeft: wp("5%"),
+    paddingRight: wp("5%"),
+    // bottom: "auto",
+    borderWidth: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.2)"
+  },
 
   // nav bar
   bottomTab : {

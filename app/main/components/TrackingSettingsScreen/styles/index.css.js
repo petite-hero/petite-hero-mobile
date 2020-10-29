@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native';
 import Constants from 'expo-constants';
 import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { withTheme } from 'react-native-elements';
 
 const styles = StyleSheet.create({
 
@@ -64,7 +63,8 @@ const styles = StyleSheet.create({
   },
 
   // control panel
-  controlPanel:{
+  controlPanelContainer:{
+    overflow: "hidden",
     position: "absolute",
     top: "auto",
     bottom: 10,
@@ -72,6 +72,14 @@ const styles = StyleSheet.create({
     right: wp('5%'),
     height: hp('45%'),
     borderRadius: hp('4%'),  // same as nav bar
+    backgroundColor: COLORS.NUDE
+  },
+  controlPanel:{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: COLORS.NUDE
   },
   controlPanelFocused:{
@@ -82,19 +90,25 @@ const styles = StyleSheet.create({
     right: 0,
     height: hp('100%'),
   },
+  locSettingPanel:{
+    position: "absolute",
+    top: 0,
+    right: "auto",
+    bottom: 0,
+    width: wp("90%"),
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: COLORS.NUDE
+  },
 
   // search bar
   searchBarContainer: {
     height: 54,  // equals to textInput + margins
+    backgroundColor: "rgba(255, 255, 255, 0)"
   },
   searchBarContainerFocused:{
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    height: hp('100%'),
     backgroundColor: "rgba(255, 255, 255, 0.6)"
-    // backgroundColor: "white"
   },
   textInputContainer: {
     height: 54,  // equals to textInput + margins

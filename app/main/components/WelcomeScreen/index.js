@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { COLORS } from '../../../const/const';
 import LoginScreen from '../LoginScreen';
@@ -43,7 +43,6 @@ const WelcomeScreen = (props) => {
 
 const Welcome = ({ navigation }) => {
 
-  [ip, setIp] = React.useState("");
   [isScanning, setIsScanning] = React.useState(false);
 
   return (
@@ -56,7 +55,6 @@ const Welcome = ({ navigation }) => {
           dolore magna aliqua. Ut enim ad minim veniam, quis
           nostrud exercitation ullamco laboris nisi ut aliquip ex
           ea commodo consequat
-          {ip}
         </Text>
       </View>
       <Image
@@ -73,8 +71,9 @@ const Welcome = ({ navigation }) => {
       {isScanning ?
         <BarCodeScanner
           onBarCodeScanned={({data}) => {
-            setIp(data);
             setIsScanning(false);
+            console.log(data);
+            AsyncStorage.setItem('IP', data);
           }}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           style={{position: "absolute", top: 0, bottom: 0, left: 0, right: 0}}

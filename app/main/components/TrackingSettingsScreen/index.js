@@ -1,32 +1,38 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, Keyboard, Dimensions,
-  Image, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import MapView, { Marker, Circle, Polygon }  from 'react-native-maps';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { Icon } from 'react-native-elements';
-import Slider from '@react-native-community/slider';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Drawer from './drawer';
-import { AsyncStorage } from 'react-native';
+import { SafeAreaView, Keyboard, Image, Text, AsyncStorage, View, Animated, Easing } from 'react-native';
+
 import styles from './styles/index.css';
-import { COLORS, PORT } from "../../../const/const"; 
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { COLORS, PORT } from "../../../const/const";
+
+import Util from './util';
+import TrackingSettingMap from './map';
+import TrackingSettingControlPanel from './control-panel';
+import TrackingSettingLocation from './setting-panel';
+import TrackingSettingLocationSubProps from './sub-setting-panel';
+import TrackingSettingButtons from './buttons';
+
 
 const TrackingSettingsScreen = ({ route }) => {
 
+  // states
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
   [substatus, setSubstatus] = React.useState("");  // "", TYPE, REPEAT, SEARCH
+  const CURRENT_DATE = Util.dateToHour0(route.params.date);
+  const RADIUS_MIN = 40;
 
   // map positioning & zooming
-  [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
-  [latitudeDelta, setLatitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.latitudeDelta);
-  [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
+  [mapLoc, setMapLoc] = React.useState(Util.LOC_FPT);  // FPT University location
+  [latitudeDelta, setLatitudeDelta] = React.useState(Util.LOCATION_ZOOM.latitudeDelta);
+  [longitudeDelta, setLongitudeDelta] = React.useState(Util.LOCATION_ZOOM.longitudeDelta);
   
   // location list
   [locList, setLocList] = React.useState([]);
-  // [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);  // testing
 
   // attributes for setting a location
   [settingLoc, setSettingLoc] = React.useState({});
+  [settingLocMap, setSettingLocMap] = React.useState({});
+  [settingLocDetail, setSettingLocDetail] = React.useState({});
   [lName, setLName] = React.useState("");
   [lType, setLType] = React.useState("None");  // None, Home, Education
   [lTypeTmp, setLTypeTmp] = React.useState("None");
@@ -34,63 +40,24 @@ const TrackingSettingsScreen = ({ route }) => {
   [lInitialRadius, setLInitialRadius] = React.useState(0);
   [lInTime, setLInTime] = React.useState("None");  [lInTimeDate, setLInTimeDate] = React.useState(null);
   [lOutTime, setLOutTime] = React.useState("None");  [lOutTimeDate, setLOutTimeDate] = React.useState(null);
-  [lShowInTimePicker, setLShowInTimePicker] = React.useState(false);
-  [lShowOutTimePicker, setLShowOutTimePicker] = React.useState(false);
   [lIndex, setLIndex] = React.useState(0);
   [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatAll, setLRepeatAll] = React.useState(false);
-  
-  const dateToHour0 = (date) => {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    return date;
-  }
-  const currentDate = dateToHour0(route.params.date);
 
-  // get user location
-  // navigator.geolocation.getCurrentPosition(
-  //     (data) => {
-  //       setLatitude(data.coords.latitude);
-  //       this.setState({longitude: data.coords.longitude});
-  //     }
-  // );
+  // animation
+  const FLY_DURATION = 300;
+  const animSettingLoc = React.useRef(new Animated.Value(0)).current;
+  const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("90%"), 0]});
+  const animSettingLocProps = React.useRef(new Animated.Value(0)).current;
+  const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("90%"), 0]});
 
-  // handling inputs
-  const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const WEEKDAYS_ABB = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const lRepeatToWeekdays = () => {
-    let result = "";
-    let count = 0;
-    WEEKDAYS_ABB.map((day, index) => {
-      if (lRepeat[index]){
-        if (count === 0) result += day;
-        else if (count < 3) result += ", " + day;
-        else if (count === 3) result += "...";
-        count++;
-      }
-    });
-    return count === 0 ? "None" : result;
-  }
-  const numberTo2Digits = (num) => {
-    return num < 10 ? "0"+num : num;
-  }
-  
-  // current date section
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const dateToStr = (date) => {
-    return MONTHS[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
-  }
-
-
-  // fetching data
+  // fetch location list
   const fetchLocList = async () => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
-    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + currentDate.getTime());
-    const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
+    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
+    const result = await response.json();
     if (result.code === 200) {
       setLocList(result.data);
     } else {
@@ -101,7 +68,7 @@ const TrackingSettingsScreen = ({ route }) => {
     fetchLocList()
   }, []);
 
-  // add location setting
+  // add location
   const addLocation = async () => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
@@ -109,10 +76,10 @@ const TrackingSettingsScreen = ({ route }) => {
     const body = JSON.stringify({
       childId: childId,
       creator: userId,
-      date: currentDate.getTime(),
+      date: CURRENT_DATE.getTime(),
       fromTime: lInTimeDate,
-      latitude: settingLoc.latitude,
-      longitude: settingLoc.longitude,
+      latitude: settingLocDetail.latitude,
+      longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
       repeatOn: "",
@@ -121,11 +88,8 @@ const TrackingSettingsScreen = ({ route }) => {
     });
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
-    const result = await response.json();  // {"latitude": 1, "longitude": 1, "status": true}
-    if (result.code === 200) {
-    } else {
-      console.log("Error while adding location. Server response: " + JSON.stringify(result));
-    }
+    const result = await response.json();
+    if (result.code !== 200) console.log("Error while adding location. Server response: " + JSON.stringify(result));
   }
   
 
@@ -135,49 +99,24 @@ const TrackingSettingsScreen = ({ route }) => {
 
       {/* ===================== MAP SECTION ===================== */}
 
-      {/* maps */}
-      <View style={{...StyleSheet.absoluteFillObject}}>
+      <TrackingSettingMap
 
-        <MapView
-          style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
-          region={{latitude: mapLoc.latitude, longitude: mapLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-          onRegionChangeComplete={(region) => {
-            setMapLoc({name: mapLoc.name, latitude: region.latitude, longitude: region.longitude});
-            setLatitudeDelta(region.latitudeDelta);
-            setLongitudeDelta(region.longitudeDelta);
-          }}>
+        status={status}
+        mapLoc={mapLoc}
+        latitudeDelta={latitudeDelta}
+        longitudeDelta={longitudeDelta}
+        locList={locList}
+        
+        settingLoc={settingLocMap}
+        lRadius={lRadius}
+        
+        onRegionChangeComplete={(region) => {
+          setMapLoc({name: mapLoc.name, latitude: region.latitude, longitude: region.longitude});
+          setLatitudeDelta(region.latitudeDelta);
+          setLongitudeDelta(region.longitudeDelta);
+        }}
 
-          {/* viewing state | showing location markers */}
-          {status === "VIEWING" ? locList.map((loc, index) => {
-            return (
-              <Marker key={index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
-                <View style={styles.safeLoc}/>
-              </Marker>
-            )
-          })
-          : null}
-
-          {/* single location marker & circle when setting location */}
-          {status === "SETTING_LOC_NEW" || status === "SETTING_LOC" ? [
-            <Marker key={0} coordinate={{latitude: settingLoc.latitude, longitude: settingLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
-              <View style={styles.safeLoc}/>
-            </Marker>,
-            <Circle key={1} center={{latitude: settingLoc.latitude, longitude: settingLoc.longitude}}
-                    radius={lRadius} fillColor={"rgba(244, 126, 62, 0.4)"} strokeWidth={0}/>
-            ]
-            : null}
-
-        </MapView>
-      </View>
-
-      {/* map fixed pin */}
-      {status === "PINNING" ?
-        <View style={styles.fixedPin}>
-          <Icon name='location-on' type='material' color={COLORS.STRONG_ORANGE} size={50}/>
-        </View>
-      : null}
+      />
 
       {/* ===================== END MAP SECTION ===================== */}
 
@@ -187,294 +126,191 @@ const TrackingSettingsScreen = ({ route }) => {
           style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
           source={require('../../../../assets/kid-avatar.png')}
         />,
-        <Text key={1} style={styles.date}>{dateToStr(route.params.date)}</Text>]
+        <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>]
       }
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
 
-      {/* control panel with search bar and location list */}
-      {status === "VIEWING" ?
-        <View style={substatus === "SEARCH" ? styles.controlPanelFocused : styles.controlPanel}>
+      <View style={styles.controlPanelContainer}>
 
-          {/* search bar */}
-          <View style={substatus === "SEARCH" ? styles.searchBarContainerFocused : styles.searchBarContainer}>
-            <GooglePlacesAutocomplete
-              // ref={(instance) => { setSearchBar(instance) }}
-              styles={substatus === "SEARCH" ?
-                {textInputContainer: styles.textInputContainerFocused, textInput: styles.textInputFocused, listView: styles.listView} :
-                {textInputContainer: styles.textInputContainer, textInput: styles.textInput}}
-              placeholder='Choose location...'
-              fetchDetails={true}
-              autoFocus={false}
-              onPress={(data, details = null) => {
-                setMapLoc({
-                  name: details.name,
-                  latitude: details.geometry.location.lat,
-                  longitude: details.geometry.location.lng});
-                setSubstatus("");
-                // searchBar.setAddressText("");
-                setLatitudeDelta(Drawer.LOCATION_ZOOM.latitudeDelta);
-                setLongitudeDelta(Drawer.LOCATION_ZOOM.longitudeDelta);
-                setStatus("PINNING");
-              }}
-              textInputProps={{ onFocus: () => setSubstatus("SEARCH") }}
-              query={{key: 'AIzaSyBvfVumttk96MLwUy-oLqaz3OqtGSIAejk', components: 'country:vn',}}
-              debounce={150}
-            />
-          </View>
-          <View style={substatus === "SEARCH" ? styles.searchBackBtnFocused : styles.searchBackBtn}>
-            <Icon name='arrow-back' type='material' size={34}
-              onPress={() => {
-                setSubstatus("");
-                Keyboard.dismiss();
-              }}/>
-          </View>
+        {/* control panel with search bar and location list */}
+        <TrackingSettingControlPanel
 
-          {/* panel content */}
-          <ScrollView style={substatus === "SEARCH" ? styles.panelContentFocused : styles.panelContent}>
-            <View style={{flexDirection: "row"}}>
+          status={status}
+          substatus={substatus}
+          locList={locList}
 
-              {/* location list */}
-              <View style={{flex: 8}}>
-                {status === "VIEWING" ? locList.map((loc, index) => {
-                  return (
-                    <TouchableOpacity key={index} style={styles.locationContainer}
-                      onPress={() => {
-                        setSettingLoc(loc);
-                        setMapLoc({latitude: loc.latitude-latitudeDelta/4, longitude: loc.longitude});
-                        setLName(loc.name);
-                        setLRadius(loc.radius);
-                        setLInitialRadius(loc.radius);
-                        setLInTime(loc.fromTime);
-                        setLOutTime(loc.toTime);
-                        setLType(loc.type)
-                        setLIndex(index);
-                        setLatitudeDelta(Drawer.LOCATION_ZOOM.latitudeDelta);
-                        setLongitudeDelta(Drawer.LOCATION_ZOOM.longitudeDelta);
-                        setStatus("SETTING_LOC");
-                      }}>
-                      <Text style={styles.locationName}>{loc.name}</Text>
-                      <Text style={styles.locationTime}>
-                        {loc.fromTime.slice(0, -3)} - {loc.toTime.slice(0, -3)}
-                      </Text>
-                      <View style={styles.rightIcon}>
-                        <Icon name='keyboard-arrow-right' type='material'/>
-                      </View>
-                    </TouchableOpacity>
-                  )
-                })
-                : null}
-              </View>
+          onSearchBarPress={() => setSubstatus("SEARCH")}
+          onSearchResultPress={(data, details = null) => {
+            setMapLoc({name: details.name, latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
+            setSubstatus("");
+            setLatitudeDelta(Util.LOCATION_ZOOM.latitudeDelta);
+            setLongitudeDelta(Util.LOCATION_ZOOM.longitudeDelta);
+            setStatus("PINNING");
+          }}
+          onBackIconPress={() => {
+            setSubstatus("");
+            Keyboard.dismiss();
+          }}
 
-            </View>
-          </ScrollView>
+          onLocationItemPress={(loc, index) => {
+            setSettingLocMap(loc);
+            setSettingLocDetail(loc);
+            setMapLoc({latitude: loc.latitude-latitudeDelta/4, longitude: loc.longitude});
+            setLName(loc.name);
+            setLRadius(loc.radius);
+            setLInitialRadius(loc.radius);
+            setLInTime(loc.fromTime);
+            setLOutTime(loc.toTime);
+            setLType(loc.type)
+            setLIndex(index);
+            setLatitudeDelta(Util.LOCATION_ZOOM.latitudeDelta);
+            setLongitudeDelta(Util.LOCATION_ZOOM.longitudeDelta);
+            setStatus("SETTING_LOC");
+            animSettingLoc.setValue(0);
+            Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+          }}
 
-        </View>
-      : null}
+        />
+
+        {/* location setting attributes */}
+        <TrackingSettingLocation
+
+          animLeft={animSettingLocLeft}
+
+          settingLoc={settingLocDetail}
+          type={lType}
+          radius={lRadius}
+          fromTime={lInTime}
+          ttoTime={lOutTime}
+          repeat={lRepeat}
+          initialRadius={lInitialRadius}
+
+          onNameChange={(text) => setLName(text)}
+          onRadiusChange={(value) => setLRadius(value)}
+          onFromTimeSelected={(event, time) => {
+            if (time == null) return;
+            setLInTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
+            setLInTimeDate(time);
+          }}
+          onToTimeSelected={(event, time) => {
+            if (time == null) return;
+            setLOutTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
+            setLOutTimeDate(time);
+          }}
+
+          onTypeSelecting={() => {
+            setSubstatus("TYPE");
+            setLTypeTmp(lType);
+            animSettingLocProps.setValue(0);
+            Animated.timing(animSettingLocProps, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+          }}
+          onRepeatSelecting={() => {
+            setSubstatus("REPEAT");
+            setLRepeatTmp([...lRepeat]);
+            animSettingLocProps.setValue(0);
+            Animated.timing(animSettingLocProps, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+          }}
+
+        />
+
+        {/* location setting sub-attributes */}
+        <TrackingSettingLocationSubProps
+
+          animLeft={animSettingLocPropsLeft}
+          substatus={substatus}
+
+          lTypeTmp={lTypeTmp}
+          lRepeatTmp={lRepeatTmp}
+          lRepeatAll={lRepeatAll}
+
+          onTypeEntrySelected={(type) => {
+            if (lTypeTmp !== type) setLTypeTmp(type);
+            else setLTypeTmp("None");
+          }}
+          onRepeatEntrySelected={(index) => {
+            let newLRepeat = [...lRepeatTmp];
+            newLRepeat[index] = !newLRepeat[index];
+            setLRepeatTmp(newLRepeat);
+          }}
+          onRepeatEntryAllSelected={() => {
+            let newLRepeat = [...lRepeatTmp];
+            newLRepeat.map((day, index) => {newLRepeat[index] = !lRepeatAll});
+            setLRepeatTmp(newLRepeat);
+            setLRepeatAll(!lRepeatAll);
+          }}
+
+        />
+
+      </View>
+
+      
 
       {/* ===================== END CONTROL PANEL SECTION ===================== */}
 
       {/* ===================== LOCATION SETTING SECTION ===================== */}
 
-      {/* set location buttons */}
-      {status === "PINNING" ?
-        <View style={styles.setLocBtnsContainer}>
-          <TouchableOpacity style={[styles.btnSetLoc, styles.btnSetLocCancel]} onPress={() => setStatus("VIEWING")}>
-            <Icon name='clear' type='material' color={COLORS.STRONG_ORANGE}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.btnSetLoc, styles.btnSetLocCheck]} onPress={() => {
-            setSettingLoc(mapLoc);
-            setLName(mapLoc.name);
-            setMapLoc({latitude: mapLoc.latitude-latitudeDelta/4, longitude: mapLoc.longitude});
-            setStatus("SETTING_LOC_NEW");
-          }}>
-            <Icon name='check' type='material' color='white'/>
-          </TouchableOpacity>
-        </View>
-      : null}
-
-      {/* setting location */}
-      {status === "SETTING_LOC_NEW" || status === "SETTING_LOC" ?
-        <View style={[styles.controlPanel, {paddingLeft: 15, paddingRight: 15}]}>
-
-          <TextInput
-            onChangeText={(text) => setLName(text)}
-            defaultValue={settingLoc.name}
-            style={styles.txtInputLocName}
-          />
-
-          <View style={{flexDirection: "row", marginTop: 15}}>
-            <Text style={{flex: 4}}>Marked as</Text>
-            <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => {setSubstatus("TYPE"); setLTypeTmp(lType);}}>
-              {lType}
-            </Text>
-            <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
-          </View>
-
-          <View style={{flexDirection: "row", marginTop: 15}}>
-            <Text style={{flex: 3}}>Radius</Text>
-            <Slider
-              style={{flex: 8, height: 20}}
-              minimumTrackTintColor={COLORS.STRONG_ORANGE}
-              thumbTintColor={COLORS.STRONG_ORANGE}
-              minimumValue={40}
-              maximumValue={1000}
-              value={lInitialRadius}
-              initial
-              onValueChange={(value) => setLRadius(value)}
-            />
-            <Text style={{flex: 3, textAlign: "right", color: COLORS.STRONG_ORANGE}}>{Math.round(lRadius)} m</Text>
-          </View>
-
-          <View style={{flexDirection: "row", marginTop: 15}}>
-            <Text style={{flex: 3}}>From</Text>
-            <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowInTimePicker(true)}>
-              {lInTime == "None" ? lInTime : lInTime.slice(0, -3)}
-            </Text>
-            {lShowInTimePicker ?
-              <DateTimePicker
-                value={new Date()}
-                mode={"time"}
-                onChange={(event, time) => {
-                  setLShowInTimePicker(false);
-                  if (time == null) return;
-                  setLInTime(numberTo2Digits(time.getHours()) + ":" + numberTo2Digits(time.getMinutes()) + ":00");
-                  setLInTimeDate(time);
-                }}
-              />
-            : null}
-          </View>
-
-          <View style={{flexDirection: "row", marginTop: 15}}>
-            <Text style={{flex: 3}}>To</Text>
-            <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => setLShowOutTimePicker(true)}>
-              {lOutTime == "None" ? lOutTime : lOutTime.slice(0, -3)}
-            </Text>
-            {lShowOutTimePicker ?
-              <DateTimePicker
-                value={new Date()}
-                mode={"time"}
-                onChange={(event, time) => {
-                  setLShowOutTimePicker(false);
-                  if (time == null) return;
-                  setLOutTime(numberTo2Digits(time.getHours()) + ":" + numberTo2Digits(time.getMinutes()) + ":00");
-                  setLOutTimeDate(time);
-                }}
-              />
-            : null}
-          </View>
-
-          <View style={{flexDirection: "row", marginTop: 15}}>
-            <Text style={{flex: 3}}>Repeat on</Text>
-            <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_ORANGE}} onPress={() => {setSubstatus("REPEAT"); setLRepeatTmp([...lRepeat])}}>
-              {lRepeatToWeekdays()}
-            </Text>
-            <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_ORANGE}/>
-          </View>
-
-        </View>
-      : null}
-
-      {/* setting location type */}
-      {(status === "SETTING_LOC_NEW" || status === "SETTING_LOC") && substatus === "TYPE" ?
-        <View style={[styles.controlPanel, {paddingLeft: 15, paddingRight: 15}]}>
-          <Text style={{marginTop: 20, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>
-            Marked as
-          </Text>
-          {["Home", "Education"].map((type, index) => {
-            return (
-              <TouchableOpacity key={index} style={styles.txtTypeContainer}
-                onPress={() => {
-                  if (lTypeTmp !== type) setLTypeTmp(type);
-                  else setLTypeTmp("None");
-                }}>
-                <Text style={{flex: 8, fontWeight: lTypeTmp === type ? "bold" : "normal", color: lTypeTmp === type ? COLORS.STRONG_ORANGE : "black"}}>{type}</Text>
-                {lTypeTmp === type ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
-              </TouchableOpacity>
-            )
-          })}
-        </View>
-      : null}
-
-      {/* setting location repeat days */}
-      {(status === "SETTING_LOC_NEW" || status === "SETTING_LOC") && substatus === "REPEAT" ?
-        <View style={[styles.controlPanel, {paddingLeft: 15, paddingRight: 15}]}>
-          <Text style={{marginTop: 20, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>
-            Repeat on
-          </Text>
-          {WEEKDAYS.map((day, index) => {
-            return (
-              <TouchableOpacity key={index}
-                style={styles.txtRepeatDayContainer}
-                onPress={() => {
-                  let newLRepeat = [...lRepeatTmp];
-                  newLRepeat[index] = !newLRepeat[index];
-                  setLRepeatTmp(newLRepeat);
-                }}>
-                <Text style={{flex: 8, fontWeight: lRepeatTmp[index] ? "bold" : "normal", color: lRepeatTmp[index] ? COLORS.STRONG_ORANGE : "black"}}>
-                  Every {day}
-                </Text>
-                {lRepeatTmp[index] ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
-              </TouchableOpacity>
-            )
-          })}
-          <TouchableOpacity
-            style={styles.txtRepeatDayContainer}
-            onPress={() => {
-              let newLRepeat = [...lRepeatTmp];
-              newLRepeat.map((day, index) => {newLRepeat[index] = !lRepeatAll});
-              setLRepeatTmp(newLRepeat);
-              setLRepeatAll(!lRepeatAll);
-            }}>
-            <Text style={{flex: 8, fontWeight: lRepeatAll ? "bold" : "normal", color: lRepeatAll ? COLORS.STRONG_ORANGE : "black"}}>All</Text>
-            {lRepeatAll ? <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_ORANGE}/> : null}
-          </TouchableOpacity>
-        </View>
-      : null}
-
-      {/* delete save cancel buttons */}
-      {status === "SETTING_LOC_NEW" || status === "SETTING_LOC" ?
-        <View style={styles.saveLocBtnsContainer}>
-
-          {/* cancel button */}
-          <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCancel]} onPress={() => {
-            if (substatus === "") setStatus("VIEWING");
-            else if (substatus === "TYPE" || substatus === "REPEAT") setSubstatus("");
-          }}>
-            <Icon name='clear' type='material' color={COLORS.STRONG_ORANGE}/>
-          </TouchableOpacity>
-
-          {/* save button */}
-          <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCheck]} onPress={() => {
-            if (substatus === ""){
-              // const tmpLoc = {name: lName, latitude: settingLoc.latitude, longitude: settingLoc.longitude,
-              //                 radius: lRadius, inTime: lInTime, outTime: lOutTime};
-              // let newLocList = [...locList];
-              // if (status === "SETTING_LOC_NEW") newLocList.push(tmpLoc);
-              // else newLocList[lIndex] = tmpLoc;
-              // setLocList(newLocList);
-              setStatus("VIEWING");
-              (async() => {
-                if (status === "SETTING_LOC_NEW") await addLocation();
-                fetchLocList();
-              })();
-            }
-            else if (substatus === "TYPE"){
-              setLType(lTypeTmp);
-              setSubstatus("");
-            }
-            else if (substatus === "REPEAT"){
-              setLRepeat(lRepeatTmp);
-              setSubstatus("");
-            }
-          }}>
-            <Icon name='check' type='material' color='white'/>
-          </TouchableOpacity>
-
-        </View>
-      : null}
-
       {/* ===================== END LOCATION SETTING SECTION ===================== */}
+
+      <TrackingSettingButtons
+
+        status={status}
+
+        onPinningCancel={() => setStatus("VIEWING")}
+        onPinningConfirm={() => {
+          setSettingLocMap(mapLoc);
+          setSettingLocDetail(mapLoc);
+          setLName(mapLoc.name);
+          setMapLoc({latitude: mapLoc.latitude-latitudeDelta/4, longitude: mapLoc.longitude});
+
+          setLType("None");
+          setLRadius(RADIUS_MIN);
+          setLInTime("None");
+          setLOutTime("None");
+          setLRepeat([false, false, false, false, false, false, false]);
+          setLInitialRadius(RADIUS_MIN);
+          
+          setStatus("SETTING_LOC_NEW");
+        }}
+
+        onSettingCancel={() => {
+          if (substatus === ""){
+            animSettingLoc.setValue(1);
+            Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+            setStatus("VIEWING");
+          }
+          else if (substatus === "TYPE" || substatus === "REPEAT"){
+            animSettingLocProps.setValue(1);
+            Animated.timing(animSettingLocProps, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false})
+              .start(() => setSubstatus(""));
+          }
+        }}
+        onSettingSave={() => {
+          if (substatus === ""){
+            (async() => {
+              if (status === "SETTING_LOC_NEW") await addLocation();
+              else if (status === "SETTING_LOC"){ } // edit loc
+              await fetchLocList();
+              animSettingLoc.setValue(1);
+              Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+              setStatus("VIEWING");
+            })();
+          }
+          else if (substatus === "TYPE"){
+            setLType(lTypeTmp);
+            animSettingLocProps.setValue(1);
+            Animated.timing(animSettingLocProps, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false})
+              .start(() => setSubstatus(""));
+          }
+          else if (substatus === "REPEAT"){
+            setLRepeat(lRepeatTmp);
+            animSettingLocProps.setValue(1);
+            Animated.timing(animSettingLocProps, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false})
+              .start(() => setSubstatus(""));
+          }
+        }}
+
+      />
 
     </SafeAreaView>
 
