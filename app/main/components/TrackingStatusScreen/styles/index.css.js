@@ -21,33 +21,20 @@ const styles = StyleSheet.create({
     height: wp("12%"),
     borderRadius: wp("12%"),
     top: hp("5%"),
-    left: wp("10%"),
+    right: wp("10%"),
   },
 
-  // warning & dismiss buttons
+  // warning
   warningBtn : {
     position: "absolute",
-    width: wp("10%"),
-    height: wp("10%"),
+    width: wp("12%"),
+    height: wp("12%"),
     borderRadius: wp("10%"),
     top: hp("5%"),
-    right: wp("5%"),
+    left: wp("10%"),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'red'
-  },
-  dismissBtn : {
-    width: 200,
-    height: 30,
-    marginTop: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: COLORS.STRONG_ORANGE,
-    backgroundColor: 'rgba(0, 0, 0, 0)'
-  },
-  dismissBtnText : {
-    color: COLORS.STRONG_ORANGE,
-    fontSize: 20
   },
   
   // status animation

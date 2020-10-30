@@ -209,7 +209,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       />
 
       {/* view map button */}
-      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency")}>
+      <TouchableOpacity style={[styles.warningBtn, {backgroundColor: trackingStatus === "NOT SAFE" ? "red" : "rgba(255, 0, 0, 0.8)"}]}
+                        onPress={() => navigation.navigate("TrackingEmergency")}>
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
 
