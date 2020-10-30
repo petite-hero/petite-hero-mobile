@@ -1,7 +1,6 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Arrow } from 'react-native';
 import { Icon } from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from 'react-native-calendars';
 import styles from './styles/index.css';
 import { COLORS, PORT, NOTI } from '../../../const/const';
@@ -205,7 +204,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     <View style={styles.container}>
 
       <Image
-        style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+        style={[styles.avatar, {backgroundColor: COLORS.STRONG_CYAN}]}
         source={require('../../../../assets/kid-avatar.png')}
       />
 
@@ -239,7 +238,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
 
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopNav}}>
           {/* activate tracking button */}
-          <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_ORANGE}]}
+          <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_CYAN}]}
             onPress={() => {
               if (trackingStatus === "INACTIVE"){
                 animTrackingStatus.setValue(0);
@@ -258,7 +257,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         {/* choose date for setting button */}
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopDay, opacity: animSetZoneBtn}}>
           <TouchableOpacity style={styles.settingBtnContainer} onPress={() => setIsPickingDate(true)}>
-            <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+            <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
         {/* setting for tomorrow button */}
@@ -272,11 +271,11 @@ const TrackingStatusScreenContent = ({ navigation }) => {
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}>
-            <Icon name="today" type="material" size={20} color={COLORS.STRONG_ORANGE}/>
+            <Icon name="today" type="material" size={20} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
         {/* setting animation button */}
-        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_ORANGE}]} onPressIn={() => {
+        <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_CYAN}]} onPressIn={() => {
           if (!flied){
             animSetZoneBtn.setValue(0);
             Animated.timing(animSetZoneBtn, {toValue: 1, duration: FLY_TIME, useNativeDriver: false}).start();
