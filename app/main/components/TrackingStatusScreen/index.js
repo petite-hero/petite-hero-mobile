@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, Image, Animated, Easing, AppState, Arrow } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Arrow } from 'react-native';
 import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from 'react-native-calendars';
@@ -73,7 +73,7 @@ const TrackingStatusScreen = ({route}) => {
         tabStyle: styles.tabItem,
         indicatorStyle: styles.indicator,
         showIcon: true,
-        activeTintColor: COLORS.STRONG_ORANGE,
+        activeTintColor: COLORS.STRONG_CYAN,
         inactiveTintColor: COLORS.GREY,
       }}
       tabBarPosition="bottom"
@@ -202,7 +202,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   // MAIN INTERFACE
   return (
 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
 
       <Image
         style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
@@ -316,7 +316,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         </TouchableOpacity>
       : null}
 
-    </SafeAreaView>
+    </View>
 
   );
 };

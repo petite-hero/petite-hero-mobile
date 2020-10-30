@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import styles from './styles/index.css';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
@@ -90,7 +90,7 @@ const QuestScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
             <Image
@@ -112,7 +112,7 @@ const QuestScreen = (props) => {
         </View>
       </View>
       <QuestBoard/>
-    </SafeAreaView>
+    </View>
   );
 };
 

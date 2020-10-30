@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity, TextInput, ToastAndroid, AsyncStorage } from 'react-native';
-import { COLORS, IP, PORT } from '../../../const/const';
+import { View, Text, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
-import { FetchWithTimeout } from '../../../utils/fetch';
+import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 
@@ -30,7 +30,7 @@ const LoginScreen = (props) => {
   const login = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await FetchWithTimeout("http://" + ip + PORT + "/account/login", {
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/account/login", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -60,7 +60,7 @@ const LoginScreen = (props) => {
   const sendToken = async(id, token) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await FetchWithTimeout("http://" + ip + PORT + "/parent/token", {
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/token", {
         method: "PUT",
         headers: {
           'Accept': 'application/json',
@@ -77,7 +77,7 @@ const LoginScreen = (props) => {
   }
   
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Loader loading={loading}/>
       <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_ORANGE}}>
         
@@ -188,7 +188,7 @@ const LoginScreen = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

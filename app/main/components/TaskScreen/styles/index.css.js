@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   header : {
     width: "100%",
-    height: hp("35%"),
+    height: hp("34%"),
     marginBottom: hp("1%"),
     backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   dateContainer : {
     width: wp("14.3%"),
-    height: wp("20%"),
+    height: hp("10%"),
     justifyContent: "center",
     alignItems: 'center',
     borderRadius: wp("6%"),
@@ -94,18 +94,17 @@ const styles = StyleSheet.create({
   taskBoard : {
     position: "absolute",
     bottom: hp("7%"),
-    width: wp("90%"),
-    height: hp("50%"),
+    height: hp("60%"),
     alignSelf: "center"
   },
   taskItem : {
-    width: wp("82%"),
-    height: hp("13%"),
+    width: wp("80%"),
+    height: hp("11.5%"),
     borderRadius: hp("3%"),
     marginBottom: hp("2%"),
     justifyContent: "center",
     elevation: 6,
-    backgroundColor: COLORS.STRONG_CYAN
+    backgroundColor: COLORS.WHITE
   },
   
 });

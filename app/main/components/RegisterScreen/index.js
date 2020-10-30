@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import { COLORS, IP, PORT } from '../../../const/const';
 import styles from './styles/index.css';
@@ -33,7 +33,7 @@ const RegisterScreen = (props) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_ORANGE}}>
         
       </View>
@@ -93,7 +93,7 @@ const RegisterScreen = (props) => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

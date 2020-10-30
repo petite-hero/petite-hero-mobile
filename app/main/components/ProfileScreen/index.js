@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
-import AddChildScreen from '../AddChildScreen';
-import Animated, { Easing, set } from 'react-native-reanimated';
+import Animated, { Easing } from 'react-native-reanimated';
 import styles from './styles/index.css';
 
 const Stack = createStackNavigator();
@@ -146,7 +145,7 @@ const ProfileScreenContent = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const { signOut } = React.useContext(props.route.params.authContext);
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <View style={{
           flexDirection: "row", 
@@ -229,7 +228,7 @@ const ProfileScreenContent = (props) => {
         <SettingItem key="5" title="Setting" icon="settings" action={() => {}}/>
         <SettingItem key="6" title="Logout" icon="exit-to-app" action={() => {signOut()}}/>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

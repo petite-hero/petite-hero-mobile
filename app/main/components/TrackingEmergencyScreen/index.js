@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions, Image, AppState } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, AppState } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 import Drawer from './drawer';
@@ -101,7 +101,7 @@ const TrackingEmergencyScreen = ({navigation}) => {
   // MAIN INTERFACE
   return (
 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
 
       {/* ===================== MAP SECTION ===================== */}
 
@@ -161,7 +161,7 @@ const TrackingEmergencyScreen = ({navigation}) => {
           }}/>
       </View>
 
-    </SafeAreaView>
+    </View>
 
   );
 };
