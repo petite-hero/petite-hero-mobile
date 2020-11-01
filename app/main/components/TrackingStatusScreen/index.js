@@ -1,18 +1,18 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Arrow } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import * as Notifications from 'expo-notifications';
+
 import styles from './styles/index.css';
 import { COLORS, PORT, NOTI } from '../../../const/const';
-import { AsyncStorage } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import TaskScreen from '../TaskScreen';
 import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
 
-import * as Notifications from 'expo-notifications';
 
 // silent notification for updating location
 Notifications.setNotificationHandler({
@@ -209,7 +209,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       />
 
       {/* view map button */}
-      <TouchableOpacity style={[styles.warningBtn, {backgroundColor: trackingStatus === "NOT SAFE" ? "red" : "rgba(255, 0, 0, 0.8)"}]}
+      <TouchableOpacity style={[styles.warningBtn, {backgroundColor: trackingStatus === "NOT SAFE" ? "red" : "rgba(255, 0, 0, 0.7)"}]}
                         onPress={() => navigation.navigate("TrackingEmergency")}>
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
@@ -227,12 +227,6 @@ const TrackingStatusScreenContent = ({ navigation }) => {
                       {width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO}]}/>
         <Text style={styles.locationStatus}>{trackingStatus}</Text>
       </View>
-
-      {/* {trackingStatus === "NOT SAFE" ?
-        <TouchableOpacity style={styles.dismissBtn} onPress={() => setIsDismissed(!isDismissed)}>
-          <Text style={styles.dismissBtnText}>{isDismissed ? "DISMISSED" : "DISMISS"}</Text>
-        </TouchableOpacity>
-      : null} */}
 
       {/* setting buttons */}
       <View style={styles.settingBtnsContainer}>

@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing } from 'react-native';
+import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing, Alert } from 'react-native';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { COLORS, PORT } from "../../../const/const";
 
 import Util from './util';
+import { Loader } from '../../../utils/loader';
 import TrackingSettingMap from './map';
 import TrackingSettingControlPanel from './control-panel';
 import TrackingSettingLocation from './setting-panel';
@@ -15,7 +16,10 @@ import TrackingSettingButtons from './buttons';
 
 const TrackingSettingsScreen = ({ route }) => {
 
+  {/* ===================== VARIABLE SECTION ===================== */}
+
   // states
+  [isLoading, setIsLoading] = React.useState(false);
   [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
   [substatus, setSubstatus] = React.useState("");  // "", TYPE, REPEAT, SEARCH
   const CURRENT_DATE = Util.dateToHour0(route.params.date);
@@ -44,6 +48,7 @@ const TrackingSettingsScreen = ({ route }) => {
   [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatAll, setLRepeatAll] = React.useState(false);
+  [searchBar, setSearchBar] = React.useState(null);
 
   // animation
   const FLY_DURATION = 300;
@@ -51,6 +56,10 @@ const TrackingSettingsScreen = ({ route }) => {
   const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
   const animSettingLocProps = React.useRef(new Animated.Value(0)).current;
   const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
+
+  {/* ===================== END OF VARIABLE SECTION ===================== */}
+
+  {/* ===================== API SECTION ===================== */}
 
   // fetch location list
   const fetchLocList = async () => {
@@ -65,7 +74,11 @@ const TrackingSettingsScreen = ({ route }) => {
     }
   }
   React.useEffect(() => {
-    fetchLocList()
+    (async () => {
+      setIsLoading(true);
+      await fetchLocList();
+      setIsLoading(false);
+    })();
   }, []);
 
   // add location
@@ -91,11 +104,51 @@ const TrackingSettingsScreen = ({ route }) => {
     const result = await response.json();
     if (result.code !== 200) console.log("Error while adding location. Server response: " + JSON.stringify(result));
   }
+
+  // edit location
+  const editLocation = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const userId = await AsyncStorage.getItem('user_id');
+    const body = JSON.stringify({
+      childId: childId,
+      creator: userId,
+      date: CURRENT_DATE.getTime(),
+      safezoneId: settingLocDetail.safezoneId,
+      fromTime: lInTimeDate,
+      latitude: settingLocDetail.latitude,
+      longitude: settingLocDetail.longitude,
+      name: lName,
+      radius: lRadius,
+      repeatOn: "",
+      toTime: lOutTimeDate,
+      type: lType
+    });
+    const response = await fetch('http://' + ip + PORT + '/location/safezone',
+      {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: body});
+    const result = await response.json();
+    if (result.code !== 200) console.log("Error while updating location. Server response: " + JSON.stringify(result));
+  }
+
+  // delete location
+  const deleteLocation = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const safeZoneId = settingLocDetail.safezoneId;
+    const response = await fetch('http://' + ip + PORT + '/location/safezone/' + safeZoneId, {method: 'DELETE'});
+    const result = await response.json();
+    if (result.code !== 200) console.log("Error while deleting location. Server response: " + JSON.stringify(result));
+  }
+
+  {/* ===================== END OF API SECTION ===================== */}
   
 
+  {/* ==================================================================================================== */}
+  {/* ========================================== USER INTERFACE ========================================== */}
   return (
 
     <View style={styles.container}>
+
+      <Loader loading={isLoading}/>
 
       {/* ===================== MAP SECTION ===================== */}
 
@@ -120,7 +173,7 @@ const TrackingSettingsScreen = ({ route }) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
-      {/* child avatar */}
+      {/* child avatar & date */}
       {substatus === "SEARCH" ? null : [
         <Image key={0}
           style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
@@ -141,6 +194,8 @@ const TrackingSettingsScreen = ({ route }) => {
           substatus={substatus}
           locList={locList}
 
+          setIsLoading={setIsLoading}
+          setSearchBar={setSearchBar}
           onSearchBarPress={() => setSubstatus("SEARCH")}
           onSearchResultPress={(data, details = null) => {
             setMapLoc({name: details.name, latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
@@ -245,19 +300,15 @@ const TrackingSettingsScreen = ({ route }) => {
 
       </View>
 
-      
-
-      {/* ===================== END CONTROL PANEL SECTION ===================== */}
-
-      {/* ===================== LOCATION SETTING SECTION ===================== */}
-
-      {/* ===================== END LOCATION SETTING SECTION ===================== */}
-
+      {/* action buttons */}
       <TrackingSettingButtons
 
         status={status}
 
-        onPinningCancel={() => setStatus("VIEWING")}
+        onPinningCancel={() => {
+          setStatus("VIEWING");
+          searchBar.setAddressText("");
+        }}
         onPinningConfirm={() => {
           setSettingLocMap(mapLoc);
           setSettingLocDetail(mapLoc);
@@ -272,6 +323,7 @@ const TrackingSettingsScreen = ({ route }) => {
           setLInitialRadius(RADIUS_MIN);
           
           setStatus("SETTING_LOC_NEW");
+          searchBar.setAddressText("");
           animSettingLoc.setValue(1);
         }}
 
@@ -290,9 +342,11 @@ const TrackingSettingsScreen = ({ route }) => {
         onSettingSave={() => {
           if (substatus === ""){
             (async() => {
+              setIsLoading(true);
               if (status === "SETTING_LOC_NEW") await addLocation();
-              else if (status === "SETTING_LOC"){ } // edit loc
+              else if (status === "SETTING_LOC") await editLocation();
               await fetchLocList();
+              setIsLoading(false);
               animSettingLoc.setValue(1);
               Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
               setStatus("VIEWING");
@@ -311,8 +365,24 @@ const TrackingSettingsScreen = ({ route }) => {
               .start(() => setSubstatus(""));
           }
         }}
+        onSettingDelete={() => {
+          Alert.alert(null, 'Delete this location?',
+            [{text: 'OK', onPress: async() => {
+                setIsLoading(true);
+                await deleteLocation();
+                await fetchLocList();
+                setIsLoading(false);
+                animSettingLoc.setValue(1);
+                Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+                setStatus("VIEWING");
+            }},
+            {text: 'Cancel'}]
+          );
+        }}
 
       />
+      
+      {/* ===================== END CONTROL PANEL SECTION ===================== */}
 
     </View>
 

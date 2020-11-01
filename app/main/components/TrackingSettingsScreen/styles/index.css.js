@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     color: 'white',
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: COLORS.STRONG_CYAN
   },
 
   // gg maps
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     borderRadius: 20,
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
   },
 
   // control panel
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     right: wp('5%'),
     height: hp('45%'),
     borderRadius: hp('4%'),  // same as nav bar
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   controlPanelContainerFocused:{
     overflow: "hidden",
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   controlPanelFocused:{
     position: "absolute",
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     width: wp("90%"),
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.LIGHT_CYAN
   },
 
   // search bar
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnSetLocCheck: {
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
   },
   btnSetLocCancel: {
     backgroundColor: 'white'
@@ -268,10 +268,14 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   btnSaveLocCheck: {
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
   },
   btnSaveLocCancel: {
     backgroundColor: 'white'
+  },
+  btnSaveLocDelete: {
+    backgroundColor: 'red',
+    marginRight: wp("90%") - 20*2-44*3-7*5
   }
 
 });

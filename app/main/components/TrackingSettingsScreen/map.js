@@ -4,7 +4,7 @@ import MapView, { Marker, Circle }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
-import { COLORS } from "../../../const/const";
+import { COLORS, changeOpac } from "../../../const/const";
 
 
 const TrackingSettingMap = (props) => {
@@ -37,7 +37,7 @@ const TrackingSettingMap = (props) => {
             <View style={styles.safeLoc}/>
           </Marker>,
           <Circle key={1} center={{latitude: props.settingLoc.latitude, longitude: props.settingLoc.longitude}}
-                  radius={props.lRadius} fillColor={"rgba(244, 126, 62, 0.4)"} strokeWidth={0}/>
+                  radius={props.lRadius} fillColor={changeOpac(COLORS.STRONG_CYAN, 0.4)} strokeWidth={0}/>
           ]
           : null}
 
@@ -48,7 +48,7 @@ const TrackingSettingMap = (props) => {
     // fixed pin
     status === "PINNING" ?
       <View key={1} style={styles.fixedPin}>
-        <Icon name='location-on' type='material' color={COLORS.STRONG_ORANGE} size={50}/>
+        <Icon name='location-on' type='material' color={COLORS.STRONG_CYAN} size={50}/>
       </View>
     : null
 

@@ -7,6 +7,7 @@ import styles from './styles/index.css';
 
 
 const TrackingSettingControlPanel = (props) => {
+
   return (
 
     <View style={props.substatus === "SEARCH" ? styles.controlPanelFocused : styles.controlPanel}>
@@ -14,7 +15,7 @@ const TrackingSettingControlPanel = (props) => {
       {/* search bar */}
       <View style={props.substatus === "SEARCH" ? styles.searchBarContainerFocused : styles.searchBarContainer}>
         <GooglePlacesAutocomplete
-          // ref={(instance) => { setSearchBar(instance) }}
+          ref={(instance) => { props.setSearchBar(instance) }}
           styles={props.substatus === "SEARCH" ?
             {textInputContainer: styles.textInputContainerFocused, textInput: styles.textInputFocused, listView: styles.listView} :
             {textInputContainer: styles.textInputContainer, textInput: styles.textInput}}

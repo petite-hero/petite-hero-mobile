@@ -14,7 +14,7 @@ export const Loader = (props) => {
           <ActivityIndicator
             animating={props.loading}
             size="large"
-            color={COLORS.STRONG_ORANGE}
+            color={COLORS.STRONG_CYAN}
           />
         </View>
       </View>
