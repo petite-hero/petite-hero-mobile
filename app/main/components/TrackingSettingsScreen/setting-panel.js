@@ -3,7 +3,7 @@ import { View, Text, TextInput, Animated } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import TimePicker from 'react-time-picker';
+// import TimePicker from 'react-time-picker';
 
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
@@ -59,10 +59,10 @@ const TrackingSettingLocation = (props) => {
         <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={() => setShowFromTimePicker(true)}>
           {props.fromTime == "None" ? props.fromTime : props.fromTime.slice(0, -3)}
         </Text>
-        <TimePicker
+        {/* <TimePicker
           onChange={(time) => console.log(time)}
           value={"00:00"}
-        />
+        /> */}
         {showFromTimePicker ?
           <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
             setShowFromTimePicker(false);
