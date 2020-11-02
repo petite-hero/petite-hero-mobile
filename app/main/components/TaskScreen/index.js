@@ -74,7 +74,7 @@ const TaskBoard = ({ list, refresh, confirm }) => {
         })}
       </View>
       <View style={styles.taskBoard}>
-        { (tabs[0].active && list[0].length == 0) || (tabs[1].active && list[1].length == 0) ?
+        { (tabs[0].active && list[0] && list[0].length == 0) || (tabs[1].active && list[1] && list[1].length == 0) ?
             <View style={{
               alignItems: "center",
               justifyContent: "center",
