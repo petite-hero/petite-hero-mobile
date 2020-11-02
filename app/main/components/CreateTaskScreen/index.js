@@ -232,8 +232,8 @@ const CreateTaskScreen = (props) => {
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [category, setCategory] = useState("");
-  const [startTime, setStartTime] = useState(new Date().setHours(7, 0, 0));
-  const [endTime, setEndTime] = useState(new Date().setHours(12, 0, 0));
+  const [startTime, setStartTime] = useState(new Date(new Date().setHours(7, 0, 0)).getTime());
+  const [endTime, setEndTime] = useState(new Date(new Date().setHours(12, 0, 0)).getTime());
   const [loading, setLoading] = useState(false);
   const [repeatOn, setRepeatOn] = useState([
     {day: "Monday", active: false},
@@ -254,8 +254,8 @@ const CreateTaskScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
-      const repeatArray = repeatOn.reduce((accelerator, currentValue) => {
-        return accelerator + +currentValue.active;
+      const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
+        return accumulator + +currentValue.active;
       }, "");
       const type = categories.find(category => category.active).title;
       const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {

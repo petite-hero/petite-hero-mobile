@@ -6,22 +6,40 @@ import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/index.css';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { fetchWithTimeout } from '../../../utils/fetch';
 import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
 import { ConfirmationModal } from '../../../utils/modal';
+import { fetchWithTimeout } from '../../../utils/fetch';
+
+const categories = [
+  {title: "Housework", name: "broom", type: "material-community", color: COLORS.YELLOW},
+  {title: "Education", name: "school", type: "material", color: COLORS.STRONG_CYAN},
+  {title: "Skills", name: "toys", type: "material", color: COLORS.GREEN}
+];
+
+const handleShowTime = (time) => {
+  const tmp = time ? time.split(":") : "00:00:00".split(":");
+  return tmp[0] + ":" + tmp[1];
+}
+
+const handleShowCategory = (category) => {
+  return categories.find(item => item.title === category);
+}
 
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
   const dates = [];
   while (date.getMonth() === month) {
     const tmp = new Date(date).toDateString().split(" ");
+    const dateString = new Date(date).toDateString();
     dates.push({
       dayOfWeek: tmp[0],
       month: tmp[1],
       monthNum: date.getMonth(),
       day: tmp[2],
-      year: tmp[3]
+      year: tmp[3],
+      numOfHandedTasks: 0,
+      date: new Date(dateString).getTime()
     });
     date.setDate(date.getDate() + 1);
   }
@@ -36,7 +54,7 @@ const getDateIndex = (dates, date = new Date().toDateString()) => {
   return index > (dates.length - 1) ? dates.length - 5 : index - 2;
 }
 
-const TaskBoard = ({ list, refresh, confirm }) => {
+const TaskBoard = ({ list, refresh, confirm, navigation }) => {
   const [tabs, setTabs] = useState(
     [
       {title: "In Progress", active : true},
@@ -91,7 +109,7 @@ const TaskBoard = ({ list, refresh, confirm }) => {
           :
             <FlatList
               data={tabs[0].active ? list[0] : list[1]}
-              renderItem={(item) => TaskItem(item, refresh, confirm)}
+              renderItem={({item, index}) => TaskItem(item, index, refresh, confirm, navigation)}
               keyExtractor={item => item.taskId + ""}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
@@ -105,7 +123,8 @@ const TaskBoard = ({ list, refresh, confirm }) => {
 };
 
 // represent an item in task list
-const TaskItem = ({ item }, refresh, confirm) => {
+const TaskItem = (item, index, refresh, confirm, navigation) => {
+  const category = handleShowCategory(item.type);
   const deleteTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
@@ -121,9 +140,10 @@ const TaskItem = ({ item }, refresh, confirm) => {
       handleError(error.message);
     }
   }
-
   return (
-    <Swipeable 
+    item &&
+    <Swipeable
+      key={index}
       containerStyle={{overflow: "visible", marginLeft: 15, marginRight: 15}}
       renderRightActions={() => (
         <TouchableOpacity style={{
@@ -149,31 +169,45 @@ const TaskItem = ({ item }, refresh, confirm) => {
       <View style={{
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center"
       }}>
         <View style={{
           width: wp("12%"),
           height: wp("12%"),
           borderRadius: wp("6%"),
-          backgroundColor: COLORS.YELLOW,
-          marginRight: -23,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: category.color,
+          marginRight: -wp("6%"),
+          marginTop: -hp("2%"),
           elevation: 8,
-          marginTop: -hp("2%")
-        }}/>
-        <TouchableOpacity style={styles.taskItem}>
+        }}>
+          <Icon
+            name={category.name}
+            type={category.type}
+            color={COLORS.WHITE}
+          />
+        </View>
+        <TouchableOpacity 
+          style={styles.taskItem}
+          onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {setLoading(true)}})}}
+        >
           <View style={{
             flexDirection: "row", 
             justifyContent: "space-between",
-            marginLeft: wp("5%"),
-            marginRight: wp("5%")
+            alignItems: "center",
+            marginLeft: wp("7.5%"),
+            marginRight: wp("5%"),
           }}>
             <View style={{
-              width: "75%",
-              flexShrink: 1
+              flexDirection: "column",
+              maxWidth: "75%",
+              flexShrink: 1,
+              justifyContent: "center",
             }}>
               <Text style={{
                 fontSize: hp("2.5%"),
                 fontFamily: "AcuminBold", 
-                marginLeft: wp("2.5%"),
                 color: COLORS.BLACK
               }}>
                 {item.name}
@@ -198,8 +232,8 @@ const TaskItem = ({ item }, refresh, confirm) => {
               </Text>
             </View>
           </View>
-          <View style={{marginLeft: wp("5%"), fontSize: hp("2.5%"), fontFamily: "Acumin", marginTop: 10}}>
-            <Text>{item.time}</Text>
+          <View style={{marginLeft: wp("7.5%"), fontSize: hp("2.5%"), fontFamily: "Acumin", marginTop: 10}}>
+            <Text>{handleShowTime(item.toTime)}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -210,7 +244,7 @@ const TaskItem = ({ item }, refresh, confirm) => {
 // represent an item in date list
 const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, refresh) => {
   return (
-    <>
+    <View key={index}>
       {index !== currentIndex ?
       (
         <TouchableOpacity style={styles.dateContainer}
@@ -230,19 +264,20 @@ const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, s
           <Text style={[styles.dateNum, styles.dateTextActive]}>{item.day}</Text>
         </TouchableOpacity>
       )}
-    </>
+    </View>
   )
 };
 
 const TaskScreen = (props) => {
-  const { t }                           = useContext(props.route.params.localizationContext);
-  const [date, setDate]                 = useState(new Date().getTime());
-  const [list, setList]                 = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading]           = useState(false);
-  const [isShowed, setShow]             = useState(false);
-  const [dates, setDates]               = useState(getDaysInMonth(new Date().getMonth(), new Date().getFullYear()));
-  const refDateFlatlist                 = useRef(null);
+  const { t }                               = useContext(props.route.params.localizationContext);
+  const [date, setDate]                     = useState(new Date().getTime());
+  const [list, setList]                     = useState([]);
+  const [handedTaskList, setHandedTaskList] = useState([]);
+  const [modalVisible, setModalVisible]     = useState(false);
+  const [loading, setLoading]               = useState(false);
+  const [isShowed, setShow]                 = useState(false);
+  const [dates, setDates]                   = useState(getDaysInMonth(new Date().getMonth(), new Date().getFullYear()));
+  const refDateFlatlist                     = useRef(null);
   //
   const currentDateIndex = getDateIndex(dates) + 2;
   const [currentIndex, setCurrentIndex] = useState(currentDateIndex);
@@ -289,7 +324,7 @@ const TaskScreen = (props) => {
     (async() => {
       try {
         const ip = await AsyncStorage.getItem('IP');
-        const response = await fetchWithTimeout('http://' + ip + PORT + '/task/list/1?date=' + date);
+        const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1?date=" + date);
         const result = await response.json();
         if (result.code === 200) {
           setList(groupTasksByStatus(result.data));
@@ -306,7 +341,7 @@ const TaskScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <ConfirmationModal visible={modalVisible} message="Are you sure you want to delete?" setVisible={setModalVisible}/>
+      {/* <ConfirmationModal visible={modalVisible} message="Are you sure you want to delete?" setVisible={setModalVisible}/> */}
       <Loader loading={loading}/>
       {isShowed &&
         <DateTimePicker
@@ -376,7 +411,7 @@ const TaskScreen = (props) => {
           />
         </View>
       </View>
-      <TaskBoard list={list} refresh={setLoading} confirm={setModalVisible}/>
+      <TaskBoard list={list} refresh={setLoading} confirm={setModalVisible} navigation={props.navigation}/>
     </View>
   );
 };
