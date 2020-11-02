@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    paddingBottom: 15,
     backgroundColor: COLORS.LIGHT_CYAN
   },
   controlPanelFocused:{
@@ -115,11 +116,13 @@ const styles = StyleSheet.create({
   // search bar
   searchBarContainer: {
     height: 54,  // equals to textInput + margins
-    backgroundColor: "rgba(255, 255, 255, 0)"
+    marginBottom: 5,
+    backgroundColor: "rgba(255, 255, 255, 0)",
   },
   searchBarContainerFocused:{
     height: hp('100%'),
-    backgroundColor: "rgba(255, 255, 255, 0.6)"
+    marginBottom: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
   textInputContainer: {
     height: 54,  // equals to textInput + margins

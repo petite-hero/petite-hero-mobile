@@ -1,7 +1,9 @@
 class Util{
 
-  static LOC_FPT = {latitude: 10.8414846, longitude: 106.8100464};
-  static LOCATION_ZOOM = {latitudeDelta: 0.024, longitudeDelta: 0.012};
+  static MAP_ZOOM = {latitudeDelta: 0.032, longitudeDelta: 0.016};
+  static REGION_FPT = {latitude: 10.8414846, longitude: 106.8100464,
+    latitudeDelta: this.MAP_ZOOM.latitudeDelta, longitudeDelta: this.MAP_ZOOM.longitudeDelta};
+  
   static MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   static WEEKDAYS_ABB = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 

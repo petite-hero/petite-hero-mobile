@@ -26,15 +26,12 @@ const TrackingSettingsScreen = ({ route }) => {
   const RADIUS_MIN = 40;
 
   // map positioning & zooming
-  [mapLoc, setMapLoc] = React.useState(Util.LOC_FPT);  // FPT University location
-  [latitudeDelta, setLatitudeDelta] = React.useState(Util.LOCATION_ZOOM.latitudeDelta);
-  [longitudeDelta, setLongitudeDelta] = React.useState(Util.LOCATION_ZOOM.longitudeDelta);
+  [map, setMap] = React.useState(null);
   
   // location list
   [locList, setLocList] = React.useState([]);
 
   // attributes for setting a location
-  [settingLoc, setSettingLoc] = React.useState({});
   [settingLocMap, setSettingLocMap] = React.useState({});
   [settingLocDetail, setSettingLocDetail] = React.useState({});
   [lName, setLName] = React.useState("");
@@ -42,8 +39,8 @@ const TrackingSettingsScreen = ({ route }) => {
   [lTypeTmp, setLTypeTmp] = React.useState("None");
   [lRadius, setLRadius] = React.useState(0);
   [lInitialRadius, setLInitialRadius] = React.useState(0);
-  [lInTime, setLInTime] = React.useState("None");  [lInTimeDate, setLInTimeDate] = React.useState(null);
-  [lOutTime, setLOutTime] = React.useState("None");  [lOutTimeDate, setLOutTimeDate] = React.useState(null);
+  [lFromTime, setLFromTime] = React.useState("None");  [lFromTimeDate, setLFromTimeDate] = React.useState(null);
+  [lToTime, setLToTime] = React.useState("None");  [lToTimeDate, setLToTimeDate] = React.useState(null);
   [lIndex, setLIndex] = React.useState(0);
   [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
@@ -51,6 +48,7 @@ const TrackingSettingsScreen = ({ route }) => {
   [searchBar, setSearchBar] = React.useState(null);
 
   // animation
+  const MAP_DURATION = 700;
   const FLY_DURATION = 300;
   const animSettingLoc = React.useRef(new Animated.Value(0)).current;
   const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
@@ -67,11 +65,8 @@ const TrackingSettingsScreen = ({ route }) => {
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
     const result = await response.json();
-    if (result.code === 200) {
-      setLocList(result.data);
-    } else {
-      console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
-    }
+    if (result.code === 200) setLocList(result.data);
+    else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
   }
   React.useEffect(() => {
     (async () => {
@@ -90,13 +85,13 @@ const TrackingSettingsScreen = ({ route }) => {
       childId: childId,
       creator: userId,
       date: CURRENT_DATE.getTime(),
-      fromTime: lInTimeDate,
+      fromTime: lFromTimeDate,
       latitude: settingLocDetail.latitude,
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
       repeatOn: "",
-      toTime: lOutTimeDate,
+      toTime: lToTimeDate,
       type: lType
     });
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
@@ -115,13 +110,13 @@ const TrackingSettingsScreen = ({ route }) => {
       creator: userId,
       date: CURRENT_DATE.getTime(),
       safezoneId: settingLocDetail.safezoneId,
-      fromTime: lInTimeDate,
+      fromTime: lFromTimeDate,
       latitude: settingLocDetail.latitude,
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
       repeatOn: "",
-      toTime: lOutTimeDate,
+      toTime: lToTimeDate,
       type: lType
     });
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
@@ -155,18 +150,14 @@ const TrackingSettingsScreen = ({ route }) => {
       <TrackingSettingMap
 
         status={status}
-        mapLoc={mapLoc}
-        latitudeDelta={latitudeDelta}
-        longitudeDelta={longitudeDelta}
         locList={locList}
         
         settingLoc={settingLocMap}
         lRadius={lRadius}
         
+        setMap={setMap}
         onRegionChangeComplete={(region) => {
-          setMapLoc({name: mapLoc.name, latitude: region.latitude, longitude: region.longitude});
-          setLatitudeDelta(region.latitudeDelta);
-          setLongitudeDelta(region.longitudeDelta);
+          if (status === "PINNING") setSettingLocMap({latitude: region.latitude, longitude: region.longitude});
         }}
 
       />
@@ -198,10 +189,11 @@ const TrackingSettingsScreen = ({ route }) => {
           setSearchBar={setSearchBar}
           onSearchBarPress={() => setSubstatus("SEARCH")}
           onSearchResultPress={(data, details = null) => {
-            setMapLoc({name: details.name, latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
+            setSettingLocMap({latitude: details.geometry.location.lat, longitude: details.geometry.location.lng});
+            setLName(details.name);
+            map.animateToRegion({latitude: details.geometry.location.lat, longitude: details.geometry.location.lng,
+              latitudeDelta: Util.MAP_ZOOM.latitudeDelta, longitudeDelta: Util.MAP_ZOOM.longitudeDelta}, MAP_DURATION);
             setSubstatus("");
-            setLatitudeDelta(Util.LOCATION_ZOOM.latitudeDelta);
-            setLongitudeDelta(Util.LOCATION_ZOOM.longitudeDelta);
             setStatus("PINNING");
           }}
           onBackIconPress={() => {
@@ -210,18 +202,17 @@ const TrackingSettingsScreen = ({ route }) => {
           }}
 
           onLocationItemPress={(loc, index) => {
+            map.animateToRegion({latitude: loc.latitude-Util.MAP_ZOOM.latitudeDelta/4, longitude: loc.longitude,
+              latitudeDelta: Util.MAP_ZOOM.latitudeDelta, longitudeDelta: Util.MAP_ZOOM.longitudeDelta}, MAP_DURATION);
             setSettingLocMap(loc);
             setSettingLocDetail(loc);
-            setMapLoc({latitude: loc.latitude-latitudeDelta/4, longitude: loc.longitude});
             setLName(loc.name);
             setLRadius(loc.radius);
             setLInitialRadius(loc.radius);
-            setLInTime(loc.fromTime);
-            setLOutTime(loc.toTime);
+            setLFromTime(loc.fromTime);
+            setLToTime(loc.toTime);
             setLType(loc.type)
             setLIndex(index);
-            setLatitudeDelta(Util.LOCATION_ZOOM.latitudeDelta);
-            setLongitudeDelta(Util.LOCATION_ZOOM.longitudeDelta);
             setStatus("SETTING_LOC");
             animSettingLoc.setValue(0);
             Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
@@ -235,10 +226,11 @@ const TrackingSettingsScreen = ({ route }) => {
           animLeft={animSettingLocLeft}
 
           settingLoc={settingLocDetail}
+          name={lName}
           type={lType}
           radius={lRadius}
-          fromTime={lInTime}
-          ttoTime={lOutTime}
+          fromTime={lFromTime}
+          ttoTime={lToTime}
           repeat={lRepeat}
           initialRadius={lInitialRadius}
 
@@ -246,13 +238,13 @@ const TrackingSettingsScreen = ({ route }) => {
           onRadiusChange={(value) => setLRadius(value)}
           onFromTimeSelected={(event, time) => {
             if (time == null) return;
-            setLInTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
-            setLInTimeDate(time);
+            setLFromTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
+            setLFromTimeDate(time);
           }}
           onToTimeSelected={(event, time) => {
             if (time == null) return;
-            setLOutTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
-            setLOutTimeDate(time);
+            setLToTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
+            setLToTimeDate(time);
           }}
 
           onTypeSelecting={() => {
@@ -264,6 +256,9 @@ const TrackingSettingsScreen = ({ route }) => {
           onRepeatSelecting={() => {
             setSubstatus("REPEAT");
             setLRepeatTmp([...lRepeat]);
+            let isRepeatAll = true;  // check repeat all
+            lRepeat.map((day, index) => { if(!day) isRepeatAll = false; });
+            if (isRepeatAll != lRepeatAll) setLRepeatAll(isRepeatAll);
             animSettingLocProps.setValue(0);
             Animated.timing(animSettingLocProps, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
           }}
@@ -288,6 +283,9 @@ const TrackingSettingsScreen = ({ route }) => {
             let newLRepeat = [...lRepeatTmp];
             newLRepeat[index] = !newLRepeat[index];
             setLRepeatTmp(newLRepeat);
+            let isRepeatAll = true;  // check repeat all
+            newLRepeat.map((day, index) => { if(!day) isRepeatAll = false; });
+            if (isRepeatAll != lRepeatAll) setLRepeatAll(isRepeatAll);
           }}
           onRepeatEntryAllSelected={() => {
             let newLRepeat = [...lRepeatTmp];
@@ -310,15 +308,13 @@ const TrackingSettingsScreen = ({ route }) => {
           searchBar.setAddressText("");
         }}
         onPinningConfirm={() => {
-          setSettingLocMap(mapLoc);
-          setSettingLocDetail(mapLoc);
-          setLName(mapLoc.name);
-          setMapLoc({latitude: mapLoc.latitude-latitudeDelta/4, longitude: mapLoc.longitude});
-
+          setSettingLocDetail(Object.assign({}, settingLocMap));
+          map.animateToRegion({latitude: settingLocMap.latitude-Util.MAP_ZOOM.latitudeDelta/4, longitude: settingLocMap.longitude,
+            latitudeDelta: Util.MAP_ZOOM.latitudeDelta, longitudeDelta: Util.MAP_ZOOM.longitudeDelta}, 700);
           setLType("None");
           setLRadius(RADIUS_MIN);
-          setLInTime("None");
-          setLOutTime("None");
+          setLFromTime("None");
+          setLToTime("None");
           setLRepeat([false, false, false, false, false, false, false]);
           setLInitialRadius(RADIUS_MIN);
           
@@ -341,6 +337,19 @@ const TrackingSettingsScreen = ({ route }) => {
         }}
         onSettingSave={() => {
           if (substatus === ""){
+            // validation
+            let validation = "";
+            if (lName == "") validation = "Please specify location name";
+            if (lType != "Home"){
+              if (!lFromTime || lFromTime === "None") validation = "Please specify the time at 'From'";
+              else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
+              else if (lFromTime >= lToTime) validation = "'From' time shall be before 'To'";
+            }
+            if (validation != ""){
+              Alert.alert(null, validation, [{text: 'OK'}], {cancelable: true});
+              return;
+            }
+            // save & load loc list
             (async() => {
               setIsLoading(true);
               if (status === "SETTING_LOC_NEW") await addLocation();
@@ -367,7 +376,9 @@ const TrackingSettingsScreen = ({ route }) => {
         }}
         onSettingDelete={() => {
           Alert.alert(null, 'Delete this location?',
-            [{text: 'OK', onPress: async() => {
+            [
+              {text: 'Cancel'},
+              {text: 'OK', onPress: async() => {
                 setIsLoading(true);
                 await deleteLocation();
                 await fetchLocList();
@@ -375,8 +386,9 @@ const TrackingSettingsScreen = ({ route }) => {
                 animSettingLoc.setValue(1);
                 Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
                 setStatus("VIEWING");
-            }},
-            {text: 'Cancel'}]
+              }}
+            ],
+            {cancelable: true}
           );
         }}
 

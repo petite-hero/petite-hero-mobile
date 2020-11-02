@@ -6,6 +6,8 @@ import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
 import { COLORS, changeOpac } from "../../../const/const";
 
+import Util from "./util";
+
 
 const TrackingSettingMap = (props) => {
   
@@ -15,8 +17,9 @@ const TrackingSettingMap = (props) => {
     <View key={0} style={{...StyleSheet.absoluteFillObject}}>
 
       <MapView
+        ref={(instance) => { props.setMap(instance) }}
         style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
-        region={{latitude: props.mapLoc.latitude, longitude: props.mapLoc.longitude, latitudeDelta: props.latitudeDelta, longitudeDelta: props.longitudeDelta}}
+        initialRegion={Util.REGION_FPT}
         showsUserLocation={true}
         showsMyLocationButton={false}
         onRegionChangeComplete={props.onRegionChangeComplete}>

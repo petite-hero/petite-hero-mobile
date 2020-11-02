@@ -34,21 +34,25 @@ const TrackingSettingControlPanel = (props) => {
 
       {/* panel content */}
       <ScrollView style={props.substatus === "SEARCH" ? styles.panelContentFocused : styles.panelContent}>
-      <View style={{flexDirection: "row"}}>
-        {/* location list */}
-        <View style={{flex: 8}}>
-        {props.status === "VIEWING" ? locList.map((loc, index) => {
-          return (
-          <TouchableOpacity key={index} style={styles.locationContainer} onPress={() => props.onLocationItemPress(loc, index)}>
-            <Text style={styles.locationName}>{loc.name}</Text>
-            <Text style={styles.locationTime}>{loc.fromTime.slice(0, -3)} - {loc.toTime.slice(0, -3)}</Text>
-            <View style={styles.rightIcon}><Icon name='keyboard-arrow-right' type='material'/></View>
-          </TouchableOpacity>
-          )
-        })
-        : null}
+        <View style={{flexDirection: "row"}}>
+          {/* location list */}
+          <View style={{flex: 8}}>
+          {props.status === "VIEWING" ? locList.map((loc, index) => {
+            return (
+            <TouchableOpacity key={index} style={styles.locationContainer} onPress={() => props.onLocationItemPress(loc, index)}>
+              <View style={{flexDirection: "row"}}>
+                <Text style={styles.locationName}>{loc.name} </Text>
+                {loc.type === "Home" ? <Icon name='home' type='material'/> : null}
+                {loc.type === "Education" ? <Icon name='school' type='material'/> : null}
+              </View>
+              <Text style={styles.locationTime}>{loc.fromTime ? loc.fromTime.slice(0, -3)+" - "+loc.toTime.slice(0, -3) : "All day"}</Text>
+              <View style={styles.rightIcon}><Icon name='keyboard-arrow-right' type='material'/></View>
+            </TouchableOpacity>
+            )
+          })
+          : null}
+          </View>
         </View>
-      </View>
       </ScrollView>
 
     </View>

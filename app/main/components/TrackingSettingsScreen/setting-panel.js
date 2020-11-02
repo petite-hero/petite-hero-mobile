@@ -3,7 +3,6 @@ import { View, Text, TextInput, Animated } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import TimePicker from 'react-time-picker';
 
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
@@ -26,7 +25,7 @@ const TrackingSettingLocation = (props) => {
       {/* field: name */}
       <TextInput
         onChangeText={props.onNameChange}
-        defaultValue={props.settingLoc.name}
+        defaultValue={props.name}
         style={styles.txtInputLocName}
       />
 
@@ -36,7 +35,7 @@ const TrackingSettingLocation = (props) => {
         <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={props.onTypeSelecting}>
           {props.type}
         </Text>
-        <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
+        <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
       </View>
 
       {/* field: radius */}
@@ -54,45 +53,47 @@ const TrackingSettingLocation = (props) => {
       </View>
 
       {/* field: from time */}
-      <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 3}}>From</Text>
-        <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={() => setShowFromTimePicker(true)}>
-          {props.fromTime == "None" ? props.fromTime : props.fromTime.slice(0, -3)}
-        </Text>
-        <TimePicker
-          onChange={(time) => console.log(time)}
-          value={"00:00"}
-        />
-        {showFromTimePicker ?
-          <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
-            setShowFromTimePicker(false);
-            props.onFromTimeSelected(null, time);
-          }}/>
-        : null}
-      </View>
+      {props.type === "Home" ? null :
+        <View style={{flexDirection: "row", marginTop: 15}}>
+          <Text style={{flex: 3}}>From</Text>
+          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={() => setShowFromTimePicker(true)}>
+            {props.fromTime == "None" || props.fromTime == null ? "None" : props.fromTime.slice(0, -3)}
+          </Text>
+          {showFromTimePicker ?
+            <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
+              setShowFromTimePicker(false);
+              props.onFromTimeSelected(null, time);
+            }}/>
+          : null}
+        </View>
+      }
 
       {/* field: to time */}
-      <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 3}}>To</Text>
-        <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={() => setShowToTimePicker(true)}>
-          {props.ttoTime == "None" ? props.ttoTime : props.ttoTime.slice(0, -3)}
-        </Text>
-        {showToTimePicker ?
-          <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
-            setShowToTimePicker(false);
-            props.onToTimeSelected(null, time);
-          }}/>
-        : null}
-      </View>
+      {props.type === "Home" ? null :
+        <View style={{flexDirection: "row", marginTop: 15}}>
+          <Text style={{flex: 3}}>To</Text>
+          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={() => setShowToTimePicker(true)}>
+            {props.ttoTime == "None" || props.ttoTime == null ? "None" : props.ttoTime.slice(0, -3)}
+          </Text>
+          {showToTimePicker ?
+            <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
+              setShowToTimePicker(false);
+              props.onToTimeSelected(null, time);
+            }}/>
+          : null}
+        </View>
+      }
 
       {/* field: repeat */}
-      <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 3}}>Repeat on</Text>
-        <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={props.onRepeatSelecting}>
-          {Util.repeatArrToShowStr(props.repeat)}
-        </Text>
-        <Icon style={{flex: 1}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
-      </View>
+      {props.type === "Home" ? null :
+        <View style={{flexDirection: "row", marginTop: 15}}>
+          <Text style={{flex: 3}}>Repeat on</Text>
+          <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN}} onPress={props.onRepeatSelecting}>
+            {Util.repeatArrToShowStr(props.repeat)}
+          </Text>
+          <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
+        </View>
+      }
 
     </Animated.View>
 

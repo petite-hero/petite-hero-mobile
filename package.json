@@ -33,6 +33,7 @@
     "firebase": "^7.23.0",
     "i18n-js": "^3.7.1",
     "react": "~16.11.0",
+    "react-clock": "^3.0.0",
     "react-dom": "~16.11.0",
     "react-intl": "^5.8.2",
     "react-native": "~0.62.2",
