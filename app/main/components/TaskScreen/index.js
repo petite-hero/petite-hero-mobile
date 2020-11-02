@@ -273,7 +273,7 @@ const TaskScreen = (props) => {
     (async() => {
       try {
         const ip = await AsyncStorage.getItem('IP');
-        const response = await fetch('http://' + ip + PORT + '/task/list/1?date=' + date);
+        const response = await fetchWithTimeout('http://' + ip + PORT + '/task/list/1?date=' + date);
         const result = await response.json();
         if (result.code === 200) {
           setList(groupTasksByStatus(result.data));
@@ -332,7 +332,7 @@ const TaskScreen = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btnAddTask}
-            onPress={() => {props.navigation.navigate("CreateTask")}}
+            onPress={() => {props.navigation.navigate("CreateTask", {date: date})}}
           >
             <Icon
               name="add"
