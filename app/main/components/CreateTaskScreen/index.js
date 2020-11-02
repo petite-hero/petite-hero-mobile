@@ -245,7 +245,7 @@ const CreateTaskScreen = (props) => {
     {day: "Sunday", active: false},
   ]);
   const [categories, setCategories] = useState([
-    {title: "Housework", active: false, name: "broom", type: "material-community", color: COLORS.YELLOW},
+    {title: "Housework", active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
     {title: "Education", active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
     {title: "Skills", active: false, name: "toys", type: "material", color: COLORS.GREEN}
   ]);
@@ -257,9 +257,7 @@ const CreateTaskScreen = (props) => {
       const repeatArray = repeatOn.reduce((accelerator, currentValue) => {
         return accelerator + +currentValue.active;
       }, "");
-      const type = categories.find(category => category.active) ? categories.find(category => category.active).title : "Education";
-      console.log(type);
-      console.log(repeatArray);
+      const type = categories.find(category => category.active).title;
       const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
         method: "POST",
         headers: {
@@ -271,19 +269,18 @@ const CreateTaskScreen = (props) => {
           childId: 1,
           creatorPhoneNumber: id,
           description: details,
-          fromTime: startTime.getTime(),
+          fromTime: startTime,
           name: name,
           repeatOn: repeatArray,
-          toTime: endTime.getTime(),
+          toTime: endTime,
           type: type
         })
       });
       const result = await response.json();
-      console.log(result);
       if (result.code === 200) {
-        console.log(result);
+        props.navigation.goBack();
       } else {
-        // do something later
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error);
