@@ -74,15 +74,31 @@ const TaskBoard = ({ list, refresh, confirm }) => {
         })}
       </View>
       <View style={styles.taskBoard}>
-        <FlatList
-          data={tabs[0].active ? list[0] : list[1]}
-          renderItem={(item) => TaskItem(item, refresh, confirm)}
-          keyExtractor={item => item.taskId + ""}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            alignItems: "center"
-          }}
-        />
+        { (tabs[0].active && list[0].length == 0) || (tabs[1].active && list[1].length == 0) ?
+            <View style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: "80%"
+            }}>
+              <Text style={{
+                fontFamily: "Acumin",
+                fontSize: 16,
+                color: COLORS.STRONG_CYAN
+              }}>
+                There is no current tasks on this day.
+              </Text>
+            </View>
+          :
+            <FlatList
+              data={tabs[0].active ? list[0] : list[1]}
+              renderItem={(item) => TaskItem(item, refresh, confirm)}
+              keyExtractor={item => item.taskId + ""}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                alignItems: "center"
+              }}
+            />
+        }
       </View>
     </>
   );
@@ -332,7 +348,7 @@ const TaskScreen = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btnAddTask}
-            onPress={() => {props.navigation.navigate("CreateTask", {date: date})}}
+            onPress={() => {props.navigation.navigate("CreateTask", {date: date, onGoBack: () => {setLoading(true)}})}}
           >
             <Icon
               name="add"

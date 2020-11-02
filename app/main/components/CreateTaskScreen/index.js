@@ -278,6 +278,7 @@ const CreateTaskScreen = (props) => {
       });
       const result = await response.json();
       if (result.code === 200) {
+        props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
         handleError(result.msg);
