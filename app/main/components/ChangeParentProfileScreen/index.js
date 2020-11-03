@@ -24,7 +24,7 @@ const ChangeParentProfileScreen = (props) => {
         <Icon
           name="keyboard-arrow-left"
           type="material"
-          color={COLORS.STRONG_ORANGE}
+          color={COLORS.STRONG_CYAN}
           onPress={() => {props.navigation.goBack()}}
         />
         {/* end icon back */}
@@ -41,7 +41,7 @@ const ChangeParentProfileScreen = (props) => {
           <Text style={{
             fontSize: 20,
             fontFamily: "Acumin",
-            color: COLORS.STRONG_ORANGE
+            color: COLORS.STRONG_CYAN
           }}>Done</Text>
         </TouchableOpacity>
         {/* end button Done */}
@@ -55,7 +55,7 @@ const ChangeParentProfileScreen = (props) => {
         paddingLeft: "10%",
         paddingRight: "10%",
         paddingBottom: "2.5%",
-        backgroundColor: COLORS.LIGHT_ORANGE
+        backgroundColor: COLORS.LIGHT_CYAN
       }}>
         <TextInput
           value={name}

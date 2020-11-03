@@ -190,7 +190,7 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
         </View>
         <TouchableOpacity 
           style={styles.taskItem}
-          onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {setLoading(true)}})}}
+          onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {refresh(true)}})}}
         >
           <View style={{
             flexDirection: "row", 
@@ -272,7 +272,6 @@ const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
   const [date, setDate]                     = useState(new Date().getTime());
   const [list, setList]                     = useState([]);
-  const [handedTaskList, setHandedTaskList] = useState([]);
   const [modalVisible, setModalVisible]     = useState(false);
   const [loading, setLoading]               = useState(false);
   const [isShowed, setShow]                 = useState(false);
@@ -332,7 +331,7 @@ const TaskScreen = (props) => {
           // do something later
         }
       } catch (error) {
-        handleError(error);
+        handleError(error.message);
       } finally {
         setLoading(false);
       }

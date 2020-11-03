@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp("20%"),
     marginBottom: hp("1%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
     borderBottomLeftRadius: wp("5%"),
     borderBottomRightRadius: wp("5%"),
     elevation: 10

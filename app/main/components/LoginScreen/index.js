@@ -79,12 +79,12 @@ const LoginScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_ORANGE}}>
+      <View style={{width: "100%", height: "30%", backgroundColor: COLORS.STRONG_CYAN}}>
         
       </View>
       <View style={{
         position: "absolute",
-        backgroundColor: COLORS.NUDE,
+        backgroundColor: COLORS.WHITE,
         width: "100%",
         height: "74%",
         top: "26%",
@@ -100,7 +100,7 @@ const LoginScreen = (props) => {
           marginLeft: 250,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: COLORS.STRONG_ORANGE,
+          backgroundColor: COLORS.STRONG_CYAN,
           elevation: 10
         }}
           onPress={() => {setLoading(true); login(username, password)}}
@@ -114,7 +114,7 @@ const LoginScreen = (props) => {
           fontSize: 40,
           fontFamily: "MontserratBold",
           alignSelf: "baseline",
-          color: COLORS.STRONG_ORANGE
+          color: COLORS.STRONG_CYAN
         }}>
           Sign in
         </Text>
@@ -130,7 +130,7 @@ const LoginScreen = (props) => {
             style={{
               borderRadius: 50,
               height: 50,
-              backgroundColor: COLORS.NUDE,
+              backgroundColor: COLORS.WHITE,
               marginBottom: "5%",
               paddingLeft: "5%",
               elevation: 8,
@@ -141,7 +141,7 @@ const LoginScreen = (props) => {
             flexDirection: "row",
             alignContent: "space-between",
             alignItems: "center",
-            backgroundColor: COLORS.NUDE,
+            backgroundColor: COLORS.WHITE,
             borderRadius: 50,
             elevation: 8
           }}>
@@ -182,7 +182,7 @@ const LoginScreen = (props) => {
           marginTop: "10%"
         }}>
           <Text style={{
-            color: COLORS.STRONG_ORANGE
+            color: COLORS.STRONG_CYAN
           }}>
             Forgot your password?
           </Text>

@@ -5,7 +5,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.WHITE
   },
   avatar : {
     width: wp("12%"),
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp("20%"),
     marginBottom: hp("1%"),
-    backgroundColor: COLORS.STRONG_ORANGE,
+    backgroundColor: COLORS.STRONG_CYAN,
     borderBottomLeftRadius: wp("5%"),
     borderBottomRightRadius: wp("5%"),
     elevation: 10
@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
   txtAddQuest : {
     fontSize: hp("7%"),
     fontFamily: "Acumin",
-    color: COLORS.STRONG_ORANGE,
+    color: COLORS.STRONG_CYAN,
     marginBottom: hp("0.8%")
   },
   tabActive : {
     borderBottomWidth: 2, 
-    borderColor: COLORS.STRONG_ORANGE
+    borderColor: COLORS.STRONG_CYAN
   },
   tabText : {
     fontSize: hp("2%"),
     fontFamily: "Acumin"
   },
   tabTextActive : {
-    color: COLORS.STRONG_ORANGE,
+    color: COLORS.STRONG_CYAN,
     paddingBottom: hp("1%")
   },
   questItem : {

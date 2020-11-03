@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     width: hp("12%"),
     height: hp("12%"),
     borderRadius: hp("6%"),
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: COLORS.STRONG_CYAN
   },
   header : {
     marginLeft: wp("10%"),

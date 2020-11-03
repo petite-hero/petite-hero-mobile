@@ -284,7 +284,7 @@ const CreateTaskScreen = (props) => {
         handleError(result.msg);
       }
     } catch (error) {
-      handleError(error);
+      handleError(error.message);
     } finally {
       setLoading(false);
     }

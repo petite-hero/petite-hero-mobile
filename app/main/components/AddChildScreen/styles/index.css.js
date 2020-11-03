@@ -4,7 +4,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex : 1,
-    backgroundColor: COLORS.NUDE
+    backgroundColor: COLORS.WHITE
   },
 
   textInput : {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "space-between",
     alignItems: "center",
-    backgroundColor: COLORS.NUDE,
+    backgroundColor: COLORS.WHITE,
     borderRadius: 50,
     elevation: 8
   },

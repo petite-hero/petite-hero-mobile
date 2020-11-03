@@ -58,7 +58,7 @@ const Welcome = ({ navigation }) => {
         </Text>
       </View>
       <Image
-        style={[styles.circle, {backgroundColor: COLORS.STRONG_ORANGE}]}
+        style={[styles.circle, {backgroundColor: COLORS.STRONG_CYAN}]}
         // source={{uri: "https://media.thethao247.vn/upload/cuongnm/2020/04/28/guc-nga-truoc-nhan-sac-cua-hot-girl-bong-ro-xinh-dep-nhat-trung-quoc1588047165.jpg"}}
       />
       <TouchableOpacity style={styles.btnRegister} onPress={() => navigation.navigate("Register")} onLongPress={() => setIsScanning(true)}>

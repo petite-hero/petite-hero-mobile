@@ -106,7 +106,7 @@ const QuestScreen = (props) => {
             <Icon
               name="add"
               type="material"
-              color={COLORS.STRONG_ORANGE}
+              color={COLORS.STRONG_CYAN}
             />
           </TouchableOpacity>
         </View>

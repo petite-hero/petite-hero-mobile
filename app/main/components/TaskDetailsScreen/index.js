@@ -43,7 +43,7 @@ const TaskDetailsScreen = (props) => {
           handleError(result.msg);
         }
       } catch (error) {
-        handleError(error);
+        handleError(error.message);
       } finally {
         setLoading(false);
       }
@@ -53,18 +53,19 @@ const TaskDetailsScreen = (props) => {
   const approveOrDeclineTask = async(status) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + props.route.params.taskId + "/approve?success=" + status, {
+      const taskId = props.route.params.taskId;
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + taskId + "/approve?success=" + status, {
         method: "PUT"
       });
       const result = await response.json();
       if (result.code === 200) {
-        // props.route.params.onGoBack();
+        props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
         handleError(result.msg);
       }
     } catch (error) {
-      handleError(error);
+      handleError(error.message);
     } finally {
       setLoading(false);
     }

@@ -80,7 +80,7 @@ const SettingItem = ({title, icon, action, subItems}) => {
         <Animated.View style={{
           paddingLeft: wp("25%"), 
           paddingRight: wp("12%"),
-          backgroundColor: COLORS.LIGHT_ORANGE,
+          backgroundColor: COLORS.LIGHT_CYAN,
           height: animDropdown
         }}
         >
@@ -176,7 +176,7 @@ const ProfileScreenContent = (props) => {
           </View>
           <View>
             <Image
-              style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+              style={[styles.avatar, {backgroundColor: COLORS.STRONG_CYAN}]}
               source={require('../../../../assets/parent-avatar.png')}
             />
           </View>

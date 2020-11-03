@@ -75,7 +75,7 @@ const ImagePickerComponent = (props) => {
           borderRadius: 10,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: COLORS.STRONG_ORANGE
+          backgroundColor: COLORS.STRONG_CYAN
         }}
       >
         <Text>Choose file</Text>
@@ -164,7 +164,7 @@ const AddChildScreen = (props) => {
           width: "100%",
           height: "74%",
           top: "10%",
-          backgroundColor: COLORS.NUDE,
+          backgroundColor: COLORS.WHITE,
           alignItems: "center",
           borderTopRightRadius: 30,
           borderTopLeftRadius:  30,
@@ -258,7 +258,7 @@ const AddChildScreen = (props) => {
               width: "40%",
               height: 50,
               borderRadius: 15,
-              backgroundColor: COLORS.STRONG_ORANGE,
+              backgroundColor: COLORS.STRONG_CYAN,
               justifyContent: "center",
               alignItems: "center"
             }}
