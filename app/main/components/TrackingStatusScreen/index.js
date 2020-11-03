@@ -6,7 +6,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import * as Notifications from 'expo-notifications';
 
 import styles from './styles/index.css';
-import { COLORS, PORT, NOTI } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import TaskScreen from '../TaskScreen';
@@ -14,25 +14,7 @@ import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
 
 
-// silent notification for updating location
-Notifications.setNotificationHandler({
-  handleNotification: async (notification) => {
-    let noti = notification.request.content;
-    if (noti.title == NOTI.SILENT_NOTI) {
-      // console.log("Do not show notification");
-    } else if (noti.title == NOTI.PETITE_HERO) {
-      // console.log("Show notification")
-      return {
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        priority: Notifications.AndroidNotificationPriority.MAX
-      }
-    }
-  }
-});
-
-// screen navigation
+{/* ===================== SCREEN NAVIGATION SECTION ===================== */}
 const Tab = createMaterialTopTabNavigator();
 const TrackingStatusScreen = ({route}) => {
   return (
@@ -99,15 +81,21 @@ const TrackingStatusScreen = ({route}) => {
     </Tab.Navigator>
   )
 }
+{/* ===================== END OF SCREEN NAVIGATION SECTION ===================== */}
 
 
-// screen content
+{/* ==================================================================================================== */}
+{/* ========================================== SCREEN CONTENT ========================================== */}
 const TrackingStatusScreenContent = ({ navigation }) => {
+
+  {/* ===================== VARIABLE SECTION ===================== */}
 
   // tracking status
   [trackingStatus, setTrackingStatus] = React.useState("INACTIVE");  // LOADING, INACTIVE, SAFE, NOT SAFE
   const STATUS_COLORS = {"LOADING": "rgb(140, 140, 140)", "INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
-  // [isDismissed, setIsDismissed] = React.useState(false);
+
+  // child information
+  [childList, setChildList] = React.useState([]);
 
   // date picker for setting zone
   [isPickingDate, setIsPickingDate] = React.useState(false);
@@ -135,6 +123,10 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   const animSetZoneBtnTopTomorrow = animSetZoneBtn.interpolate({inputRange: [0, 1/2, 1], outputRange: [50, 50, 0]});
   const animSetZoneBtnTextWidth = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [0, 200]});
 
+  {/* ===================== END OF VARIABLE SECTION ===================== */}
+
+  {/* ===================== LOCATION UPDATE HANDLING SECTION ===================== */}
+
   // listen to location updates
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
@@ -142,18 +134,16 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      // if (notification.request.content.title == NOTI.SILENT_NOTI) {
-        if (notification.request.content.data.status && trackingStatus !== "SAFE" && trackingStatus !== "INACTIVE"){
-          animTrackingStatus.setValue(0);
-          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
-          setTrackingStatus("SAFE");
-        }
-        else if (!notification.request.content.data.status && trackingStatus !== "NOT SAFE" && trackingStatus !== "INACTIVE"){
-          animTrackingStatus.setValue(0);
-          Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
-          setTrackingStatus("NOT SAFE");
-        }
-      // }
+      if (notification.request.content.data.status && trackingStatus !== "SAFE" && trackingStatus !== "INACTIVE"){
+        animTrackingStatus.setValue(0);
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
+        setTrackingStatus("SAFE");
+      }
+      else if (!notification.request.content.data.status && trackingStatus !== "NOT SAFE" && trackingStatus !== "INACTIVE"){
+        animTrackingStatus.setValue(0);
+        Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION/2, easing: Easing.linear, useNativeDriver: true})).start();
+        setTrackingStatus("NOT SAFE");
+      }
     });
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
@@ -165,19 +155,47 @@ const TrackingStatusScreenContent = ({ navigation }) => {
     };
   };
 
+  {/* ===================== END OF LOCATION UPDATE HANDLING SECTION ===================== */}
+
+  {/* ===================== API SECTION ===================== */}
+
   // request emergency mode
   const requestEmergencyMode = async (isEmergency) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/emergency/' + childId + '/' + isEmergency);
     const result = await response.json();
-    if (result.code !== 200) {
-      console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
-    }
+    if (result.code !== 200) console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
+  }
+
+  // request smartwatch tracking
+  const requestSmartwatchTracking = async (isTracking) => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/toggle/' + childId + '/' + isTracking);
+    const result = await response.json();
+    if (result.code !== 200) console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
+  }
+
+  // fetch child list
+  const fetchChildList = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
+    const result = await response.json();
+    if (result.code === 200) setLocList(result.data);
+    else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
+    
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/toggle/' + childId + '/' + isTracking);
+    const result = await response.json();
+    if (result.code !== 200) console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
   }
 
   // start on screen load
   React.useEffect(() => {
+
     // get tracking setting
     (async () => {
       const isTracking = await AsyncStorage.getItem('is_tracking');
@@ -186,8 +204,10 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
       }
     })();
+
     // listen to location update from server
     listenLocationUpdate();
+
     // handle screen & app states
     navigation.addListener('focus', () => { requestEmergencyMode(true); });
     navigation.addListener('blur', () => { requestEmergencyMode(false); });
@@ -195,24 +215,35 @@ const TrackingStatusScreenContent = ({ navigation }) => {
       if (nextState === "active")  requestEmergencyMode(true);
       else  requestEmergencyMode(false);
     });
+
   }, []);
 
+  {/* ===================== END OF API SECTION ===================== */}
+
   
-  // MAIN INTERFACE
+  {/* ==================================================================================================== */}
+  {/* ========================================== USER INTERFACE ========================================== */}
   return (
 
     <View style={styles.container}>
 
+      {/* ===================== AVATAR & EMERGENCY BUTTON SECTION ===================== */}
+
+      {/* child avatar */}
       <Image
-        style={[styles.avatar, {backgroundColor: COLORS.STRONG_CYAN}]}
+        style={styles.avatar}
         source={require('../../../../assets/kid-avatar.png')}
       />
 
-      {/* view map button */}
+      {/* emergency button */}
       <TouchableOpacity style={[styles.warningBtn, {backgroundColor: trackingStatus === "NOT SAFE" ? "red" : "rgba(255, 0, 0, 0.7)"}]}
                         onPress={() => navigation.navigate("TrackingEmergency")}>
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
+
+      {/* ===================== END OF AVATAR & EMERGENCY BUTTON SECTION ===================== */}
+
+      {/* ===================== LOCATION STATUS SECTION ===================== */}
 
       {/* status container */}
       <View style={styles.statusContainer}>
@@ -228,19 +259,26 @@ const TrackingStatusScreenContent = ({ navigation }) => {
         <Text style={styles.locationStatus}>{trackingStatus}</Text>
       </View>
 
+      {/* ===================== END OF LOCATION STATUS SECTION ===================== */}
+
+      {/* ===================== SETTING BUTTONS SECTION ===================== */}
+
       {/* setting buttons */}
       <View style={styles.settingBtnsContainer}>
 
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopNav}}>
+
           {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: trackingStatus === "INACTIVE" ? "white" : COLORS.STRONG_CYAN}]}
             onPress={() => {
               if (trackingStatus === "INACTIVE"){
+                requestSmartwatchTracking(true);
                 animTrackingStatus.setValue(0);
                 Animated.loop(Animated.timing(animTrackingStatus, {toValue: 1, duration: STATUS_DURATION, easing: Easing.linear, useNativeDriver: true})).start();
                 setTrackingStatus("LOADING");
               }
               else{
+                requestSmartwatchTracking(false);
                 setTrackingStatus("INACTIVE");
                 animTrackingStatus.stopAnimation();
               }
@@ -249,12 +287,14 @@ const TrackingStatusScreenContent = ({ navigation }) => {
             <Icon name={trackingStatus === "INACTIVE" ? "explore" : "explore"} type="material" size={20} color={trackingStatus === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
           </TouchableOpacity>
         </Animated.View>
+
         {/* choose date for setting button */}
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopDay, opacity: animSetZoneBtn}}>
           <TouchableOpacity style={styles.settingBtnContainer} onPress={() => setIsPickingDate(true)}>
             <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
+
         {/* setting for tomorrow button */}
         <Animated.View style={{position: "relative", top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn}}>
           <TouchableOpacity style={styles.settingBtnContainer} onPress={() => {
@@ -269,6 +309,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
             <Icon name="today" type="material" size={20} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
+
         {/* setting animation button */}
         <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_CYAN}]} onPressIn={() => {
           if (!flied){
@@ -284,6 +325,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
           <Icon name="add-location" type="material" size={20} color="white"/>
         </TouchableOpacity>
 
+        {/* explaination texts */}
         <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 60, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Selected Day</Text>
         </Animated.View>
@@ -309,6 +351,8 @@ const TrackingStatusScreenContent = ({ navigation }) => {
           />
         </TouchableOpacity>
       : null}
+
+      {/* ===================== END OF SETTING BUTTONS SECTION ===================== */}
 
     </View>
 

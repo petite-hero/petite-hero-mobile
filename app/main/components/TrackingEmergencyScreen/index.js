@@ -1,51 +1,32 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, Image, AppState } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, AppState, AsyncStorage } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
-import Drawer from './drawer';
-import styles from './styles/index.css';
-import { AsyncStorage } from 'react-native';
-import { COLORS, PORT, NOTI } from '../../../const/const';
-
 import * as Notifications from 'expo-notifications';
 
-// silent notification for updating location
-Notifications.setNotificationHandler({
-  handleNotification: async (notification) => {
-    let noti = notification.request.content;
-    if (noti.title == NOTI.SILENT_NOTI) {
-      // console.log("Do not show notification");
-    } else if (noti.title == NOTI.PETITE_HERO) {
-      // console.log("Show notification")
-      return {
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        priority: Notifications.AndroidNotificationPriority.MAX
-      }
-    }
-  }
-});
+import styles from './styles/index.css';
+import { COLORS, PORT } from '../../../const/const';
+
 
 const TrackingEmergencyScreen = ({navigation}) => {
 
+  {/* ===================== VARIABLE SECTION ===================== */}
+
+  const LOC_FPT = {latitude: 10.8414846, longitude: 106.8100464};
+  const MAP_ZOOM = {latitudeDelta: 0.024, longitudeDelta: 0.012};
+
   // map positioning & zooming
-  [mapLoc, setMapLoc] = React.useState(Drawer.LOC_FPT);  // FPT University location
-  [latitudeDelta, setLatitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.latitudeDelta);
-  [longitudeDelta, setLongitudeDelta] = React.useState(Drawer.LOCATION_ZOOM.longitudeDelta);
+  [mapLoc, setMapLoc] = React.useState(LOC_FPT);  // FPT University location
+  [latitudeDelta, setLatitudeDelta] = React.useState(MAP_ZOOM.latitudeDelta);
+  [longitudeDelta, setLongitudeDelta] = React.useState(MAP_ZOOM.longitudeDelta);
 
   // reported location list
   [realLocList, setRealLocList] = React.useState([]);
-  // [realLocList, setRealLocList] = React.useState(Drawer.realLocList);
-  [locList, setLocList] = React.useState([Drawer.locFPT, Drawer.locLandmark]);
+  [locList, setLocList] = React.useState([]);
 
-  // get user location
-  // navigator.geolocation.getCurrentPosition(
-  //     (data) => {
-  //       setLatitude(data.coords.latitude);
-  //       this.setState({longitude: data.coords.longitude});
-  //     }
-  // );
+  {/* ===================== END OF VARIABLE SECTION ===================== */}
+
+  {/* ===================== LOCATION UPDATE HANDLING SECTION ===================== */}
 
   // listen to location updates
   const notificationListener = React.useRef();
@@ -54,15 +35,12 @@ const TrackingEmergencyScreen = ({navigation}) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      // if (notification.request.content.title == NOTI.SILENT_NOTI) { 
-        const newLoc = notification.request.content.data;
-        let realLocListTmp = [...realLocList];
-        realLocListTmp.push(newLoc);
-        setRealLocList(realLocListTmp);
-        setMapLoc(newLoc);
-      // }
+      const newLoc = notification.request.content.data;
+      let realLocListTmp = [...realLocList];
+      realLocListTmp.push(newLoc);
+      setRealLocList(realLocListTmp);
+      setMapLoc(newLoc);
     });
-
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
       console.log("Background noti listener");
@@ -72,6 +50,10 @@ const TrackingEmergencyScreen = ({navigation}) => {
       Notifications.removeNotificationSubscription(responseListener);
     };
   };
+
+  {/* ===================== END OF LOCATION UPDATE HANDLING SECTION ===================== */}
+
+  {/* ===================== API SECTION ===================== */}
 
   // request emergency mode
   const requestEmergencyMode = async (isEmergency) => {
@@ -97,8 +79,10 @@ const TrackingEmergencyScreen = ({navigation}) => {
     });
   }, []);
 
+  {/* ===================== END OF API SECTION ===================== */}
 
-  // MAIN INTERFACE
+  {/* ==================================================================================================== */}
+  {/* ========================================== USER INTERFACE ========================================== */}
   return (
 
     <View style={styles.container}>
@@ -119,14 +103,16 @@ const TrackingEmergencyScreen = ({navigation}) => {
             setLongitudeDelta(region.longitudeDelta);
           }}>
 
-          {/* {locList.map((loc, index) => {
+          {/* safe zone list */}
+          {locList.map((loc, index) => {
             return (
               <Marker key={index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
                 <View style={styles.safeLoc}/>
               </Marker>
             )
-          })} */}
+          })}
 
+          {/* reported location list */}
           {realLocList.length >= 1 ?
             <Marker coordinate={{latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude}} anchor={{x: 0.5, y: 0.5}}>
               <View style={[styles.realLoc, {height: 14, width: 14}]}/>
@@ -169,7 +155,7 @@ const TrackingEmergencyScreen = ({navigation}) => {
 export default TrackingEmergencyScreen;
 
 
-  // Tuan
+
   // const [expoPushToken, setExpoPushToken] = React.useState('');
   // const [notification, setNotification] = React.useState(false);
   // const notificationListener = useRef();

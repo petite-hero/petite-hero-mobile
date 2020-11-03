@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing, Alert } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { COLORS, PORT } from "../../../const/const";
+import { PORT } from "../../../const/const";
 
 import Util from './util';
 import { Loader } from '../../../utils/loader';
@@ -14,7 +15,7 @@ import TrackingSettingLocationSubProps from './sub-setting-panel';
 import TrackingSettingButtons from './buttons';
 
 
-const TrackingSettingsScreen = ({ route }) => {
+const TrackingSettingsScreen = ({ route, navigation }) => {
 
   {/* ===================== VARIABLE SECTION ===================== */}
 
@@ -68,13 +69,6 @@ const TrackingSettingsScreen = ({ route }) => {
     if (result.code === 200) setLocList(result.data);
     else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
   }
-  React.useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      await fetchLocList();
-      setIsLoading(false);
-    })();
-  }, []);
 
   // add location
   const addLocation = async () => {
@@ -134,6 +128,15 @@ const TrackingSettingsScreen = ({ route }) => {
     if (result.code !== 200) console.log("Error while deleting location. Server response: " + JSON.stringify(result));
   }
 
+  // load location list on screen loaded
+  React.useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      await fetchLocList();
+      setIsLoading(false);
+    })();
+  }, []);
+
   {/* ===================== END OF API SECTION ===================== */}
   
 
@@ -164,14 +167,19 @@ const TrackingSettingsScreen = ({ route }) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
-      {/* child avatar & date */}
+      {/* child avatar, date & back button*/}
       {substatus === "SEARCH" ? null : [
         <Image key={0}
-          style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
+          style={styles.avatar}
           source={require('../../../../assets/kid-avatar.png')}
         />,
-        <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>]
+        <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
+        <View key={2} style={styles.backBtn}>
+          <Icon name='arrow-back' type='material' size={34}
+            onPress={() => {navigation.goBack()}}/>
+        </View>]
       }
+      
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
 

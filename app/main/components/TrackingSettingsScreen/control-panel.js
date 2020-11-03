@@ -45,7 +45,7 @@ const TrackingSettingControlPanel = (props) => {
                 {loc.type === "Home" ? <Icon name='home' type='material'/> : null}
                 {loc.type === "Education" ? <Icon name='school' type='material'/> : null}
               </View>
-              <Text style={styles.locationTime}>{loc.fromTime ? loc.fromTime.slice(0, -3)+" - "+loc.toTime.slice(0, -3) : "All day"}</Text>
+              <Text style={styles.locationTime}>{loc.type === "Home" ? "All day" : loc.fromTime.slice(0, -3)+" - "+loc.toTime.slice(0, -3)}</Text>
               <View style={styles.rightIcon}><Icon name='keyboard-arrow-right' type='material'/></View>
             </TouchableOpacity>
             )

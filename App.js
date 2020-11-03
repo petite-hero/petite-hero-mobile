@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { YellowBox, AsyncStorage } from 'react-native';
-import { IP } from './app/const/const';
+import { IP, NOTI } from './app/const/const';
 
 import * as Localization from 'expo-localization';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
 import MainScreen from './app/main/components/MainScreen';
 import { useFonts } from 'expo-font';
 import { AppLoading } from 'expo';
+
+import * as Notifications from 'expo-notifications';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
@@ -99,7 +101,25 @@ const App = () => {
       console.log("Error while testing application settings");
     }
   }
-  useEffect(() => {testSetApplicationSettings()}, []);
+  useEffect(() => {
+    testSetApplicationSettings();
+    Notifications.setNotificationHandler({
+      handleNotification: async (notification) => {
+        let noti = notification.request.content;
+        if (noti.title === NOTI.SILENT_NOTI) {
+          console.log("Do not show notification");
+        } else if (noti.title === NOTI.PETITE_HERO) {
+          console.log("Show notification")
+          return {
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+            priority: Notifications.AndroidNotificationPriority.MAX
+          }
+        }
+      }
+    });
+  }, []);
 
   if (!fontLoaded) {
     return null;

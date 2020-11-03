@@ -29,19 +29,28 @@ const styles = StyleSheet.create({
     height: wp("12%"),
     borderRadius: wp("12%"),
     top: hp("5%"),
-    left: wp("10%"),
+    right: wp("10%")
   },
   date : {
     position: "absolute",
     borderRadius: wp("12%"),
     top: hp("5%"),
-    left: wp("27%"),
+    right: wp("27%"),
     fontSize: wp("6%"),
     fontWeight: "bold",
     paddingHorizontal: 10,
     paddingVertical: 5,
     color: 'white',
     backgroundColor: COLORS.STRONG_CYAN
+  },
+  backBtn : {
+    position: "absolute",
+    width: wp("12%"),
+    height: wp("12%"),
+    borderRadius: wp("12%"),
+    top: hp("5%"),
+    left: wp("5%"),
+    justifyContent: 'center'
   },
 
   // gg maps
