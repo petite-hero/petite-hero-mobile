@@ -93,9 +93,9 @@ const App = () => {
   const testSetApplicationSettings = async () => {
     try {
       await AsyncStorage.setItem('IP', IP);
-      await AsyncStorage.setItem('user_id', '0987654321');
-      // await AsyncStorage.setItem('user_id', '0938194701');  // Duong
-      await AsyncStorage.setItem('child_id', '3');
+      // await AsyncStorage.setItem('user_id', '0987654321');
+      await AsyncStorage.setItem('user_id', '0938194701');  // Duong
+      await AsyncStorage.setItem('child_id', '1');
       await AsyncStorage.setItem('is_tracking', 'false');
     } catch (error) {
       console.log("Error while testing application settings");
@@ -130,7 +130,7 @@ const App = () => {
       <LocalizationContext.Provider value={localizationContext}>
         <NavigationContainer>
           {/* hung - test */}
-          <Stack.Navigator 
+          {/* <Stack.Navigator 
             initialRouteName="Main"
             screenOptions={{
               headerShown: false
@@ -140,8 +140,8 @@ const App = () => {
               component={MainScreen}
               initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
             />
-          </Stack.Navigator>
-          {/* {state.userToken == null ? (
+          </Stack.Navigator> */}
+          {state.userToken == null ? (
             <Stack.Navigator 
               initialRouteName="Welcome"
               screenOptions={{
@@ -166,7 +166,7 @@ const App = () => {
                 initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
               />
             </Stack.Navigator>
-          )} */}
+          )}
         </NavigationContainer>
       </LocalizationContext.Provider>
     </AuthContext.Provider>

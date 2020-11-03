@@ -179,12 +179,12 @@ const TrackingStatusScreenContent = ({ navigation }) => {
 
   // fetch child list
   const fetchChildList = async () => {
-    const ip = await AsyncStorage.getItem('IP');
-    const childId = await AsyncStorage.getItem('child_id');
-    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
-    const result = await response.json();
-    if (result.code === 200) setLocList(result.data);
-    else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
+    // const ip = await AsyncStorage.getItem('IP');
+    // const childId = await AsyncStorage.getItem('child_id');
+    // const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
+    // const result = await response.json();
+    // if (result.code === 200) setLocList(result.data);
+    // else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
     
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');

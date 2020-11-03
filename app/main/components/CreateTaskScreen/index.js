@@ -208,7 +208,7 @@ const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
           value={startTime}
           onChange={(event, time) => {
             setShowStartTimePicker(false);
-            time ? setStartTime(time) : null;
+            time ? setStartTime(new Date(time).getTime()) : null;
           }}
         />
       }
@@ -219,7 +219,7 @@ const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
           value={endTime}
           onChange={(event, time) => {
             setShowEndTimePicker(false);
-            time ? setEndTime(time) : null;
+            time ? setEndTime(new Date(time).getTime()) : null;
           }}
         />
       }
