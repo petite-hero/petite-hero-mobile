@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { View, TouchableOpacity, Text, TextInput } from 'react-native';
-import { COLORS } from '../../../const/const';
+import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from 'react-native';
+import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { Icon } from 'react-native-elements';
+import { fetchWithTimeout } from '../../../utils/fetch';
+import { handleError } from '../../../utils/handleError';
+import { Loader } from '../../../utils/loader';
 
 const CategoryList = ({categories, setCategories}) => {
   const toggleCategory = (categoryIndex) => {
@@ -229,8 +232,9 @@ const CreateTaskScreen = (props) => {
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [category, setCategory] = useState("");
-  const [startTime, setStartTime] = useState(new Date().setHours(7, 0, 0));
-  const [endTime, setEndTime] = useState(new Date().setHours(12, 0, 0));
+  const [startTime, setStartTime] = useState(new Date(new Date().setHours(7, 0, 0)).getTime());
+  const [endTime, setEndTime] = useState(new Date(new Date().setHours(12, 0, 0)).getTime());
+  const [loading, setLoading] = useState(false);
   const [repeatOn, setRepeatOn] = useState([
     {day: "Monday", active: false},
     {day: "Tuesday", active: false},
@@ -241,13 +245,54 @@ const CreateTaskScreen = (props) => {
     {day: "Sunday", active: false},
   ]);
   const [categories, setCategories] = useState([
-    {title: "Housework", active: false, name: "broom", type: "material-community", color: COLORS.YELLOW},
+    {title: "Housework", active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
     {title: "Education", active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
     {title: "Skills", active: false, name: "toys", type: "material", color: COLORS.GREEN}
   ]);
 
+  const createTask = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem("user_id");
+      const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
+        return accumulator + +currentValue.active;
+      }, "");
+      const type = categories.find(category => category.active).title;
+      const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          assignDate: props.route.params.date,
+          childId: 1,
+          creatorPhoneNumber: id,
+          description: details,
+          fromTime: startTime,
+          name: name,
+          repeatOn: repeatArray,
+          toTime: endTime,
+          type: type
+        })
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        props.route.params.onGoBack();
+        props.navigation.goBack();
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <View style={styles.container}>
+      <Loader loading={loading}/>
       <View style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -400,7 +445,9 @@ const CreateTaskScreen = (props) => {
         justifyContent: "center",
         height: heightPercentageToDP("5%"),
         backgroundColor: COLORS.YELLOW
-      }}>
+      }}
+        onPress={() => {setLoading(true); createTask()}}
+      >
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 16,

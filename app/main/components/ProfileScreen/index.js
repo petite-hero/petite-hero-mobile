@@ -41,31 +41,34 @@ const SettingItem = ({title, icon, action, subItems}) => {
     <>
       <TouchableOpacity style={{
         flexDirection: "row", 
-        paddingLeft: wp("10%"), 
-        paddingRight: wp("10%"),
-        paddingTop: hp("2.5%"),
-        paddingBottom: hp("2.5%"),
-        backgroundColor: COLORS.NUDE,
+        marginLeft: "10%", 
+        marginRight: "10%",
+        marginBottom: hp("2.5%"),
+        paddingTop: hp("1%"),
+        paddingBottom: hp("1%"),
+        borderRadius: hp("4%"),
+        backgroundColor: COLORS.WHITE,
+        alignItems: "center",
       }}
         onPress={() => {action ? action() : dropdownSubItems(subItems.length)}}
       >
         <Icon 
           name={icon}
           type='material'
-          color={COLORS.WHITE}
+          color={COLORS.STRONG_CYAN}
           style={{
             width: hp("5%"), 
             height: hp("5%"), 
-            borderRadius: hp("2.5%"), 
-            marginRight: wp("5%"), 
+            marginRight: wp("1%"), 
+            marginLeft: wp("1%"), 
             justifyContent: "center",
-            backgroundColor: COLORS.GREY
           }}
         />
         <View style={styles.settingItem}>
           <Text style={{
-            fontSize: hp("3%"),
-            fontFamily: "Acumin"
+            fontSize: 20,
+            fontFamily: "Acumin",
+            color: COLORS.STRONG_CYAN
           }}>
             {title}
           </Text>
@@ -157,7 +160,7 @@ const ProfileScreenContent = (props) => {
             <View style={{
               width: wp("35%"), 
               height: hp("3.5%"), 
-              backgroundColor: COLORS.STRONG_ORANGE,
+              backgroundColor: COLORS.STRONG_CYAN,
               borderRadius: hp("1.75%"),
               marginTop: hp("1%"),
               justifyContent: "center"
