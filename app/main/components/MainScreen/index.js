@@ -7,6 +7,9 @@ import CreateTaskScreen from '../CreateTaskScreen';
 import TaskDetailsScreen from '../TaskDetailsScreen';
 import ChangeParentProfileScreen from '../ChangeParentProfileScreen';
 import AddChildScreen from '../AddChildScreen';
+import QuestDetailsScreen from '../QuestDetailsScreen';
+import CreateQuestScreen from '../CreateQuestScreen';
+import ChooseBadgeScreen from '../ChooseBadgeScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +44,21 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="TaskDetails"
         component={TaskDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="CreateQuest"
+        component={CreateQuestScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="QuestDetails"
+        component={QuestDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ChooseBadge"
+        component={ChooseBadgeScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen

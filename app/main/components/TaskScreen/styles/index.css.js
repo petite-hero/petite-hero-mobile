@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   header : {
     width: "100%",
-    height: hp("34%"),
+    height: hp("32%"),
     marginBottom: hp("1%"),
     backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
@@ -66,19 +66,41 @@ const styles = StyleSheet.create({
     marginRight: wp("10%")
   },
   title : {
-    fontSize: hp("5%"),
+    fontSize: 30,
     fontFamily: "AcuminBold",
     color: COLORS.BLACK
   },
   btnAddTask : {
-    width: wp("20%"),
-    height: hp("6%"),
-    marginRight: "10%",
-    borderRadius: 15,
-    backgroundColor: COLORS.YELLOW,
+    position: "absolute",
+    bottom: "10%",
+    right: "10%",
+    width: wp("15%"),
+    height: wp("15%"),
+    borderRadius: wp("7.5%"),
+    backgroundColor: COLORS.STRONG_CYAN,
     alignItems: "center",
     justifyContent: "center",
     elevation: 10
+  },
+  btnBack : {
+    right: "50%",
+    width: wp("12%"),
+    height: wp("12%"),
+    borderRadius: wp("6%"),
+    backgroundColor: COLORS.WHITE,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 20
+  },
+  btnForth : {
+    left: "50%",
+    width: wp("12%"),
+    height: wp("12%"),
+    borderRadius: wp("6%"),
+    backgroundColor: COLORS.WHITE,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 20
   },
   tabActive : {
     borderBottomWidth: 2, 
@@ -92,8 +114,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp("1%")
   },
   taskBoard : {
-    position: "absolute",
-    bottom: hp("7%"),
+    marginTop: hp("3%"),
     height: hp("60%"),
     alignSelf: "center"
   },

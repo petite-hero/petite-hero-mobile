@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, AsyncStorage, FlatList } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -54,6 +55,8 @@ const getDateIndex = (dates, date = new Date().toDateString()) => {
   return index > (dates.length - 1) ? dates.length - 5 : index - 2;
 }
 
+const currentDateIndex = getDateIndex(getDaysInMonth(new Date().getMonth(), new Date().getFullYear())) + 2;
+
 const TaskBoard = ({ list, refresh, confirm, navigation }) => {
   const [tabs, setTabs] = useState(
     [
@@ -75,7 +78,7 @@ const TaskBoard = ({ list, refresh, confirm, navigation }) => {
       <View style={{
         flexDirection: "row", 
         justifyContent: "space-evenly",
-        marginTop: hp("1%")}}
+        marginTop: hp("2%")}}
       >
         {tabs.map((value, index) => {
           return (
@@ -141,9 +144,7 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
     }
   }
   return (
-    item &&
     <Swipeable
-      key={index}
       containerStyle={{overflow: "visible", marginLeft: 15, marginRight: 15}}
       renderRightActions={() => (
         <TouchableOpacity style={{
@@ -190,6 +191,7 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
         </View>
         <TouchableOpacity 
           style={styles.taskItem}
+          activeOpacity={1}
           onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {refresh(true)}})}}
         >
           <View style={{
@@ -244,7 +246,19 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
 // represent an item in date list
 const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, refresh) => {
   return (
-    <View key={index}>
+    <View>
+      {
+        item.numOfHandedTasks > 0 &&
+        <View style={{
+          position: "absolute",
+          width: 10,
+          height: 10,
+          borderRadius: 5,
+          right: 0,
+          backgroundColor: COLORS.PURPLE,
+          elevation: 8
+        }}/>
+      }
       {index !== currentIndex ?
       (
         <TouchableOpacity style={styles.dateContainer}
@@ -270,36 +284,15 @@ const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, s
 
 const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
-  const [date, setDate]                     = useState(new Date().getTime());
+  const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
   const [list, setList]                     = useState([]);
   const [modalVisible, setModalVisible]     = useState(false);
   const [loading, setLoading]               = useState(false);
   const [isShowed, setShow]                 = useState(false);
   const [dates, setDates]                   = useState(getDaysInMonth(new Date().getMonth(), new Date().getFullYear()));
+  const currentDate                         = new Date(new Date().toDateString()).getTime();
+  const [currentIndex, setCurrentIndex]     = useState(currentDateIndex);
   const refDateFlatlist                     = useRef(null);
-  //
-  const currentDateIndex = getDateIndex(dates) + 2;
-  const [currentIndex, setCurrentIndex] = useState(currentDateIndex);
-  // check valid index
-  const isValidIndex = (index, length) => {
-    return !(index < 0 || index >= length);
-  }
-  // handle scroll event of date list
-  const handleScroll = (contentOffset) => {
-    setLoading(true);
-    if(refDateFlatlist.current) {
-      const width = wp("16%"); // item width + margin
-      const nextIndex = Math.round(contentOffset / width);
-      if (isValidIndex(nextIndex, dates.length)) {
-        refDateFlatlist.current.scrollToIndex({ animated: true, index: nextIndex });
-        setCurrentIndex(nextIndex + 2);
-        // setDate(new Date((new Date(tmp).toDateString())).getTime());
-      } else {
-        // do nothing
-      }
-    }
-  };
-
   // group tasks by status
   const groupTasksByStatus = (list) => {
     const tmp = list.reduce((r, a) => {
@@ -319,6 +312,27 @@ const TaskScreen = (props) => {
     return [inProgress, finished];
   }
   
+  const getHandedTasks = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1/handed?date=" + date);
+      const result = await response.json();
+      if (result.code === 200) {
+        const tmp = getDaysInMonth(new Date(date).getMonth(), new Date(date).getFullYear());
+        tmp.forEach(date => {
+          result.data.forEach(object => {
+            date.date === object.date ? date.numOfHandedTasks = object.count : null;
+          })
+        });
+        setDates(tmp);
+      } else {
+        // do something later
+      }
+    } catch (error) {
+      handleError(error.message);
+    }
+  };
+
   useEffect(() => {
     (async() => {
       try {
@@ -327,16 +341,16 @@ const TaskScreen = (props) => {
         const result = await response.json();
         if (result.code === 200) {
           setList(groupTasksByStatus(result.data));
+          getHandedTasks();
         } else {
           // do something later
         }
+        setLoading(false);
       } catch (error) {
         handleError(error.message);
-      } finally {
-        setLoading(false);
       }
     })()
-  }, [date, loading]);
+  }, [loading]);
 
   return (
     <View style={styles.container}>
@@ -346,13 +360,16 @@ const TaskScreen = (props) => {
         <DateTimePicker
           mode="date"
           value={date}
-          onChange={(event, date) => {
+          onChange={(event, newDate) => {
             setShow(false);
-            if (date == null) return;
-            setDate(new Date((new Date(date).toDateString())).getTime());
-            setDates(getDaysInMonth(date.getMonth(), date.getFullYear()));
-            setCurrentIndex(getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) + 2);
-            refDateFlatlist.current.scrollToIndex({index: getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) - 2 > 0 ? getDateIndex(getDaysInMonth(date.getMonth(), date.getFullYear()), date.toDateString()) : 0})
+            if (newDate == null) return;
+            if (event.nativeEvent.type === "set" || new Date(newDate.toDateString()).getTime() !== date) {
+              setLoading(true);
+              const daysInMonth = getDaysInMonth(newDate.getMonth(), newDate.getFullYear());
+              setDate(new Date((new Date(newDate).toDateString())).getTime());
+              setCurrentIndex(getDateIndex(daysInMonth, newDate.toDateString()) + 2);
+              refDateFlatlist.current.scrollToIndex({index: getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) - 2 > 0 ? getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) : 0})
+            }
           }}
         />
       }
@@ -371,23 +388,13 @@ const TaskScreen = (props) => {
             style={styles.monthPicker}
             onPress={() => {setShow(true)}}
           >
-            <Text style={{fontSize: wp("6%"), fontFamily: "AcuminBold", color: COLORS.BLACK}}>
+            <Text style={{fontSize: 20, fontFamily: "AcuminBold", color: COLORS.BLACK}}>
               {new Date(date).toDateString().split(" ")[1] + " " + new Date(date).toDateString().split(" ")[3]}
             </Text>
             <Icon
               name="keyboard-arrow-down"
               type="material"
               color={COLORS.BLACK}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btnAddTask}
-            onPress={() => {props.navigation.navigate("CreateTask", {date: date, onGoBack: () => {setLoading(true)}})}}
-          >
-            <Icon
-              name="add"
-              type="material"
-              color={COLORS.WHITE}
             />
           </TouchableOpacity>
         </View>
@@ -408,9 +415,61 @@ const TaskScreen = (props) => {
             //   handleScroll(nativeEvent.contentOffset.x);
             // }}
           />
+          {/* move to current date buttons */}
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            top: -hp("8%")
+          }}>
+            <TouchableOpacity
+              style={[styles.btnBack, {display: date > currentDate ? "flex" : "none"}]}
+              onPress={() => {
+                setLoading(true);
+                setDate(currentDate);
+                setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
+                refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
+              }}
+              activeOpacity={1}
+            >
+              <Icon
+                name="keyboard-arrow-left"
+                type="material"
+                color={COLORS.BLACK}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btnForth, {display: date < currentDate ? "flex" : "none"}]}
+              onPress={() => {
+                setLoading(true);
+                setDate(currentDate);
+                setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
+                refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
+              }}
+              activeOpacity={1}
+            >
+              <Icon
+                name="keyboard-arrow-right"
+                type="material"
+                color={COLORS.BLACK}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* end move to current date buttons */}
         </View>
       </View>
       <TaskBoard list={list} refresh={setLoading} confirm={setModalVisible} navigation={props.navigation}/>
+      {/* button add task */}
+      <TouchableOpacity
+        style={styles.btnAddTask}
+        onPress={() => {props.navigation.navigate("CreateTask", {date: date, onGoBack: () => {setLoading(true)}})}}
+      >
+        <Icon
+          name="add"
+          type="material"
+          color={COLORS.WHITE}
+        />
+      </TouchableOpacity>
+      {/* end button add task */}
     </View>
   );
 };

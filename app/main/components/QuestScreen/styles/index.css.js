@@ -1,11 +1,11 @@
-import {StyleSheet} from "react-native"
+import {StyleSheet} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { COLORS } from "../../../../const/const"; 
 
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   avatar : {
     width: wp("12%"),
@@ -14,42 +14,57 @@ const styles = StyleSheet.create({
   },
   header : {
     width: "100%",
-    height: hp("20%"),
+    height: hp("32%"),
     marginBottom: hp("1%"),
-    backgroundColor: COLORS.STRONG_CYAN,
+    backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
     borderBottomRightRadius: wp("5%"),
     elevation: 10
+  },
+  monthPicker : {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: wp("10%"),
+    fontSize: hp("2%"),
+    fontFamily: "Acumin"
+  },
+  dateList : {
+    marginTop: hp("2%"),
+    marginLeft: wp("10%"),
+    marginRight: wp("10%")
+  },
+  badgeContainer : {
+    width: wp("14.3%"),
+    height: hp("10%"),
+    justifyContent: "center",
+    alignItems: 'center',
+    borderRadius: wp("6%"),
+    backgroundColor: COLORS.LIGHT_CYAN
   },
   titleContainer : {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: hp("5%"),
     marginLeft: wp("10%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("2%"),
     marginRight: wp("10%")
   },
   title : {
-    fontSize: hp("5%"),
+    fontSize: 30,
     fontFamily: "AcuminBold",
-    color: COLORS.WHITE
+    color: COLORS.BLACK
   },
   btnAddQuest : {
-    width: hp("7%"),
-    height: hp("7%"),
-    marginTop: hp("3.5%"),
-    marginRight: wp("10%"),
-    borderRadius: hp("3.5%"),
-    backgroundColor: COLORS.WHITE,
+    position: "absolute",
+    bottom: "10%",
+    right: "10%",
+    width: wp("15%"),
+    height: wp("15%"),
+    borderRadius: wp("7.5%"),
+    backgroundColor: COLORS.STRONG_CYAN,
     alignItems: "center",
     justifyContent: "center",
     elevation: 10
-  },
-  txtAddQuest : {
-    fontSize: hp("7%"),
-    fontFamily: "Acumin",
-    color: COLORS.STRONG_CYAN,
-    marginBottom: hp("0.8%")
   },
   tabActive : {
     borderBottomWidth: 2, 
@@ -57,32 +72,26 @@ const styles = StyleSheet.create({
   },
   tabText : {
     fontSize: hp("2%"),
-    fontFamily: "Acumin"
   },
   tabTextActive : {
     color: COLORS.STRONG_CYAN,
     paddingBottom: hp("1%")
   },
+  questBoard : {
+    marginTop: hp("3%"),
+    height: hp("60%"),
+    marginLeft: "5%",
+    marginRight: "5%",
+  },
   questItem : {
     width: wp("40%"),
     height: wp("40%"),
-    borderRadius: hp("3%"),
+    borderRadius: 25,
+    marginLeft: wp("2.5%"),
+    marginRight: wp("2.5%"),
     marginBottom: hp("2%"),
-    marginLeft: wp("2%"),
-    marginRight: wp("2%"),
-    paddingLeft: wp("2%"),
-    paddingRight: wp("2%"),
-    paddingTop: hp("3%"),
-    paddingBottom: hp("3%"),
-    alignItems: "center",
     elevation: 8,
     backgroundColor: COLORS.WHITE
-  },
-  questBoard : {
-    width: wp("90%"),
-    height: hp("60%"),
-    marginTop: hp("5%"),
-    alignSelf: "center",
   }
 });
 
