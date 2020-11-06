@@ -110,7 +110,7 @@ const QuestItem = (item, index, setLoading, navigation) => {
           marginRight: "10%"
         }}>
           <Image
-            source={badgesList[item.questBadgeId - 1].image}
+            source={badgesList[item.reward - 1].image}
             style={{
               width: wp("15%"),
               height: wp("15%")

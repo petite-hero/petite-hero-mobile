@@ -133,7 +133,7 @@ const QuestDetailsScreen = (props) => {
           fontSize: 16,
           marginTop: "5%"
         }}>
-          Quest Details
+          Reward Details
         </Text>
         <Text style={{
           fontFamily: "Acumin",
