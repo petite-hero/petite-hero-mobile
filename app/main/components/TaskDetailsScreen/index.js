@@ -78,21 +78,39 @@ const TaskDetailsScreen = (props) => {
     <View style={styles.container}>
       <View style={{
         width: "100%",
-        height: "32%",
+        height: widthPercentageToDP("100%"),
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         overflow: "hidden"
       }}>
         <Image
-          // source={{uri: "https://sickkidscare.com.au/wp-content/uploads/2020/09/vb.png"}}
-          source={{uri: "https://scontent-sin6-2.xx.fbcdn.net/v/t1.15752-9/123192711_3395183017226006_6360276073099702214_n.jpg?_nc_cat=105&ccb=2&_nc_sid=ae9488&_nc_ohc=vpDD0WzdvzEAX9x_z4P&_nc_ht=scontent-sin6-2.xx&oh=f8a4a7834f361012f52fb402aef7fd52&oe=5FC7F8D1"}}
+          source={{uri: "https://sickkidscare.com.au/wp-content/uploads/2020/09/vb.png"}}
+          // source={{uri: "https://scontent-sin6-2.xx.fbcdn.net/v/t1.15752-9/123192711_3395183017226006_6360276073099702214_n.jpg?_nc_cat=105&ccb=2&_nc_sid=ae9488&_nc_ohc=vpDD0WzdvzEAX9x_z4P&_nc_ht=scontent-sin6-2.xx&oh=f8a4a7834f361012f52fb402aef7fd52&oe=5FC7F8D1"}}
           style={{height: "100%", width: "100%"}}
+        />
+        <Icon
+          name="keyboard-arrow-left"
+          type="material"
+          color={COLORS.BLACK}
+          containerStyle={{
+            position: "absolute",
+            left: "10%",
+            top: "15%",
+            width: widthPercentageToDP("10%"),
+            height: widthPercentageToDP("10%"),
+            borderRadius: widthPercentageToDP("5%"),
+            backgroundColor: COLORS.WHITE,
+            alignItems: "center",
+            justifyContent: "center",
+            elevation: 10
+          }}
+          onPress={() => {props.navigation.goBack()}}
         />
       </View>
       <View style={{
         position: "absolute",
         right: "10%",
-        top: "28%",
+        top: widthPercentageToDP("92%"),
         width: "15%",
         height: widthPercentageToDP("15%"),
         backgroundColor: category.color,
@@ -117,12 +135,6 @@ const TaskDetailsScreen = (props) => {
           alignItems: "center",
           justifyContent: "space-between"
         }}>
-          <Icon
-            name="keyboard-arrow-left"
-            type="material"
-            color={COLORS.BLACK}
-            onPress={() => {props.navigation.goBack()}}
-          />
           <View style={{
             maxWidth: "50%"
           }}>
@@ -153,25 +165,73 @@ const TaskDetailsScreen = (props) => {
             </Text>
           </View>
         </View>
+        <View style={{
+          flexDirection: "row",
+          marginTop: "3%",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}>
+          <View style={{
+            flexDirection: "column",
+            alignItems: "flex-start",
+            width: "50%",
+            borderLeftWidth: 2,
+            borderColor: COLORS.LIGHT_GREY
+          }}>
+            <Icon
+              name="date-range"
+              type="material"
+              color={COLORS.BLACK}
+              style={{
+                marginLeft: 10
+              }}
+            />
+            <Text style={{
+              fontFamily: "Acumin",
+              fontSize: 16,
+              color: COLORS.LIGHT_GREY,
+              marginLeft: 10
+            }}>
+              {handleShowDate(details.assignDate)}
+            </Text>
+          </View>
+          <View style={{
+            flexDirection: "column",
+            alignItems: "flex-start",
+            width: "50%",
+            borderLeftWidth: 2,
+            borderColor: COLORS.LIGHT_GREY
+          }}>
+            <Icon
+              name="schedule"
+              type="material"
+              color={COLORS.BLACK}
+              style={{
+                marginLeft: 10
+              }}
+            />
+            <Text style={{
+              fontFamily: "Acumin",
+              fontSize: 16,
+              color: COLORS.LIGHT_GREY,
+              marginLeft: 10
+            }}>
+              From {handleShowTime(details.fromTime)} to {handleShowTime(details.toTime)}
+            </Text>
+          </View>
+        </View>
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 16,
-          color: COLORS.STRONG_CYAN,
-          marginTop: "3%"
+          marginTop: "5%"
         }}>
-          {handleShowDate(details.assignDate)}
-        </Text>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 14,
-          marginTop: "1%"
-        }}>
-          {handleShowTime(details.fromTime)} - {handleShowTime(details.toTime)}
+          Task Details
         </Text>
         <Text style={{
           fontFamily: "Acumin",
           fontSize: 16,
-          marginTop: "5%"
+          marginTop: "1%",
+          color: COLORS.LIGHT_GREY
         }}>
           {details.description}
         </Text>
@@ -182,10 +242,8 @@ const TaskDetailsScreen = (props) => {
             paddingTop: "5%",
             paddingBottom: "5%",
             marginTop: "10%",
-            backgroundColor: COLORS.WHITE,
-            borderWidth: 2,
+            backgroundColor: COLORS.YELLOW,
             borderRadius: heightPercentageToDP("5%"),
-            borderColor: COLORS.YELLOW,
             alignItems: "center",
             justifyContent: "center"
           }}
@@ -195,7 +253,7 @@ const TaskDetailsScreen = (props) => {
               fontFamily: "Acumin",
               fontSize: 16
             }}>
-              Back
+              OK
             </Text>
           </TouchableOpacity>
           :
@@ -221,7 +279,7 @@ const TaskDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Decline
+                Fail
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={{
@@ -240,7 +298,7 @@ const TaskDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Approve
+                Done
               </Text>
             </TouchableOpacity>
           </View>

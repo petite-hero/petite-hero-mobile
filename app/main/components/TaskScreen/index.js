@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { View, Text, Image, AsyncStorage, FlatList } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -234,8 +233,14 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
               </Text>
             </View>
           </View>
-          <View style={{marginLeft: wp("7.5%"), fontSize: hp("2.5%"), fontFamily: "Acumin", marginTop: 10}}>
-            <Text>{handleShowTime(item.toTime)}</Text>
+          <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
+            <Text style={{
+               fontSize: 14,
+               fontFamily: "Acumin",
+               color: COLORS.LIGHT_GREY
+            }}>
+              From: {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -417,8 +422,6 @@ const TaskScreen = (props) => {
           />
           {/* move to current date buttons */}
           <View style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
             top: -hp("8%")
           }}>
             <TouchableOpacity

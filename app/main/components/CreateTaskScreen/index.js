@@ -3,11 +3,29 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
+import { Switch } from 'react-native';
+
+const getDateList = (date) => {
+  const currentDate = new Date(date);
+  let datesArray = [];
+  let newDate = new Date();
+  for (let i = 0; i < 7; i++) {
+    newDate.setDate(currentDate.getDate() + i);
+    const tmp = newDate.toDateString().split(" ");
+    datesArray.push({
+      dayOfWeek: tmp[0],
+      day: tmp[2],
+      date: new Date(new Date(newDate).toDateString()).getTime(),
+      active: false
+    })
+  }
+  return datesArray;
+}
 
 const CategoryList = ({categories, setCategories}) => {
   const toggleCategory = (categoryIndex) => {
@@ -235,20 +253,14 @@ const CreateTaskScreen = (props) => {
   const [startTime, setStartTime] = useState(new Date(new Date().setHours(7, 0, 0)).getTime());
   const [endTime, setEndTime] = useState(new Date(new Date().setHours(12, 0, 0)).getTime());
   const [loading, setLoading] = useState(false);
-  const [repeatOn, setRepeatOn] = useState([
-    {day: "Monday", active: false},
-    {day: "Tuesday", active: false},
-    {day: "Wednesday", active: false},
-    {day: "Thursday", active: false},
-    {day: "Friday", active: false},
-    {day: "Saturday", active: false},
-    {day: "Sunday", active: false},
-  ]);
+  const [isSelectedAll, setSelectAll] = useState(false);
+  const [repeatOn, setRepeatOn] = useState(getDateList(props.route.params.date));
   const [categories, setCategories] = useState([
     {title: "Housework", active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
     {title: "Education", active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
     {title: "Skills", active: false, name: "toys", type: "material", color: COLORS.GREEN}
   ]);
+  const date = new Date(props.route.params.date).toDateString().split(" ");
 
   const createTask = async() => {
     try {
@@ -257,7 +269,10 @@ const CreateTaskScreen = (props) => {
       const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
         return accumulator + +currentValue.active;
       }, "");
+      const repeatOnList = repeatOn.filter(item => item.active === true);
+      const dateList = repeatOnList.map(date => date.date);
       const type = categories.find(category => category.active).title;
+      console.log(dateList);
       const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
         method: "POST",
         headers: {
@@ -265,7 +280,7 @@ const CreateTaskScreen = (props) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          assignDate: props.route.params.date,
+          assignDateList: dateList,
           childId: 1,
           creatorPhoneNumber: id,
           description: details,
@@ -290,6 +305,21 @@ const CreateTaskScreen = (props) => {
     }
   }
 
+  const selectAll = (isSelectedAll) => {
+    let newArray = [...repeatOn];
+    isSelectedAll ? 
+      newArray = newArray.map((date, index) => {
+        date.active = true
+        return date;
+      })
+    :
+      newArray = newArray.map((date, index) => {
+        date.active = false
+        return date;
+      })
+    setRepeatOn(newArray);
+  };
+
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
@@ -311,12 +341,25 @@ const CreateTaskScreen = (props) => {
         />
         {/* end icon back */}
         {/* title of the screen */}
-        <Text style={{
-          fontSize: 20,
-          fontFamily: "AcuminBold"
+        <View style={{
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center"
         }}>
-          Add New Task
-        </Text>
+          <Text style={{
+            fontSize: 20,
+            fontFamily: "AcuminBold"
+          }}>
+            Add New Task
+          </Text>
+          <Text style={{
+            fontSize: 20,
+            fontFamily: "Acumin",
+            color: COLORS.LIGHT_GREY
+          }}>
+            {date[1]}, {date[2]} {date[3]}
+          </Text>
+        </View>
         {/* end title of the screen */}
         {/* create this View for center title purpose */}
         <View style={{marginRight: "10%"}}></View>
@@ -399,13 +442,37 @@ const CreateTaskScreen = (props) => {
         </Text>
         <View style={{
           flexDirection: "row",
+          justifyContent: "space-between",
+          width: "100%",
+          marginTop: 5
+        }}>
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 16,
+            color: COLORS.LIGHT_GREY
+          }}>
+            All next 7 days
+          </Text>
+          <Switch
+            trackColor={{ false: COLORS.LIGHT_GREY, true: COLORS.LIGHT_CYAN }}
+            thumbColor={isSelectedAll ? COLORS.STRONG_CYAN : COLORS.GREY}
+            onValueChange={() => {setSelectAll(!isSelectedAll); selectAll(!isSelectedAll)}}
+            value={isSelectedAll}
+            style={{
+              transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
+            }}
+          />
+        </View>
+        <View style={{
+          flexDirection: "row",
           flexWrap: "wrap",
           marginTop: 10
         }}>
           {repeatOn.map((value, index) => {
             return (
               <TouchableOpacity key={index} style={{
-                height: heightPercentageToDP("5%"),
+                width: widthPercentageToDP("10%"),
+                height: heightPercentageToDP("10%"),
                 backgroundColor: value.active ? COLORS.STRONG_CYAN : COLORS.GREY,
                 borderRadius: 20,
                 alignItems: "center",
@@ -423,8 +490,15 @@ const CreateTaskScreen = (props) => {
                 }}
               >
                 <Text style={{
-                  fontSize: 15,
+                  fontSize: 10,
                   fontFamily: "Acumin",
+                  color: COLORS.WHITE
+                }}>
+                  {value.dayOfWeek}
+                </Text>
+                <Text style={{
+                  fontSize: 17,
+                  fontFamily: "AcuminBold",
                   color: COLORS.WHITE
                 }}>
                   {value.day}

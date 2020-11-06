@@ -211,13 +211,6 @@ const QuestScreen = (props) => {
               color={COLORS.BLACK}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon
-              name="add"
-              type="material"
-              color={COLORS.WHITE}
-            />
-          </TouchableOpacity>
         </View>
         <View style={styles.dateList}>
           {/* <FlatList

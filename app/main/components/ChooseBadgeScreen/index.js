@@ -77,7 +77,7 @@ const ChooseBadgeScreen = (props) => {
           fontSize: 20,
           marginTop: "5%"
         }}>
-          Choose Badge
+          Choose Reward Icon
         </Text>
       </View>
       <View style={{
