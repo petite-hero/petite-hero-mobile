@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { COLORS } from "../../../../const/const"; 
 
 const styles = StyleSheet.create({
@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
   dateTextActive : {
     color: COLORS.WHITE
   },
+  dateTimePickerShower: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
   titleContainer : {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -83,6 +88,7 @@ const styles = StyleSheet.create({
     elevation: 10
   },
   btnBack : {
+    top: -hp("8%"),
     left: "93%",
     width: wp("12%"),
     height: wp("12%"),
@@ -93,6 +99,7 @@ const styles = StyleSheet.create({
     elevation: 20
   },
   btnForth : {
+    top: -hp("8%"),
     right: "9%",
     width: wp("12%"),
     height: wp("12%"),
@@ -101,6 +108,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     elevation: 20
+  },
+  tabs : {
+    flexDirection: "row", 
+    justifyContent: "space-evenly",
+    marginTop: hp("2%")
   },
   tabActive : {
     borderBottomWidth: 2, 
@@ -116,7 +128,7 @@ const styles = StyleSheet.create({
   taskBoard : {
     marginTop: hp("3%"),
     height: hp("60%"),
-    alignSelf: "center"
+    alignSelf: "center",
   },
   taskItem : {
     width: wp("80%"),
@@ -127,7 +139,24 @@ const styles = StyleSheet.create({
     elevation: 6,
     backgroundColor: COLORS.WHITE
   },
-  
+  fontAcumin : {
+    fontFamily: "Acumin"
+  },
+  fontAcuminBold : {
+    fontFamily: "AcuminBold"
+  },
+  "mr-2" : {
+    marginRight: wp("2%")
+  },
+  "fs-16" : {
+    fontSize: 16
+  },
+  "fs-18" : {
+    fontSize: 18
+  },
+  "fs-20" : {
+    fontSize: 20
+  }
 });
 
 export default styles;

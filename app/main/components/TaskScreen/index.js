@@ -1,31 +1,23 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import styles from './styles/index.css';
+import DateItem from './DateItem';
+import TaskBoard from './TaskBoard';
 import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import styles from './styles/index.css';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
-import { ConfirmationModal } from '../../../utils/modal';
 import { fetchWithTimeout } from '../../../utils/fetch';
 
-const categories = [
-  {title: "Housework", name: "broom", type: "material-community", color: COLORS.YELLOW},
-  {title: "Education", name: "school", type: "material", color: COLORS.STRONG_CYAN},
-  {title: "Skills", name: "toys", type: "material", color: COLORS.GREEN}
-];
-
-const handleShowTime = (time) => {
-  const tmp = time ? time.split(":") : "00:00:00".split(":");
-  return tmp[0] + ":" + tmp[1];
-}
-
-const handleShowCategory = (category) => {
-  return categories.find(item => item.title === category);
-}
-
+{/*
+  function getDaysInMonth
+  description: load dates in a specific month
+  parameters:
+    + month: specify a month in a year, type "number", range from 0 to 11 (0 is January, 11 is December)
+    + year : specify a full year, type "number", e.g. 2020
+  return: list of dates in a specific month
+*/}
 const getDaysInMonth = (month, year) => {
   const date = new Date(year, month, 1);
   const dates = [];
@@ -46,6 +38,14 @@ const getDaysInMonth = (month, year) => {
   return dates;
 }
 
+{/*
+  function getDateIndex
+  description: get index of a specific date in date list
+  parameters:
+    + dates: array of dates of a specific month 
+    + date : date whose index is needed to be found, date must be converted to date string i.e. "Fri Nov 06 2020"
+  return: index of giving date
+*/}
 const getDateIndex = (dates, date = new Date().toDateString()) => {
   const month = date.split(" ")[1];
   const day = date.split(" ")[2];
@@ -54,239 +54,70 @@ const getDateIndex = (dates, date = new Date().toDateString()) => {
   return index > (dates.length - 1) ? dates.length - 5 : index - 2;
 }
 
+{/*
+  function groupTasksByStatus
+  description: group tasks in list by status, giving statuses are: ASSIGNED, HANDED, DONE, FAILED
+  parameters:
+    + list: list of tasks
+  return: array of tasks grouped into two statuses: in progress and finished
+*/}
+const groupTasksByStatus = (list) => {
+  const tmp = list.reduce((r, a) => {
+    r[a.status] = [...r[a.status] || [], a];
+    return r;
+  }, {})
+  const assigned = tmp.ASSIGNED ? tmp.ASSIGNED : [];
+  const handed = tmp.HANDED ? tmp.HANDED : [];
+  const done = tmp.DONE ? tmp.DONE : [];
+  const failed = tmp.FAILED ? tmp.FAILED : [];
+  const inProgress = [assigned, handed].reduce((accumulator, currentValue) => {
+    return accumulator.concat(currentValue);
+  }, []);
+  const finished = [done, failed].reduce((accumulator, currentValue) => {
+    return accumulator.concat(currentValue);
+  }, []);
+  return [inProgress, finished];
+};
+
+{/*
+  function getHandedTasks
+  description: get 
+  parameters:
+    + list: list of tasks
+  return: array of tasks grouped into two statuses: in progress and finished
+*/}
+const getHandedTasks = async(date, setDates) => {
+  try {
+    const ip = await AsyncStorage.getItem('IP');
+    const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1/handed?date=" + date);
+    const result = await response.json();
+    if (result.code === 200) {
+      const tmp = getDaysInMonth(new Date(date).getMonth(), new Date(date).getFullYear());
+      tmp.forEach(date => {
+        result.data.forEach(object => {
+          date.date === object.date ? date.numOfHandedTasks = object.count : null;
+        })
+      });
+      setDates(tmp);
+    } else {
+      handleError(result.msg);
+    }
+  } catch (error) {
+    handleError(error.message);
+  }
+};
+
+
+{/* 
+  variable currentDateIndex
+  description: this variable is used to store index of current date 
+*/}
 const currentDateIndex = getDateIndex(getDaysInMonth(new Date().getMonth(), new Date().getFullYear())) + 2;
 
-const TaskBoard = ({ list, refresh, confirm, navigation }) => {
-  const [tabs, setTabs] = useState(
-    [
-      {title: "In Progress", active : true},
-      {title: "Finished", active : false}
-    ]
-  );
-
-  const toggleTab = (tabIndex) => {
-    let tmp = [...tabs];
-    tmp.map((value, index) => {
-      index === tabIndex ? value.active = true : value.active = false;
-    });
-    setTabs(tmp);
-  }
-
-  return (
-    <>
-      <View style={{
-        flexDirection: "row", 
-        justifyContent: "space-evenly",
-        marginTop: hp("2%")}}
-      >
-        {tabs.map((value, index) => {
-          return (
-            value.active ? (
-              <TouchableOpacity key={index} style={styles.tabActive}>
-                <Text style={[styles.tabText, styles.tabTextActive]}>{value.title}</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity key={index} onPress={() => {toggleTab(index)}}>
-                <Text style={styles.tabText}>{value.title}</Text>
-              </TouchableOpacity>
-            )
-          )
-        })}
-      </View>
-      <View style={styles.taskBoard}>
-        { (tabs[0].active && list[0] && list[0].length == 0) || (tabs[1].active && list[1] && list[1].length == 0) ?
-            <View style={{
-              alignItems: "center",
-              justifyContent: "center",
-              height: "80%"
-            }}>
-              <Text style={{
-                fontFamily: "Acumin",
-                fontSize: 16,
-                color: COLORS.STRONG_CYAN
-              }}>
-                There is no current tasks on this day.
-              </Text>
-            </View>
-          :
-            <FlatList
-              data={tabs[0].active ? list[0] : list[1]}
-              renderItem={({item, index}) => TaskItem(item, index, refresh, confirm, navigation)}
-              keyExtractor={item => item.taskId + ""}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                alignItems: "center"
-              }}
-            />
-        }
-      </View>
-    </>
-  );
-};
-
-// represent an item in task list
-const TaskItem = (item, index, refresh, confirm, navigation) => {
-  const category = handleShowCategory(item.type);
-  const deleteTask = async() => {
-    try {
-      const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + item.taskId, {
-        method: "DELETE"
-      });
-      const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-      } else {
-        handleError(result.msg);
-      }
-    } catch (error) {
-      handleError(error.message);
-    }
-  }
-  return (
-    <Swipeable
-      containerStyle={{overflow: "visible", marginLeft: 15, marginRight: 15}}
-      renderRightActions={() => (
-        <TouchableOpacity style={{
-          width: hp("10%"),
-          height: hp("11.5%"),
-          borderRadius: hp("3%"),
-          backgroundColor: COLORS.RED,
-          marginLeft: 20,
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-          onPress={() => {refresh(true); deleteTask()}}
-          // onPress={() => {confirm(true);}}
-        >
-          <Icon
-            type="material"
-            name="delete"
-            color={COLORS.WHITE}
-          />
-        </TouchableOpacity>
-      )}
-    >
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        <View style={{
-          width: wp("12%"),
-          height: wp("12%"),
-          borderRadius: wp("6%"),
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: category.color,
-          marginRight: -wp("6%"),
-          marginTop: -hp("2%"),
-          elevation: 8,
-        }}>
-          <Icon
-            name={category.name}
-            type={category.type}
-            color={COLORS.WHITE}
-          />
-        </View>
-        <TouchableOpacity 
-          style={styles.taskItem}
-          activeOpacity={1}
-          onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {refresh(true)}})}}
-        >
-          <View style={{
-            flexDirection: "row", 
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginLeft: wp("7.5%"),
-            marginRight: wp("5%"),
-          }}>
-            <View style={{
-              flexDirection: "column",
-              maxWidth: "75%",
-              flexShrink: 1,
-              justifyContent: "center",
-            }}>
-              <Text style={{
-                fontSize: hp("2.5%"),
-                fontFamily: "AcuminBold", 
-                color: COLORS.BLACK
-              }}>
-                {item.name}
-              </Text>
-            </View>
-            <View style={{
-              width: wp("20%"),
-              height: hp("2.5%"),
-              borderRadius: hp("0.5%"),
-              backgroundColor: item.status === "DONE" && COLORS.GREEN
-                            || item.status === "FAILED" && COLORS.RED
-                            || item.status === "HANDED" && COLORS.PURPLE
-                            || item.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
-              <Text style={{
-                color: COLORS.WHITE,
-                textTransform: "capitalize"
-              }}>
-                {item.status}
-              </Text>
-            </View>
-          </View>
-          <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
-            <Text style={{
-               fontSize: 14,
-               fontFamily: "Acumin",
-               color: COLORS.LIGHT_GREY
-            }}>
-              From: {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </Swipeable>
-  );
-};
-
-// represent an item in date list
-const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, refresh) => {
-  return (
-    <View>
-      {
-        item.numOfHandedTasks > 0 &&
-        <View style={{
-          position: "absolute",
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          right: 0,
-          backgroundColor: COLORS.PURPLE,
-          elevation: 8
-        }}/>
-      }
-      {index !== currentIndex ?
-      (
-        <TouchableOpacity style={styles.dateContainer}
-          onPress={() => {
-            refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
-            setCurrentIndex(index);
-            refresh(true);
-            const tmp = item.year + "-" + (item.monthNum + 1 >= 10 ? item.monthNum + 1 : "0" + (item.monthNum + 1)) + "-" + item.day;
-            setDate(new Date((new Date(tmp).toDateString())).getTime());
-          }}>
-          <Text style={styles.dateText}>{item.dayOfWeek}</Text>
-          <Text style={styles.dateNum}>{item.day}</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={[styles.dateContainer, styles.dateActiveContainer]}>
-          <Text style={[styles.dateText, styles.dateTextActive]}>{item.dayOfWeek}</Text>
-          <Text style={[styles.dateNum, styles.dateTextActive]}>{item.day}</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  )
-};
-
+{/* 
+  React component TaskScreen
+  description: presentational component of TaskScreen
+*/}
 const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
@@ -298,45 +129,6 @@ const TaskScreen = (props) => {
   const currentDate                         = new Date(new Date().toDateString()).getTime();
   const [currentIndex, setCurrentIndex]     = useState(currentDateIndex);
   const refDateFlatlist                     = useRef(null);
-  // group tasks by status
-  const groupTasksByStatus = (list) => {
-    const tmp = list.reduce((r, a) => {
-      r[a.status] = [...r[a.status] || [], a];
-      return r;
-    }, {})
-    const assigned = tmp.ASSIGNED ? tmp.ASSIGNED : [];
-    const handed = tmp.HANDED ? tmp.HANDED : [];
-    const done = tmp.DONE ? tmp.DONE : [];
-    const failed = tmp.FAILED ? tmp.FAILED : [];
-    const inProgress = [assigned, handed].reduce((accumulator, currentValue) => {
-      return accumulator.concat(currentValue);
-    }, []);
-    const finished = [done, failed].reduce((accumulator, currentValue) => {
-      return accumulator.concat(currentValue);
-    }, []);
-    return [inProgress, finished];
-  }
-  
-  const getHandedTasks = async() => {
-    try {
-      const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1/handed?date=" + date);
-      const result = await response.json();
-      if (result.code === 200) {
-        const tmp = getDaysInMonth(new Date(date).getMonth(), new Date(date).getFullYear());
-        tmp.forEach(date => {
-          result.data.forEach(object => {
-            date.date === object.date ? date.numOfHandedTasks = object.count : null;
-          })
-        });
-        setDates(tmp);
-      } else {
-        // do something later
-      }
-    } catch (error) {
-      handleError(error.message);
-    }
-  };
 
   useEffect(() => {
     (async() => {
@@ -346,9 +138,9 @@ const TaskScreen = (props) => {
         const result = await response.json();
         if (result.code === 200) {
           setList(groupTasksByStatus(result.data));
-          getHandedTasks();
+          getHandedTasks(date, setDates);
         } else {
-          // do something later
+          handleError(result.msg);
         }
         setLoading(false);
       } catch (error) {
@@ -359,8 +151,12 @@ const TaskScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* <ConfirmationModal visible={modalVisible} message="Are you sure you want to delete?" setVisible={setModalVisible}/> */}
+
+      {/* LOADER */}
       <Loader loading={loading}/>
+      {/* END LOADER */}
+
+      {/* DATE TIME PICKER */}
       {isShowed &&
         <DateTimePicker
           mode="date"
@@ -378,22 +174,32 @@ const TaskScreen = (props) => {
           }}
         />
       }
+      {/* END DATE TIME PICKER */}
+
+      {/* HEADER */}
       <View style={styles.header}>
+        {/* TITLE CONTAINER */}
         <View style={styles.titleContainer}>
+          {/* TITLE */}
           <Text style={styles.title}>
             Tasks
           </Text>
+          {/* END TITLE */}
+          {/* AVATAR */}
           <Image
             style={[styles.avatar, {backgroundColor: COLORS.WHITE}]}
             source={require('../../../../assets/kid-avatar.png')}
           />
+          {/* END AVATAR */}
         </View>
-        <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+        {/* END TITLE CONTAINER */}
+        {/* DATE TIME PICKER SHOWER */}
+        <View style={styles.dateTimePickerShower}>
           <TouchableOpacity 
             style={styles.monthPicker}
             onPress={() => {setShow(true)}}
           >
-            <Text style={{fontSize: 20, fontFamily: "AcuminBold", color: COLORS.BLACK}}>
+            <Text style={styles.dateNum}>
               {new Date(date).toDateString().split(" ")[1] + " " + new Date(date).toDateString().split(" ")[3]}
             </Text>
             <Icon
@@ -403,65 +209,74 @@ const TaskScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
+        {/* END DATE TIME PICKER SHOWER */}
+        {/* DATE LIST */}
         <View style={styles.dateList}>
+          {/* DATE FLAT LIST */}
           <FlatList
             data={dates}
             renderItem={({item, index}) => DateItem(item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, setLoading)}
             keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <Text style={{marginRight: wp("2%")}}></Text>}
+            ItemSeparatorComponent={() => <Text style={styles["mr-2"]}></Text>}
             ref={refDateFlatlist}
             initialNumToRender={31}
             onLayout={() => {
               refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
             }}
-            // onMomentumScrollEnd={({nativeEvent}) => {
-            //   handleScroll(nativeEvent.contentOffset.x);
-            // }}
           />
-          {/* move to current date buttons */}
-          <View style={{
-            top: -hp("8%")
-          }}>
-            <TouchableOpacity
-              style={[styles.btnBack, {display: date > currentDate ? "flex" : "none"}]}
-              onPress={() => {
-                setLoading(true);
-                setDate(currentDate);
-                setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
-                refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
-              }}
-              activeOpacity={1}
-            >
-              <Icon
-                name="keyboard-arrow-left"
-                type="material"
-                color={COLORS.BLACK}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.btnForth, {display: date < currentDate ? "flex" : "none"}]}
-              onPress={() => {
-                setLoading(true);
-                setDate(currentDate);
-                setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
-                refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
-              }}
-              activeOpacity={1}
-            >
-              <Icon
-                name="keyboard-arrow-right"
-                type="material"
-                color={COLORS.BLACK}
-              />
-            </TouchableOpacity>
-          </View>
-          {/* end move to current date buttons */}
+          {/* END DATE FLAT LIST */}
+          {/* BUTTON BACK TO CURRENT DATE */}
+          <TouchableOpacity
+            style={[styles.btnBack, {display: date > currentDate ? "flex" : "none"}]}
+            onPress={() => {
+              setLoading(true);
+              setDate(currentDate);
+              setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
+              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
+            }}
+            activeOpacity={1}
+          >
+            <Icon
+              name="keyboard-arrow-left"
+              type="material"
+              color={COLORS.BLACK}
+            />
+          </TouchableOpacity>
+          {/* END BUTTON BACK TO CURRENT DATE */}
+          {/* BUTTON FORWARD TO CURRENT DATE */}
+          <TouchableOpacity
+            style={[styles.btnForth, {display: date < currentDate ? "flex" : "none"}]}
+            onPress={() => {
+              setLoading(true);
+              setDate(currentDate);
+              setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
+              refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
+            }}
+            activeOpacity={1}
+          >
+            <Icon
+              name="keyboard-arrow-right"
+              type="material"
+              color={COLORS.BLACK}
+            />
+          </TouchableOpacity>
+          {/* END BUTTON FORWARD TO CURRENT DATE */}
         </View>
+        {/* END DATE LIST */}
       </View>
-      <TaskBoard list={list} refresh={setLoading} confirm={setModalVisible} navigation={props.navigation}/>
-      {/* button add task */}
+      {/* END HEADER */}
+
+      {/* TASK BOARD */}
+      <TaskBoard 
+        list={list} 
+        refresh={setLoading} 
+        confirm={setModalVisible} 
+        navigation={props.navigation}/>
+      {/* END TASK BOARD */}
+
+      {/* BUTTON ADD TASK */}
       <TouchableOpacity
         style={styles.btnAddTask}
         onPress={() => {props.navigation.navigate("CreateTask", {date: date, onGoBack: () => {setLoading(true)}})}}
@@ -472,7 +287,8 @@ const TaskScreen = (props) => {
           color={COLORS.WHITE}
         />
       </TouchableOpacity>
-      {/* end button add task */}
+      {/* END BUTTON ADD TASK */}
+
     </View>
   );
 };

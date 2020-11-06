@@ -14,7 +14,7 @@ export const COLORS = {
   PURPLE: "#7107be",
 };
 
-export const IP = "192.168.1.105";
+export const IP = "192.168.186.246";
 export const PORT = ":8080";
 
 export const NOTI = {
@@ -32,6 +32,12 @@ export const changeOpac = (color, opac) => {
   const b = parseInt(result[3], 16);
   return "rgba(" + r + "," + g + "," + b + "," + opac + ")";
 };
+
+export const categories = [
+  {title: "Housework", name: "broom", type: "material-community", color: COLORS.YELLOW},
+  {title: "Education", name: "school", type: "material", color: COLORS.STRONG_CYAN},
+  {title: "Skills", name: "toys", type: "material", color: COLORS.GREEN}
+];
 
 export const badgesList = [
   {
