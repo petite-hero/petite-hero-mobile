@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     elevation: 10
   },
   btnBack : {
-    right: "50%",
+    left: "93%",
     width: wp("12%"),
     height: wp("12%"),
     borderRadius: wp("6%"),
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     elevation: 20
   },
   btnForth : {
-    left: "50%",
+    right: "9%",
     width: wp("12%"),
     height: wp("12%"),
     borderRadius: wp("6%"),

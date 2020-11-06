@@ -15,32 +15,26 @@ const CreateQuestScreen = (props) => {
   const [details, setDetails]             = useState("");
   const [loading, setLoading]             = useState(false);
   const [badge, setBadge]                 = useState(badgesList[0]);
+  const [photo, setPhoto]                 = useState({});
 
   const createQuest = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
-      const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
-        return accumulator + +currentValue.active;
-      }, "");
-      const type = categories.find(category => category.active).title;
-      const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
+      const data = new FormData();
+      data.append("childId", 1);
+      data.append("creatorPhoneNumber", id);
+      data.append("description", details);  
+      data.append("name", name);
+      data.append("reward", badge.id);
+      data.append("rewardDetail", details);
+      data.append("rewardPhoto", null);
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/quest", {
         method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'multipart/form-data;'
         },
-        body: JSON.stringify({
-          assignDate: props.route.params.date,
-          childId: 1,
-          creatorPhoneNumber: id,
-          description: details,
-          fromTime: startTime,
-          name: name,
-          repeatOn: repeatArray,
-          toTime: endTime,
-          type: type
-        })
+        body: data
       });
       const result = await response.json();
       if (result.code === 200) {
@@ -180,7 +174,7 @@ const CreateQuestScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Quest Details
+          Reward Details
         </Text>
         <TextInput
           value={details}
@@ -206,7 +200,7 @@ const CreateQuestScreen = (props) => {
         height: heightPercentageToDP("5%"),
         backgroundColor: COLORS.YELLOW
       }}
-        onPress={() => {setLoading(true); createTask()}}
+        onPress={() => {setLoading(true); createQuest()}}
       >
         <Text style={{
           fontFamily: "AcuminBold",
