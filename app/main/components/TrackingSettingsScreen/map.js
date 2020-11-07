@@ -7,6 +7,7 @@ import styles from './styles/index.css';
 import { COLORS, changeOpac } from "../../../const/const";
 
 import Util from "./util";
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 
 const TrackingSettingMap = (props) => {
@@ -15,10 +16,9 @@ const TrackingSettingMap = (props) => {
 
     // map
     <View key={0} style={{...StyleSheet.absoluteFillObject}}>
-
       <MapView
         ref={(instance) => { props.setMap(instance) }}
-        style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
+        style={{width: Dimensions.get("screen").width, height: Dimensions.get("screen").height}}
         initialRegion={Util.REGION_FPT}
         showsUserLocation={true}
         showsMyLocationButton={false}
