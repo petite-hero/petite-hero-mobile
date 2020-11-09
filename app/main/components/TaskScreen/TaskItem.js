@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { View, Text, AsyncStorage, TouchableOpacity } from 'react-native';
 import { COLORS, PORT, categories } from '../../../const/const';
@@ -7,6 +7,7 @@ import styles from './styles/index.css';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
+import Animated from 'react-native-reanimated';
 
 // represent an item in task list
 const handleShowCategory = (category) => {
@@ -20,6 +21,7 @@ const handleShowTime = (time) => {
 
 const TaskItem = (item, index, refresh, confirm, navigation) => {
   const category = handleShowCategory(item.type);
+
   const deleteTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
@@ -35,29 +37,61 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
       handleError(error.message);
     }
   }
+
   return (
     <Swipeable
       containerStyle={{overflow: "visible", marginLeft: 15, marginRight: 15}}
-      renderRightActions={() => (
-        <TouchableOpacity style={{
-          width: hp("10%"),
-          height: hp("11.5%"),
-          borderRadius: hp("3%"),
-          backgroundColor: COLORS.RED,
-          marginLeft: 20,
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-          onPress={() => {refresh(true); deleteTask()}}
-          // onPress={() => {confirm(true);}}
-        >
-          <Icon
-            type="material"
-            name="delete"
-            color={COLORS.WHITE}
-          />
-        </TouchableOpacity>
-      )}
+      renderRightActions={(progress, dragX) => {
+        const scales = dragX.interpolate({
+          inputRange: [0, 50, 100],
+          outputRange: [0, 0.5, 1],
+        });
+        const trans = dragX.interpolate({
+          inputRange: [0, 50, 100, 101],
+          outputRange: [-20, 0, 0, 1],
+        });
+        return(
+          <Animated.View style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}>
+            <TouchableOpacity style={{
+              width: wp("12%"),
+              height: hp("8%"),
+              borderRadius: hp("1%"),
+              backgroundColor: COLORS.STRONG_CYAN,
+              marginLeft: 10,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+              onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
+            >
+              <Icon
+                type="material"
+                name="content-copy"
+                color={COLORS.WHITE}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={{
+              width: wp("12%"),
+              height: hp("8%"),
+              borderRadius: hp("1%"),
+              marginLeft: 5,
+              backgroundColor: COLORS.RED,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+              onPress={() => {refresh(true); deleteTask()}}
+            >
+              <Icon
+                type="material"
+                name="delete"
+                color={COLORS.WHITE}
+              />
+            </TouchableOpacity>
+          </Animated.View>
+        )
+      }}
     >
       <View style={{
         flexDirection: "row",

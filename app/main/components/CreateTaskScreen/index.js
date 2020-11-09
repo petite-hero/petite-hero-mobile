@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
@@ -8,15 +8,21 @@ import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
-import { Switch } from 'react-native';
 
 const getDateList = (date) => {
   const currentDate = new Date(date);
   let datesArray = [];
   let newDate = new Date();
-  for (let i = 0; i < 7; i++) {
+  let tmp = newDate.toDateString().split(" ");
+  datesArray.push({
+    dayOfWeek: tmp[0],
+    day: tmp[2],
+    date: new Date(new Date(newDate).toDateString()).getTime(),
+    active: true
+  })
+  for (let i = 1; i <= 7; i++) {
     newDate.setDate(currentDate.getDate() + i);
-    const tmp = newDate.toDateString().split(" ");
+    tmp = newDate.toDateString().split(" ");
     datesArray.push({
       dayOfWeek: tmp[0],
       day: tmp[2],
@@ -25,6 +31,11 @@ const getDateList = (date) => {
     })
   }
   return datesArray;
+}
+
+const getTime = (time) => {
+  const tmp = time.split(":");
+  return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
 }
 
 const CategoryList = ({categories, setCategories}) => {
@@ -252,7 +263,7 @@ const CreateTaskScreen = (props) => {
   const [category, setCategory] = useState("");
   const [startTime, setStartTime] = useState(new Date(new Date().setHours(7, 0, 0)).getTime());
   const [endTime, setEndTime] = useState(new Date(new Date().setHours(12, 0, 0)).getTime());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isSelectedAll, setSelectAll] = useState(false);
   const [repeatOn, setRepeatOn] = useState(getDateList(props.route.params.date));
   const [categories, setCategories] = useState([
@@ -272,7 +283,6 @@ const CreateTaskScreen = (props) => {
       const repeatOnList = repeatOn.filter(item => item.active === true);
       const dateList = repeatOnList.map(date => date.date);
       const type = categories.find(category => category.active).title;
-      console.log(dateList);
       const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
         method: "POST",
         headers: {
@@ -305,6 +315,35 @@ const CreateTaskScreen = (props) => {
     }
   }
 
+  useEffect(() => {
+    props.route.params.taskId ? (async() => {
+      try {
+        const ip = await AsyncStorage.getItem('IP');
+        const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + props.route.params.taskId);
+        const result = await response.json();
+        if (result.code === 200 && result.msg === "OK") {
+          const fromTime = getTime(result.data.fromTime);
+          const toTime = getTime(result.data.toTime);
+          setName(result.data.name);
+          setDetails(result.data.description);
+          setCategories(categories.map((value, index) => {
+            value.title === result.data.type ? value.active = true : value.active = false;
+            return value;
+          }));
+          setStartTime(new Date(new Date().setHours(fromTime[0], fromTime[1], fromTime[2])).getTime());
+          setEndTime(new Date(new Date().setHours(toTime[0], toTime[1], toTime[2])).getTime());
+        } else {
+          handleError(result.msg);
+        }
+      } catch (error) {
+        handleError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    })() :
+    setLoading(false);
+  }, []);
+
   const selectAll = (isSelectedAll) => {
     let newArray = [...repeatOn];
     isSelectedAll ? 
@@ -321,7 +360,7 @@ const CreateTaskScreen = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Loader loading={loading}/>
       <View style={{
         flexDirection: "row",
@@ -381,17 +420,18 @@ const CreateTaskScreen = (props) => {
         }}>
           Task Name
         </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            width: "100%",
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY
-          }}
-        />
+          <TextInput
+            value={name}
+            onChangeText={(text) => {setName(text)}}
+            style={{
+              fontSize: 16,
+              fontFamily: "Acumin",
+              backgroundColor: COLORS.WHITE,
+              borderBottomWidth: 2,
+              borderColor: COLORS.GREY,
+              width: "100%",
+            }}
+          />
       </View>
       {/* end task name */}
       {/* category */}
@@ -421,7 +461,8 @@ const CreateTaskScreen = (props) => {
             fontFamily: "Acumin",
             width: "100%",
             borderBottomWidth: 2,
-            borderColor: COLORS.GREY
+            borderColor: COLORS.GREY,
+            backgroundColor: COLORS.WHITE
           }}
         />
       </View>
@@ -459,7 +500,8 @@ const CreateTaskScreen = (props) => {
             onValueChange={() => {setSelectAll(!isSelectedAll); selectAll(!isSelectedAll)}}
             value={isSelectedAll}
             style={{
-              transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
+              transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+              elevation: 0
             }}
           />
         </View>
@@ -470,6 +512,7 @@ const CreateTaskScreen = (props) => {
         }}>
           {repeatOn.map((value, index) => {
             return (
+              index > 0 &&
               <TouchableOpacity key={index} style={{
                 width: widthPercentageToDP("10%"),
                 height: heightPercentageToDP("10%"),
@@ -532,7 +575,7 @@ const CreateTaskScreen = (props) => {
       </TouchableOpacity>
       {/* end button Save */}
       {/* end form */}
-    </View>
+    </ScrollView>
   )
 }
 

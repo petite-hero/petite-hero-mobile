@@ -5,16 +5,17 @@ export const COLORS = {
   BLACK: "#000000",
   STRONG_ORANGE: "#f47e3e",
   LIGHT_ORANGE: "#ffe3c1",
-  STRONG_CYAN: "#5ec7f9",
+  STRONG_CYAN: "#00ade8",
+  MEDIUM_CYAN: "#9edbfa",
   LIGHT_CYAN: "#ecf8fe",
   NUDE: "#feefdd",
-  RED: "#f32b2b",
+  RED: "#ec546b",
   YELLOW: "#fbc424",
   GREEN: "#07be8a",
-  PURPLE: "#7107be",
+  PURPLE: "#785adf",
 };
 
-export const IP = "192.168.186.246";
+export const IP = "192.168.1.4";
 export const PORT = ":8080";
 
 export const NOTI = {
