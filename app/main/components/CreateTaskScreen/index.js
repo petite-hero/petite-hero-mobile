@@ -266,6 +266,7 @@ const CreateTaskScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
+      const childId = await AsyncStorage.getItem('child_id');
       const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
         return accumulator + +currentValue.active;
       }, "");
@@ -281,7 +282,7 @@ const CreateTaskScreen = (props) => {
         },
         body: JSON.stringify({
           assignDateList: dateList,
-          childId: 1,
+          childId: childId,
           creatorPhoneNumber: id,
           description: details,
           fromTime: startTime,

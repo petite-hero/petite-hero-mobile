@@ -89,7 +89,8 @@ const groupTasksByStatus = (list) => {
 const getHandedTasks = async(date, setDates) => {
   try {
     const ip = await AsyncStorage.getItem('IP');
-    const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1/handed?date=" + date);
+    const childId = await AsyncStorage.getItem('child_id');
+    const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "/handed?date=" + date);
     const result = await response.json();
     if (result.code === 200) {
       const tmp = getDaysInMonth(new Date(date).getMonth(), new Date(date).getFullYear());
@@ -134,7 +135,8 @@ const TaskScreen = (props) => {
     (async() => {
       try {
         const ip = await AsyncStorage.getItem('IP');
-        const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/1?date=" + date);
+        const childId = await AsyncStorage.getItem('child_id');
+        const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
         const result = await response.json();
         if (result.code === 200) {
           setList(groupTasksByStatus(result.data));

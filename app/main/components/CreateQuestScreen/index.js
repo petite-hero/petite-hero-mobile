@@ -21,8 +21,9 @@ const CreateQuestScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
+      const childId = await AsyncStorage.getItem('child_id');
       const data = new FormData();
-      data.append("childId", 1);
+      data.append("childId", childId);
       data.append("creatorPhoneNumber", id);
       data.append("description", details);  
       data.append("name", name);

@@ -216,8 +216,9 @@ const QuestScreen = (props) => {
     (async () => {
       try {
         const ip = await AsyncStorage.getItem("IP");
+        const childId = await AsyncStorage.getItem('child_id');
         const response = await fetchWithTimeout(
-          "http://" + ip + PORT + "/quest/list/1"
+          "http://" + ip + PORT + "/quest/list/" + childId
         );
         const result = await response.json();
         if (result.code === 200) {
