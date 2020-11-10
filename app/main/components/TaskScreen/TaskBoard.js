@@ -45,8 +45,8 @@ const TaskBoard = ({ list, refresh, confirm, navigation }) => {
               justifyContent: "center",
               height: "80%"
             }}>
-              <Text style={[styles.fontAcumin, styles["fs-16"], {color: COLORS.STRONG_CYAN}]}>
-                There is no current tasks on this day.
+              <Text style={[styles.fontAcumin, styles["fs-16"], {color: COLORS.MEDIUM_CYAN}]}>
+                There is no {tabs[0].active ? tabs[0].title.toLowerCase() : tabs[1].title.toLowerCase()} tasks on this day.
               </Text>
             </View>
           :

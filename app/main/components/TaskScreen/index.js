@@ -70,7 +70,7 @@ const groupTasksByStatus = (list) => {
   const handed = tmp.HANDED ? tmp.HANDED : [];
   const done = tmp.DONE ? tmp.DONE : [];
   const failed = tmp.FAILED ? tmp.FAILED : [];
-  const inProgress = [assigned, handed].reduce((accumulator, currentValue) => {
+  const inProgress = [handed, assigned].reduce((accumulator, currentValue) => {
     return accumulator.concat(currentValue);
   }, []);
   const finished = [done, failed].reduce((accumulator, currentValue) => {
@@ -275,7 +275,8 @@ const TaskScreen = (props) => {
         list={list} 
         refresh={setLoading} 
         confirm={setModalVisible} 
-        navigation={props.navigation}/>
+        navigation={props.navigation}
+      />
       {/* END TASK BOARD */}
 
       {/* BUTTON ADD TASK */}
