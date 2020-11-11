@@ -13,6 +13,7 @@ import Animated, { Easing } from "react-native-reanimated";
 import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
+import AvatarContainer from "../AvatarContainer";
 
 const Stack = createStackNavigator();
 
@@ -165,6 +166,7 @@ const ProfileScreen = ({ route }) => (
       initialParams={{
         authContext: route.params.authContext,
         localizationContext: route.params.localizationContext,
+        children: route.params.children
       }}
     />
   </Stack.Navigator>
@@ -173,6 +175,7 @@ const ProfileScreen = ({ route }) => (
 const ProfileScreenContent = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const { signOut } = React.useContext(props.route.params.authContext);
+  const [children, setChildren] = useState(props.route.params.children);
   const [parentProfile, setParentProfile] = React.useState("");
   const [listSubscriptionType, setListSubscriptionType] = React.useState("");
   const [listChildren, setListChildren] = React.useState("");
@@ -286,13 +289,12 @@ const ProfileScreenContent = (props) => {
     getCollaboratorList();
     getAllSubscriptionType();
   }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
             marginTop: hp("10%"),
           }}
         >
@@ -320,12 +322,6 @@ const ProfileScreenContent = (props) => {
                 {parentProfile.subscriptionType}
               </Text>
             </View>
-          </View>
-          <View>
-            <Image
-              style={[styles.avatar, { backgroundColor: COLORS.STRONG_CYAN }]}
-              source={require("../../../../assets/parent-avatar.png")}
-            />
           </View>
         </View>
       </View>
@@ -428,6 +424,7 @@ const ProfileScreenContent = (props) => {
           }}
         />
       </ScrollView>
+      <AvatarContainer children={children}/>
     </View>
   );
 };

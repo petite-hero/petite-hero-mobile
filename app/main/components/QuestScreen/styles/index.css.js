@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   header : {
     width: "100%",
-    height: hp("32%"),
+    height: hp("16%"),
     marginBottom: hp("1%"),
     backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   questBoard : {
     marginTop: hp("3%"),
-    height: hp("60%"),
+    height: hp("75%"),
     marginLeft: "5%",
     marginRight: "5%",
   },

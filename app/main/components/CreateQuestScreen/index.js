@@ -14,7 +14,7 @@ const CreateQuestScreen = (props) => {
   const [name, setName] = useState("");
   const [details, setDetails]             = useState("");
   const [loading, setLoading]             = useState(false);
-  const [badge, setBadge]                 = useState(badgesList[0]);
+  const [badge, setBadge]                 = useState("");
   const [photo, setPhoto]                 = useState({});
 
   const createQuest = async() => {
@@ -112,7 +112,7 @@ const CreateQuestScreen = (props) => {
         />
       </View>
       {/* end quest name */}
-      {/* choose badge */}
+      {/* choose reward */}
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
@@ -125,7 +125,7 @@ const CreateQuestScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Choose Badge
+          Choose Reward
         </Text>
         <View style={{
           width: "100%",
@@ -133,24 +133,35 @@ const CreateQuestScreen = (props) => {
           justifyContent: "space-between",
           alignItems: "center"
         }}>
-          <View style={{
-            width: widthPercentageToDP("14.3%"),
-            height: heightPercentageToDP("10%"),
-            borderRadius: 30,
-            marginTop: 15,
-            backgroundColor: COLORS.LIGHT_CYAN,
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden"
-          }}>
-            <Image
-              source={badge.image}
-              style={{
-                width: "90%",
-                height: "90%"
-              }}
-            />
-          </View>
+          {
+          badge ?
+            <View style={{
+              width: widthPercentageToDP("16%"),
+              height: widthPercentageToDP("16%"),
+              borderRadius: widthPercentageToDP("8%"),
+              marginTop: 15,
+              backgroundColor: COLORS.LIGHT_CYAN,
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden"
+            }}>
+              <Image
+                source={badge.image}
+                style={{
+                  width: "90%",
+                  height: "90%"
+                }}
+              />
+            </View>
+          :
+            <Text style={{
+              fontFamily: "AcuminBold",
+              fontSize: 14,
+              color: COLORS.STRONG_GREY
+            }}>
+              None
+            </Text>
+          }
           <Icon
             name="keyboard-arrow-right"
             type="material"
@@ -162,7 +173,7 @@ const CreateQuestScreen = (props) => {
           />
         </View>
       </View>
-      {/* end choose badge */}
+      {/* end choose reward */}
       {/* quest details */}
       <View style={{
         flexDirection: "column",
@@ -175,7 +186,7 @@ const CreateQuestScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Reward Details
+          Quest Details
         </Text>
         <TextInput
           value={details}

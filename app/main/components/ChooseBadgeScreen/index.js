@@ -8,9 +8,9 @@ import styles from './styles/index.css';
 const BadgeItem = (item, index, badge, setBadge) => {
   return (
     <TouchableOpacity style={{
-      width: widthPercentageToDP("14.3%"),
-      height: heightPercentageToDP("10%"),
-      borderRadius: 30,
+      width: widthPercentageToDP("18%"),
+      height: widthPercentageToDP("18%"),
+      borderRadius: widthPercentageToDP("9%"),
       marginRight: "2%",
       backgroundColor: COLORS.LIGHT_CYAN,
       alignItems: "center",
@@ -92,7 +92,7 @@ const ChooseBadgeScreen = (props) => {
           ItemSeparatorComponent={() => <View style={{margin: "2%"}}></View>}
           keyExtractor={item => item.id + ""}
           showsVerticalScrollIndicator={false}
-          numColumns={5}
+          numColumns={4}
         />
       </View>
       {/* button Choose */}
@@ -113,7 +113,7 @@ const ChooseBadgeScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Choose
+          OK
         </Text>
       </TouchableOpacity>
       {/* end button Choose */}

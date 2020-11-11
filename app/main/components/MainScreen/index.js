@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TrackingStatusScreen from '../TrackingStatusScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import TrackingSettingsScreen from '../TrackingSettingsScreen';
@@ -24,7 +24,10 @@ const MainScreen = ({route}) => {
       <Stack.Screen 
         name="TrackingStatus"
         component={TrackingStatusScreen}
-        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+        initialParams={{ 
+          authContext: route.params.authContext,
+          localizationContext: route.params.localizationContext
+        }}
       />
       <Stack.Screen
         name="TrackingSettings"

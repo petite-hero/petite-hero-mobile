@@ -12,11 +12,42 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import TaskScreen from '../TaskScreen';
 import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
+import { handleError } from '../../../utils/handleError';
+import { Loader } from '../../../utils/loader';
 
 
 {/* ===================== SCREEN NAVIGATION SECTION ===================== */}
 const Tab = createMaterialTopTabNavigator();
 const TrackingStatusScreen = ({route}) => {
+  const [loading, setLoading]   = React.useState(true);
+  const [children, setChildren] = React.useState([]);
+
+  React.useEffect(() => {
+    (async() => {
+      try {
+        const ip = await AsyncStorage.getItem('IP');
+        const id = await AsyncStorage.getItem('user_id');
+        const childId = await AsyncStorage.getItem('child_id');
+        const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+        const result = await response.json();
+        if (result.code === 200) {
+          setChildren(result.data);
+          if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        } else {
+          handleError(result.msg);
+        }
+      } catch (error) {
+        handleError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    })()
+  }, [loading, children]);
+
+  if (loading) return (
+    <Loader loading={true}/>
+  )
+
   return (
     <Tab.Navigator
       screenOptions = {({route}) => ({
@@ -63,20 +94,40 @@ const TrackingStatusScreen = ({route}) => {
       <Tab.Screen 
         name="Tracking" 
         component={TrackingStatusScreenContent}
-        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+        initialParams={{ 
+          authContext: route.params.authContext, 
+          localizationContext: route.params.localizationContext,
+          children: children,
+          setChildren: setChildren
+        }}
       />
       <Tab.Screen 
         name="Tasks" 
         component={TaskScreen}
-        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+        initialParams={{ 
+          authContext: route.params.authContext, 
+          localizationContext: route.params.localizationContext,
+          children: children,
+          setChildren: setChildren
+        }}
       />
       <Tab.Screen name="Quests" 
         component={QuestScreen}
-        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+        initialParams={{ 
+          authContext: route.params.authContext, 
+          localizationContext: route.params.localizationContext,
+          children: children,
+          setChildren: setChildren
+        }}
       />
       <Tab.Screen name="Profile" 
         component={ProfileScreen}
-        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+        initialParams={{ 
+          authContext: route.params.authContext, 
+          localizationContext: route.params.localizationContext,
+          children: children,
+          setChildren: setChildren
+        }}
       />
     </Tab.Navigator>
   )

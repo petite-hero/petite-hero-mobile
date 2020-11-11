@@ -84,8 +84,7 @@ const TaskDetailsScreen = (props) => {
         overflow: "hidden"
       }}>
         <Image
-          source={{uri: "https://sickkidscare.com.au/wp-content/uploads/2020/09/vb.png"}}
-          // source={{uri: "https://scontent-sin6-2.xx.fbcdn.net/v/t1.15752-9/123192711_3395183017226006_6360276073099702214_n.jpg?_nc_cat=105&ccb=2&_nc_sid=ae9488&_nc_ohc=vpDD0WzdvzEAX9x_z4P&_nc_ht=scontent-sin6-2.xx&oh=f8a4a7834f361012f52fb402aef7fd52&oe=5FC7F8D1"}}
+          source={{uri: details.proofPhoto ? "data:image/png;base64," + details.proofPhoto : "https://www.newstatesman.com/sites/default/files/styles/homesection_image/public/blogs_2016/12/untitled_design_41_.png"}}
           style={{height: "100%", width: "100%"}}
         />
         <Icon

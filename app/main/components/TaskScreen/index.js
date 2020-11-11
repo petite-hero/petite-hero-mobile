@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
+import AvatarContainer from '../AvatarContainer';
 
 {/*
   function getDaysInMonth
@@ -81,9 +82,10 @@ const groupTasksByStatus = (list) => {
 
 {/*
   function getHandedTasks
-  description: get 
+  description: get tasks with status HANDED
   parameters:
-    + list: list of tasks
+    + date: date to get tasks
+    + setDates: method to set new list of dates
   return: array of tasks grouped into two statuses: in progress and finished
 */}
 const getHandedTasks = async(date, setDates) => {
@@ -121,6 +123,8 @@ const currentDateIndex = getDateIndex(getDaysInMonth(new Date().getMonth(), new 
 */}
 const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
+  const [currentChild, setCurrentChild]     = useState("");
+  const [children, setChildren]             = useState(props.route.params.children);
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
   const [list, setList]                     = useState([]);
   const [modalVisible, setModalVisible]     = useState(false);
@@ -139,6 +143,7 @@ const TaskScreen = (props) => {
         const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
         const result = await response.json();
         if (result.code === 200) {
+          setCurrentChild(childId);
           setList(groupTasksByStatus(result.data));
           getHandedTasks(date, setDates);
         } else {
@@ -187,12 +192,6 @@ const TaskScreen = (props) => {
             Tasks
           </Text>
           {/* END TITLE */}
-          {/* AVATAR */}
-          <Image
-            style={[styles.avatar, {backgroundColor: COLORS.WHITE}]}
-            source={require('../../../../assets/kid-avatar.png')}
-          />
-          {/* END AVATAR */}
         </View>
         {/* END TITLE CONTAINER */}
         {/* DATE TIME PICKER SHOWER */}
@@ -291,7 +290,9 @@ const TaskScreen = (props) => {
         />
       </TouchableOpacity>
       {/* END BUTTON ADD TASK */}
-
+      {/* AVATAR */}
+      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
+      {/* END AVATAR */}
     </View>
   );
 };

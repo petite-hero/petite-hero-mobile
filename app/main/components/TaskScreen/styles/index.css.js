@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: 'center',
     borderRadius: wp("6%"),
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: COLORS.LIGHT_CYAN,
+    elevation: 0
   },
   dateActiveContainer : {
     backgroundColor: COLORS.STRONG_CYAN
@@ -63,8 +64,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   titleContainer : {
-    flexDirection: "row",
-    justifyContent: "space-between",
     marginTop: hp("5%"),
     marginLeft: wp("10%"),
     marginBottom: hp("2%"),

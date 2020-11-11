@@ -17,6 +17,7 @@ import styles from "./styles/index.css";
 import { Loader } from "../../../utils/loader";
 import { handleError } from "../../../utils/handleError";
 import { fetchWithTimeout } from "../../../utils/fetch";
+import AvatarContainer from "../AvatarContainer";
 
 const categories = [
   {
@@ -127,59 +128,47 @@ const QuestBoard = ({ list, setLoading, navigation }) => {
 // represent an item in task list
 const QuestItem = (item, index, setLoading, navigation) => {
   return (
-    item && (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <TouchableOpacity
+        style={styles.questItem}
+        onPress={() => {
+          navigation.navigate("QuestDetails", {
+            questId: item.questId,
+            onGoBack: () => setLoading(true),
+          });
         }}
       >
-        <TouchableOpacity
-          style={styles.questItem}
-          onPress={() => {
-            navigation.navigate("QuestDetails", {
-              questId: item.questId,
-              onGoBack: () => setLoading(true),
-            });
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "space-between",
+            margin: "10%",
+            height: "90%"
           }}
         >
-          <View
+          <Text
             style={{
-              marginTop: "10%",
-              marginLeft: "10%",
-              marginRight: "10%",
+              fontSize: 20,
+              fontFamily: "AcuminBold",
+              color: COLORS.BLACK,
             }}
           >
-            <Image
-              source={badgesList[item.reward - 1].image}
-              style={{
-                width: wp("15%"),
-                height: wp("15%"),
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "AcuminBold",
-                color: COLORS.BLACK,
-              }}
-            >
-              {item.name}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  );
-};
-
-// represent an item in date list
-const BadgeItem = (item, index) => {
-  return (
-    <View key={index}>
-      <TouchableOpacity style={styles.badgeContainer}>
-        <Text style={styles.dateText}>{item.dayOfWeek}</Text>
-        <Text style={styles.dateNum}>{item.day}</Text>
+            {item.name}
+          </Text>
+          <Image
+            source={badgesList[item.reward - 1].image}
+            style={{
+              width: wp("21%"),
+              height: wp("21%"),
+              marginLeft: -wp("2%")
+            }}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -187,6 +176,8 @@ const BadgeItem = (item, index) => {
 
 const QuestScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
+  const [children, setChildren] = useState(props.route.params.children);
+  const [currentChild, setCurrentChild] = useState("");
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -223,6 +214,8 @@ const QuestScreen = (props) => {
         const result = await response.json();
         if (result.code === 200) {
           setList(groupQuestsByStatus(result.data));
+          setChildren(children);
+          setCurrentChild(childId);
         } else {
           // do something later
         }
@@ -236,53 +229,10 @@ const QuestScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* <ConfirmationModal visible={modalVisible} message="Are you sure you want to delete?" setVisible={setModalVisible}/> */}
       <Loader loading={loading} />
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Quests</Text>
-          <Image
-            style={[styles.avatar, { backgroundColor: COLORS.WHITE }]}
-            source={require("../../../../assets/kid-avatar.png")}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity style={styles.monthPicker}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "AcuminBold",
-                color: COLORS.BLACK,
-              }}
-            >
-              Badge Library
-            </Text>
-            <Icon
-              name="keyboard-arrow-down"
-              type="material"
-              color={COLORS.BLACK}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="add" type="material" color={COLORS.WHITE} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.dateList}>
-          {/* <FlatList
-            data={dates}
-            renderItem={({item, index}) => BadgeItem(item, index)}
-            keyExtractor={item => item.year + item.month + item.day}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <Text style={{marginRight: wp("2%")}}></Text>}
-            initialNumToRender={6}
-          /> */}
         </View>
       </View>
       <QuestBoard
@@ -302,6 +252,7 @@ const QuestScreen = (props) => {
       >
         <Icon name="add" type="material" color={COLORS.WHITE} />
       </TouchableOpacity>
+      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
     </View>
   );
 };
