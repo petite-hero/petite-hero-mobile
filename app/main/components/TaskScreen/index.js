@@ -140,12 +140,14 @@ const TaskScreen = (props) => {
 
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      if (notification.request.content.data.status) {
+      if (notification.request.content.data) {
         setLoading(true);
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
-      console.log("Background noti listener");
+      if (notification.request.content.data) {
+        setLoading(true);
+      }
     });
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
