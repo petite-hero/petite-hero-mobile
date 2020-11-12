@@ -21,7 +21,6 @@ const RegisterScreen = (props) => {
         })
       });
       const result = await response.json();
-      console.log(result);
       if (result.code === 200 && result.msg === "OK") {
         props.navigation.navigate("Login");
       } else {

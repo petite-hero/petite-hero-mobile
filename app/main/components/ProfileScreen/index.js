@@ -420,7 +420,11 @@ const ProfileScreenContent = (props) => {
           title="Logout"
           icon="exit-to-app"
           action={() => {
-            signOut();
+            (async() => {
+              await AsyncStorage.removeItem("child_id");
+              await AsyncStorage.removeItem("user_id");
+              signOut();
+            })()
           }}
         />
       </ScrollView>

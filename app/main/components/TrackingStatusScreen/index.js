@@ -32,6 +32,7 @@ const TrackingStatusScreen = ({route}) => {
         const result = await response.json();
         if (result.code === 200) {
           setChildren(result.data);
+          console.log(childId);
           if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         } else {
           handleError(result.msg);
@@ -42,7 +43,7 @@ const TrackingStatusScreen = ({route}) => {
         setLoading(false);
       }
     })()
-  }, [loading, children]);
+  }, [loading]);
 
   if (loading) return (
     <Loader loading={true}/>

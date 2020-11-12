@@ -10,6 +10,7 @@ import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import AvatarContainer from '../AvatarContainer';
+import * as Notifications from 'expo-notifications';
 
 {/*
   function getDaysInMonth
@@ -134,6 +135,23 @@ const TaskScreen = (props) => {
   const currentDate                         = new Date(new Date().toDateString()).getTime();
   const [currentIndex, setCurrentIndex]     = useState(currentDateIndex);
   const refDateFlatlist                     = useRef(null);
+  const notificationListener                = useRef();
+  const responseListener                    = useRef();
+
+  const listenChangeTaskStatus = () => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      if (notification.request.content.data.status) {
+        setLoading(true);
+      }
+    });
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
+      console.log("Background noti listener");
+    });
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  };
 
   useEffect(() => {
     (async() => {
@@ -153,7 +171,8 @@ const TaskScreen = (props) => {
       } catch (error) {
         handleError(error.message);
       }
-    })()
+    })();
+    listenChangeTaskStatus();
   }, [loading]);
 
   return (
@@ -191,6 +210,8 @@ const TaskScreen = (props) => {
           <Text style={styles.title}>
             Tasks
           </Text>
+          <View style={styles.bigCircle}/>
+          <View style={styles.smallCircle}/>
           {/* END TITLE */}
         </View>
         {/* END TITLE CONTAINER */}

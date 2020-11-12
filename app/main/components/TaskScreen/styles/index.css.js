@@ -5,7 +5,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: COLORS.WHITE
   },
   avatar : {
     width: wp("12%"),
@@ -18,8 +18,27 @@ const styles = StyleSheet.create({
     marginBottom: hp("1%"),
     backgroundColor: COLORS.WHITE,
     borderBottomLeftRadius: wp("5%"),
-    borderBottomRightRadius: wp("5%"),
-    elevation: 10
+    borderBottomRightRadius: wp("5%")
+  },
+  bigCircle : {
+    position: "absolute",
+    width: wp("88%"),
+    height: wp("88%"),
+    borderRadius: wp("44%"),
+    top: -hp("23.5%"),
+    left: -wp("44%"),
+    backgroundColor: COLORS.LIGHT_CYAN,
+    elevation: -1
+  },
+  smallCircle: {
+    position: "absolute",
+    width: wp("30%"),
+    height: wp("30%"),
+    borderRadius: wp("15%"),
+    top: -hp("4%"),
+    right: -wp("23%"),
+    backgroundColor: COLORS.LIGHT_CYAN,
+    elevation: -1
   },
   monthPicker : {
     flexDirection: "row",
@@ -38,12 +57,15 @@ const styles = StyleSheet.create({
     height: hp("10%"),
     justifyContent: "center",
     alignItems: 'center',
+    borderWidth: 1,
     borderRadius: wp("6%"),
-    backgroundColor: COLORS.LIGHT_CYAN,
+    borderColor: COLORS.MEDIUM_GREY,
+    backgroundColor: COLORS.WHITE,
     elevation: 0
   },
   dateActiveContainer : {
-    backgroundColor: COLORS.STRONG_CYAN
+    borderColor: COLORS.STRONG_CYAN,
+    backgroundColor: COLORS.WHITE
   },
   dateText : {
     fontSize: 15,
@@ -56,7 +78,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK
   },
   dateTextActive : {
-    color: COLORS.WHITE
+    color: COLORS.STRONG_CYAN
   },
   dateTimePickerShower: {
     flexDirection: "row",
@@ -72,7 +94,7 @@ const styles = StyleSheet.create({
   title : {
     fontSize: 30,
     fontFamily: "AcuminBold",
-    color: COLORS.BLACK
+    color: COLORS.STRONG_CYAN
   },
   btnAddTask : {
     position: "absolute",
@@ -135,8 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: hp("3%"),
     marginBottom: hp("2%"),
     justifyContent: "center",
-    elevation: 6,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.WHITE,
+    borderWidth: 2
   },
   fontAcumin : {
     fontFamily: "Acumin"

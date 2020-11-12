@@ -55,21 +55,23 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
             flexDirection: "row",
             alignItems: "center"
           }}>
-            <TouchableOpacity style={{
-              width: wp("12%"),
-              height: hp("8%"),
-              borderRadius: hp("1%"),
-              backgroundColor: COLORS.STRONG_CYAN,
-              marginLeft: 10,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+            <TouchableOpacity
               onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
             >
               <Icon
                 type="material"
                 name="content-copy"
                 color={COLORS.WHITE}
+                containerStyle={{
+                  width: wp("12%"),
+                  height: hp("8%"),
+                  borderRadius: hp("1%"),
+                  backgroundColor: COLORS.STRONG_CYAN,
+                  marginLeft: 10,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                // onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
               />
             </TouchableOpacity>
             <TouchableOpacity style={{
@@ -116,7 +118,14 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
           />
         </View>
         <TouchableOpacity 
-          style={styles.taskItem}
+          style={[styles.taskItem, 
+            { borderColor:
+              item.status === "DONE" && COLORS.GREEN
+              || item.status === "FAILED" && COLORS.RED
+              || item.status === "HANDED" && COLORS.PURPLE
+              || item.status === "ASSIGNED" && COLORS.STRONG_CYAN
+            }
+          ]}
           activeOpacity={1}
           onPress={() => {navigation.navigate("TaskDetails", {taskId: item.taskId, onGoBack: () => {refresh(true)}})}}
         >
@@ -141,33 +150,27 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
                 {item.name}
               </Text>
             </View>
-            <View style={{
-              width: wp("20%"),
-              height: hp("2.5%"),
-              borderRadius: hp("0.5%"),
-              backgroundColor: item.status === "DONE" && COLORS.GREEN
-                            || item.status === "FAILED" && COLORS.RED
-                            || item.status === "HANDED" && COLORS.PURPLE
-                            || item.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
+          </View>
+          <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
+            { item.status === "ASSIGNED" ?
               <Text style={{
-                color: COLORS.WHITE,
+                fontSize: 14,
+                fontFamily: "Acumin",
+                color: COLORS.LIGHT_GREY
+              }}>
+                From {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
+              </Text>
+            :
+              <Text style={{
+                color: item.status === "DONE" && COLORS.GREEN
+                    || item.status === "FAILED" && COLORS.RED
+                    || item.status === "HANDED" && COLORS.PURPLE
+                    || item.status === "ASSIGNED" && COLORS.STRONG_CYAN,
                 textTransform: "capitalize"
               }}>
                 {item.status}
               </Text>
-            </View>
-          </View>
-          <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
-            <Text style={{
-               fontSize: 14,
-               fontFamily: "Acumin",
-               color: COLORS.LIGHT_GREY
-            }}>
-              From: {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
-            </Text>
+            }
           </View>
         </TouchableOpacity>
       </View>
