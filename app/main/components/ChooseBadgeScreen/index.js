@@ -45,7 +45,7 @@ const ChooseBadgeScreen = (props) => {
         overflow: "hidden"
       }}>
         <Image
-          source={{uri: "https://sickkidscare.com.au/wp-content/uploads/2020/09/vb.png"}}
+          source={badge.image}
           style={{height: "100%", width: "100%"}}
         />
         <Icon

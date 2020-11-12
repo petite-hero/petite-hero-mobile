@@ -32,7 +32,6 @@ const TrackingStatusScreen = ({route}) => {
         const result = await response.json();
         if (result.code === 200) {
           setChildren(result.data);
-          console.log(childId);
           if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         } else {
           handleError(result.msg);
@@ -143,14 +142,14 @@ const TrackingStatusScreenContent = ({ navigation }) => {
   {/* ===================== VARIABLE SECTION ===================== */}
 
   // tracking status
-  [trackingStatus, setTrackingStatus] = React.useState("INACTIVE");  // LOADING, INACTIVE, SAFE, NOT SAFE
+  const [trackingStatus, setTrackingStatus] = React.useState("INACTIVE");  // LOADING, INACTIVE, SAFE, NOT SAFE
   const STATUS_COLORS = {"LOADING": "rgb(140, 140, 140)", "INACTIVE": "rgb(140, 140, 140)", "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
 
   // child information
-  [childList, setChildList] = React.useState([]);
+  const [childList, setChildList] = React.useState([]);
 
   // date picker for setting zone
-  [isPickingDate, setIsPickingDate] = React.useState(false);
+  const [isPickingDate, setIsPickingDate] = React.useState(false);
 
   // tracking status animation
   const CENTER_RATIO = 0.6;
@@ -168,7 +167,7 @@ const TrackingStatusScreenContent = ({ navigation }) => {
 
   // set safe zone animation
   const FLY_TIME = 400;
-  [flied, setFlied] = React.useState(false);
+  const [flied, setFlied] = React.useState(false);
   const animSetZoneBtn = React.useRef(new Animated.Value(0)).current;
   const animSetZoneBtnTopNav = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});
   const animSetZoneBtnTopDay = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});

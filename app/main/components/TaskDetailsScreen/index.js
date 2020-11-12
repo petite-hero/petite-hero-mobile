@@ -8,14 +8,33 @@ import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 
+const handleShowHourAndMinute = (time) => {
+  return time < 10 ?  "0" + time : time;
+}
+
 const handleShowTime = (time) => {
-  const tmp = time ? time.split(":") : "00:00:00".split(":");
-  return tmp[0] + ":" + tmp[1];
+  if (typeof(time) == "string") {
+    const tmp = time ? time.split(":") : "00:00:00".split(":");
+    return tmp[0] + ":" + tmp[1];
+  } else {
+    return handleShowHourAndMinute(new Date(time).getHours()) + ":" + handleShowHourAndMinute(new Date(time).getMinutes());
+  }
 }
 
 const handleShowDate = (date) => {
   const tmp = new Date(date).toDateString().split(" ").slice(1, 4);
   return tmp[0] + " " + tmp[1] + " " + tmp[2];
+}
+
+const getTime = (time) => {
+  const tmp = time.split(":");
+  return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
+}
+
+const isLate = (date, submitTime, time) => {
+  const tmp = getTime(time);
+  const toTime = new Date(new Date(date).setHours(tmp[0], tmp[1], tmp[2])).getTime();
+  return submitTime - toTime > 0;
 }
 
 const categories = [
@@ -144,25 +163,48 @@ const TaskDetailsScreen = (props) => {
               {details.name}
             </Text>
           </View>
-          <View style={{
-            paddingTop: "2%",
-            paddingLeft: "8%",
-            paddingRight: "8%",
-            paddingBottom: "2%",
-            borderRadius: 10,
-            backgroundColor: details.status === "DONE" && COLORS.GREEN
-                            || details.status === "FAILED" && COLORS.RED
-                            || details.status === "HANDED" && COLORS.PURPLE
-                            || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-          }}>
-            <Text style={{
-              fontFamily: "Acumin",
-              color: COLORS.WHITE,
-              textTransform: "capitalize"
-            }}>
-              {details.status}
-            </Text>
-          </View>
+          {
+            details.status === "DONE" || details.status === "FAILED" ?
+              <Text style={{
+                fontFamily: "Acumin",
+                color: details.status === "DONE" && COLORS.GREEN
+                    || details.status === "FAILED" && COLORS.RED,
+                textTransform: "capitalize"
+              }}>
+                {details.status}
+              </Text>
+            : details.submitDate ?
+              isLate(details.assignDate, details.submitDate, details.toTime) ?
+              <Text style={{
+                fontFamily: "Acumin",
+                color: COLORS.RED
+              }}>
+                Submit late at {handleShowTime(details.submitDate)}
+              </Text>
+              :
+              <Text style={{
+                fontFamily: "Acumin",
+                color: COLORS.GREEN
+              }}>
+                Submit at {handleShowTime(details.submitDate)}
+              </Text>
+            : isLate(details.assignDate, new Date().getTime(), details.toTime) ?
+              <Text style={{
+                fontFamily: "Acumin",
+                color: COLORS.YELLOW
+              }}>
+                Late
+              </Text>
+              :
+              <Text style={{
+                fontFamily: "Acumin",
+                color: details.status === "HANDED" && COLORS.PURPLE
+                    || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
+                textTransform: "capitalize"
+              }}>
+                {details.status}
+              </Text>
+          }
         </View>
         <View style={{
           flexDirection: "row",

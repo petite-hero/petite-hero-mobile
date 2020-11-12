@@ -294,6 +294,7 @@ const TaskScreen = (props) => {
 
       {/* TASK BOARD */}
       <TaskBoard 
+        date={date}
         list={list} 
         refresh={setLoading} 
         confirm={setModalVisible} 

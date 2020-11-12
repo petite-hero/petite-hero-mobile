@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
-import { COLORS, PORT } from '../../../const/const';
+import { badgesList, COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Icon } from 'react-native-elements';
@@ -66,7 +66,7 @@ const QuestDetailsScreen = (props) => {
         overflow: "hidden"
       }}>
         <Image
-          source={{uri: "https://sickkidscare.com.au/wp-content/uploads/2020/09/vb.png"}}
+          source={badgesList[details.reward - 1].image}
           style={{height: "100%", width: "100%"}}
         />
         <Icon
@@ -108,25 +108,26 @@ const QuestDetailsScreen = (props) => {
               {details.name}
             </Text>
           </View>
-          <View style={{
-            paddingTop: "2%",
-            paddingLeft: "8%",
-            paddingRight: "8%",
-            paddingBottom: "2%",
-            borderRadius: 10,
-            backgroundColor: details.status === "DONE" && COLORS.GREEN
-                            || details.status === "FAILED" && COLORS.RED
-                            || details.status === "HANDED" && COLORS.PURPLE
-                            || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-          }}>
-            <Text style={{
-              fontFamily: "Acumin",
-              color: COLORS.WHITE,
-              textTransform: "capitalize"
+          {
+            (details.status === "DONE" || details.status === "FAILED") &&
+            <View style={{
+              paddingTop: "2%",
+              paddingLeft: "8%",
+              paddingRight: "8%",
+              paddingBottom: "2%",
+              borderRadius: 10,
+              backgroundColor: details.status === "DONE" && COLORS.GREEN
+                              || details.status === "FAILED" && COLORS.RED
             }}>
-              {details.status}
-            </Text>
-          </View>
+              <Text style={{
+                fontFamily: "Acumin",
+                color: COLORS.WHITE,
+                textTransform: "capitalize"
+              }}>
+                {details.status}
+              </Text>
+            </View>
+          }
         </View>
         <Text style={{
           fontFamily: "AcuminBold",

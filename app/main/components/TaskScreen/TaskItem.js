@@ -1,13 +1,12 @@
 import React, { useRef } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { View, Text, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, Text, AsyncStorage, TouchableOpacity, Animated } from 'react-native';
 import { COLORS, PORT, categories } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import Animated from 'react-native-reanimated';
 
 // represent an item in task list
 const handleShowCategory = (category) => {
@@ -19,7 +18,19 @@ const handleShowTime = (time) => {
   return tmp[0] + ":" + tmp[1];
 }
 
-const TaskItem = (item, index, refresh, confirm, navigation) => {
+const getTime = (time) => {
+  const tmp = time.split(":");
+  return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
+}
+
+const isLate = (date, time) => {
+  const tmp = getTime(time);
+  const toTime = new Date(new Date(date).setHours(tmp[0], tmp[1], tmp[2])).getTime();
+  const currentTime = new Date().getTime();
+  return currentTime - toTime > 0;
+}
+
+const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
   const category = handleShowCategory(item.type);
 
   const deleteTask = async() => {
@@ -40,65 +51,81 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
 
   return (
     <Swipeable
-      containerStyle={{overflow: "visible", marginLeft: 15, marginRight: 15}}
+      containerStyle={{overflow: "visible", marginLeft: 15}}
+      friction={2}
+      leftThreshold={30}
+      rightThreshold={40}
       renderRightActions={(progress, dragX) => {
-        const scales = dragX.interpolate({
-          inputRange: [0, 50, 100],
-          outputRange: [0, 0.5, 1],
+        const trans = progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [150, 0],
         });
-        const trans = dragX.interpolate({
-          inputRange: [0, 50, 100, 101],
-          outputRange: [-20, 0, 0, 1],
-        });
-        return(
-          <Animated.View style={{
-            flexDirection: "row",
-            alignItems: "center"
-          }}>
-            <TouchableOpacity
-              onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
-            >
-              <Icon
-                type="material"
-                name="content-copy"
-                color={COLORS.WHITE}
-                containerStyle={{
-                  width: wp("12%"),
-                  height: hp("8%"),
-                  borderRadius: hp("1%"),
-                  backgroundColor: COLORS.STRONG_CYAN,
-                  marginLeft: 10,
+        return (
+          <View style={{ width: 150, flexDirection: 'row' }}>
+            <Animated.View 
+              style={{ 
+                flex: 1,
+                height: hp("11.5%"),
+                marginLeft: -20,
+                borderTopRightRadius: hp("3%"),
+                borderBottomRightRadius: hp("3%"),
+                flexDirection: "row",
+                backgroundColor: COLORS.STRONG_CYAN,
+                transform: [{ translateX: trans }] 
+              }}>
+              <TouchableOpacity
+                style={{
+                  width: "100%", 
+                  height: "100%",
                   alignItems: "center",
                   justifyContent: "center"
                 }}
-                // onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{
-              width: wp("12%"),
-              height: hp("8%"),
-              borderRadius: hp("1%"),
-              marginLeft: 5,
-              backgroundColor: COLORS.RED,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-              onPress={() => {refresh(true); deleteTask()}}
-            >
-              <Icon
-                type="material"
-                name="delete"
-                color={COLORS.WHITE}
-              />
-            </TouchableOpacity>
-          </Animated.View>
+                onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
+              >
+                <Icon
+                  type="material"
+                  name="content-copy"
+                  color={COLORS.WHITE}
+                />
+              </TouchableOpacity>
+            </Animated.View>
+            <Animated.View 
+              style={{ 
+                flex: 1,
+                height: hp("11.5%"),
+                borderTopRightRadius: hp("3%"),
+                borderBottomRightRadius: hp("3%"),
+                marginLeft: -20,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: COLORS.RED,
+                transform: [{ translateX: trans }],
+                elevation: -1
+              }}>
+              <TouchableOpacity
+                style={{
+                  width: "100%", 
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onPress={() => {refresh(true); deleteTask()}}
+              >
+                <Icon
+                  type="material"
+                  name="delete"
+                  color={COLORS.WHITE}
+                />
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
         )
       }}
     >
       <View style={{
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
+        alignItems: "center"
       }}>
         <View style={{
           width: wp("12%"),
@@ -120,10 +147,12 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
         <TouchableOpacity 
           style={[styles.taskItem, 
             { borderColor:
-              item.status === "DONE" && COLORS.GREEN
-              || item.status === "FAILED" && COLORS.RED
-              || item.status === "HANDED" && COLORS.PURPLE
-              || item.status === "ASSIGNED" && COLORS.STRONG_CYAN
+                item.status === "DONE" ? COLORS.GREEN
+              : item.status === "FAILED" ? COLORS.RED
+              : item.status === "HANDED" ? COLORS.PURPLE
+              : category.title === "Housework" ? COLORS.YELLOW
+              : category.title === "Education" ? COLORS.STRONG_CYAN
+              : category.title === "Skills" && COLORS.GREEN
             }
           ]}
           activeOpacity={1}
@@ -152,7 +181,25 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
             </View>
           </View>
           <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
-            { item.status === "ASSIGNED" ?
+            { item.status === "DONE" || item.status === "FAILED" ?
+              <Text style={{
+                color: item.status === "DONE" && COLORS.GREEN
+                    || item.status === "FAILED" && COLORS.RED,
+                textTransform: "capitalize"
+              }}>
+                {item.status}
+              </Text>
+            :
+            isLate(date, item.toTime) ?
+              <Text style={{
+                fontSize: 14,
+                fontFamily: "Acumin",
+                color: COLORS.YELLOW
+              }}>
+                Late
+              </Text>
+            :
+            item.status === "ASSIGNED" ?
               <Text style={{
                 fontSize: 14,
                 fontFamily: "Acumin",
@@ -162,10 +209,7 @@ const TaskItem = (item, index, refresh, confirm, navigation) => {
               </Text>
             :
               <Text style={{
-                color: item.status === "DONE" && COLORS.GREEN
-                    || item.status === "FAILED" && COLORS.RED
-                    || item.status === "HANDED" && COLORS.PURPLE
-                    || item.status === "ASSIGNED" && COLORS.STRONG_CYAN,
+                color: COLORS.PURPLE,
                 textTransform: "capitalize"
               }}>
                 {item.status}
