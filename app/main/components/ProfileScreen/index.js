@@ -335,7 +335,7 @@ const ProfileScreenContent = (props) => {
               title: "First name",
               text: parentProfile.firstName,
               action: () =>
-                props.navigation.navigate("ChangeParentProfile", {
+                props.navigation.navigate("ProfileChanging", {
                   screenName: "First name",
                   value: parentProfile.firstName,
                 }),
@@ -344,7 +344,7 @@ const ProfileScreenContent = (props) => {
               title: "Last Name",
               text: parentProfile.lastName,
               action: () =>
-                props.navigation.navigate("ChangeParentProfile", {
+                props.navigation.navigate("ProfileChanging", {
                   screenName: "Last name",
                   value: parentProfile.lastName,
                 }),
@@ -357,7 +357,7 @@ const ProfileScreenContent = (props) => {
               title: "Email",
               text: parentProfile.email,
               action: () =>
-                props.navigation.navigate("ChangeParentProfile", {
+                props.navigation.navigate("ProfileChanging", {
                   screenName: "Email",
                   value: parentProfile.email,
                 }),
@@ -385,7 +385,7 @@ const ProfileScreenContent = (props) => {
             {
               title: "Add child",
               action: () => {
-                props.navigation.navigate("AddChild");
+                props.navigation.navigate("ChildAdding");
               },
             },
           ]}
@@ -409,7 +409,7 @@ const ProfileScreenContent = (props) => {
             {
               title: "Change Password",
               action: () =>
-                props.navigation.navigate("ChangeParentProfile", {
+                props.navigation.navigate("ProfileChanging", {
                   screenName: "Change Password",
                 }),
             },

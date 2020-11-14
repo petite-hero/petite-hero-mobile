@@ -6,40 +6,28 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
-    paddingLeft: wp('10%'),
-    paddingRight: wp('10%'),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.STRONG_CYAN
   },
-  btnRegister : {
-    marginTop: hp('7%'),
+  button : {
+    marginTop: hp('10%'),
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: COLORS.STRONG_CYAN,
+    backgroundColor: COLORS.WHITE,
     justifyContent: "center",
     alignItems: "center",
   },
-  btnLogin : {
-    marginTop: hp('1%'),
-    width: wp('55%'),
-    height: hp('7%'),
-    borderRadius: hp('3.5%'),
-    backgroundColor: COLORS.STRONG_CYAN,
-    justifyContent: "center",
-    alignItems: "center",
+  textButton : {
+    fontSize: 16,
+    fontFamily: "Acumin",
+    color: COLORS.STRONG_CYAN
   },
-  txtHello : {
-    fontSize: hp('7%'),
-    fontWeight: "bold",
-  },
-  txtMessage : {
-    fontSize: hp('2%'),
-  },
-  txtButton : {
-    fontSize: hp('2%'),
-    color: "#ffffff"
+  title : {
+    fontSize: 52,
+    fontFamily: "AcuminBold",
+    color: COLORS.WHITE
   },
   circle : {
     marginTop: hp('7%'),

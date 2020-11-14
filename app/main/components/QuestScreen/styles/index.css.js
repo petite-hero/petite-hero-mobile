@@ -5,7 +5,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: COLORS.WHITE
   },
   avatar : {
     width: wp("12%"),
@@ -15,11 +15,17 @@ const styles = StyleSheet.create({
   header : {
     width: "100%",
     height: hp("16%"),
-    marginBottom: hp("1%"),
-    backgroundColor: COLORS.WHITE,
-    borderBottomLeftRadius: wp("5%"),
-    borderBottomRightRadius: wp("5%"),
-    elevation: 10
+    marginBottom: hp("1%")
+  },
+  circle : {
+    position: "absolute",
+    top: -hp("45%"),
+    left: -wp("25%"),
+    width: wp("150%"),
+    height: wp("150%"),
+    borderRadius: wp("100%"),
+    backgroundColor: COLORS.LIGHT_CYAN,
+    elevation: -1
   },
   monthPicker : {
     flexDirection: "row",
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
   title : {
     fontSize: 30,
     fontFamily: "AcuminBold",
-    color: COLORS.BLACK
+    color: COLORS.STRONG_CYAN
   },
   btnAddQuest : {
     position: "absolute",
@@ -71,6 +77,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.STRONG_CYAN
   },
   tabText : {
+    color: COLORS.MEDIUM_CYAN,
     fontSize: hp("2%"),
   },
   tabTextActive : {
@@ -81,16 +88,15 @@ const styles = StyleSheet.create({
     marginTop: hp("3%"),
     height: hp("75%"),
     marginLeft: "5%",
-    marginRight: "5%",
+    marginRight: "5%"
   },
   questItem : {
-    width: wp("40%"),
     height: wp("40%"),
+    borderWidth: 2,
     borderRadius: 25,
     marginLeft: wp("2.5%"),
     marginRight: wp("2.5%"),
     marginBottom: hp("2%"),
-    elevation: 8,
     backgroundColor: COLORS.WHITE
   }
 });

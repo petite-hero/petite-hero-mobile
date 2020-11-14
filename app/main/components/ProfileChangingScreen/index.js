@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 import { COLORS } from "../../../const/const";
 import styles from "./styles/index.css";
 
-const ChangeParentProfileScreen = (props) => {
+const ProfileChangingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [currentName, setCurrentName] = useState(props.route.params.value);
   const [name, setName] = useState(props.route.params.value);
@@ -162,4 +162,4 @@ const ChangeParentProfileScreen = (props) => {
   );
 };
 
-export default ChangeParentProfileScreen;
+export default ProfileChangingScreen;

@@ -9,7 +9,7 @@ import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 
-const CreateQuestScreen = (props) => {
+const QuestCreatingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [name, setName] = useState("");
   const [details, setDetails]             = useState("");
@@ -166,7 +166,7 @@ const CreateQuestScreen = (props) => {
             name="keyboard-arrow-right"
             type="material"
             color={COLORS.BLACK}
-            onPress={() => {props.navigation.navigate("ChooseBadge", {badge: badge, onGoBack: (badge) => {setBadge(badge)}})}}
+            onPress={() => {props.navigation.navigate("QuestChoosingBadge", {badge: badge, onGoBack: (badge) => {setBadge(badge)}})}}
             containerStyle={{
               marginRight: 10
             }}
@@ -228,4 +228,4 @@ const CreateQuestScreen = (props) => {
   )
 }
 
-export default CreateQuestScreen;
+export default QuestCreatingScreen;

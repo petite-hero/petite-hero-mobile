@@ -39,8 +39,9 @@ const TaskBoard = ({ date, list, refresh, confirm, navigation }) => {
         })}
       </View>
       <View style={styles.taskBoard}>
-        { (tabs[0].active && list[0] && list[0].length == 0) || (tabs[1].active && list[1] && list[1].length == 0) ?
+        { (tabs[0].active && list[0] && list[0].length == 1) || (tabs[1].active && list[1] && list[1].length == 1) ?
             <View style={{
+              width: wp("100%"),
               alignItems: "center",
               justifyContent: "center",
               height: "80%"
@@ -60,7 +61,8 @@ const TaskBoard = ({ date, list, refresh, confirm, navigation }) => {
                 keyExtractor={item => item.taskId + ""}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                  alignItems: "center"
+                  alignItems: "center",
+                  justifyContent: "center"
                 }}
               />
             </View>

@@ -38,6 +38,7 @@
     "react-intl": "^5.8.2",
     "react-native": "~0.62.2",
     "react-native-calendars": "^1.403.0",
+    "react-native-confirmation-code-field": "^6.5.1",
     "react-native-elements": "^2.3.2",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-google-places-autocomplete": "^1.8.3",

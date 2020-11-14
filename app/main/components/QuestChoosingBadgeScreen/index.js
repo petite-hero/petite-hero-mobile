@@ -32,7 +32,7 @@ const BadgeItem = (item, index, badge, setBadge) => {
   )
 };
 
-const ChooseBadgeScreen = (props) => {
+const QuestChoosingBadgeScreen = (props) => {
   const [badge, setBadge] = useState(props.route.params.badge);
 
   return (
@@ -121,4 +121,4 @@ const ChooseBadgeScreen = (props) => {
   )
 }
 
-export default ChooseBadgeScreen;
+export default QuestChoosingBadgeScreen;

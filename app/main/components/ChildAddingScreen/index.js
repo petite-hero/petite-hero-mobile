@@ -87,7 +87,7 @@ const ImagePickerComponent = (props) => {
   )
 };
 
-const AddChildScreen = (props) => {
+const ChildAddingScreen = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [nickName, setNickName]   = useState("");
@@ -297,4 +297,4 @@ const AddChildScreen = (props) => {
 }
 
 
-export default AddChildScreen;
+export default ChildAddingScreen;

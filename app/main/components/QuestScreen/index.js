@@ -87,8 +87,8 @@ const QuestBoard = ({ list, setLoading, navigation }) => {
         })}
       </View>
       <View style={styles.questBoard}>
-        {(tabs[0].active && list[0] && list[0].length == 0) ||
-        (tabs[1].active && list[1] && list[1].length == 0) ? (
+        {(tabs[0].active && list[0] && list[0].length == 2) ||
+        (tabs[1].active && list[1] && list[1].length == 2) ? (
           <View
             style={{
               alignItems: "center",
@@ -128,14 +128,14 @@ const QuestBoard = ({ list, setLoading, navigation }) => {
 // represent an item in task list
 const QuestItem = (item, index, setLoading, navigation) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
+    item.questId ? (
       <TouchableOpacity
-        style={styles.questItem}
+        style={[styles.questItem, { 
+          borderColor: item.status === "DONE" ? COLORS.GREEN :
+                       item.status === "FAILED" ? COLORS.RED :
+                       "black",
+          width: item.status !== "DONE" && item.status !== "FAILED" && index === 0 ? wp("85%") : wp("40%")
+        }]}
         onPress={() => {
           navigation.navigate("QuestDetails", {
             questId: item.questId,
@@ -147,19 +147,42 @@ const QuestItem = (item, index, setLoading, navigation) => {
           style={{
             flexDirection: "column",
             justifyContent: "space-between",
-            margin: "10%",
+            margin: wp("3%"),
             height: "90%"
           }}
         >
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: "AcuminBold",
-              color: COLORS.BLACK,
-            }}
-          >
-            {item.name}
-          </Text>
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "space-between"
+          }}>
+            <View style={{maxWidth: "80%"}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: "AcuminBold",
+                  color: COLORS.BLACK,
+                }}
+              >
+                {item.name}
+              </Text>
+            </View>
+            { 
+              item.status === "DONE" &&
+              <Icon
+                name="check-circle"
+                type="material"
+                color={COLORS.GREEN}
+              />
+            }
+            {
+              item.status === "FAILED" &&
+              <Icon
+                name="cancel"
+                type="material"
+                color={COLORS.RED}
+              />
+            }
+          </View>
           <Image
             source={badgesList[item.reward - 1].image}
             style={{
@@ -170,7 +193,9 @@ const QuestItem = (item, index, setLoading, navigation) => {
           />
         </View>
       </TouchableOpacity>
-    </View>
+    ) : (
+      <TouchableOpacity style={[styles.questItem, {borderWidth: 0, backgroundColor: "transparent"}]}/>
+    )
   );
 };
 
@@ -194,12 +219,13 @@ const QuestScreen = (props) => {
     const inProgress = [assigned, handed].reduce(
       (accumulator, currentValue) => {
         return accumulator.concat(currentValue);
-      },
-      []
-    );
+    }, []);
     const finished = [done, failed].reduce((accumulator, currentValue) => {
       return accumulator.concat(currentValue);
     }, []);
+    inProgress.splice(1, 0, {}); // for the first quest to be bigger, not losing the 2nd quest
+    inProgress.push({}, {}); // for better UI
+    finished.push({}, {}); // for better UI
     return [inProgress, finished];
   };
 
@@ -235,6 +261,7 @@ const QuestScreen = (props) => {
           <Text style={styles.title}>Quests</Text>
         </View>
       </View>
+      <View style={styles.circle}/>
       <QuestBoard
         list={list}
         setLoading={setLoading}
@@ -243,7 +270,7 @@ const QuestScreen = (props) => {
       <TouchableOpacity
         style={styles.btnAddQuest}
         onPress={() => {
-          props.navigation.navigate("CreateQuest", {
+          props.navigation.navigate("QuestCreating", {
             onGoBack: () => {
               setLoading(true);
             },

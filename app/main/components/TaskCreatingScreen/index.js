@@ -256,7 +256,7 @@ const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
   )
 }
 
-const CreateTaskScreen = (props) => {
+const TaskCreatingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
@@ -580,4 +580,4 @@ const CreateTaskScreen = (props) => {
   )
 }
 
-export default CreateTaskScreen;
+export default TaskCreatingScreen;

@@ -3,13 +3,13 @@ import TrackingStatusScreen from '../TrackingStatusScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import TrackingSettingsScreen from '../TrackingSettingsScreen';
 import TrackingEmergencyScreen from '../TrackingEmergencyScreen';
-import CreateTaskScreen from '../CreateTaskScreen';
+import TaskCreatingScreen from '../TaskCreatingScreen';
 import TaskDetailsScreen from '../TaskDetailsScreen';
-import ChangeParentProfileScreen from '../ChangeParentProfileScreen';
-import AddChildScreen from '../AddChildScreen';
+import ProfileChangingScreen from '../ProfileChangingScreen';
+import ChildAddingScreen from '../ChildAddingScreen';
 import QuestDetailsScreen from '../QuestDetailsScreen';
-import CreateQuestScreen from '../CreateQuestScreen';
-import ChooseBadgeScreen from '../ChooseBadgeScreen';
+import QuestCreatingScreen from '../QuestCreatingScreen';
+import QuestChoosingBadgeScreen from '../QuestChoosingBadgeScreen';
 
 const Stack = createStackNavigator();
 
@@ -40,8 +40,8 @@ const MainScreen = ({route}) => {
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
-        name="CreateTask"
-        component={CreateTaskScreen}
+        name="TaskCreating"
+        component={TaskCreatingScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
@@ -50,8 +50,8 @@ const MainScreen = ({route}) => {
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
-        name="CreateQuest"
-        component={CreateQuestScreen}
+        name="QuestCreating"
+        component={QuestCreatingScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
@@ -60,18 +60,18 @@ const MainScreen = ({route}) => {
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
-        name="ChooseBadge"
-        component={ChooseBadgeScreen}
+        name="QuestChoosingBadge"
+        component={QuestChoosingBadgeScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
-        name="ChangeParentProfile"
-        component={ChangeParentProfileScreen}
+        name="ProfileChanging"
+        component={ProfileChangingScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
-        name="AddChild"
-        component={AddChildScreen}
+        name="ChildAdding"
+        component={ChildAddingScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>

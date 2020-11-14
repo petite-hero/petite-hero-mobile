@@ -1,42 +1,14 @@
 import React, { useState } from 'react';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { AsyncStorage } from 'react-native';
-import { COLORS, IP, PORT } from '../../../const/const';
-import { Loader } from '../../../utils/loader';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
+import { COLORS } from '../../../const/const';
+import { Loader } from '../../../utils/loader';
 import styles from './styles/index.css';
-import { handleError } from '../../../utils/handleError';
 
-const RegisterScreen = (props) => {
+const ForgotPasswordScreen = (props) => {
   const [phone, setPhone] = useState("");
-  const [loading, setLoading]   = useState(false);
-
-  const register = async() => {
-    try {
-      const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch("http://" + ip + PORT + "/account/parent/register", {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          phoneNumber: phone
-        })
-      });
-      const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        props.navigation.navigate("Login");
-      } else {
-        handleError(result.msg);
-      }
-    } catch (error) {
-      handleError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [loading, setLoading] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -78,11 +50,10 @@ const RegisterScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          Sign Up
+          Forgot Password
         </Text>
         <View style={{
-          width: "80%",
-          height: 100
+          width: "80%"
         }}>
           <TextInput
             keyboardType="phone-pad"
@@ -110,8 +81,10 @@ const RegisterScreen = (props) => {
           justifyContent: "center",
           backgroundColor: COLORS.STRONG_CYAN
         }}
-          // onPress={() => {setLoading(true); register(phone)}}
-          onPress={() => {register(phone)}}
+          onPress={() => {
+            // setLoading(true);
+            props.navigation.navigate("CodeEntering")
+          }}
         >
           <Text style={{
             fontSize: 16, 
@@ -123,8 +96,7 @@ const RegisterScreen = (props) => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
-
-export default RegisterScreen;
+export default ForgotPasswordScreen;

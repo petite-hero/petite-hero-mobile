@@ -147,8 +147,10 @@ const styles = StyleSheet.create({
     paddingBottom: hp("1%")
   },
   taskBoard : {
-    marginTop: hp("3%"),
+    width: "100%",
     height: hp("60%"),
+    marginTop: hp("3%"),
+    paddingRight: wp("10%"),
     alignSelf: "center",
   },
   taskItem : {

@@ -50,6 +50,7 @@ const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
   }
 
   return (
+    item.taskId ? (
     <Swipeable
       containerStyle={{overflow: "visible", marginLeft: 15}}
       friction={2}
@@ -80,7 +81,7 @@ const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
                   alignItems: "center",
                   justifyContent: "center"
                 }}
-                onPress={() => {navigation.navigate("CreateTask", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
+                onPress={() => {navigation.navigate("TaskCreating", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
               >
                 <Icon
                   type="material"
@@ -219,6 +220,9 @@ const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
         </TouchableOpacity>
       </View>
     </Swipeable>
+    ) : (
+      <View style={[styles.taskItem, {borderWidth: 0, backgroundColor: "transparent"}]}></View>
+    )
   );
 };
 

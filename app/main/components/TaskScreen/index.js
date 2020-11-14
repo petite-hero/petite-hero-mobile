@@ -78,6 +78,8 @@ const groupTasksByStatus = (list) => {
   const finished = [done, failed].reduce((accumulator, currentValue) => {
     return accumulator.concat(currentValue);
   }, []);
+  inProgress.push({});
+  finished.push({});
   return [inProgress, finished];
 };
 
@@ -97,11 +99,15 @@ const getHandedTasks = async(date, setDates) => {
     const result = await response.json();
     if (result.code === 200) {
       const tmp = getDaysInMonth(new Date(date).getMonth(), new Date(date).getFullYear());
-      tmp.forEach(date => {
-        result.data.forEach(object => {
-          date.date === object.date ? date.numOfHandedTasks = object.count : null;
-        })
-      });
+      if (result.data) {
+        tmp.forEach(date => {
+          result.data.forEach(object => {
+            date.date === object.date ? date.numOfHandedTasks = object.count : null;
+          })
+        });
+      } else {
+        // do nothing
+      }
       setDates(tmp);
     } else {
       handleError(result.msg);
@@ -295,7 +301,7 @@ const TaskScreen = (props) => {
       {/* TASK BOARD */}
       <TaskBoard 
         date={date}
-        list={list} 
+        list={list}
         refresh={setLoading} 
         confirm={setModalVisible} 
         navigation={props.navigation}
@@ -305,7 +311,7 @@ const TaskScreen = (props) => {
       {/* BUTTON ADD TASK */}
       <TouchableOpacity
         style={styles.btnAddTask}
-        onPress={() => {props.navigation.navigate("CreateTask", {date: date, onGoBack: () => {setLoading(true)}})}}
+        onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
       >
         <Icon
           name="add"
