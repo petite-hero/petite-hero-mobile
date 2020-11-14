@@ -261,8 +261,8 @@ const CreateTaskScreen = (props) => {
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [category, setCategory] = useState("");
-  const [startTime, setStartTime] = useState(new Date(new Date().setHours(7, 0, 0)).getTime());
-  const [endTime, setEndTime] = useState(new Date(new Date().setHours(12, 0, 0)).getTime());
+  const [startTime, setStartTime] = useState(new Date().getTime());
+  const [endTime, setEndTime] = useState(new Date().getTime());
   const [loading, setLoading] = useState(true);
   const [isSelectedAll, setSelectAll] = useState(false);
   const [repeatOn, setRepeatOn] = useState(getDateList(props.route.params.date));

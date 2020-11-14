@@ -17,7 +17,7 @@ export const COLORS = {
   PURPLE: "#785adf",
 };
 
-export const IP = "192.168.179.219";
+export const IP = "10.1.143.10";
 export const PORT = ":8080";
 
 export const NOTI = {
