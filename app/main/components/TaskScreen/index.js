@@ -147,12 +147,12 @@ const TaskScreen = (props) => {
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       if (notification.request.content.data) {
-        setLoading(true);
+        // setLoading(true);
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
       if (notification.request.content.data) {
-        setLoading(true);
+        // setLoading(true);
       }
     });
     return () => {

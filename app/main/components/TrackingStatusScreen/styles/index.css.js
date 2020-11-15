@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import { COLORS } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { Size } from '@ui-kitten/components/devsupport';
 
 const styles = StyleSheet.create({
 
@@ -14,14 +13,7 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     paddingLeft: wp('10%'),
     paddingRight: wp('10%'),
-  },
-  avatar : {
-    position: "absolute",
-    width: wp("12%"),
-    height: wp("12%"),
-    borderRadius: wp("12%"),
-    top: hp("5%"),
-    right: wp("10%"),
+    backgroundColor: "white"
   },
 
   // warning
@@ -34,15 +26,21 @@ const styles = StyleSheet.create({
     left: wp("10%"),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red'
+    backgroundColor: "#ec546b",
+    shadowOpacity: 0.6,
+    elevation: 10
   },
   
   // status animation
   statusContainer: {
     position: "absolute",
-    top: 80,
+    top: 50,
     height: wp('100%'),
     width: wp('100%'),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  statusItemContainer: {
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -54,6 +52,13 @@ const styles = StyleSheet.create({
   locationStatus: {
     color: 'white',
     fontSize: 24
+  },
+  // status list animation
+  statusListContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    width: wp("70%"),
+    justifyContent: "flex-end"
   },
 
   // setting buttons
@@ -70,6 +75,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 40,
     backgroundColor: "white",
+    marginBottom: 10
+  },
+  settingBtnAnimatedContainer: {
+    position: "relative",
+    borderRadius: 40,
+    shadowOpacity: 0.2,
     marginBottom: 10
   },
   txtSettingBtnGuideContainer: {
