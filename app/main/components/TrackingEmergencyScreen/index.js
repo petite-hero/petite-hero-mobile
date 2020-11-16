@@ -1,29 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, Image, AppState, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Dimensions, AppState, AsyncStorage } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 
 import styles from './styles/index.css';
-import { COLORS, PORT } from '../../../const/const';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { PORT } from '../../../const/const';
+
+import { Loader } from '../../../utils/loader';
+import AvatarContainer from '../AvatarContainer';
 
 
-const TrackingEmergencyScreen = ({navigation}) => {
+const TrackingEmergencyScreen = (props) => {
 
   {/* ===================== VARIABLE SECTION ===================== */}
 
-  const LOC_FPT = {latitude: 10.8414846, longitude: 106.8100464};
-  const MAP_ZOOM = {latitudeDelta: 0.024, longitudeDelta: 0.012};
+  // constances
+  const REGION_FPT = {latitude: 10.8414846, longitude: 106.8100464, latitudeDelta: 0.032, longitudeDelta: 0.016};
+  const MAP_DURATION = 200;
+
+  const [loading, setLoading] = React.useState(false);
+
+  // children information
+  const [children, setChildren] = React.useState(props.route.params.children);
 
   // map positioning & zooming
-  [mapLoc, setMapLoc] = React.useState(LOC_FPT);  // FPT University location
-  [latitudeDelta, setLatitudeDelta] = React.useState(MAP_ZOOM.latitudeDelta);
-  [longitudeDelta, setLongitudeDelta] = React.useState(MAP_ZOOM.longitudeDelta);
+  const [map, setMap] = React.useState(null);
+  const mapRef = React.useRef(map);
+  const setMapRef = (mapInstance) => {
+    mapRef.current = mapInstance;
+    setMap(mapInstance);
+  }
+  const [latitudeDelta, setLatitudeDelta] = React.useState(REGION_FPT.latitudeDelta);
+  const [longitudeDelta, setLongitudeDelta] = React.useState(REGION_FPT.longitudeDelta);
 
   // reported location list
-  [realLocList, setRealLocList] = React.useState([]);
-  [locList, setLocList] = React.useState([]);
+  const [realLocList, setRealLocList] = React.useState([]);
+  const [locList, setLocList] = React.useState([]);
 
   {/* ===================== END OF VARIABLE SECTION ===================== */}
 
@@ -37,10 +50,8 @@ const TrackingEmergencyScreen = ({navigation}) => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
       const newLoc = notification.request.content.data;
-      let realLocListTmp = [...realLocList];
-      realLocListTmp.push(newLoc);
-      setRealLocList(realLocListTmp);
-      setMapLoc(newLoc);
+      setRealLocList(realLocList => [...realLocList, newLoc]);
+      if (mapRef.current != null) mapRef.current.animateToRegion({latitude: newLoc.latitude, longitude: newLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}, MAP_DURATION);
     });
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
@@ -67,17 +78,39 @@ const TrackingEmergencyScreen = ({navigation}) => {
     }
   }
 
+  // request location list
+  const requestLocationList = async () => {
+    const ip = await AsyncStorage.getItem('IP');
+    const childId = await AsyncStorage.getItem('child_id');
+    const to = Date.now();
+    const from = to - 10*60000; 
+    const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + from + '/' + to);
+    const result = await response.json();
+    if (result.code == 200){
+      setRealLocList(result.data);
+      const newLoc = result.data[result.data.length - 1];
+      if (mapRef.current != null) mapRef.current.animateToRegion({latitude: newLoc.latitude, longitude: newLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}, MAP_DURATION);
+    }
+    else console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
+  }
+
   // start on screen load
   React.useEffect(() => {
+
+    // request last locations in 10 minutes
+    requestLocationList();
+
     // listen to location update from server
     listenLocationUpdate();
+
     // handle screen & app states
-    navigation.addListener('focus', () => { requestEmergencyMode(true); });
-    navigation.addListener('blur', () => { requestEmergencyMode(false); });
+    props.navigation.addListener('focus', () => { requestEmergencyMode(true); });
+    props.navigation.addListener('blur', () => { requestEmergencyMode(false); });
     AppState.addEventListener("change", (nextState) => {
       if (nextState === "active")  requestEmergencyMode(true);
       else requestEmergencyMode(false);
     });
+
   }, []);
 
   {/* ===================== END OF API SECTION ===================== */}
@@ -88,19 +121,20 @@ const TrackingEmergencyScreen = ({navigation}) => {
 
     <View style={styles.container}>
 
+      <Loader loading={loading}/>
+
       {/* ===================== MAP SECTION ===================== */}
 
       {/* maps */}
       <View style={{...StyleSheet.absoluteFillObject}}>
 
         <MapView
-          // style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
-          style={{width: wp("100%"), height: hp("100%")}}
-          region={{latitude: mapLoc.latitude, longitude: mapLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}}
-          showsUserLocation={true}
+          ref={(instance) => {setMapRef(instance)}}
+          style={{width: Dimensions.get("screen").width, height: Dimensions.get("screen").height}}
+          initialRegion={REGION_FPT}
+          // showsUserLocation={true}
           showsMyLocationButton={false}
           onRegionChangeComplete={(region) => {
-            setMapLoc({name: mapLoc.name, latitude: region.latitude, longitude: region.longitude});
             setLatitudeDelta(region.latitudeDelta);
             setLongitudeDelta(region.longitudeDelta);
           }}>
@@ -117,7 +151,9 @@ const TrackingEmergencyScreen = ({navigation}) => {
           {/* reported location list */}
           {realLocList.length >= 1 ?
             <Marker coordinate={{latitude: realLocList[realLocList.length-1].latitude, longitude: realLocList[realLocList.length-1].longitude}} anchor={{x: 0.5, y: 0.5}}>
-              <View style={[styles.realLoc, {height: 14, width: 14}]}/>
+              <View style={styles.realLocContainer}>
+                <View style={styles.realLoc}/>
+              </View>
             </Marker>
           : null}
           {realLocList.map((loc, index) => {
@@ -136,16 +172,13 @@ const TrackingEmergencyScreen = ({navigation}) => {
       {/* ===================== END MAP SECTION ===================== */}
 
       {/* child avatar */}
-      <Image
-        style={[styles.avatar, {backgroundColor: COLORS.STRONG_ORANGE}]}
-        source={require('../../../../assets/kid-avatar.png')}
-      />
+      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
 
       {/* back btn */}
       <View style={styles.backBtn}>
         <Icon name='arrow-back' type='material' size={34}
           onPress={() => {
-            navigation.goBack();
+            props.navigation.goBack();
           }}/>
       </View>
 

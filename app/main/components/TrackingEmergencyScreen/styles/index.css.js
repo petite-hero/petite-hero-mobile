@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
-import Constants from 'expo-constants';
-import { COLORS } from "../../../../const/const"; 
+import { COLORS, changeOpac } from "../../../../const/const"; 
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
@@ -46,10 +45,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'green',
   },
+  realLocContainer: {
+    height: 24,
+    width: 24,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: changeOpac(COLORS.STRONG_ORANGE, 0.5)
+  },
   realLoc: {
-    height: 20,
-    width: 20,
-    borderRadius: 20 ,
+    height: 16,
+    width: 16,
+    borderRadius: 16,
     backgroundColor: COLORS.STRONG_ORANGE
   }
 

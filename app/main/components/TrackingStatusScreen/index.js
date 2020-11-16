@@ -37,6 +37,13 @@ const TrackingStatusScreen = ({route}) => {
         if (result.code === 200) {
           setChildren(result.data);
           if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          else {
+            let isInChildren = false;
+            result.data.map((child, index) => {
+              if (childId == child.childId) isInChildren = true;
+            });
+            if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          }
         } else {
           handleError(result.msg);
         }
@@ -255,7 +262,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     listenLocationUpdate();
 
     // handle screen & app states
-    navigation.addListener('focus', () => { requestEmergencyModeList(true) });
+    requestEmergencyModeList(true)
+    navigation.addListener('focus', () => { requestEmergencyModeList(true); });
     navigation.addListener('blur', () => { requestEmergencyModeList(false); });
     AppState.addEventListener("change", (nextState) => {
       if (nextState === "active") requestEmergencyModeList(true);
@@ -278,7 +286,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       {/* ===================== AVATAR & EMERGENCY BUTTON SECTION ===================== */}
 
       {/* emergency button */}
-      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency")}>
+      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
         <Icon name='priority-high' type='material' color='white' size={20}/>
       </TouchableOpacity>
 
@@ -323,14 +331,17 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
             onPress={() => {
               if (children[childIndex].status === "INACTIVE"){
                 requestSmartwatchTracking(true);
+                requestEmergencyMode(true, children[childIndex].childId);
                 let childrenTmp = [...childrenRef.current];
                 childrenTmp[childIndex].status = "LOADING";
+                childrenTmp[childIndex].isTrackingActive = true;
                 setChildrenRef(childrenTmp);
               }
               else{
                 requestSmartwatchTracking(false);
                 let childrenTmp = [...childrenRef.current];
                 childrenTmp[childIndex].status = "INACTIVE";
+                childrenTmp[childIndex].isTrackingActive = false;
                 setChildrenRef(childrenTmp);
               }
             }}
