@@ -436,7 +436,7 @@ const TaskCreatingScreen = (props) => {
       </View>
       {/* end task name */}
       {/* category */}
-      <CategoryList categories={categories} setCategories={setCategories} category={category} setCategory={setCategory}/>
+      <CategoryList categories={categories} setCategories={setCategories}/>
       {/* end category */}
       {/* time picker */}
       <TimeSettings startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime}/>

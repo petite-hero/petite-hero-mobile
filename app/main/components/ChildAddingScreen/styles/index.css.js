@@ -3,10 +3,9 @@ import { COLORS } from "../../../../const/const";
 
 const styles = StyleSheet.create({
   container : {
-    flex : 1,
+    flex: 1,
     backgroundColor: COLORS.WHITE
   },
-
   textInput : {
     height: 50,
     width: "80%",
@@ -19,9 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderRadius: 50,
     elevation: 8
-  },
-
-  
+  }
 })
 
 export default styles;
