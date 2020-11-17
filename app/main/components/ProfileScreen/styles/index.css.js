@@ -5,7 +5,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: COLORS.WHITE
   },
   avatar : {
     width: hp("12%"),
@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.STRONG_CYAN
   },
   header : {
+    marginTop: "5%",
     marginLeft: wp("10%"),
-    marginRight: wp("10%"),
-    height: hp("30%"),
+    marginRight: wp("10%")
   },
   name : {
     fontSize: hp("3.5%"),

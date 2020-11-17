@@ -1,33 +1,15 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, AsyncStorage } from "react-native";
+import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView, Image } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import { COLORS, IP, PORT } from "../../../const/const";
+import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
-
-import * as Notifications from 'expo-notifications';
-
-// silent notification for updating location
-Notifications.setNotificationHandler({
-  handleNotification: async (notification) => {
-    let noti = notification.request.content;
-    if (noti.title == null) {
-      // console.log("Do not show notification");
-    } else {
-      // console.log("Show notification")
-      return {
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        priority: Notifications.AndroidNotificationPriority.MAX
-      }
-    }
-  }
-});
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -87,24 +69,111 @@ const ImagePickerComponent = (props) => {
   )
 };
 
+const GenderPickerComponent = ({genders, setGenders}) => {
+  const toggleGender = (genderIndex) => {
+    let tmp = [...genders];
+    tmp.map((value, index) => {
+      index === genderIndex ? value.active = true : value.active = false;
+    });
+    setGenders(tmp);
+  }
+
+  return (
+    <View style={{
+      flexDirection: "column",
+      alignItems: "flex-start",
+      paddingTop: "2.5%",
+      paddingLeft: "10%",
+      paddingRight: "10%",
+      paddingBottom: "2.5%"
+    }}>
+      <Text style={{
+        fontFamily: "AcuminBold",
+        fontSize: 16,
+        marginBottom: 15
+      }}>
+        Gender
+      </Text>
+      <View style={{
+        flexDirection: "row"
+      }}>
+        {
+          genders.map((value, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  minWidth: 45,
+                  height: 45,
+                  marginRight: 10,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {toggleGender(index)}}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: 45,
+                    borderRadius: 22.5,
+                    backgroundColor: value.active ? value.color : COLORS.GREY,
+                  }}
+                >
+                  <Icon
+                    name={value.name}
+                    type={value.type}
+                    color={COLORS.WHITE}
+                    containerStyle={{
+                      alignSelf: "center",
+                      alignContent: "flex-start"
+                    }}
+                    iconStyle={{
+                      marginLeft: 10
+                    }}
+                  />
+                  {
+                    value.active &&
+                    <Text style={{
+                      alignSelf: "center",
+                      textAlign: "center",
+                      fontSize: 16,
+                      fontFamily: "AcuminBold",
+                      color: COLORS.WHITE,
+                      marginLeft: 10,
+                      marginRight: 10
+                    }}>
+                      {value.title}
+                    </Text>
+                  }
+                </TouchableOpacity>
+              </View>
+            )
+          }) 
+        }
+      </View>
+    </View>
+  )
+}
+
 const ChildAddingScreen = (props) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName]   = useState("");
+  const [name, setName]           = useState("");
   const [nickName, setNickName]   = useState("");
   const [language, setLanguage]   = useState("English");
-  const [gender, setGender]       = useState("Male");
-  const [photo, setPhoto]         = useState({});
+  const [photo, setPhoto]         = useState("");
   const [yob, setYob]             = useState("");
-  const [qr, setQr]               = useState("");
   const [loading, setLoading]     = useState(false);
+  const [genders, setGenders] = useState([
+    {title: "Male", active: true, name: "male", type: "fontisto", color: COLORS.STRONG_CYAN},
+    {title: "Female", active: false, name: "female", type: "fontisto", color: COLORS.STRONG_CYAN}
+  ]);
 
   const createQrCode = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
+      const gender = genders.find(gender => gender.active).title;
       const data = new FormData();
-      data.append("firstName", firstName);
-      data.append("lastName", lastName);
+      data.append("name", name);
       data.append("nickName", nickName);
       data.append("language", language);
       data.append("gender", gender);
@@ -118,11 +187,10 @@ const ChildAddingScreen = (props) => {
         body: data
       });
       const result = await response.json();
-      // console.log(result);
       if (result.code === 200 && result.msg === "OK") {
-        const data = result.data.childId.toString();
-        await AsyncStorage.setItem("child_id", result.data.childId + "");
-        setQr("https://api.qrserver.com/v1/create-qr-code/?data=" + data + "&amp;size=250x250");
+        const childId = result.data.childId.toString();
+        props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
+        // props.navigation.navigate("ChildAddingShowingQr", {qr: "Hello"});
       } else {
         handleError(result.msg);
       }
@@ -133,166 +201,157 @@ const ChildAddingScreen = (props) => {
     }
   }
 
-  // listen to smartwatch QR scanning updates
-  const notificationListener = React.useRef();
-  const responseListener = React.useRef();
-  const listenQRScanned = () => {
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      // Silent noti for updating child loc
-      if (notification.request.content.title === "Petite Hero" && notification.request.content.body === "Done setting up child device") { 
-        props.navigation.goBack();
-      }
-    });
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
-    };
-  };
-
-  React.useEffect(() => {
-    // listen to location update from server
-    listenQRScanned();
-  }, []);
-
-
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Loader loading={loading}/>
-      {!qr ? <>
+      <View style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "20%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginBottom: "10%",
+      }}>
+        {/* icon back */}
+        <Icon
+          name="keyboard-arrow-left"
+          type="material"
+          color={COLORS.BLACK}
+          onPress={() => {props.navigation.goBack()}}
+        />
+        {/* end icon back */}
+        {/* title of the screen */}
         <View style={{
-          width: "100%",
-          height: "74%",
-          top: "10%",
-          backgroundColor: COLORS.WHITE,
-          alignItems: "center",
-          borderTopRightRadius: 30,
-          borderTopLeftRadius:  30,
-        }}>
-          <TextInput
-            keyboardType="default"
-            value={firstName}
-            onChangeText={(text) => setFirstName(text)}
-            placeholder="First name"
-            style={styles.textInput}
-          />
-          <TextInput
-            keyboardType="default"
-            value={lastName}
-            onChangeText={(text) => setLastName(text)}
-            placeholder="Last name"
-            style={styles.textInput}
-          />
-          <TextInput
-            keyboardType="default"
-            value={nickName}
-            onChangeText={(text) => setNickName(text)}
-            placeholder="Nick name"
-            style={styles.textInput}
-          />
-          <TextInput
-            keyboardType="numeric"
-            value={yob}
-            onChangeText={(text) => setYob(text)}
-            placeholder="Year of birth"
-            style={styles.textInput}
-          />
-          <View style={{
-            width: "80%",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
-            <Text style={{
-              marginRight: 20
-            }}>
-              Language
-            </Text>
-            <Text>English</Text>
-            <RadioButton
-              value="English"
-              status={language === "English" ? "checked" : "unchecked"}
-              onPress={() => {setLanguage("English")}}
-            />
-            <Text>Vietnamese</Text>
-            <RadioButton
-              value="Vietnamese"
-              status={language === "Vietnamese" ? "checked" : "unchecked"}
-              onPress={() => {setLanguage("Vietnamese")}}
-            />
-          </View>
-          <View style={{
-            width: "80%",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 20
-          }}>
-            <Text style={{
-              marginRight: 20
-            }}>
-              Gender
-            </Text>
-            <Text>Male</Text>
-            <RadioButton
-              value="Male"
-              status={gender === "Male" ? "checked" : "unchecked"}
-              onPress={() => {setGender("Male")}}
-            />
-            <Text>Female</Text>
-            <RadioButton
-              value="Female"
-              status={gender === "Female" ? "checked" : "unchecked"}
-              onPress={() => {setGender("Female")}}
-            />
-          </View>
-          <ImagePickerComponent title="Attached file " data={photo} setPhoto={setPhoto}/>
-        </View>
-        <View style={{
-          width: "100%",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center"
         }}>
-          <TouchableOpacity
-            style={{
-              width: "40%",
-              height: 50,
-              borderRadius: 15,
-              backgroundColor: COLORS.STRONG_CYAN,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-            onPress={() => {setLoading(true); createQrCode()}}
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: "Acumin"
-            }}>
-              Create
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </> : 
-      <View onLayout={() => setLoading(true)}>
-        <Loader loading={loading}/>
-        <View style={{
-          width: "100%",
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>
-          <Image style={{width: 250, height: 250}} source={{uri: qr}} onLoad={() => {setLoading(false)}} />
           <Text style={{
-            fontSize: 25,
-            fontFamily: "Acumin",
-            textAlign: "center",
-            marginTop: 20
+            fontSize: 20,
+            fontFamily: "AcuminBold"
           }}>
-            Please scan this QR using smartwatch
+            Add New Child
           </Text>
         </View>
-      </View>}
-    </View>
+        {/* end title of the screen */}
+        {/* create this View for center title purpose */}
+        <View style={{marginRight: "10%"}}></View>
+        {/* end View */}
+      </View>
+      {/* form */}
+      {/* child name */}
+      <View style={{
+        flexDirection: "column",
+        alignItems: "flex-start",
+        paddingTop: "2.5%",
+        paddingLeft: "10%",
+        paddingRight: "10%",
+        paddingBottom: "2.5%"
+      }}>
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16
+        }}>
+          Your Child's Name
+        </Text>
+          <TextInput
+            value={name}
+            onChangeText={(text) => {setName(text)}}
+            style={{
+              fontSize: 16,
+              fontFamily: "Acumin",
+              backgroundColor: COLORS.WHITE,
+              borderBottomWidth: 2,
+              borderColor: COLORS.GREY,
+              width: "100%",
+            }}
+          />
+      </View>
+      {/* end child name */}
+      {/* child nick name */}
+      <View style={{
+        flexDirection: "column",
+        alignItems: "flex-start",
+        paddingTop: "2.5%",
+        paddingLeft: "10%",
+        paddingRight: "10%",
+        paddingBottom: "2.5%"
+      }}>
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16
+        }}>
+          Nickname (Optional)
+        </Text>
+          <TextInput
+            value={nickName}
+            onChangeText={(text) => {setNickName(text)}}
+            style={{
+              fontSize: 16,
+              fontFamily: "Acumin",
+              backgroundColor: COLORS.WHITE,
+              borderBottomWidth: 2,
+              borderColor: COLORS.GREY,
+              width: "100%",
+            }}
+          />
+      </View>
+      {/* end child nick name */}
+      {/* child year of birth */}
+      <View style={{
+        flexDirection: "column",
+        alignItems: "flex-start",
+        paddingTop: "2.5%",
+        paddingLeft: "10%",
+        paddingRight: "10%",
+        paddingBottom: "2.5%"
+      }}>
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16
+        }}>
+          Year of birth
+        </Text>
+          <TextInput
+            value={yob}
+            onChangeText={(text) => {setYob(text)}}
+            style={{
+              fontSize: 16,
+              fontFamily: "Acumin",
+              backgroundColor: COLORS.WHITE,
+              borderBottomWidth: 2,
+              borderColor: COLORS.GREY,
+              width: "100%",
+            }}
+          />
+      </View>
+      {/* end child year of birth */}
+      {/* child gender */}
+      <GenderPickerComponent genders={genders} setGenders={setGenders}/>
+      {/* end child gender */}
+      {/* button Save */}
+      <TouchableOpacity style={{
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginTop: "10%",
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        height: heightPercentageToDP("5%"),
+        backgroundColor: COLORS.YELLOW
+      }}
+        onPress={() => {setLoading(true); createQrCode()}}
+      >
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16,
+          color: COLORS.BLACK
+        }}>
+          Next
+        </Text>
+      </TouchableOpacity>
+    </ScrollView>
   )
 }
 
