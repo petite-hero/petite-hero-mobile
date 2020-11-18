@@ -117,27 +117,21 @@ const TrackingStatusScreen = ({route}) => {
         component={TaskScreen}
         initialParams={{ 
           authContext: route.params.authContext, 
-          localizationContext: route.params.localizationContext,
-          children: children,
-          setChildren: setChildren
+          localizationContext: route.params.localizationContext
         }}
       />
       <Tab.Screen name="Quests" 
         component={QuestScreen}
         initialParams={{ 
           authContext: route.params.authContext, 
-          localizationContext: route.params.localizationContext,
-          children: children,
-          setChildren: setChildren
+          localizationContext: route.params.localizationContext
         }}
       />
       <Tab.Screen name="Profile" 
         component={ProfileScreen}
         initialParams={{ 
           authContext: route.params.authContext, 
-          localizationContext: route.params.localizationContext,
-          children: children,
-          setChildren: setChildren
+          localizationContext: route.params.localizationContext
         }}
       />
     </Tab.Navigator>

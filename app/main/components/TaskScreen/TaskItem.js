@@ -30,24 +30,24 @@ const isLate = (date, time) => {
   return currentTime - toTime > 0;
 }
 
-const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
+const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
   const category = handleShowCategory(item.type);
 
-  const deleteTask = async() => {
-    try {
-      const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + item.taskId, {
-        method: "DELETE"
-      });
-      const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-      } else {
-        handleError(result.msg);
-      }
-    } catch (error) {
-      handleError(error.message);
-    }
-  }
+  // const deleteTask = async() => {
+  //   try {
+  //     const ip = await AsyncStorage.getItem('IP');
+  //     const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + item.taskId, {
+  //       method: "DELETE"
+  //     });
+  //     const result = await response.json();
+  //     if (result.code === 200 && result.msg === "OK") {
+  //     } else {
+  //       handleError(result.msg);
+  //     }
+  //   } catch (error) {
+  //     handleError(error.message);
+  //   }
+  // }
 
   return (
     item.taskId ? (
@@ -111,7 +111,7 @@ const TaskItem = ({ date, item, index, refresh, confirm, navigation }) => {
                   alignItems: "center",
                   justifyContent: "center"
                 }}
-                onPress={() => {refresh(true); deleteTask()}}
+                onPress={() => {onDelete(item.taskId)}}
               >
                 <Icon
                   type="material"

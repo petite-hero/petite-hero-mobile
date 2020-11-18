@@ -1,16 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import {
-  View,
-  Text,
-  Image,
-  AsyncStorage,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from "react-native";
 import { badgesList, COLORS, PORT } from "../../../const/const";
 import { Icon } from "react-native-elements";
 import styles from "./styles/index.css";
@@ -87,7 +77,7 @@ const QuestBoard = ({ list, setLoading, navigation }) => {
         })}
       </View>
       <View style={styles.questBoard}>
-        {(tabs[0].active && list[0] && list[0].length == 2) ||
+        {(tabs[0].active && list[0] && list[0].length == 3) ||
         (tabs[1].active && list[1] && list[1].length == 2) ? (
           <View
             style={{
@@ -133,7 +123,7 @@ const QuestItem = (item, index, setLoading, navigation) => {
         style={[styles.questItem, { 
           borderColor: item.status === "DONE" ? COLORS.GREEN :
                        item.status === "FAILED" ? COLORS.RED :
-                       "black",
+                       badgesList[item.reward - 1].borderColor,
           width: item.status !== "DONE" && item.status !== "FAILED" && index === 0 ? wp("85%") : wp("40%")
         }]}
         onPress={() => {
@@ -201,8 +191,7 @@ const QuestItem = (item, index, setLoading, navigation) => {
 
 const QuestScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
-  const [children, setChildren] = useState(props.route.params.children);
-  const [currentChild, setCurrentChild] = useState("");
+  const [children, setChildren] = useState([]);
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -229,28 +218,60 @@ const QuestScreen = (props) => {
     return [inProgress, finished];
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const ip = await AsyncStorage.getItem("IP");
-        const childId = await AsyncStorage.getItem('child_id');
-        const response = await fetchWithTimeout(
-          "http://" + ip + PORT + "/quest/list/" + childId
-        );
-        const result = await response.json();
-        if (result.code === 200) {
-          setList(groupQuestsByStatus(result.data));
-          setChildren(children);
-          setCurrentChild(childId);
-        } else {
-          // do something later
-        }
-      } catch (error) {
-        handleError(error.message);
-      } finally {
-        setLoading(false);
+  const getListOfQuest = async() => {
+    try {
+      const ip = await AsyncStorage.getItem("IP");
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetchWithTimeout(
+        "http://" + ip + PORT + "/quest/list/" + childId
+      );
+      const result = await response.json();
+      if (result.code === 200) {
+        setList(groupQuestsByStatus(result.data));
+      } else {
+        // do something later
       }
-    })();
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getListOfChildren = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+      const result = await response.json();
+      if (result.code === 200) {
+        setChildren(result.data);
+        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        else {
+          let isInChildren = false;
+          result.data.map((child, index) => {
+            if (childId == child.childId) isInChildren = true;
+          });
+          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        }
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    // props.navigation.addListener('focus', () => { getListOfQuest(); getListOfChildren(); });
+  }, []);
+
+  useEffect(() => {
+    getListOfQuest();
+    getListOfChildren();
   }, [loading]);
 
   return (

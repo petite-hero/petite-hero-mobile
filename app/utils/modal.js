@@ -1,29 +1,31 @@
 import React from 'react';
 import { StyleSheet, View, Modal, TouchableOpacity, Text } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { COLORS } from '../const/const';
 
 export const ConfirmationModal = (props) => {
   return (
     <Modal
       transparent={true}
-      visible={props.visible}
-      animationType="none"
-      onRequestClose={() => props.setVisible(false)}
+      visible={props.visible ? true : false}
+      animationType="fade"
+      onRequestClose={() => {props.onClose()}}
     >
-      <TouchableOpacity style={styles.modalBackground} onPressOut={() => props.setVisible(false)} activeOpacity={1}>
+      <TouchableOpacity style={styles.modalBackground} activeOpacity={1}
+        // onPress={() => {props.onClose()}}
+      >
         <TouchableOpacity style={styles.modalWrapper} activeOpacity={1}>
           <Text style={styles.title}>{props.message}</Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.STRONG_CYAN}]} onPress={() => props.setVisible(false)}>
-              <Text style={styles.buttonText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.GREY}]} onPress={() => props.setVisible(false)}>
-              <Text style={styles.buttonText}>No</Text>
-            </TouchableOpacity>
-          </View>
         </TouchableOpacity>
       </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
+          <Text style={styles.buttonText}>Yes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPress={() => {props.onClose()}}>
+          <Text style={styles.buttonText}>No</Text>
+        </TouchableOpacity>
+      </View>
     </Modal>
   )
 }
@@ -37,29 +39,35 @@ const styles = StyleSheet.create({
   },
   modalWrapper: {
     backgroundColor: COLORS.WHITE,
-    height: "30%",
-    width: "70%",
+    height: "20%",
+    width: "90%",
     borderRadius: 20,
-    alignItems: 'center',
-    overflow: "hidden"
+    alignItems: 'center'
   },
   buttonContainer : {
     position: "absolute",
-    bottom: 0,
+    top: "56.5%",
+    left: "9%",
     flexDirection: "row",
     justifyContent: "space-between"
   },
   button : {
     height: hp("7%"),
-    width: "50%",
+    marginLeft: 2,
+    marginRight: 2,
+    borderRadius: 50,
+    width: wp("40%"),
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    elevation: 10
   },
   title : {
     textAlign: "center",
     fontFamily: "Acumin",
     fontSize: 20,
-    marginTop: 20
+    marginTop: 25,
+    marginLeft: 50,
+    marginRight: 50
   },
   buttonText : {
     fontFamily: "Acumin",

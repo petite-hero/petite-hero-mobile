@@ -3,8 +3,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 
 const styles = StyleSheet.create({
   avatar : {
-    width: wp("12%"),
-    height: wp("12%"),
+    width: wp("13.33%"),
+    height: wp("13.33%"),
     borderRadius: wp("6%")
   },
 });

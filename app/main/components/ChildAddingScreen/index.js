@@ -37,34 +37,48 @@ const ImagePickerComponent = (props) => {
 
   return (
     <View style={{
-      flexDirection: "row",
+      width: "100%",
       alignItems: "center",
-      width: "80%",
-      justifyContent: "flex-start",
-      marginBottom: 20
+      justifyContent: "center",
+      marginBottom: "10%"
     }}>
-      <Text style={{
-
-      }}>
-        {props.title}
-      </Text>
       <TouchableOpacity
         title="Choose file"
         onPress={async() => {await getPermission(); await pickImage()}}
         style={{
-          width: 100,
-          height: 30,
-          borderRadius: 10,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: COLORS.STRONG_CYAN
+          width: 120,
+          height: 120,
+          borderRadius: 60,
+          backgroundColor: COLORS.MEDIUM_GREY
         }}
+        activeOpacity={0.8}
       >
-        <Text>Choose file</Text>
+      {props.photo ?
+        <Image
+          source={{uri: props.photo.uri}}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: 60
+          }}
+        />
+      :
+        <Icon
+          name="photo-camera"
+          type="material"
+          color={COLORS.WHITE}
+          containerStyle={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          iconStyle={{
+            transform: [{ scaleX: 2 }, { scaleY: 2 }]
+          }}
+        />
+      }
       </TouchableOpacity>
-      <Text style={{marginLeft: 15}}>
-        {props.data.name ? "..." + props.data.name.slice(props.data.name.length-11, props.data.name.length) : "No file selected"}
-      </Text>
     </View>
   )
 };
@@ -163,8 +177,8 @@ const ChildAddingScreen = (props) => {
   const [yob, setYob]             = useState("");
   const [loading, setLoading]     = useState(false);
   const [genders, setGenders] = useState([
-    {title: "Male", active: true, name: "male", type: "fontisto", color: COLORS.STRONG_CYAN},
-    {title: "Female", active: false, name: "female", type: "fontisto", color: COLORS.STRONG_CYAN}
+    {title: "Boy", active: true, name: "male", type: "fontisto", color: COLORS.STRONG_CYAN},
+    {title: "Girl", active: false, name: "female", type: "fontisto", color: COLORS.STRONG_CYAN}
   ]);
 
   const createQrCode = async() => {
@@ -240,6 +254,9 @@ const ChildAddingScreen = (props) => {
         {/* end View */}
       </View>
       {/* form */}
+      {/* child image */}
+      <ImagePickerComponent photo={photo} setPhoto={setPhoto}/>
+      {/* end child image */}
       {/* child name */}
       <View style={{
         flexDirection: "column",

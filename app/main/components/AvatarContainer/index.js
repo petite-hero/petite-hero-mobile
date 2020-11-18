@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AsyncStorage, Image, Text, TouchableOpacity } from 'react-native';
+import { AsyncStorage, Image, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 const AvatarContainer = (props) => {
@@ -9,7 +10,7 @@ const AvatarContainer = (props) => {
   const [currentChild, setCurrentChild] = useState({});
   const [otherChildren, setOtherChildren] = useState([]);
   const animAvatar = useRef(new Animated.Value(0)).current;
-  const avatarHeight = widthPercentageToDP("13%");
+  const avatarHeight = widthPercentageToDP("14.3%");
   const animAvatarPositions = [];
   const children = props.children;
   props.children.map((child, index) => {
@@ -35,6 +36,35 @@ const AvatarContainer = (props) => {
 
   return (
     <>
+      {dropdown && 
+      <TouchableOpacity style={{
+        position: "absolute",
+        width: widthPercentageToDP("100%"),
+        height: heightPercentageToDP("110%"),
+        backgroundColor: COLORS.BLACK,
+        opacity: 0.4,
+        elevation: 10
+      }}
+        onPressIn={() => {
+          if (!dropdown) {
+            animAvatar.setValue(0);
+            Animated.timing(animAvatar, {
+              toValue: 1,
+              duration: 400,
+              easing: Easing.linear
+            }).start(); 
+          }
+          else {
+            animAvatar.setValue(1);
+            Animated.timing(animAvatar, {
+              toValue: 0,
+              duration: 400,
+              easing: Easing.linear
+            }).start(); 
+          }
+          setDropdown(!dropdown);
+        }}
+      />}
       {otherChildren.length > 0 && otherChildren.map((child, index) => (
         <Animated.View 
           key={child.childId + ""}

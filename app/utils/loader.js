@@ -25,6 +25,7 @@ export const Loader = (props) => {
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
+    margin: 0,
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',

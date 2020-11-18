@@ -1,4 +1,5 @@
 export const COLORS = {
+  BROWN: "#d67046",
   WHITE: "#ffffff",
   GREY: "#bbbbbb",
   LIGHT_GREY: "#8e8e8e",
@@ -20,7 +21,7 @@ export const COLORS = {
   PURPLE: "#785adf",
 };
 
-export const IP = "192.168.1.8";
+export const IP = "192.168.1.130";
 export const PORT = ":8080";
 
 export const NOTI = {
@@ -45,185 +46,140 @@ export const categories = [
   {title: "Skills", name: "toys", type: "material", color: COLORS.GREEN}
 ];
 
+export const questBackgroundList = [
+  {
+    id: 1,
+    image: require("../../assets/quest-background/normal.png"),
+  },
+  {
+    id: 2,
+    image: require("../../assets/quest-background/success.png"),
+  },
+  {
+    id: 3,
+    image: require("../../assets/quest-background/fail.png"),
+  }
+]
+
 export const badgesList = [
   {
     id: 1,
     image: require("../../assets/badges/Awards-1.png"),
+    imageFail: require("../../assets/badges/Awards-1-fail.png"),
+    borderColor: COLORS.YELLOW
   },
   {
     id: 2,
     image: require("../../assets/badges/Awards-2.png"),
+    imageFail: require("../../assets/badges/Awards-2-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
   },
   {
     id: 3,
     image: require("../../assets/badges/Awards-3.png"),
+    imageFail: require("../../assets/badges/Awards-3-fail.png"),
+    borderColor: COLORS.BROWN
   },
   {
     id: 4,
     image: require("../../assets/badges/Awards-4.png"),
+    imageFail: require("../../assets/badges/Awards-4-fail.png"),
+    borderColor: COLORS.BROWN
   },
   {
     id: 5,
     image: require("../../assets/badges/Awards-5.png"),
+    imageFail: require("../../assets/badges/Awards-5-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
   },
   {
     id: 6,
     image: require("../../assets/badges/Awards-6.png"),
+    imageFail: require("../../assets/badges/Awards-6-fail.png"),
+    borderColor: COLORS.RED
   },
   {
     id: 7,
     image: require("../../assets/badges/Awards-7.png"),
+    imageFail: require("../../assets/badges/Awards-7-fail.png"),
+    borderColor: COLORS.YELLOW
   },
   {
     id: 8,
     image: require("../../assets/badges/Awards-8.png"),
+    imageFail: require("../../assets/badges/Awards-8-fail.png"),
+    borderColor: COLORS.RED
   },
   {
     id: 9,
     image: require("../../assets/badges/Awards-9.png"),
+    imageFail: require("../../assets/badges/Awards-9-fail.png"),
+    borderColor: COLORS.RED
   },
   {
     id: 10,
     image: require("../../assets/badges/Awards-10.png"),
+    imageFail: require("../../assets/badges/Awards-10-fail.png"),
+    borderColor: COLORS.YELLOW
   },
   {
     id: 11,
     image: require("../../assets/badges/Awards-11.png"),
+    imageFail: require("../../assets/badges/Awards-11-fail.png"),
+    borderColor: COLORS.RED
   },
   {
     id: 12,
     image: require("../../assets/badges/Awards-12.png"),
+    imageFail: require("../../assets/badges/Awards-12-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
   },
-  // {
-  //   id: 13,
-  //   image: require("../../assets/badges/Awards-13.png"),
-  // },
-  // {
-  //   id: 14,
-  //   image: require("../../assets/badges/Awards-14.png"),
-  // },
-  // {
-  //   id: 15,
-  //   image: require("../../assets/badges/Awards-15.png"),
-  // },
-  // {
-  //   id: 16,
-  //   image: require("../../assets/badges/Awards-16.png"),
-  // },
-  // {
-  //   id: 17,
-  //   image: require("../../assets/badges/Awards-17.png"),
-  // },
-  // {
-  //   id: 18,
-  //   image: require("../../assets/badges/Awards-18.png"),
-  // },
-  // {
-  //   id: 19,
-  //   image: require("../../assets/badges/Awards-19.png"),
-  // },
-  // {
-  //   id: 20,
-  //   image: require("../../assets/badges/Awards-20.png"),
-  // },
-  // {
-  //   id: 21,
-  //   image: require("../../assets/badges/Awards-21.png"),
-  // },
-  // {
-  //   id: 22,
-  //   image: require("../../assets/badges/Awards-22.png"),
-  // },
-  // {
-  //   id: 23,
-  //   image: require("../../assets/badges/Awards-23.png"),
-  // },
-  // {
-  //   id: 24,
-  //   image: require("../../assets/badges/Awards-24.png"),
-  // },
-  // {
-  //   id: 25,
-  //   image: require("../../assets/badges/Awards-25.png"),
-  // },
-  // {
-  //   id: 26,
-  //   image: require("../../assets/badges/Awards-26.png"),
-  // },
-  // {
-  //   id: 27,
-  //   image: require("../../assets/badges/Awards-27.png"),
-  // },
-  // {
-  //   id: 28,
-  //   image: require("../../assets/badges/Awards-28.png"),
-  // },
-  // {
-  //   id: 29,
-  //   image: require("../../assets/badges/Awards-29.png"),
-  // },
-  // {
-  //   id: 30,
-  //   image: require("../../assets/badges/Awards-30.png"),
-  // },
-  // {
-  //   id: 31,
-  //   image: require("../../assets/badges/Awards-31.png"),
-  // },
-  // {
-  //   id: 32,
-  //   image: require("../../assets/badges/Awards-32.png"),
-  // },
-  // {
-  //   id: 33,
-  //   image: require("../../assets/badges/Awards-33.png"),
-  // },
-  // {
-  //   id: 34,
-  //   image: require("../../assets/badges/Awards-34.png"),
-  // },
-  // {
-  //   id: 35,
-  //   image: require("../../assets/badges/Awards-35.png"),
-  // },
-  // {
-  //   id: 36,
-  //   image: require("../../assets/badges/Awards-36.png"),
-  // },
-  // {
-  //   id: 37,
-  //   image: require("../../assets/badges/Awards-37.png"),
-  // },
-  // {
-  //   id: 38,
-  //   image: require("../../assets/badges/Awards-38.png"),
-  // },
-  // {
-  //   id: 39,
-  //   image: require("../../assets/badges/Awards-39.png"),
-  // },
-  // {
-  //   id: 40,
-  //   image: require("../../assets/badges/Awards-40.png"),
-  // },
-  // {
-  //   id: 41,
-  //   image: require("../../assets/badges/Awards-41.png"),
-  // },
-  // {
-  //   id: 42,
-  //   image: require("../../assets/badges/Awards-42.png"),
-  // },
-  // {
-  //   id: 43,
-  //   image: require("../../assets/badges/Awards-43.png"),
-  // },
-  // {
-  //   id: 44,
-  //   image: require("../../assets/badges/Awards-44.png"),
-  // },
-  // {
-  //   id: 45,
-  //   image: require("../../assets/badges/Awards-45.png"),
-  // },
+  {
+    id: 13,
+    image: require("../../assets/badges/Awards-13.png"),
+    imageFail: require("../../assets/badges/Awards-13-fail.png"),
+    borderColor: COLORS.RED
+  },
+  {
+    id: 14,
+    image: require("../../assets/badges/Awards-14.png"),
+    imageFail: require("../../assets/badges/Awards-14-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
+  },
+  {
+    id: 15,
+    image: require("../../assets/badges/Awards-15.png"),
+    imageFail: require("../../assets/badges/Awards-15-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
+  },
+  {
+    id: 16,
+    image: require("../../assets/badges/Awards-16.png"),
+    imageFail: require("../../assets/badges/Awards-16-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
+  },
+  {
+    id: 17,
+    image: require("../../assets/badges/Awards-17.png"),
+    imageFail: require("../../assets/badges/Awards-17-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
+  },
+  {
+    id: 18,
+    image: require("../../assets/badges/Awards-18.png"),
+    imageFail: require("../../assets/badges/Awards-18-fail.png"),
+    borderColor: COLORS.STRONG_CYAN
+  },
+  {
+    id: 19,
+    image: require("../../assets/badges/Awards-19.png"),
+    imageFail: require("../../assets/badges/Awards-19-fail.png"),
+    borderColor: COLORS.RED
+  },
+  {
+    id: 20,
+    image: require("../../assets/badges/Awards-20.png"),
+    imageFail: require("../../assets/badges/Awards-20-fail.png"),
+    borderColor: COLORS.BROWN
+  }
 ];

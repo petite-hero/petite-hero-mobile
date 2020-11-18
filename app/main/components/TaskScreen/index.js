@@ -11,6 +11,7 @@ import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import AvatarContainer from '../AvatarContainer';
 import * as Notifications from 'expo-notifications';
+import { ConfirmationModal } from '../../../utils/modal';
 
 {/*
   function getDaysInMonth
@@ -130,13 +131,13 @@ const currentDateIndex = getDateIndex(getDaysInMonth(new Date().getMonth(), new 
 */}
 const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
-  const [currentChild, setCurrentChild]     = useState("");
-  const [children, setChildren]             = useState(props.route.params.children);
+  const [children, setChildren]             = useState([]);
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
   const [list, setList]                     = useState([]);
   const [modalVisible, setModalVisible]     = useState(false);
   const [loading, setLoading]               = useState(false);
   const [isShowed, setShow]                 = useState(false);
+  const [deletedTaskId, setDeletedTaskId]   = useState("");
   const [dates, setDates]                   = useState(getDaysInMonth(new Date().getMonth(), new Date().getFullYear()));
   const currentDate                         = new Date(new Date().toDateString()).getTime();
   const [currentIndex, setCurrentIndex]     = useState(currentDateIndex);
@@ -147,12 +148,12 @@ const TaskScreen = (props) => {
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       if (notification.request.content.data) {
-        // setLoading(true);
+        getListOfTask();
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
       if (notification.request.content.data) {
-        // setLoading(true);
+        getListOfTask();
       }
     });
     return () => {
@@ -161,31 +162,83 @@ const TaskScreen = (props) => {
     };
   };
 
-  useEffect(() => {
-    (async() => {
-      try {
-        const ip = await AsyncStorage.getItem('IP');
-        const childId = await AsyncStorage.getItem('child_id');
-        const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
-        const result = await response.json();
-        if (result.code === 200) {
-          setCurrentChild(childId);
-          setList(groupTasksByStatus(result.data));
-          getHandedTasks(date, setDates);
-        } else {
-          handleError(result.msg);
-        }
-        setLoading(false);
-      } catch (error) {
-        handleError(error.message);
+  const getListOfTask = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
+      const result = await response.json();
+      if (result.code === 200) {
+        setList(groupTasksByStatus(result.data));
+        getHandedTasks(date, setDates);
+      } else {
+        handleError(result.msg);
       }
-    })();
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getListOfChildren = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+      const result = await response.json();
+      if (result.code === 200) {
+        setChildren(result.data);
+        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        else {
+          let isInChildren = false;
+          result.data.map((child, index) => {
+            if (childId == child.childId) isInChildren = true;
+          });
+          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        }
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const deleteTask = async(id) => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + id, {
+        method: "DELETE"
+      });
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    }
+  }
+
+  useEffect(() => {
     listenChangeTaskStatus();
+    // props.navigation.addListener('focus', () => { getListOfTask(); getListOfChildren() });
+  }, []);
+
+  useEffect(() => {
+    getListOfTask();
+    getListOfChildren();
   }, [loading]);
 
   return (
     <View style={styles.container}>
-
+      {/* CONFIRMATION MODAL */}
+      <ConfirmationModal message="Are your sure you want to delete this task?" visible={deletedTaskId} onConfirm={() => {setLoading(true); setDeletedTaskId(""); deleteTask(deletedTaskId) }} onClose={() => setDeletedTaskId("")}/>
+      {/* END CONFIRMATION MODAL */}
       {/* LOADER */}
       <Loader loading={loading}/>
       {/* END LOADER */}
@@ -303,8 +356,8 @@ const TaskScreen = (props) => {
         date={date}
         list={list}
         refresh={setLoading} 
-        confirm={setModalVisible} 
         navigation={props.navigation}
+        onDelete={setDeletedTaskId}
       />
       {/* END TASK BOARD */}
 

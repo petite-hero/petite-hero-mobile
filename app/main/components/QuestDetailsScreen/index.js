@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
-import { badgesList, COLORS, PORT } from '../../../const/const';
+import { View, TouchableOpacity, Text, AsyncStorage, Image, ImageBackground } from 'react-native';
+import { badgesList, COLORS, PORT, questBackgroundList } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Icon } from 'react-native-elements';
@@ -58,15 +58,19 @@ const QuestDetailsScreen = (props) => {
     <Loader loading={loading}/>
     :
     <View style={styles.container}>
-      <View style={{
-        width: "100%",
-        height: widthPercentageToDP("100%"),
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-        overflow: "hidden"
+      <ImageBackground 
+        source={details.status === "DONE" ? questBackgroundList[1].image
+              : details.status === "FAILED" ? questBackgroundList[2].image
+              : questBackgroundList[0].image}
+        style={{
+          width: "100%",
+          height: widthPercentageToDP("100%"),
+          borderBottomLeftRadius: 30,
+          borderBottomRightRadius: 30,
+          overflow: "hidden",
       }}>
         <Image
-          source={badgesList[details.reward - 1].image}
+          source={details.status === "FAILED" ? badgesList[details.reward - 1].imageFail : badgesList[details.reward - 1].image}
           style={{height: "100%", width: "100%"}}
         />
         <Icon
@@ -87,7 +91,7 @@ const QuestDetailsScreen = (props) => {
             }}
             onPress={() => {props.navigation.goBack()}}
           />
-      </View>
+      </ImageBackground>
       <View style={{
         marginTop: "10%",
         marginLeft: "10%",
