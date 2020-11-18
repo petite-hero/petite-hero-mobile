@@ -5,7 +5,8 @@ import { Icon } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 
 import styles from './styles/index.css';
-import { PORT } from '../../../const/const';
+import { PORT, COLORS, changeOpac } from '../../../const/const';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import { Loader } from '../../../utils/loader';
 import AvatarContainer from '../AvatarContainer';
@@ -140,13 +141,13 @@ const TrackingEmergencyScreen = (props) => {
           }}>
 
           {/* safe zone list */}
-          {locList.map((loc, index) => {
+          {/* {locList.map((loc, index) => {
             return (
               <Marker key={index} coordinate={{latitude: loc.latitude, longitude: loc.longitude}} anchor={{x: 0.5, y: 0.5}}>
                 <View style={styles.safeLoc}/>
               </Marker>
             )
-          })}
+          })} */}
 
           {/* reported location list */}
           {realLocList.length >= 1 ?
@@ -160,7 +161,7 @@ const TrackingEmergencyScreen = (props) => {
             return (
               index != 0 ?
                 <Polyline key={index} coordinates={[loc, realLocList[index-1]]}
-                          strokeWidth={10*(index+1)/realLocList.length} strokeColor="rgba(244, 126, 62, 0.5)"/>
+                          strokeWidth={10*(index+1)/realLocList.length} strokeColor={changeOpac(COLORS.RED, 0.5)}/>
               : null
             )
           })}
@@ -176,7 +177,7 @@ const TrackingEmergencyScreen = (props) => {
 
       {/* back btn */}
       <View style={styles.backBtn}>
-        <Icon name='arrow-back' type='material' size={34}
+        <Icon name='keyboard-arrow-left' type='material' size={24} color={COLORS.STRONG_CYAN}
           onPress={() => {
             props.navigation.goBack();
           }}/>

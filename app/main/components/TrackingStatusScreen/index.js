@@ -10,7 +10,7 @@ import QuestScreen from '../QuestScreen';
 import ProfileScreen from '../ProfileScreen';
 
 import styles from './styles/index.css';
-import { COLORS, PORT } from '../../../const/const';
+import { COLORS, PORT, NOTI } from '../../../const/const';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import { handleError } from '../../../utils/handleError';
@@ -187,21 +187,24 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      const notiData = notification.request.content.data;
-      let currentChildIndex = -1;
-      childrenRef.current.map((child, index) => {
-        if (child.childId === notiData.child) currentChildIndex = index;
-      });
-      const currentStatus = childrenRef.current[currentChildIndex].status;
-      if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
-        let childrenTmp = [...childrenRef.current];
-        childrenTmp[currentChildIndex].status = "SAFE";
-        setChildrenRef(childrenTmp);
-      }
-      else if (!notiData.status && currentStatus !== "NOT SAFE" && currentStatus !== "INACTIVE"){
-        let childrenTmp = [...childrenRef.current];
-        childrenTmp[currentChildIndex].status = "NOT SAFE";
-        setChildrenRef(childrenTmp);
+      if (notification.request.content.title === NOTI.SILENT_NOTI){
+        console.log(notification.request.content);
+        const notiData = notification.request.content.data;
+        let currentChildIndex = -1;
+        childrenRef.current.map((child, index) => {
+          if (child.childId === notiData.child) currentChildIndex = index;
+        });
+        const currentStatus = childrenRef.current[currentChildIndex].status;
+        if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
+          let childrenTmp = [...childrenRef.current];
+          childrenTmp[currentChildIndex].status = "SAFE";
+          setChildrenRef(childrenTmp);
+        }
+        else if (!notiData.status && currentStatus !== "NOT SAFE" && currentStatus !== "INACTIVE"){
+          let childrenTmp = [...childrenRef.current];
+          childrenTmp[currentChildIndex].status = "NOT SAFE";
+          setChildrenRef(childrenTmp);
+        }
       }
     });
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
@@ -308,7 +311,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           if (index != childIndex)
             return (
               <LocationStatus key={index}
-                diameter={50}
+                diameter={wp("16%")}
                 margin={10}
                 trackingStatus={child.status}
                 photo={child.photo}/>

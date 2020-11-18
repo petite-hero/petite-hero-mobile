@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
   // warning
   warningBtn : {
     position: "absolute",
-    width: wp("12%"),
-    height: wp("12%"),
+    width: wp("13.33%"),
+    height: wp("13.33%"),
     borderRadius: wp("10%"),
     top: hp("5%"),
     left: wp("10%"),
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   // status list animation
   statusListContainer: {
     flexDirection: "row",
-    marginTop: 20,
+    marginTop: 10,
     width: wp("70%"),
     justifyContent: "flex-end"
   },
@@ -69,17 +69,17 @@ const styles = StyleSheet.create({
     // borderWidth: 1
   },
   settingBtnContainer: {
-    height: 40,
-    width: 40,
+    height: wp("13.33%"),
+    width: wp("13.33%"),
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 40,
+    borderRadius: wp("13.33%"),
     backgroundColor: "white",
     marginBottom: 10
   },
   settingBtnAnimatedContainer: {
     position: "relative",
-    borderRadius: 40,
+    borderRadius: wp("13.33%"),
     shadowOpacity: 0.2,
     marginBottom: 10
   },
@@ -93,7 +93,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     textAlign: "right",
     width: 180,
-    color: "rgb(140, 140, 140)",
+    color: "#9edbfa",
+    fontFamily: "Acumin",
+    fontSize: 18
   },
   calendarContainer: {
     position: "absolute",
@@ -104,7 +106,6 @@ const styles = StyleSheet.create({
     paddingTop: hp("20%"),
     paddingLeft: wp("5%"),
     paddingRight: wp("5%"),
-    // bottom: "auto",
     borderWidth: 1,
     backgroundColor: "rgba(0, 0, 0, 0.2)"
   },

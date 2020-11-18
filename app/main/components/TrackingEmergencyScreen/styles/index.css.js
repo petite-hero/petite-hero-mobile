@@ -25,17 +25,21 @@ const styles = StyleSheet.create({
     width: wp("12%"),
     height: wp("12%"),
     borderRadius: wp("12%"),
-    top: hp("5%"),
+    top: hp("6%"),
     right: wp("10%"),
   },
   backBtn : {
     position: "absolute",
-    width: wp("12%"),
-    height: wp("12%"),
-    borderRadius: wp("12%"),
-    top: hp("5%"),
-    left: wp("5%"),
-    justifyContent: 'center'
+    width: wp("13.33%"),
+    height: wp("13.33%"),
+    borderRadius: wp("13.33%"),
+    top: hp("6%"),
+    left: wp("10%"),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    shadowOpacity: 0.2,
+    elevation: 5
   },
 
   // gg maps
@@ -51,13 +55,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: changeOpac(COLORS.STRONG_ORANGE, 0.5)
+    backgroundColor: changeOpac(COLORS.RED, 0.5)
   },
   realLoc: {
     height: 16,
     width: 16,
     borderRadius: 16,
-    backgroundColor: COLORS.STRONG_ORANGE
+    backgroundColor: COLORS.RED
   }
 
 });
