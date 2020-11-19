@@ -15,7 +15,7 @@ const QuestCreatingScreen = (props) => {
   const [details, setDetails]             = useState("");
   const [loading, setLoading]             = useState(false);
   const [badge, setBadge]                 = useState("");
-  const [photo, setPhoto]                 = useState({});
+  const [title, setTitle]                 = useState("");
 
   const createQuest = async() => {
     try {
@@ -28,8 +28,7 @@ const QuestCreatingScreen = (props) => {
       data.append("description", details);  
       data.append("name", name);
       data.append("reward", badge.id);
-      data.append("rewardDetail", details);
-      data.append("rewardPhoto", null);
+      data.append("title", title);
       const response = await fetchWithTimeout("http://" + ip + PORT + "/child/quest", {
         method: "POST",
         headers: {
@@ -201,6 +200,33 @@ const QuestCreatingScreen = (props) => {
         />
       </View>
       {/* end quest details */}
+      {/* quest title */}
+      <View style={{
+        flexDirection: "column",
+        alignItems: "flex-start",
+        marginTop: 15,
+        marginLeft: "10%",
+        marginRight: "10%",
+      }}>
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16
+        }}>
+          Quest Title
+        </Text>
+        <TextInput
+          value={title}
+          onChangeText={(text) => {setTitle(text)}}
+          style={{
+            fontSize: 16,
+            fontFamily: "Acumin",
+            width: "100%",
+            borderBottomWidth: 2,
+            borderColor: COLORS.GREY
+          }}
+        />
+      </View>
+      {/* end quest title */}
       {/* button Save */}
       <TouchableOpacity style={{
         marginLeft: "10%",

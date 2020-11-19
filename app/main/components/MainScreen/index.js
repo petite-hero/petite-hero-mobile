@@ -12,6 +12,8 @@ import QuestCreatingScreen from '../QuestCreatingScreen';
 import QuestChoosingBadgeScreen from '../QuestChoosingBadgeScreen';
 import ChildAddingShowingQrScreen from '../ChildAddingShowingQrScreen';
 import ProfilePasswordChangingScreen from '../ProfilePasswordChangingScreen';
+import ChildDetailsScreen from '../ChildDetailsScreen';
+import CollaboratorAddingScreen from '../CollaboratorAddingScreen';
 
 const Stack = createStackNavigator();
 
@@ -84,6 +86,16 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="ChildAddingShowingQr"
         component={ChildAddingShowingQrScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ChildDetails"
+        component={ChildDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="CollaboratorAdding"
+        component={CollaboratorAddingScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>

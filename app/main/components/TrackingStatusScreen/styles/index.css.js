@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   tabIcon : {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
     alignSelf: "center"
   },
   indicator : {

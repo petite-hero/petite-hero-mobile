@@ -194,7 +194,13 @@ const ProfileScreen = (props) => {
           result.data.map((childData, index) => {
             return {
               title: "Child " + (index + 1),
-              text: childData.name
+              text: childData.name,
+              action: () =>
+                props.navigation.navigate("ChildDetails", {
+                  screenName: childData.name,
+                  childId: childData.childId,
+                }),
+              iconName: "keyboard-arrow-right"
             };
           })
         );
@@ -313,14 +319,7 @@ const ProfileScreen = (props) => {
             subItems={[
               {
                 title: "Your Name",
-                text: parentProfile.name ? parentProfile.name : "Add name to your profile",
-                action: () =>
-                  props.navigation.navigate("ProfileChanging", {
-                    screenName: "Your Name",
-                    value: {name: parentProfile.name},
-                    goBack: () => setLoading(true)
-                }),
-                iconName: "keyboard-arrow-right"
+                text: parentProfile.name ? parentProfile.name : "Add name to your profile"
               },
               {
                 title: "Phone Number",
@@ -356,7 +355,9 @@ const ProfileScreen = (props) => {
               ...listCollaborator,
               {
                 title: "Add collaborator",
-                action: null,
+                action: () => {
+                  props.navigation.navigate("CollaboratorAdding")
+                },
                 iconName: "add"
               },
             ]}
