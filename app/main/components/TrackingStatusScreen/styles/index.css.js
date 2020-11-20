@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: "#ec546b",
-    shadowOpacity: 0.6,
-    elevation: 10
+    shadowOpacity: 0.2,
+    elevation: 5
   },
   
   // status animation

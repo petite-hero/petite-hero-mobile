@@ -351,7 +351,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         {/* choose date for setting button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => setIsPickingDate(true)}>
-            <Icon name="date-range" type="material" size={24} color={COLORS.STRONG_CYAN}/>
+            <Image source={require("../../../../assets/icons/Calendar.png")} style={{width: 30, height: 30}} />
           </TouchableOpacity>
         </Animated.View>
 
@@ -366,7 +366,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}>
-            <Icon name="today" type="material" size={24} color={COLORS.STRONG_CYAN}/>
+            <Image source={require("../../../../assets/icons/Tomorrow.png")} style={{width: 30, height: 30}} />
+            {/* <Image source={require("../../../../assets/icons/Tomorrow.png")} style={{width: 30, height: 30}} tintColor="red"/> */}
           </TouchableOpacity>
         </Animated.View>
 
@@ -403,7 +404,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
             minDate={new Date()}
             onDayPress={(day) => {
               setIsPickingDate(false);
-              navigation.navigate("TrackingSettings", {date: new Date(day.timestamp)});
+              navigation.navigate("TrackingSettings", {children: children, date: new Date(day.timestamp)});
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}

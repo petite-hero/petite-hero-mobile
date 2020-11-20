@@ -171,22 +171,17 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
-      {/* date & back button*/}
+      {/* back button, data & avatar */}
       {substatus === "SEARCH" ? null : [
-        <Text key={0} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>
-      ]
-      }
-      {/* back btn */}
-      <View style={styles.backBtn}>
-        <Icon name='keyboard-arrow-left' type='material' size={24}
-          onPress={() => {
-            navigation.goBack();
-          }}/>
-      </View>
-      {/* date */}
-      <Text key={0} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>
-      {/* child avatar */}
-      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
+        <View key={0} style={styles.backBtn}>
+          <Icon name='keyboard-arrow-left' type='material' size={24}
+            onPress={() => {
+              navigation.goBack();
+            }}/>
+        </View>,
+        <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
+        <AvatarContainer key={2} children={children} setChildren={setChildren} setLoading={setLoading}/>
+      ]}
       
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}

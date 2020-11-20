@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     borderRadius: 20,
-    backgroundColor: COLORS.STRONG_CYAN,
+    backgroundColor: COLORS.STRONG_BLUE,
   },
 
   // control panel
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     right: wp('5%'),
     height: hp('45%'),
     borderRadius: hp('4%'),  // same as nav bar
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: "white"
   },
   controlPanelContainerFocused:{
     overflow: "hidden",
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     paddingBottom: 15,
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: "white"
   },
   controlPanelFocused:{
     position: "absolute",
@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
     width: wp("90%"),
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: COLORS.LIGHT_CYAN
+    backgroundColor: "white"
   },
 
   // search bar
   searchBarContainer: {
     height: 54,  // equals to textInput + margins
     marginBottom: 5,
-    backgroundColor: "rgba(255, 255, 255, 0)",
+    backgroundColor: "rgba(255, 255, 255, 0)"
   },
   searchBarContainerFocused:{
     height: hp('100%'),
@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
     height: 54,  // equals to textInput + margins
     backgroundColor: "rgba(0, 0, 0, 0)",
     marginTop: 38,
-    marginLeft: 45,
+    marginLeft: 10,
+    marginRight: 10,
     borderTopWidth: 0,
     borderBottomWidth: 0
   },
@@ -150,31 +151,39 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 4,
     height: 44,
+    fontFamily: "Acumin",
     borderRadius: 28,
+    elevation: 3
   },
   textInputFocused: {
     marginTop: 0,
     marginRight: 10,
-    marginLeft: 0,
-    paddingLeft: 15,
+    marginLeft: 10,
+    paddingLeft: 40,
     height: 44,
     borderRadius: 28,
     borderColor: "rgb(210, 210, 210)",
-    borderWidth: 1
+    shadowOpacity: 0.2,
+    elevation: 5
   },
   searchBackBtn: {
     display: "none"
   },
   searchBackBtnFocused: {
     position: "absolute",
-    top: 40,
-    left: 0,
-    height: 36,
-    width: 45,
+    top: 46,
+    left: 24,
+    width: 30,
+    height: 30,
+    borderRadius: 40,
     justifyContent: 'center', 
   },
   listView: {
     backgroundColor: 'rgba(255, 255, 255, 0)'
+  },
+  searchRow: {
+    marginLeft: 10,
+    marginRight: 10
   },
 
   // control panel content
@@ -189,12 +198,25 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   locationName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
+    fontSize: 19,
+    marginLeft: 50,
+    fontFamily: "AcuminBold"
   },
   locationTime: {
-    color: "rgb(160, 160, 160)"
+    marginLeft: 50,
+    color: "rgb(160, 160, 160)",
+    fontFamily: "Acumin"
+  },
+  typeIcon: {
+    position: "absolute",
+    left: 0,
+    top: 3,
+    bottom: 0,
+    height: 40,
+    width: 40,
+    borderRadius: wp("7%"),
+    justifyContent: "center",
+    alignItems: "center"
   },
   rightIcon: {
     position: "absolute",
