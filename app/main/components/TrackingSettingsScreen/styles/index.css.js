@@ -71,10 +71,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     position: "absolute",
     bottom: 10,
-    top: hp('55%') - 10,
     left: wp('5%'),
     right: wp('5%'),
-    height: hp('45%'),
+    // height: hp('45%'),
+    borderWidth: 1,
     borderRadius: hp('4%'),  // same as nav bar
     backgroundColor: "white"
   },
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   locSettingPanel:{
     position: "absolute",
     top: 0,
+    // left: 0,
     right: "auto",
     bottom: 0,
     width: wp("90%"),
@@ -264,6 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "white",
     fontFamily: "Acumin",
+    fontSize: 16,
     shadowOpacity: 0.2,
     elevation: 5
   },
@@ -271,14 +273,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingTop: 5,
     paddingBottom: 5,
-    fontFamily: "Acumin",
     marginTop: 5
   },
   txtRepeatDayContainer: {
     flexDirection: "row",
     paddingTop: 5,
     paddingBottom: 5,
-    fontFamily: "Acumin",
   },
 
   saveLocBtnsContainer: {

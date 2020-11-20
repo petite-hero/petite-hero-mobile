@@ -56,9 +56,11 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const MAP_DURATION = 700;
   const FLY_DURATION = 300;
   const animSettingLoc = React.useRef(new Animated.Value(0)).current;
-  const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
+  const animSettingLocLeft = animSettingLoc.interpolate({inputRange: [0, 0.001, 1], outputRange: [wp("100%"), 0, 0]});
   const animSettingLocProps = React.useRef(new Animated.Value(0)).current;
   const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
+
+  const [animSettingLocHeight, setAnimSettingLocHeight] = React.useState(null);
 
   {/* ===================== END OF VARIABLE SECTION ===================== */}
 
@@ -137,6 +139,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     (async () => {
       setLoading(true);
       await fetchLocList();
+      setAnimSettingLocHeight(animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [Util.calLocSettingContainerHeight(locList.length), hp('45%')]}));
       setLoading(false);
     })();
   }, []);
@@ -174,10 +177,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       {/* back button, data & avatar */}
       {substatus === "SEARCH" ? null : [
         <View key={0} style={styles.backBtn}>
-          <Icon name='keyboard-arrow-left' type='material' size={24}
-            onPress={() => {
-              navigation.goBack();
-            }}/>
+          <Icon name='keyboard-arrow-left' type='material' size={24} onPress={() => {navigation.goBack();}}/>
         </View>,
         <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
         <AvatarContainer key={2} children={children} setChildren={setChildren} setLoading={setLoading}/>
@@ -186,7 +186,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
 
-      <View style={[substatus === "SEARCH" ? styles.controlPanelContainerFocused : styles.controlPanelContainer,
+      <Animated.View style={[substatus === "SEARCH" ? styles.controlPanelContainerFocused : styles.controlPanelContainer,
+                    substatus === "SEARCH" ? {} : {height: animSettingLocHeight},
                     status === "PINNING" ? {height: 0, width: 0, opacity: 0} : {}]}>
 
         {/* control panel with search bar and location list */}
@@ -226,7 +227,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             setLIndex(index);
             setStatus("SETTING_LOC");
             animSettingLoc.setValue(0);
-            Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+            Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION*10, easing: Easing.linear, useNativeDriver: false}).start();
           }}
 
         />
@@ -234,6 +235,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
         {/* location setting attributes */}
         <TrackingSettingLocation
 
+          animOpac={animSettingLoc}
           animLeft={animSettingLocLeft}
 
           settingLoc={settingLocDetail}
@@ -307,12 +309,13 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
         />
 
-      </View>
+      </Animated.View>
 
       {/* action buttons */}
       <TrackingSettingButtons
 
         status={status}
+        animOpac={animSettingLoc}
 
         onPinningCancel={() => {
           setStatus("VIEWING");

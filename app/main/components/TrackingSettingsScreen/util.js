@@ -45,6 +45,15 @@ class Util{
     return result;
   }
 
+  static calLocSettingContainerHeight = (itemNum) => {
+    const MIN = 74 + 2*60;
+    const MAX = 74 + 4*60;
+    let result = 74 + itemNum*60;
+    if (result < MIN) return MIN;
+    if (result > MAX) return MAX;
+    return result;
+  }
+
   // get user location
   // navigator.geolocation.getCurrentPosition(
   //     (data) => {

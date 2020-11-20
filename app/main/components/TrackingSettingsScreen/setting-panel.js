@@ -20,7 +20,7 @@ const TrackingSettingLocation = (props) => {
 
   return (
 
-    <Animated.View style={[styles.locSettingPanel, {left: props.animLeft}]}>
+    <Animated.View style={[styles.locSettingPanel, {opacity: props.animOpac, left: props.animLeft}]}>
 
       {/* field: name */}
       <TextInput
@@ -31,8 +31,8 @@ const TrackingSettingLocation = (props) => {
 
       {/* field: type */}
       <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 4, fontFamily: "AcuminBold"}}>Marked as</Text>
-        <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin"}} onPress={props.onTypeSelecting}>
+        <Text style={{flex: 4, fontFamily: "AcuminBold", fontSize: 15}}>Mark as</Text>
+        <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onTypeSelecting}>
           {props.type}
         </Text>
         <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
@@ -40,23 +40,24 @@ const TrackingSettingLocation = (props) => {
 
       {/* field: radius */}
       <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 3, fontFamily: "AcuminBold"}}>Radius</Text>
+        <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>Radius</Text>
         <Slider
           style={{flex: 8, height: 20}}
           minimumTrackTintColor={COLORS.STRONG_CYAN}
+          maximumTrackTintColor={COLORS.MEDIUM_CYAN}
           thumbTintColor={COLORS.STRONG_CYAN}
           minimumValue={RADIUS_MIN} maximumValue={RADIUS_MAX}
           value={props.initialRadius} initial
           onValueChange={props.onRadiusChange}
         />
-        <Text style={{flex: 3, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin"}}>{Math.round(props.radius)} m</Text>
+        <Text style={{flex: 3, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}}>{Math.round(props.radius)} m</Text>
       </View>
 
       {/* field: from time */}
       {props.type === "Home" ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold"}}>From</Text>
-          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin"}} onPress={() => setShowFromTimePicker(true)}>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>From</Text>
+          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowFromTimePicker(true)}>
             {props.fromTime == "None" || props.fromTime == null ? "None" : props.fromTime.slice(0, -3)}
           </Text>
           {showFromTimePicker ?
@@ -71,8 +72,8 @@ const TrackingSettingLocation = (props) => {
       {/* field: to time */}
       {props.type === "Home" ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold"}}>To</Text>
-          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin"}} onPress={() => setShowToTimePicker(true)}>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>To</Text>
+          <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowToTimePicker(true)}>
             {props.ttoTime == "None" || props.ttoTime == null ? "None" : props.ttoTime.slice(0, -3)}
           </Text>
           {showToTimePicker ?
@@ -87,8 +88,8 @@ const TrackingSettingLocation = (props) => {
       {/* field: repeat */}
       {props.type === "Home" ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold"}}>Repeat on</Text>
-          <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin"}} onPress={props.onRepeatSelecting}>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>Repeat on</Text>
+          <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onRepeatSelecting}>
             {Util.repeatArrToShowStr(props.repeat)}
           </Text>
           <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>

@@ -40,7 +40,7 @@ const TrackingSettingMap = (props) => {
             <View style={styles.safeLoc}/>
           </Marker>,
           <Circle key={1} center={{latitude: props.settingLoc.latitude, longitude: props.settingLoc.longitude}}
-                  radius={props.lRadius} fillColor={changeOpac(COLORS.STRONG_BLUE, 0.4)} strokeWidth={0}/>
+                  radius={props.lRadius} fillColor={changeOpac(COLORS.STRONG_BLUE, 0.317)} strokeWidth={0}/>
           ]
           : null}
 

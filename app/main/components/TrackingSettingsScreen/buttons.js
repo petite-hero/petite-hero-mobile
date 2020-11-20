@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Animated } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
@@ -24,7 +24,7 @@ const TrackingSettingButtons = (props) => {
 
     // DELETE SAVE CANCEL BUTTONS
     props.status === "SETTING_LOC_NEW" || props.status === "SETTING_LOC" ?
-      <View key={1} style={styles.saveLocBtnsContainer}>
+      <Animated.View key={1} style={[styles.saveLocBtnsContainer, {opacity: props.animOpac}]}>
         {props.status === "SETTING_LOC" ?
           <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocDelete]} onPress={props.onSettingDelete}>
             <Icon name='delete' type='material' color="white"/>
@@ -36,7 +36,7 @@ const TrackingSettingButtons = (props) => {
         <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCheck]} onPress={props.onSettingSave}>
           <Icon name='check' type='material' color='white'/>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     : null
 
   ])
