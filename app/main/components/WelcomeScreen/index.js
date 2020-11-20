@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, Image, TouchableOpacity, AsyncStorage, ImageBackground } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { COLORS } from '../../../const/const';
 import LoginScreen from '../LoginScreen';
@@ -68,11 +68,11 @@ const Welcome = ({ navigation }) => {
   const [isScanning, setIsScanning] = React.useState(false);
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={[styles.circle, {backgroundColor: COLORS.WHITE}]}
-      />
-      <Text style={styles.title}>Welcome!</Text>
+    <ImageBackground 
+      style={styles.container}
+      source={require("../../../../assets/gif/welcome.gif")}
+    >
+      <Image style={styles.circle}/>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Register")} onLongPress={() => setIsScanning(true)}>
         <Text style={styles.textButton}>Create an Account</Text>
       </TouchableOpacity>
@@ -91,7 +91,7 @@ const Welcome = ({ navigation }) => {
         />
       : null}
 
-    </View>
+    </ImageBackground>
   )
 }
 

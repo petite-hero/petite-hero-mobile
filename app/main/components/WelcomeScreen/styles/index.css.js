@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
   container : {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.STRONG_CYAN
+    alignItems: "center"
   },
   button : {
     marginTop: hp('10%'),
@@ -30,10 +29,10 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE
   },
   circle : {
-    marginTop: hp('7%'),
+    backgroundColor: "transparent",
+    marginTop: hp('20%'),
     width: hp('40%'),
     height: hp('40%'),
-    borderRadius: hp('20%')
   }
 });
 
