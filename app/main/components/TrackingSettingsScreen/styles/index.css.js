@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   locationName: {
     fontSize: 19,
     marginLeft: 50,
-    fontFamily: "AcuminBold"
+    fontFamily: "AcuminBold",
   },
   locationTime: {
     marginLeft: 50,
@@ -260,27 +260,32 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     paddingTop: 6,
     paddingBottom: 6,
-    marginTop: 30,
+    marginTop: 40,
     borderRadius: 24,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    fontFamily: "Acumin",
+    shadowOpacity: 0.2,
+    elevation: 5
   },
   txtTypeContainer: {
     flexDirection: "row",
     paddingTop: 5,
     paddingBottom: 5,
+    fontFamily: "Acumin",
     marginTop: 5
   },
   txtRepeatDayContainer: {
     flexDirection: "row",
     paddingTop: 5,
     paddingBottom: 5,
+    fontFamily: "Acumin",
   },
 
   saveLocBtnsContainer: {
     flexDirection: "row",
     position: "absolute",
     top: "auto",
-    bottom: hp('45%')+10-22,
+    bottom: hp('45%')+15-wp("13.33%")/2,
     left: "auto",
     right: wp('5%')+20,
     height: 44,
@@ -288,13 +293,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   btnSaveLoc : {
-    width: 44,
-    height: 44,
-    borderRadius: 44,
+    width: wp("13.33%"),
+    height: wp("13.33%"),
+    borderRadius: wp("13.33%"),
     marginLeft: 7,
     marginRight: 7,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    shadowOpacity: 0.2,
+    elevation: 5
   },
   btnSaveLocCheck: {
     backgroundColor: COLORS.STRONG_CYAN,
