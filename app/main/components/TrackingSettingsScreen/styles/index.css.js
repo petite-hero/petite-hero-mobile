@@ -21,35 +21,31 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: wp("50%"),
   },
 
-  // avatar & date
-  avatar : {
-    position: "absolute",
-    width: wp("12%"),
-    height: wp("12%"),
-    borderRadius: wp("12%"),
-    top: hp("5%"),
-    right: wp("10%")
-  },
+  // back button & date
   date : {
     position: "absolute",
     borderRadius: wp("12%"),
-    top: hp("5%"),
-    right: wp("27%"),
-    fontSize: wp("6%"),
-    fontWeight: "bold",
-    paddingHorizontal: 10,
+    top: hp("6%"),
+    right: wp("16%"),
+    fontSize: 18,
+    paddingHorizontal: 30,
     paddingVertical: 5,
-    color: 'white',
-    backgroundColor: COLORS.STRONG_CYAN
+    color: COLORS.STRONG_CYAN,
+    backgroundColor: "white",
+    fontFamily: "Acumin"
   },
   backBtn : {
     position: "absolute",
-    width: wp("12%"),
-    height: wp("12%"),
-    borderRadius: wp("12%"),
+    width: wp("13.33%"),
+    height: wp("13.33%"),
+    borderRadius: wp("13.33%"),
     top: hp("5%"),
-    left: wp("5%"),
-    justifyContent: 'center'
+    left: wp("10%"),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    shadowOpacity: 0.2,
+    elevation: 5
   },
 
   // gg maps

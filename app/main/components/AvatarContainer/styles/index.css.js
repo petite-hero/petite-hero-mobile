@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   avatar : {
     width: wp("13.33%"),
     height: wp("13.33%"),
-    borderRadius: wp("6%")
+    borderRadius: wp("7%")
   },
 });
 

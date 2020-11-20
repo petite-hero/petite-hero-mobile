@@ -49,7 +49,7 @@ const TrackingSettingMap = (props) => {
     </View>,
 
     // fixed pin
-    status === "PINNING" ?
+    props.status === "PINNING" ?
       <View key={1} style={styles.fixedPin}>
         <Icon name='location-on' type='material' color={COLORS.STRONG_CYAN} size={50}/>
       </View>

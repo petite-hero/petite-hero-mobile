@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { PORT } from "../../../const/const";
+import { PORT, COLORS } from "../../../const/const";
 
 import Util from './util';
 import { Loader } from '../../../utils/loader';
@@ -13,6 +13,7 @@ import TrackingSettingControlPanel from './control-panel';
 import TrackingSettingLocation from './setting-panel';
 import TrackingSettingLocationSubProps from './sub-setting-panel';
 import TrackingSettingButtons from './buttons';
+import AvatarContainer from '../AvatarContainer';
 
 
 const TrackingSettingsScreen = ({ route, navigation }) => {
@@ -20,33 +21,36 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   {/* ===================== VARIABLE SECTION ===================== */}
 
   // states
-  [isLoading, setIsLoading] = React.useState(false);
-  [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
-  [substatus, setSubstatus] = React.useState("");  // "", TYPE, REPEAT, SEARCH
+  const [loading, setLoading] = React.useState(false);
+  const [status, setStatus] = React.useState("VIEWING");  // VIEWING, PINNING, SETTING_LOC_NEW, SETTING_LOC
+  const [substatus, setSubstatus] = React.useState("");  // "", TYPE, REPEAT, SEARCH
   const CURRENT_DATE = Util.dateToHour0(route.params.date);
   const RADIUS_MIN = 40;
 
+  // children information
+  const [children, setChildren] = React.useState(route.params.children);
+
   // map positioning & zooming
-  [map, setMap] = React.useState(null);
+  const [map, setMap] = React.useState(null);
   
   // location list
-  [locList, setLocList] = React.useState([]);
+  const [locList, setLocList] = React.useState([]);
 
   // attributes for setting a location
-  [settingLocMap, setSettingLocMap] = React.useState({});
-  [settingLocDetail, setSettingLocDetail] = React.useState({});
-  [lName, setLName] = React.useState("");
-  [lType, setLType] = React.useState("None");  // None, Home, Education
-  [lTypeTmp, setLTypeTmp] = React.useState("None");
-  [lRadius, setLRadius] = React.useState(0);
-  [lInitialRadius, setLInitialRadius] = React.useState(0);
-  [lFromTime, setLFromTime] = React.useState("None");  [lFromTimeDate, setLFromTimeDate] = React.useState(null);
-  [lToTime, setLToTime] = React.useState("None");  [lToTimeDate, setLToTimeDate] = React.useState(null);
-  [lIndex, setLIndex] = React.useState(0);
-  [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
-  [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
-  [lRepeatAll, setLRepeatAll] = React.useState(false);
-  [searchBar, setSearchBar] = React.useState(null);
+  const [settingLocMap, setSettingLocMap] = React.useState({});
+  const [settingLocDetail, setSettingLocDetail] = React.useState({});
+  const [lName, setLName] = React.useState("");
+  const [lType, setLType] = React.useState("None");  // None, Home, Education
+  const [lTypeTmp, setLTypeTmp] = React.useState("None");
+  const [lRadius, setLRadius] = React.useState(0);
+  const [lInitialRadius, setLInitialRadius] = React.useState(0);
+  const [lFromTime, setLFromTime] = React.useState("None");  const [lFromTimeDate, setLFromTimeDate] = React.useState(null);
+  const [lToTime, setLToTime] = React.useState("None");  const [lToTimeDate, setLToTimeDate] = React.useState(null);
+  const [lIndex, setLIndex] = React.useState(0);
+  const [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
+  const [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
+  const [lRepeatAll, setLRepeatAll] = React.useState(false);
+  const [searchBar, setSearchBar] = React.useState(null);
 
   // animation
   const MAP_DURATION = 700;
@@ -131,9 +135,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   // load location list on screen loaded
   React.useEffect(() => {
     (async () => {
-      setIsLoading(true);
+      setLoading(true);
       await fetchLocList();
-      setIsLoading(false);
+      setLoading(false);
     })();
   }, []);
 
@@ -146,7 +150,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
     <View style={styles.container}>
 
-      <Loader loading={isLoading}/>
+      <Loader loading={loading}/>
 
       {/* ===================== MAP SECTION ===================== */}
 
@@ -167,18 +171,22 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
       {/* ===================== END MAP SECTION ===================== */}
 
-      {/* child avatar, date & back button*/}
+      {/* date & back button*/}
       {substatus === "SEARCH" ? null : [
-        <Image key={0}
-          style={styles.avatar}
-          source={require('../../../../assets/kid-avatar.png')}
-        />,
-        <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
-        <View key={2} style={styles.backBtn}>
-          <Icon name='arrow-back' type='material' size={34}
-            onPress={() => {navigation.goBack()}}/>
-        </View>]
+        <Text key={0} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>
+      ]
       }
+      {/* back btn */}
+      <View style={styles.backBtn}>
+        <Icon name='keyboard-arrow-left' type='material' size={24}
+          onPress={() => {
+            navigation.goBack();
+          }}/>
+      </View>
+      {/* date */}
+      <Text key={0} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>
+      {/* child avatar */}
+      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
       
 
       {/* ===================== CONTROL PANEL SECTION ===================== */}
@@ -193,7 +201,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           substatus={substatus}
           locList={locList}
 
-          setIsLoading={setIsLoading}
+          setIsLoading={setLoading}
           setSearchBar={setSearchBar}
           onSearchBarPress={() => setSubstatus("SEARCH")}
           onSearchResultPress={(data, details = null) => {
@@ -359,11 +367,11 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             }
             // save & load loc list
             (async() => {
-              setIsLoading(true);
+              setLoading(true);
               if (status === "SETTING_LOC_NEW") await addLocation();
               else if (status === "SETTING_LOC") await editLocation();
               await fetchLocList();
-              setIsLoading(false);
+              setLoading(false);
               animSettingLoc.setValue(1);
               Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
               setStatus("VIEWING");
@@ -387,10 +395,10 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             [
               {text: 'Cancel'},
               {text: 'OK', onPress: async() => {
-                setIsLoading(true);
+                setLoading(true);
                 await deleteLocation();
                 await fetchLocList();
-                setIsLoading(false);
+                setLoading(false);
                 animSettingLoc.setValue(1);
                 Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
                 setStatus("VIEWING");

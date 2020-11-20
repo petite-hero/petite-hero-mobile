@@ -164,11 +164,11 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   const FLY_TIME = 400;
   const [flied, setFlied] = React.useState(false);
   const animSetZoneBtn = React.useRef(new Animated.Value(0)).current;
-  const animSetZoneBtnTopNav = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});
+  const animSetZoneBtnTopNav = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [115, 0]});
   const animSetZoneBtnTopDay = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [100, 0]});
   const animSetZoneBtnTopTomorrow = animSetZoneBtn.interpolate({inputRange: [0, 1/2, 1], outputRange: [50, 50, 0]});
   const animSetZoneBtnElevation = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [0, 5]});
-  const animSetZoneBtnTextWidth = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [0, 180]});
+  const animSetZoneBtnTextWidth = animSetZoneBtn.interpolate({inputRange: [0, 1], outputRange: [0, 230]});
 
   {/* ===================== END OF VARIABLE SECTION ===================== */}
 
@@ -324,7 +324,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
           {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer,
-                                   {backgroundColor: children[childIndex].status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
+                                    {backgroundColor: children[childIndex].status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
             onPress={() => {
               if (children[childIndex].status === "INACTIVE"){
                 requestSmartwatchTracking(true);
@@ -343,22 +343,22 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               }
             }}
           >
-            <Icon name={children[childIndex].status === "INACTIVE" ? "explore" : "explore"} type="material" size={20}
-                  color={children[childIndex].status === "INACTIVE" ? "rgb(140, 140, 140)" : "white"}/>
+            <Icon name={children[childIndex].status === "INACTIVE" ? "explore" : "explore"} type="material" size={24}
+                  color={children[childIndex].status === "INACTIVE" ? "#d6d6d6" : "white"}/>
           </TouchableOpacity>
         </Animated.View>
 
         {/* choose date for setting button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => setIsPickingDate(true)}>
-            <Icon name="date-range" type="material" size={20} color={COLORS.STRONG_CYAN}/>
+            <Icon name="date-range" type="material" size={24} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
 
         {/* setting for tomorrow button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => {
-              navigation.navigate("TrackingSettings", {date: (() => {
+              navigation.navigate("TrackingSettings", {children: children, date: (() => {
                 let today = new Date();
                 today.setDate(today.getDate()+1);
                 return today;
@@ -366,7 +366,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}>
-            <Icon name="today" type="material" size={20} color={COLORS.STRONG_CYAN}/>
+            <Icon name="today" type="material" size={24} color={COLORS.STRONG_CYAN}/>
           </TouchableOpacity>
         </Animated.View>
 
@@ -383,14 +383,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           }
           setFlied(!flied);
         }}>
-          <Icon name="add-location" type="material" size={20} color="white"/>
+          <Icon name="add-location" type="material" size={24} color="white"/>
         </TouchableOpacity>
 
         {/* explaination texts */}
-        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 60, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 68, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Selected Day</Text>
         </Animated.View>
-        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 110, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 125, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Tomorrow</Text>
         </Animated.View>
 

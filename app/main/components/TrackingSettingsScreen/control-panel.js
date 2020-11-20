@@ -37,7 +37,7 @@ const TrackingSettingControlPanel = (props) => {
         <View style={{flexDirection: "row"}}>
           {/* location list */}
           <View style={{flex: 8}}>
-          {props.status === "VIEWING" ? locList.map((loc, index) => {
+          {props.status === "VIEWING" ? props.locList.map((loc, index) => {
             return (
             <TouchableOpacity key={index} style={styles.locationContainer} onPress={() => props.onLocationItemPress(loc, index)}>
               <View style={{flexDirection: "row"}}>

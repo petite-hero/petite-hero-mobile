@@ -15,8 +15,8 @@ const TrackingSettingLocation = (props) => {
   const RADIUS_MIN = 40;
   const RADIUS_MAX = 1000;
   
-  [showFromTimePicker, setShowFromTimePicker] = React.useState(false);
-  [showToTimePicker, setShowToTimePicker] = React.useState(false);
+  const [showFromTimePicker, setShowFromTimePicker] = React.useState(false);
+  const [showToTimePicker, setShowToTimePicker] = React.useState(false);
 
   return (
 

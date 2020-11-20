@@ -86,16 +86,16 @@ const styles = StyleSheet.create({
   txtSettingBtnGuideContainer: {
     position: "absolute",
     right: 55,
-    height: 20,
+    height: 24,
     overflow: "hidden"
   },
   txtSettingBtnGuide: {
     alignSelf: "flex-start",
     textAlign: "right",
-    width: 180,
+    width: 220,
     color: "#9edbfa",
     fontFamily: "Acumin",
-    fontSize: 18
+    fontSize: 17,
   },
   calendarContainer: {
     position: "absolute",
