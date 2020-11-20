@@ -103,7 +103,7 @@ const TaskDetailsScreen = (props) => {
         overflow: "hidden"
       }}>
         <Image
-          source={{uri: details.proofPhoto ? "data:image/png;base64," + details.proofPhoto : "https://www.newstatesman.com/sites/default/files/styles/homesection_image/public/blogs_2016/12/untitled_design_41_.png"}}
+          source={details.proofPhoto ? {uri: "data:image/png;base64," + details.proofPhoto} : require("../../../../assets/task-background/1.png")}
           style={{height: "100%", width: "100%"}}
         />
         <Icon
@@ -149,68 +149,63 @@ const TaskDetailsScreen = (props) => {
         marginRight: "10%",
       }}>
         <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between"
+          maxWidth: "50%"
         }}>
-          <View style={{
-            maxWidth: "50%"
+          <Text style={{
+            fontFamily: "AcuminBold",
+            fontSize: 20
           }}>
-            <Text style={{
-              fontFamily: "AcuminBold",
-              fontSize: 20
-            }}>
-              {details.name}
-            </Text>
-          </View>
-          {
-            details.status === "DONE" || details.status === "FAILED" ?
-              <Text style={{
-                fontFamily: "Acumin",
-                color: details.status === "DONE" && COLORS.GREEN
-                    || details.status === "FAILED" && COLORS.RED,
-                textTransform: "capitalize"
-              }}>
-                {details.status}
-              </Text>
-            : details.submitDate ?
-              isLate(details.assignDate, details.submitDate, details.toTime) ?
-              <Text style={{
-                fontFamily: "Acumin",
-                color: COLORS.RED
-              }}>
-                Submit late at {handleShowTime(details.submitDate)}
-              </Text>
-              :
-              <Text style={{
-                fontFamily: "Acumin",
-                color: COLORS.GREEN
-              }}>
-                Submit at {handleShowTime(details.submitDate)}
-              </Text>
-            : isLate(details.assignDate, new Date().getTime(), details.toTime) ?
-              <Text style={{
-                fontFamily: "Acumin",
-                color: COLORS.YELLOW
-              }}>
-                Late
-              </Text>
-              :
-              <Text style={{
-                fontFamily: "Acumin",
-                color: details.status === "HANDED" && COLORS.PURPLE
-                    || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-                textTransform: "capitalize"
-              }}>
-                {details.status}
-              </Text>
-          }
+            {details.name}
+          </Text>
         </View>
+        {
+          details.status === "DONE" || details.status === "FAILED" ?
+            <Text style={{
+              fontFamily: "Acumin",
+              color: details.status === "DONE" && COLORS.GREEN
+                  || details.status === "FAILED" && COLORS.RED,
+              textTransform: "capitalize"
+            }}>
+              {details.status}
+            </Text>
+          : details.submitDate ?
+            isLate(details.assignDate, details.submitDate, details.toTime) ?
+            <Text style={{
+              fontFamily: "Acumin",
+              color: COLORS.RED
+            }}>
+              Submitted late at {handleShowTime(details.submitDate)}
+            </Text>
+            :
+            <Text style={{
+              fontFamily: "Acumin",
+              color: COLORS.GREEN
+            }}>
+              Submitted at {handleShowTime(details.submitDate)}
+            </Text>
+          : isLate(details.assignDate, new Date().getTime(), details.toTime) ?
+            <Text style={{
+              fontFamily: "Acumin",
+              color: COLORS.YELLOW
+            }}>
+              Late
+            </Text>
+            :
+            <Text style={{
+              fontFamily: "Acumin",
+              color: details.status === "HANDED" && COLORS.BLACK
+                  || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
+              textTransform: "capitalize"
+            }}>
+              {details.status}
+            </Text>
+        }
         <View style={{
           flexDirection: "row",
           marginTop: "3%",
           justifyContent: "flex-start",
           alignItems: "center",
+          backgroundColor: COLORS.WHITE
         }}>
           <View style={{
             flexDirection: "column",

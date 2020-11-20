@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   tabIcon : {
+    bottom: 2,
     width: 30,
     height: 30,
     alignSelf: "center"
@@ -140,7 +141,6 @@ const styles = StyleSheet.create({
     marginLeft: wp("6.25%"),
     backgroundColor: COLORS.STRONG_CYAN,
   }
-
 });
 
 export default styles;

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Loader } from '../../../utils/loader'
 import QRCode from 'react-native-qrcode-svg';
 import styles from './styles/index.css'
 import { badgesList, COLORS } from '../../../const/const';
 import { Icon } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 // silent notification for updating location
 Notifications.setNotificationHandler({
@@ -119,6 +120,28 @@ const ChildAddingShowingQrScreen = (props) => {
           size={200}
         />
       </View>
+      <TouchableOpacity style={{
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginTop: "10%",
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        height: heightPercentageToDP("5%"),
+        borderWidth: 2,
+        borderColor: COLORS.YELLOW,
+        backgroundColor: COLORS.WHITE
+      }}
+        onPress={() => {props.navigation.navigate("Profile")}}
+      >
+        <Text style={{
+          fontFamily: "AcuminBold",
+          fontSize: 16,
+          color: COLORS.BLACK
+        }}>
+          Later
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }

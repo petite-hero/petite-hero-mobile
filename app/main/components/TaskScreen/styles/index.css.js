@@ -42,9 +42,8 @@ const styles = StyleSheet.create({
   monthPicker : {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: wp("10%"),
-    fontSize: hp("2%"),
-    fontFamily: "Acumin"
+    justifyContent: "center",
+    marginLeft: wp("10%")
   },
   dateList : {
     marginTop: hp("2%"),

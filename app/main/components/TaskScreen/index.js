@@ -4,8 +4,7 @@ import styles from './styles/index.css';
 import DateItem from './DateItem';
 import TaskBoard from './TaskBoard';
 import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
-import { COLORS, PORT } from '../../../const/const';
-import { Icon } from 'react-native-elements';
+import { PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
 import { fetchWithTimeout } from '../../../utils/fetch';
@@ -285,10 +284,9 @@ const TaskScreen = (props) => {
             <Text style={styles.dateNum}>
               {new Date(date).toDateString().split(" ")[1] + " " + new Date(date).toDateString().split(" ")[3]}
             </Text>
-            <Icon
-              name="keyboard-arrow-down"
-              type="material"
-              color={COLORS.BLACK}
+            <Image
+              source={require("../../../../assets/icons/down.png")}
+              style={{width: 30, height: 30}}
             />
           </TouchableOpacity>
         </View>
@@ -321,10 +319,9 @@ const TaskScreen = (props) => {
             }}
             activeOpacity={1}
           >
-            <Icon
-              name="keyboard-arrow-left"
-              type="material"
-              color={COLORS.BLACK}
+            <Image
+              source={require("../../../../assets/icons/back.png")}
+              style={{width: 30, height: 30}}
             />
           </TouchableOpacity>
           {/* END BUTTON BACK TO CURRENT DATE */}
@@ -339,10 +336,9 @@ const TaskScreen = (props) => {
             }}
             activeOpacity={1}
           >
-            <Icon
-              name="keyboard-arrow-right"
-              type="material"
-              color={COLORS.BLACK}
+            <Image
+              source={require("../../../../assets/icons/forth.png")}
+              style={{width: 30, height: 30}}
             />
           </TouchableOpacity>
           {/* END BUTTON FORWARD TO CURRENT DATE */}
@@ -366,10 +362,9 @@ const TaskScreen = (props) => {
         style={styles.btnAddTask}
         onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
       >
-        <Icon
-          name="add"
-          type="material"
-          color={COLORS.WHITE}
+        <Image
+          source={require("../../../../assets/icons/add.png")}
+          style={{width: 30, height: 30}}
         />
       </TouchableOpacity>
       {/* END BUTTON ADD TASK */}

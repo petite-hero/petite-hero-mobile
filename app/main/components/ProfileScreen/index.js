@@ -1,15 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import NumberFormat from "react-number-format";
 import { View, Text, Image, AsyncStorage } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { Icon } from "react-native-elements";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { COLORS, PORT } from "../../../const/const";
 import Animated, { Easing } from "react-native-reanimated";
 import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
-import AvatarContainer from "../AvatarContainer";
 import { Loader } from "../../../utils/loader";
 
 const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastItemOfGroup, differentArrow }) => {
@@ -63,10 +60,13 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
           action ? action() : dropdownSubItems(subItems.length);
         }}
       >
-        <Icon
-          name={icon}
-          type="material"
-          color={iconColor}
+        <Image
+          source={title === "Personal Profile" ? require("../../../../assets/icons/personal-profile.png")
+                : title === "Collaborators" ? require("../../../../assets/icons/collaborator.png")
+                : title === "Children" ? require("../../../../assets/icons/child.png")
+                : title === "Subscription" ? require("../../../../assets/icons/subscription.png")
+                : title === "Setting" ? require("../../../../assets/icons/setting.png")
+                : require("../../../../assets/icons/log-out.png")}
           style={{
             width: hp("5%"),
             height: hp("5%"),
@@ -86,18 +86,16 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
             {title}
           </Text>
           {subItems && (
-            <Icon
-              name={isDropdown ? "keyboard-arrow-up" : "keyboard-arrow-down"}
-              type="material"
-              color={COLORS.STRONG_GREY}
+            <Image
+              source={isDropdown ? require("../../../../assets/icons/up.png") : require("../../../../assets/icons/down.png")}
+              style={{width: 30, height: 30}}
             />
           )}
           {differentArrow && (
-            <Icon
-              name={differentArrow.name}
-              type="material"
-              color={COLORS.STRONG_GREY}
-            />
+            <Image
+            source={require("../../../../assets/icons/forth.png")}
+            style={{width: 30, height: 30}}
+          />
           )}
         </View>
       </TouchableOpacity>
@@ -155,13 +153,12 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
                   </Text>
                 )}
                 {value.iconName &&
-                  <Icon
-                    name={value.iconName}
-                    type="material"
-                    color={COLORS.GREY}
+                  <Image
+                    source={value.iconName === "keyboard-arrow-right" ? require("../../../../assets/icons/forth.png") : require("../../../../assets/icons/add.png")}
                     style={{
                       marginRight: wp("4%"),
-                      justifyContent: "center"
+                      justifyContent: "center",
+                      width: 30, height: 30
                     }}
                   />
                 }
@@ -262,6 +259,20 @@ const ProfileScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
+      <View style={{
+        position: "absolute",
+        top: "5%",
+        right: "10%",
+        width: wp("22%"),
+        height: wp("22%"),
+        borderRadius: wp("11%"),
+        overflow: "hidden"
+      }}>
+        <Image
+          source={{uri: "data:image/png;base64," + parentProfile.avatar}}
+          style={{width: "100%", height: "100%"}}
+        />
+      </View>
       <View style={styles.header}>
         <View style={{marginTop: hp("5%")}}>
           <Text style={styles.name}>

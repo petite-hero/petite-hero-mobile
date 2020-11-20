@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView, Image } from 'react-native';
-import { RadioButton } from 'react-native-paper';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
@@ -133,18 +132,15 @@ const GenderPickerComponent = ({genders, setGenders}) => {
                     backgroundColor: value.active ? value.color : COLORS.GREY,
                   }}
                 >
-                  <Icon
-                    name={value.name}
-                    type={value.type}
-                    color={COLORS.WHITE}
-                    containerStyle={{
-                      alignSelf: "center",
-                      alignContent: "flex-start"
-                    }}
-                    iconStyle={{
-                      marginLeft: 10
-                    }}
-                  />
+                  <View style={{
+                    alignSelf: "center",
+                    alignContent: "flex-start"
+                  }}>
+                    <Image
+                      source={value.title === "Boy" ? require("../../../../assets/icons/boy.png") : require("../../../../assets/icons/girl.png")}
+                      style={{width: 25, height: 25, marginLeft: 10}}
+                    />
+                  </View>
                   {
                     value.active &&
                     <Text style={{

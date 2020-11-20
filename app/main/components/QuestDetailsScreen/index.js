@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Text, AsyncStorage, Image, ImageBackground } fr
 import { badgesList, COLORS, PORT, questBackgroundList } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
@@ -73,35 +72,33 @@ const QuestDetailsScreen = (props) => {
           source={details.status === "FAILED" ? badgesList[details.reward - 1].imageFail : badgesList[details.reward - 1].image}
           style={{height: "100%", width: "100%"}}
         />
-        <Icon
-            name="keyboard-arrow-left"
-            type="material"
-            color={COLORS.BLACK}
-            containerStyle={{
-              position: "absolute",
-              left: "10%",
-              top: "15%",
-              width: widthPercentageToDP("10%"),
-              height: widthPercentageToDP("10%"),
-              borderRadius: widthPercentageToDP("5%"),
-              backgroundColor: COLORS.WHITE,
-              alignItems: "center",
-              justifyContent: "center",
-              elevation: 10
-            }}
-            onPress={() => {props.navigation.goBack()}}
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            left: "10%",
+            top: "15%",
+            width: widthPercentageToDP("10%"),
+            height: widthPercentageToDP("10%"),
+            borderRadius: widthPercentageToDP("5%"),
+            backgroundColor: COLORS.WHITE,
+            alignItems: "center",
+            justifyContent: "center",
+            elevation: 10
+          }}
+          onPress={() => {props.navigation.goBack()}}
+        >
+          <Image
+            source={require("../../../../assets/icons/back.png")}
+            style={{width: 30, height: 30}}
           />
+        </TouchableOpacity>
       </ImageBackground>
       <View style={{
         marginTop: "10%",
         marginLeft: "10%",
         marginRight: "10%",
       }}>
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}>
+        <View>
           <View style={{
             maxWidth: "50%"
           }}>
@@ -112,26 +109,17 @@ const QuestDetailsScreen = (props) => {
               {details.name}
             </Text>
           </View>
-          {
-            (details.status === "DONE" || details.status === "FAILED") &&
-            <View style={{
-              paddingTop: "2%",
-              paddingLeft: "8%",
-              paddingRight: "8%",
-              paddingBottom: "2%",
-              borderRadius: 10,
-              backgroundColor: details.status === "DONE" && COLORS.GREEN
-                              || details.status === "FAILED" && COLORS.RED
+          <View>
+            <Text style={{
+              fontFamily: "Acumin",
+              color: details.status === "DONE" ? COLORS.GREEN
+                    : details.status === "FAILED" ? COLORS.RED
+                    : COLORS.STRONG_CYAN,
+              textTransform: "capitalize"
             }}>
-              <Text style={{
-                fontFamily: "Acumin",
-                color: COLORS.WHITE,
-                textTransform: "capitalize"
-              }}>
-                {details.status}
-              </Text>
-            </View>
-          }
+              {details.status}
+            </Text>
+          </View>
         </View>
         <Text style={{
           fontFamily: "AcuminBold",

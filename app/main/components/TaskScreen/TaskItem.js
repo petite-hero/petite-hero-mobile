@@ -1,12 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import { View, Text, AsyncStorage, TouchableOpacity, Animated } from 'react-native';
-import { COLORS, PORT, categories } from '../../../const/const';
-import { Icon } from 'react-native-elements';
+import { View, Text, TouchableOpacity, Animated, Image } from 'react-native';
+import { COLORS, categories } from '../../../const/const';
 import styles from './styles/index.css';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { handleError } from '../../../utils/handleError';
-import { fetchWithTimeout } from '../../../utils/fetch';
 
 // represent an item in task list
 const handleShowCategory = (category) => {
@@ -32,22 +29,6 @@ const isLate = (date, time) => {
 
 const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
   const category = handleShowCategory(item.type);
-
-  // const deleteTask = async() => {
-  //   try {
-  //     const ip = await AsyncStorage.getItem('IP');
-  //     const response = await fetchWithTimeout("http://" + ip + PORT + "/task/" + item.taskId, {
-  //       method: "DELETE"
-  //     });
-  //     const result = await response.json();
-  //     if (result.code === 200 && result.msg === "OK") {
-  //     } else {
-  //       handleError(result.msg);
-  //     }
-  //   } catch (error) {
-  //     handleError(error.message);
-  //   }
-  // }
 
   return (
     item.taskId ? (
@@ -83,10 +64,9 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 }}
                 onPress={() => {navigation.navigate("TaskCreating", {taskId: item.taskId, date: new Date(new Date().toDateString()).getTime(), onGoBack: () => {refresh(true)}})}}
               >
-                <Icon
-                  type="material"
-                  name="content-copy"
-                  color={COLORS.WHITE}
+                <Image
+                  source={require("../../../../assets/icons/copy.png")}
+                  style={{width: 40, height: 40}}
                 />
               </TouchableOpacity>
             </Animated.View>
@@ -113,10 +93,9 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 }}
                 onPress={() => {onDelete(item.taskId)}}
               >
-                <Icon
-                  type="material"
-                  name="delete"
-                  color={COLORS.WHITE}
+                <Image
+                  source={require("../../../../assets/icons/delete.png")}
+                  style={{width: 40, height: 40}}
                 />
               </TouchableOpacity>
             </Animated.View>
@@ -134,15 +113,16 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
           borderRadius: wp("6%"),
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: category.color,
+          backgroundColor: item.status === "HANDED" ? COLORS.RED : category.color,
           marginRight: -wp("6%"),
           marginTop: -hp("2%"),
           elevation: 8,
         }}>
-          <Icon
-            name={category.name}
-            type={category.type}
-            color={COLORS.WHITE}
+          <Image
+            source={category.title === "Housework" ? require("../../../../assets/icons/housework.png")
+                  : category.title === "Education" ? require("../../../../assets/icons/education.png")
+                  : require("../../../../assets/icons/skills.png")}
+            style={{width: 40, height: 40}}
           />
         </View>
         <TouchableOpacity 
@@ -150,7 +130,7 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
             { borderColor:
                 item.status === "DONE" ? COLORS.GREEN
               : item.status === "FAILED" ? COLORS.RED
-              : item.status === "HANDED" ? COLORS.PURPLE
+              : item.status === "HANDED" ? COLORS.RED
               : category.title === "Housework" ? COLORS.YELLOW
               : category.title === "Education" ? COLORS.STRONG_CYAN
               : category.title === "Skills" && COLORS.GREEN
@@ -180,8 +160,32 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 {item.name}
               </Text>
             </View>
+            { 
+              item.status === "DONE" ?
+              <Image
+                source={require("../../../../assets/icons/done.png")}
+                style={{width: 35, height: 35}}
+              />
+              :
+              item.status === "FAILED" ?
+              <Image
+                source={require("../../../../assets/icons/failed.png")}
+                style={{width: 35, height: 35}}
+              />
+              :
+              item.status === "HANDED" ?
+              <Image
+                source={require("../../../../assets/icons/submitted.png")}
+                style={{width: 35, height: 35}}
+              />
+              : isLate(date, item.toTime) &&
+              <Image
+                source={require("../../../../assets/icons/late.png")}
+                style={{width: 35, height: 35}}
+              />
+            }
           </View>
-          <View style={{marginLeft: wp("7.5%"), marginTop: 10}}>
+          <View style={{marginLeft: wp("7.5%"), marginBottom: 10}}>
             { item.status === "DONE" || item.status === "FAILED" ?
               <Text style={{
                 color: item.status === "DONE" && COLORS.GREEN
@@ -190,8 +194,15 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
               }}>
                 {item.status}
               </Text>
+            : item.status === "HANDED" ?
+              <Text style={{
+                color: COLORS.RED,
+                textTransform: "capitalize"
+              }}>
+                Submitted
+              </Text>
             :
-            isLate(date, item.toTime) ?
+              isLate(date, item.toTime) ?
               <Text style={{
                 fontSize: 14,
                 fontFamily: "Acumin",
@@ -200,20 +211,12 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 Late
               </Text>
             :
-            item.status === "ASSIGNED" ?
               <Text style={{
                 fontSize: 14,
                 fontFamily: "Acumin",
                 color: COLORS.LIGHT_GREY
               }}>
                 From {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
-              </Text>
-            :
-              <Text style={{
-                color: COLORS.PURPLE,
-                textTransform: "capitalize"
-              }}>
-                {item.status}
               </Text>
             }
           </View>

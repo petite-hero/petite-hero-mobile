@@ -89,6 +89,7 @@ const TrackingStatusScreen = ({route}) => {
       tabBarOptions={{
         labelStyle: {
           fontSize: 10,
+          bottom: 2,
           fontWeight: "bold",
           textTransform: "none"
         },
@@ -351,7 +352,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         {/* choose date for setting button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => setIsPickingDate(true)}>
-            <Image source={require("../../../../assets/icons/Calendar.png")} style={{width: 30, height: 30}} />
+            <Image source={require("../../../../assets/icons/calendar.png")} style={{width: 30, height: 30}} />
           </TouchableOpacity>
         </Animated.View>
 
@@ -366,7 +367,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               animSetZoneBtn.setValue(0);
               setFlied(false);
             }}>
-            <Image source={require("../../../../assets/icons/Tomorrow.png")} style={{width: 30, height: 30}} />
+            <Image source={require("../../../../assets/icons/tomorrow.png")} style={{width: 30, height: 30}} />
             {/* <Image source={require("../../../../assets/icons/Tomorrow.png")} style={{width: 30, height: 30}} tintColor="red"/> */}
           </TouchableOpacity>
         </Animated.View>

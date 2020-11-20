@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { badgesList, COLORS } from '../../../const/const';
 import styles from './styles/index.css';
@@ -48,11 +47,8 @@ const QuestChoosingBadgeScreen = (props) => {
           source={badge.image}
           style={{height: "100%", width: "100%"}}
         />
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          containerStyle={{
+        <TouchableOpacity
+          style={{
             position: "absolute",
             left: "10%",
             top: "15%",
@@ -65,7 +61,12 @@ const QuestChoosingBadgeScreen = (props) => {
             elevation: 10
           }}
           onPress={() => {props.navigation.goBack()}}
-        />
+        >
+          <Image
+            source={require("../../../../assets/icons/back.png")}
+            style={{width: 30, height: 30}}
+          />
+        </TouchableOpacity>
       </View>
       <View style={{
         marginTop: "5%",

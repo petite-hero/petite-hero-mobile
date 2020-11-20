@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Image, FlatList } from 'react-native';
-import { badgesList, COLORS, PORT } from '../../../const/const';
+import React, { useContext, useState } from 'react';
+import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Image} from 'react-native';
+import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
@@ -63,12 +61,12 @@ const QuestCreatingScreen = (props) => {
         marginBottom: "10%",
       }}>
         {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
+        <TouchableOpacity onPress={() => {props.navigation.goBack()}}>
+          <Image
+            source={require("../../../../assets/icons/back.png")}
+            style={{width: 30, height: 30}}
+          />
+        </TouchableOpacity>
         {/* end icon back */}
         {/* title of the screen */}
         <Text style={{
@@ -161,15 +159,15 @@ const QuestCreatingScreen = (props) => {
               None
             </Text>
           }
-          <Icon
-            name="keyboard-arrow-right"
-            type="material"
-            color={COLORS.BLACK}
+          <TouchableOpacity
             onPress={() => {props.navigation.navigate("QuestChoosingBadge", {badge: badge, onGoBack: (badge) => {setBadge(badge)}})}}
-            containerStyle={{
-              marginRight: 10
-            }}
-          />
+            style={{ marginRight: -10 }}
+          >
+            <Image
+              source={require("../../../../assets/icons/forth.png")}
+              style={{width: 30, height: 30}}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       {/* end choose reward */}

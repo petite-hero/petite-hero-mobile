@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from "react-native";
 import { badgesList, COLORS, PORT } from "../../../const/const";
-import { Icon } from "react-native-elements";
 import styles from "./styles/index.css";
 import { Loader } from "../../../utils/loader";
 import { handleError } from "../../../utils/handleError";
@@ -158,18 +157,16 @@ const QuestItem = (item, index, setLoading, navigation) => {
             </View>
             { 
               item.status === "DONE" &&
-              <Icon
-                name="check-circle"
-                type="material"
-                color={COLORS.GREEN}
+              <Image
+                source={require("../../../../assets/icons/done.png")}
+                style={{width: 30, height: 30}}
               />
             }
             {
               item.status === "FAILED" &&
-              <Icon
-                name="cancel"
-                type="material"
-                color={COLORS.RED}
+              <Image
+                source={require("../../../../assets/icons/failed.png")}
+                style={{width: 30, height: 30}}
               />
             }
           </View>
@@ -298,7 +295,10 @@ const QuestScreen = (props) => {
           });
         }}
       >
-        <Icon name="add" type="material" color={COLORS.WHITE} />
+        <Image
+          source={require("../../../../assets/icons/add.png")}
+          style={{width: 30, height: 30}}
+        />
       </TouchableOpacity>
       <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
     </View>
