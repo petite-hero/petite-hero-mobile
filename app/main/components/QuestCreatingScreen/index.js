@@ -73,7 +73,7 @@ const QuestCreatingScreen = (props) => {
           fontSize: 20,
           fontFamily: "AcuminBold"
         }}>
-          Add New Quest
+          {t("quest-add-title")}
         </Text>
         {/* end title of the screen */}
         {/* create this View for center title purpose */}
@@ -94,7 +94,7 @@ const QuestCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Quest Name
+          {t("quest-add-name")}
         </Text>
         <TextInput
           value={name}
@@ -122,7 +122,7 @@ const QuestCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Choose Reward
+          {t("quest-add-choose-reward")}
         </Text>
         <View style={{
           width: "100%",
@@ -156,7 +156,7 @@ const QuestCreatingScreen = (props) => {
               fontSize: 14,
               color: COLORS.STRONG_GREY
             }}>
-              None
+              {t("quest-add-no-reward")}
             </Text>
           }
           <TouchableOpacity
@@ -183,7 +183,7 @@ const QuestCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Quest Details
+          {t("quest-add-details")}
         </Text>
         <TextInput
           value={details}
@@ -199,7 +199,7 @@ const QuestCreatingScreen = (props) => {
       </View>
       {/* end quest details */}
       {/* quest title */}
-      {/* <View style={{
+      <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
         marginTop: 15,
@@ -210,7 +210,7 @@ const QuestCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Quest Title
+          {t("quest-add-smartwatch-title")}
         </Text>
         <TextInput
           value={title}
@@ -223,7 +223,7 @@ const QuestCreatingScreen = (props) => {
             borderColor: COLORS.GREY
           }}
         />
-      </View> */}
+      </View>
       {/* end quest title */}
       {/* button Save */}
       <TouchableOpacity style={{
@@ -243,7 +243,7 @@ const QuestCreatingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Save
+          {t("quest-add-save")}
         </Text>
       </TouchableOpacity>
       {/* end button Save */}

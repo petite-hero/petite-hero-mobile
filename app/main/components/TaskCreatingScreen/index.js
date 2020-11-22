@@ -38,7 +38,7 @@ const getTime = (time) => {
   return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
 }
 
-const CategoryList = ({categories, setCategories}) => {
+const CategoryList = ({t, categories, setCategories}) => {
   const toggleCategory = (categoryIndex) => {
     let tmp = [...categories];
     tmp.map((value, index) => {
@@ -61,7 +61,7 @@ const CategoryList = ({categories, setCategories}) => {
         fontSize: 16,
         marginBottom: 15
       }}>
-        Choose Category
+        {t("task-add-category")}
       </Text>
       <View style={{
         flexDirection: "row"
@@ -124,7 +124,7 @@ const CategoryList = ({categories, setCategories}) => {
   )
 }
 
-const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
+const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime}) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
@@ -154,7 +154,7 @@ const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
             fontFamily: "AcuminBold",
             fontSize: 16,
           }}>
-            Start Time
+            {t("task-add-start-time")}
           </Text>
         </View>
         <View style={{
@@ -164,7 +164,7 @@ const TimeSettings = ({startTime, setStartTime, endTime, setEndTime}) => {
             fontFamily: "AcuminBold",
             fontSize: 16
           }}>
-            End Time
+            {t("task-add-end-time")}
           </Text>
         </View>
       </View>
@@ -267,9 +267,9 @@ const TaskCreatingScreen = (props) => {
   const [isSelectedAll, setSelectAll] = useState(false);
   const [repeatOn, setRepeatOn] = useState(getDateList(props.route.params.date));
   const [categories, setCategories] = useState([
-    {title: "Housework", active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
-    {title: "Education", active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
-    {title: "Skills", active: false, name: "toys", type: "material", color: COLORS.GREEN}
+    {title: t("task-add-category-housework"), active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
+    {title: t("task-add-category-education"), active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
+    {title: t("task-add-category-skills"), active: false, name: "toys", type: "material", color: COLORS.GREEN}
   ]);
   const date = new Date(props.route.params.date).toDateString().split(" ");
 
@@ -390,7 +390,7 @@ const TaskCreatingScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            Add New Task
+            {t("task-add-title")}
           </Text>
           <Text style={{
             fontSize: 20,
@@ -419,7 +419,7 @@ const TaskCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Task Name
+          {t("task-add-name")}
         </Text>
           <TextInput
             value={name}
@@ -436,10 +436,10 @@ const TaskCreatingScreen = (props) => {
       </View>
       {/* end task name */}
       {/* category */}
-      <CategoryList categories={categories} setCategories={setCategories}/>
+      <CategoryList t={t} categories={categories} setCategories={setCategories}/>
       {/* end category */}
       {/* time picker */}
-      <TimeSettings startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime}/>
+      <TimeSettings t={t} startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime}/>
       {/* task details */}
       <View style={{
         flexDirection: "column",
@@ -452,7 +452,7 @@ const TaskCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Task Details
+          {t("task-add-details")}
         </Text>
         <TextInput
           value={details}
@@ -480,7 +480,7 @@ const TaskCreatingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Repeat On
+          {t("task-add-repeat-on")}
         </Text>
         <View style={{
           flexDirection: "row",
@@ -493,7 +493,7 @@ const TaskCreatingScreen = (props) => {
             fontSize: 16,
             color: COLORS.LIGHT_GREY
           }}>
-            All next 7 days
+            {t("task-add-repeat-on-check-all")}
           </Text>
           <Switch
             trackColor={{ false: COLORS.LIGHT_GREY, true: COLORS.LIGHT_CYAN }}
@@ -571,7 +571,7 @@ const TaskCreatingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Save
+          {t("task-add-save")}
         </Text>
       </TouchableOpacity>
       {/* end button Save */}

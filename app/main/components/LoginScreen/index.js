@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import { Icon } from 'react-native-elements';
@@ -16,12 +16,13 @@ const LoginScreen = (props) => {
   // const [username, setUsername] = useState("0987654321");
   // const [password, setPassword] = useState("123456");
 
+  const { t } = useContext(props.route.params.localizationContext);
+  const { signIn } = React.useContext(props.route.params.authContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showInvalidMessage, setShowInvalidMessage] = useState(false);
   const [secureText, setSecureText] = useState(true);
   const [loading, setLoading]   = useState(false);
-  const { signIn } = React.useContext(props.route.params.authContext);
-  const localizationContext = React.useContext(props.route.params.localizationContext);
 
   const registerForPushNotificationsAsync = async() => {
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -53,8 +54,9 @@ const LoginScreen = (props) => {
         await sendToken(username, token);
         await AsyncStorage.setItem("user_id", username);
         signIn({jwt: result.data.jwt});
-      } else {
-        handleError(result.msg);
+      } else if (result.code === 404 && result.msg === "Wrong username or password. Please try again") {
+        setShowInvalidMessage(true);
+        setPassword("");
       }
     } catch (error) {
       handleError(error.message);
@@ -122,17 +124,16 @@ const LoginScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          Sign In
+          {t("signin-title")}
         </Text>
         <View style={{
-          width: "80%",
-          height: 100
+          width: "80%"
         }}>
-          <TextInput 
+          <TextInput
             keyboardType="phone-pad"
             value={username}
             onChangeText={(text) => setUsername(text)}
-            placeholder={"Enter Phone Number"}
+            placeholder={t("signin-username")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
@@ -158,8 +159,8 @@ const LoginScreen = (props) => {
               secureTextEntry={secureText}
               keyboardType="numeric"
               value={password}
-              onChangeText={(text) => setPassword(text)}
-              placeholder={"Enter Password"}
+              onChangeText={(text) => {showInvalidMessage && setShowInvalidMessage(false); setPassword(text)}}
+              placeholder={t("signin-password")}
               placeholderTextColor={COLORS.MEDIUM_CYAN}
               style={{
                 fontSize: 16,
@@ -188,9 +189,22 @@ const LoginScreen = (props) => {
               />
             </TouchableOpacity>
           </View>
+          {showInvalidMessage &&
+            <View style={{
+              marginTop: -10
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontFamily: "Montserrat",
+                color: COLORS.RED
+              }}>
+              {t("signin-invalid-message")}
+              </Text>
+            </View>
+          }
         </View>
         <TouchableOpacity style={{
-          marginTop: "10%"
+          marginTop: 10
         }}
           onPress={() => props.navigation.navigate("ForgotPassword")}
         >
@@ -199,26 +213,27 @@ const LoginScreen = (props) => {
             fontFamily: "Acumin",
             color: COLORS.STRONG_CYAN
           }}>
-            Forgot your password?
+            {t("signin-forgot-password")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={{
           width: "80%",
           height: 50,
           borderRadius: 25,
-          marginTop: "10%",
+          marginTop: "7%",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: COLORS.STRONG_CYAN
+          backgroundColor: username.length < 10 || password.length == 0 ? COLORS.LIGHT_GREY : COLORS.STRONG_CYAN
         }}
           onPress={() => {setLoading(true); login(username, password)}}
+          disabled={username.length < 10 || password.length == 0}
         >
           <Text style={{
             fontSize: 16, 
             fontFamily: "Acumin", 
             color: COLORS.WHITE
           }}>
-            Next
+            {t("signin-next")}
           </Text>
         </TouchableOpacity>
       </View>

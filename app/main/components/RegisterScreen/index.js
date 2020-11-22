@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AsyncStorage } from 'react-native';
-import { COLORS, IP, PORT } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
 import { handleError } from '../../../utils/handleError';
 
 const RegisterScreen = (props) => {
+
+  const { t } = useContext(props.route.params.localizationContext);
   const [phone, setPhone] = useState("");
   const [loading, setLoading]   = useState(false);
 
@@ -78,7 +80,7 @@ const RegisterScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          Sign Up
+          {t("signup-title")}
         </Text>
         <View style={{
           width: "80%",
@@ -88,7 +90,7 @@ const RegisterScreen = (props) => {
             keyboardType="phone-pad"
             value={phone}
             onChangeText={(text) => setPhone(text)}
-            placeholder={"Enter Phone Number"}
+            placeholder={t("signup-username")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
@@ -118,7 +120,7 @@ const RegisterScreen = (props) => {
             fontFamily: "Acumin", 
             color: COLORS.WHITE
           }}>
-            Next
+            {t("signup-next")}
           </Text>
         </TouchableOpacity>
       </View>

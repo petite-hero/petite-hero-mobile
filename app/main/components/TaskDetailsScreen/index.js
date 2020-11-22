@@ -37,17 +37,16 @@ const isLate = (date, submitTime, time) => {
   return submitTime - toTime > 0;
 }
 
-const categories = [
-  {title: "Housework", name: "broom", type: "material-community", color: COLORS.YELLOW},
-  {title: "Education", name: "school", type: "material", color: COLORS.STRONG_CYAN},
-  {title: "Skills", name: "toys", type: "material", color: COLORS.GREEN}
-];
-
 const TaskDetailsScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [details, setDetails] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
+  const categories = [
+    {title: t("task-add-category-housework"), name: "broom", type: "material-community", color: COLORS.YELLOW},
+    {title: t("task-add-category-education"), name: "school", type: "material", color: COLORS.STRONG_CYAN},
+    {title: t("task-add-category-skills"), name: "toys", type: "material", color: COLORS.GREEN}
+  ];
 
   useEffect(() => {
     (async() => {
@@ -131,17 +130,17 @@ const TaskDetailsScreen = (props) => {
         top: widthPercentageToDP("92%"),
         width: "15%",
         height: widthPercentageToDP("15%"),
-        backgroundColor: category.color,
+        backgroundColor: "black",
         borderRadius: widthPercentageToDP("7.5%"),
         alignItems: "center",
         justifyContent: "center",
         elevation: 8
       }}>
-        <Icon
+        {/* <Icon
           name={category.name}
           type={category.type}
           color={COLORS.WHITE}
-        />
+        /> */}
       </View>
       <View style={{
         marginTop: "10%",
@@ -164,9 +163,8 @@ const TaskDetailsScreen = (props) => {
               fontFamily: "Acumin",
               color: details.status === "DONE" && COLORS.GREEN
                   || details.status === "FAILED" && COLORS.RED,
-              textTransform: "capitalize"
             }}>
-              {details.status}
+              { details.status === "DONE" ? t("task-status-done") : t("task-status-failed") }
             </Text>
           : details.submitDate ?
             isLate(details.assignDate, details.submitDate, details.toTime) ?
@@ -174,30 +172,29 @@ const TaskDetailsScreen = (props) => {
               fontFamily: "Acumin",
               color: COLORS.RED
             }}>
-              Submitted late at {handleShowTime(details.submitDate)}
+              { t("task-details-submit-late") } { handleShowTime(details.submitDate) }
             </Text>
             :
             <Text style={{
               fontFamily: "Acumin",
               color: COLORS.GREEN
             }}>
-              Submitted at {handleShowTime(details.submitDate)}
+              { t("task-details-submit") } { handleShowTime(details.submitDate) }
             </Text>
           : isLate(details.assignDate, new Date().getTime(), details.toTime) ?
             <Text style={{
               fontFamily: "Acumin",
               color: COLORS.YELLOW
             }}>
-              Late
+              { t("task-status-late") }
             </Text>
             :
             <Text style={{
               fontFamily: "Acumin",
               color: details.status === "HANDED" && COLORS.BLACK
-                  || details.status === "ASSIGNED" && COLORS.STRONG_CYAN,
-              textTransform: "capitalize"
+                  || details.status === "ASSIGNED" && COLORS.STRONG_CYAN
             }}>
-              {details.status}
+              { t("task-status-assigned") }
             </Text>
         }
         <View style={{
@@ -252,7 +249,7 @@ const TaskDetailsScreen = (props) => {
               color: COLORS.LIGHT_GREY,
               marginLeft: 10
             }}>
-              From {handleShowTime(details.fromTime)} to {handleShowTime(details.toTime)}
+              {t("task-details-from")} {handleShowTime(details.fromTime)} {t("task-details-to")} {handleShowTime(details.toTime)}
             </Text>
           </View>
         </View>
@@ -261,7 +258,7 @@ const TaskDetailsScreen = (props) => {
           fontSize: 16,
           marginTop: "5%"
         }}>
-          Task Details
+          {t("task-details-details")}
         </Text>
         <Text style={{
           fontFamily: "Acumin",
@@ -315,7 +312,7 @@ const TaskDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Fail
+                {t("task-details-fail")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={{
@@ -334,7 +331,7 @@ const TaskDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Done
+                {t("task-details-done")}
               </Text>
             </TouchableOpacity>
           </View>

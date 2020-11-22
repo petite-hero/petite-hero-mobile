@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
@@ -7,7 +7,8 @@ import { Loader } from '../../../utils/loader';
 import styles from './styles/index.css';
 
 const ForgotPasswordScreen = (props) => {
-  const [phone, setPhone] = useState("");
+  const { t }                 = useContext(props.route.params.localizationContext);
+  const [phone, setPhone]     = useState("");
   const [loading, setLoading] = useState(false);
 
   return (
@@ -50,7 +51,7 @@ const ForgotPasswordScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          Forgot Password
+          {t("forgot-title")}
         </Text>
         <View style={{
           width: "80%"
@@ -59,7 +60,7 @@ const ForgotPasswordScreen = (props) => {
             keyboardType="phone-pad"
             value={phone}
             onChangeText={(text) => setPhone(text)}
-            placeholder={"Enter Phone Number"}
+            placeholder={t("forgot-phone")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
@@ -91,7 +92,7 @@ const ForgotPasswordScreen = (props) => {
             fontFamily: "Acumin", 
             color: COLORS.WHITE
           }}>
-            Next
+            {t("forgot-next")}
           </Text>
         </TouchableOpacity>
       </View>

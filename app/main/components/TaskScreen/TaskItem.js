@@ -27,7 +27,7 @@ const isLate = (date, time) => {
   return currentTime - toTime > 0;
 }
 
-const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
+const TaskItem = ({ t, date, item, refresh, navigation, onDelete }) => {
   const category = handleShowCategory(item.type);
 
   return (
@@ -186,20 +186,17 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
             }
           </View>
           <View style={{marginLeft: wp("7.5%"), marginBottom: 10}}>
-            { item.status === "DONE" || item.status === "FAILED" ?
+            { item.status === "DONE" || item.status === "FAILED" || item.status === "HANDED" ?
               <Text style={{
-                color: item.status === "DONE" && COLORS.GREEN
-                    || item.status === "FAILED" && COLORS.RED,
-                textTransform: "capitalize"
+                color: item.status === "DONE"  ? COLORS.GREEN
+                    : item.status === "FAILED" ? COLORS.RED
+                    : COLORS.RED
               }}>
-                {item.status}
-              </Text>
-            : item.status === "HANDED" ?
-              <Text style={{
-                color: COLORS.RED,
-                textTransform: "capitalize"
-              }}>
-                Submitted
+                {
+                  item.status === "DONE" ? t("task-status-done") 
+                : item.status === "HANDED" ? t("task-status-submitted")
+                : t("task-status-failed")
+                }
               </Text>
             :
               isLate(date, item.toTime) ?
@@ -208,7 +205,7 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 fontFamily: "Acumin",
                 color: COLORS.YELLOW
               }}>
-                Late
+                {t("task-status-late")}
               </Text>
             :
               <Text style={{
@@ -216,7 +213,7 @@ const TaskItem = ({ date, item, refresh, navigation, onDelete }) => {
                 fontFamily: "Acumin",
                 color: COLORS.LIGHT_GREY
               }}>
-                From {handleShowTime(item.fromTime)} to {handleShowTime(item.toTime)}
+                {t("task-details-from")} {handleShowTime(item.fromTime)} {t("task-details-to")} {handleShowTime(item.toTime)}
               </Text>
             }
           </View>

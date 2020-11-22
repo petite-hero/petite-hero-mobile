@@ -5,11 +5,11 @@ import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 import TaskItem from './TaskItem';
 
-const TaskBoard = ({ date, list, refresh, navigation, onDelete }) => {
+const TaskBoard = ({ t, date, list, refresh, navigation, onDelete }) => {
   const [tabs, setTabs] = useState(
     [
-      {title: "In Progress", active : true},
-      {title: "Finished", active : false}
+      {title: t("task-status-in-progress"), active : true},
+      {title: t("task-status-finished"), active : false}
     ]
   );
 
@@ -57,7 +57,7 @@ const TaskBoard = ({ date, list, refresh, navigation, onDelete }) => {
             }}>
               <FlatList
                 data={tabs[0].active ? list[0] : list[1]}
-                renderItem={({item, index}) => <TaskItem date={date} item={item} index={index} refresh={refresh} navigation={navigation} onDelete={onDelete}/>}
+                renderItem={({item, index}) => <TaskItem t={t} date={date} item={item} index={index} refresh={refresh} navigation={navigation} onDelete={onDelete}/>}
                 keyExtractor={item => item.taskId + ""}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{

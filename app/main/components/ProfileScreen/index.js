@@ -8,8 +8,10 @@ import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import { Loader } from "../../../utils/loader";
+import { t } from "i18n-js";
+import { ConfirmationModal } from "../../../utils/modal";
 
-const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastItemOfGroup, differentArrow }) => {
+const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup, iconName }) => {
   const [isDropdown, setDropdown] = useState(false);
   const animDropdown = useRef(new Animated.Value(0)).current;
   const animOpacity = useRef(new Animated.Value(0)).current;
@@ -61,12 +63,7 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
         }}
       >
         <Image
-          source={title === "Personal Profile" ? require("../../../../assets/icons/personal-profile.png")
-                : title === "Collaborators" ? require("../../../../assets/icons/collaborator.png")
-                : title === "Children" ? require("../../../../assets/icons/child.png")
-                : title === "Subscription" ? require("../../../../assets/icons/subscription.png")
-                : title === "Setting" ? require("../../../../assets/icons/setting.png")
-                : require("../../../../assets/icons/log-out.png")}
+          source={image}
           style={{
             width: hp("5%"),
             height: hp("5%"),
@@ -91,7 +88,7 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
               style={{width: 30, height: 30}}
             />
           )}
-          {differentArrow && (
+          {iconName && (
             <Image
             source={require("../../../../assets/icons/forth.png")}
             style={{width: 30, height: 30}}
@@ -172,13 +169,17 @@ const SettingItem = ({ title, icon, iconColor, action, subItems, style, isLastIt
 };
 
 const ProfileScreen = (props) => {
-  const { t } = useContext(props.route.params.localizationContext);
+  const { t, locale, setLocale } = useContext(props.route.params.localizationContext);
   const { signOut } = React.useContext(props.route.params.authContext);
   const [loading, setLoading] = useState(false);
   const [parentProfile, setParentProfile] = React.useState("");
-  const [listSubscriptionType, setListSubscriptionType] = React.useState("");
   const [listChildren, setListChildren] = React.useState("");
   const [listCollaborator, setListCollaborator] = React.useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const hideModal = () => {
+    setShowModal(false);
+  }
 
   const getListChildren = async () => {
     try {
@@ -324,20 +325,19 @@ const ProfileScreen = (props) => {
         }}>
           <SettingItem
             key="1"
-            title="Personal Profile"
-            icon="face"
-            iconColor={COLORS.STRONG_CYAN}
+            title={t("profile-personal-profile-title")}
+            image={require("../../../../assets/icons/personal-profile.png")}
             subItems={[
               {
-                title: "Your Name",
-                text: parentProfile.name ? parentProfile.name : "Add name to your profile"
+                title: t("profile-personal-profile-name"),
+                text: parentProfile.name
               },
               {
-                title: "Phone Number",
+                title: t("profile-personal-profile-phone"),
                 text: parentProfile.phoneNumber
               },
               {
-                title: "Email",
+                title: t("profile-personal-profile-email"),
                 text: parentProfile.email ? parentProfile.email : "Add email to your profile",
                 action: () =>
                   props.navigation.navigate("ProfileChanging", {
@@ -359,13 +359,12 @@ const ProfileScreen = (props) => {
         }}>
           <SettingItem
             key="2"
-            title="Collaborators"
-            icon="group-add"
-            iconColor={COLORS.YELLOW}
+            title={t("profile-collaborators-title")}
+            image={require("../../../../assets/icons/collaborator.png")}
             subItems={[
               ...listCollaborator,
               {
-                title: "Add collaborator",
+                title: t("profile-collaborators-add"),
                 action: () => {
                   props.navigation.navigate("CollaboratorAdding")
                 },
@@ -379,13 +378,12 @@ const ProfileScreen = (props) => {
           />
           <SettingItem
             key="3"
-            title="Children"
-            icon="child-care"
-            iconColor={COLORS.YELLOW}
+            title={t("profile-children-title")}
+            image={require("../../../../assets/icons/child.png")}
             subItems={[
               ...listChildren,
               {
-                title: "Add child",
+                title: t("profile-children-add"),
                 action: () => {
                   props.navigation.navigate("ChildAdding", {
                     goBack: () => setLoading(true)
@@ -410,26 +408,24 @@ const ProfileScreen = (props) => {
         }}>
           <SettingItem
             key="4"
-            title="Subscription"
-            icon="payment"
-            iconColor={COLORS.GREEN}
+            title={t("profile-subscription-title")}
+            image={require("../../../../assets/icons/subscription.png")}
             style={{
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0
             }}
-            differentArrow={{name: "keyboard-arrow-right"}}
+            iconName={{name: "keyboard-arrow-right"}}
             action={() => {
 
             }}
           />
           <SettingItem
             key="5"
-            title="Setting"
-            icon="settings"
-            iconColor={COLORS.STRONG_GREY}
+            title={t("profile-setting-title")}
+            image={require("../../../../assets/icons/setting.png")}
             subItems={[
               {
-                title: "Change Password",
+                title: t("profile-setting-password"),
                 action: () =>
                   props.navigation.navigate("ProfilePasswordChanging", {
                     screenName: "Change Password",
@@ -437,6 +433,14 @@ const ProfileScreen = (props) => {
                 }),
                 iconName: "keyboard-arrow-right"
               },
+              {
+                title: t("profile-setting-language"),
+                action: () => {
+                  // locale === "en" ? setLocale("vi") : setLocale("en");
+                  setShowModal(true);
+                },
+                iconName: "keyboard-arrow-right"
+              }
             ]}
             style={{
               borderTopLeftRadius: 0,
@@ -454,19 +458,28 @@ const ProfileScreen = (props) => {
         }}>
           <SettingItem
             key="6"
-            title="Logout"
-            icon="exit-to-app"
-            iconColor={COLORS.RED}
-            action={() => {
-              (async() => {
-                await AsyncStorage.removeItem("child_id");
-                await AsyncStorage.removeItem("user_id");
-                signOut();
-              })()
+            title={t("profile-logout")}
+            image={require("../../../../assets/icons/log-out.png")}
+            action={async() => {
+              await AsyncStorage.removeItem("child_id");
+              await AsyncStorage.removeItem("user_id");
+              signOut();
             }}
           />
         </View>
       </ScrollView>
+      <ConfirmationModal 
+        visible={showModal} 
+        message={t("profile-setting-language-info")}
+        option="info"
+        onConfirm={async() => {
+          hideModal();
+          locale === "en" ? setLocale("vi") : setLocale("en");
+          await AsyncStorage.removeItem("child_id");
+          await AsyncStorage.removeItem("user_id");
+          signOut();
+        }}
+      />
     </View>
   );
 };

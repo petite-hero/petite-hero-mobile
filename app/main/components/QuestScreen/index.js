@@ -24,19 +24,10 @@ const categories = [
   { title: "Skills", name: "toys", type: "material", color: COLORS.GREEN },
 ];
 
-const handleShowTime = (time) => {
-  const tmp = time ? time.split(":") : "00:00:00".split(":");
-  return tmp[0] + ":" + tmp[1];
-};
-
-const handleShowCategory = (category) => {
-  return categories.find((item) => item.title === category);
-};
-
-const QuestBoard = ({ list, setLoading, navigation }) => {
+const QuestBoard = ({ t, list, setLoading, navigation }) => {
   const [tabs, setTabs] = useState([
-    { title: "In Progress", active: true },
-    { title: "Finished", active: false },
+    { title: t("quest-status-in-progress"), active: true },
+    { title: t("quest-status-finished"), active: false },
   ]);
 
   const toggleTab = (tabIndex) => {
@@ -276,11 +267,12 @@ const QuestScreen = (props) => {
       <Loader loading={loading} />
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Quests</Text>
+          <Text style={styles.title}>{t("quest-title")}</Text>
         </View>
       </View>
       <View style={styles.circle}/>
       <QuestBoard
+        t={t}
         list={list}
         setLoading={setLoading}
         navigation={props.navigation}

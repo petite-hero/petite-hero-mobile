@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { badgesList, COLORS } from '../../../const/const';
@@ -32,6 +32,7 @@ const BadgeItem = (item, index, badge, setBadge) => {
 };
 
 const QuestChoosingBadgeScreen = (props) => {
+  const { t } = useContext(props.route.params.localizationContext);
   const [badge, setBadge] = useState(props.route.params.badge);
 
   return (
@@ -78,7 +79,7 @@ const QuestChoosingBadgeScreen = (props) => {
           fontSize: 20,
           marginTop: "5%"
         }}>
-          Choose Reward Icon
+          {t("quest-add-choose-reward-icon")}
         </Text>
       </View>
       <View style={{

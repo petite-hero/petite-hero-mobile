@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
@@ -10,9 +10,10 @@ import styles from './styles/index.css';
 const CELLS = 6;
 
 const ForgotPasswordCodeEnteringScreen = (props) => {
-  const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const ref = useBlurOnFulfill({value, cellCount: CELLS});
+  const { t }                              = useContext(props.route.params.localizationContext);
+  const [value, setValue]                  = useState("");
+  const [loading, setLoading]              = useState(false);
+  const ref                                = useBlurOnFulfill({value, cellCount: CELLS});
   const [property, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
@@ -58,7 +59,7 @@ const ForgotPasswordCodeEnteringScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          Enter Received Code
+          {t("forgot-enter-otp-title")}
         </Text>
         <View style={{
           width: "80%"
@@ -99,7 +100,7 @@ const ForgotPasswordCodeEnteringScreen = (props) => {
             fontFamily: "Acumin", 
             color: COLORS.WHITE
           }}>
-            Next
+            {t("forgot-enter-otp-next")}
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, AsyncStorage, ImageBackground } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { COLORS } from '../../../const/const';
@@ -63,8 +63,9 @@ const WelcomeScreen = (props) => {
   );
 };
 
-const Welcome = ({ navigation }) => {
+const Welcome = ({ navigation, route }) => {
 
+  const { t } = useContext(route.params.localizationContext);
   const [isScanning, setIsScanning] = React.useState(false);
 
   return (
@@ -74,10 +75,10 @@ const Welcome = ({ navigation }) => {
     >
       <Image style={styles.circle}/>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Register")} onLongPress={() => setIsScanning(true)}>
-        <Text style={styles.textButton}>Create an Account</Text>
+        <Text style={styles.textButton}>{t("welcome-signup")}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, {marginTop: "7%"}]} onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.textButton}>Sign in</Text>
+        <Text style={styles.textButton}>{t("welcome-signin")}</Text>
       </TouchableOpacity>
       {isScanning ?
         <BarCodeScanner
@@ -90,7 +91,6 @@ const Welcome = ({ navigation }) => {
           style={{position: "absolute", top: 0, bottom: 0, left: 0, right: 0}}
         />
       : null}
-
     </ImageBackground>
   )
 }

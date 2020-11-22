@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
+import { t } from "i18n-js";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -82,7 +83,7 @@ const ImagePickerComponent = (props) => {
   )
 };
 
-const GenderPickerComponent = ({genders, setGenders}) => {
+const GenderPickerComponent = ({t, genders, setGenders}) => {
   const toggleGender = (genderIndex) => {
     let tmp = [...genders];
     tmp.map((value, index) => {
@@ -105,7 +106,7 @@ const GenderPickerComponent = ({genders, setGenders}) => {
         fontSize: 16,
         marginBottom: 15
       }}>
-        Gender
+        {t("child-add-gender")}
       </Text>
       <View style={{
         flexDirection: "row"
@@ -152,7 +153,7 @@ const GenderPickerComponent = ({genders, setGenders}) => {
                       marginLeft: 10,
                       marginRight: 10
                     }}>
-                      {value.title}
+                      {value.title === "Boy" ? t("child-add-gender-boy") : t("child-add-gender-girl")}
                     </Text>
                   }
                 </TouchableOpacity>
@@ -166,6 +167,7 @@ const GenderPickerComponent = ({genders, setGenders}) => {
 }
 
 const ChildAddingScreen = (props) => {
+  const { t }                     = useContext(props.route.params.localizationContext);
   const [name, setName]           = useState("");
   const [nickName, setNickName]   = useState("");
   const [language, setLanguage]   = useState("English");
@@ -241,7 +243,7 @@ const ChildAddingScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            Add New Child
+            {t("child-add-title")}
           </Text>
         </View>
         {/* end title of the screen */}
@@ -266,7 +268,7 @@ const ChildAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Your Child's Name
+          {t("child-add-name")}
         </Text>
           <TextInput
             value={name}
@@ -295,7 +297,7 @@ const ChildAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Nickname (Optional)
+          {t("child-add-nickname")}
         </Text>
           <TextInput
             value={nickName}
@@ -324,7 +326,7 @@ const ChildAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Year of birth
+          {t("child-add-yob")}
         </Text>
           <TextInput
             value={yob}
@@ -341,7 +343,7 @@ const ChildAddingScreen = (props) => {
       </View>
       {/* end child year of birth */}
       {/* child gender */}
-      <GenderPickerComponent genders={genders} setGenders={setGenders}/>
+      <GenderPickerComponent t={t} genders={genders} setGenders={setGenders}/>
       {/* end child gender */}
       {/* button Save */}
       <TouchableOpacity style={{
@@ -361,7 +363,7 @@ const ChildAddingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Next
+          {t("child-add-next")}
         </Text>
       </TouchableOpacity>
     </ScrollView>

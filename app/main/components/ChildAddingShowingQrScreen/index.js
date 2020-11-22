@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Loader } from '../../../utils/loader'
 import QRCode from 'react-native-qrcode-svg';
@@ -27,6 +27,7 @@ Notifications.setNotificationHandler({
 });
 
 const ChildAddingShowingQrScreen = (props) => {
+  const { t }                 = useContext(props.route.params.localizationContext);
   const [loading, setLoading] = useState(false);
   const logo = badgesList[0].image;
 
@@ -82,7 +83,7 @@ const ChildAddingShowingQrScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            Add New Child
+            {t("child-add-title")}
           </Text>
         </View>
         {/* end title of the screen */}
@@ -105,7 +106,7 @@ const ChildAddingShowingQrScreen = (props) => {
           textAlign: "center",
           color: COLORS.STRONG_GREY
         }}>
-          Scan this QR code using smartwatch to connect
+          {t("child-add-qr-scan")}
         </Text>
       </View>
       <View style={{
@@ -139,7 +140,7 @@ const ChildAddingShowingQrScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Later
+          {t("child-add-qr-scan-later")}
         </Text>
       </TouchableOpacity>
     </View>

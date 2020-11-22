@@ -268,7 +268,7 @@ const TaskScreen = (props) => {
         <View style={styles.titleContainer}>
           {/* TITLE */}
           <Text style={styles.title}>
-            Tasks
+            {t("task-title")}
           </Text>
           <View style={styles.bigCircle}/>
           <View style={styles.smallCircle}/>
@@ -348,7 +348,8 @@ const TaskScreen = (props) => {
       {/* END HEADER */}
 
       {/* TASK BOARD */}
-      <TaskBoard 
+      <TaskBoard
+        t={t}
         date={date}
         list={list}
         refresh={setLoading} 

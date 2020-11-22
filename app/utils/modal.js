@@ -7,7 +7,7 @@ export const ConfirmationModal = (props) => {
   return (
     <Modal
       transparent={true}
-      visible={props.visible ? true : false}
+      visible={props.visible}
       animationType="fade"
       onRequestClose={() => {props.onClose()}}
     >
@@ -19,12 +19,26 @@ export const ConfirmationModal = (props) => {
         </TouchableOpacity>
       </TouchableOpacity>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
-          <Text style={styles.buttonText}>Yes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPress={() => {props.onClose()}}>
-          <Text style={styles.buttonText}>No</Text>
-        </TouchableOpacity>
+        {props.option === "info" ?
+        <View style={{
+          width: "90%",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
+            <Text style={styles.buttonText}>OK</Text>
+          </TouchableOpacity>
+        </View>
+        :
+        <>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
+            <Text style={styles.buttonText}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPress={() => {props.onClose()}}>
+            <Text style={styles.buttonText}>No</Text>
+          </TouchableOpacity>
+        </>
+        }
       </View>
     </Modal>
   )

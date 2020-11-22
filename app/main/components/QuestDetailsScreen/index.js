@@ -114,10 +114,13 @@ const QuestDetailsScreen = (props) => {
               fontFamily: "Acumin",
               color: details.status === "DONE" ? COLORS.GREEN
                     : details.status === "FAILED" ? COLORS.RED
-                    : COLORS.STRONG_CYAN,
-              textTransform: "capitalize"
+                    : COLORS.STRONG_CYAN
             }}>
-              {details.status}
+            {   
+              details.status === "ASSIGNED" ? t("quest-status-assigned")
+            : details.status === "DONE" ? t("quest-status-done")
+            : t("quest-status-failed")
+            }
             </Text>
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React, { Children, useContext } from 'react';
 import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
@@ -16,13 +16,14 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 import LocationStatus from './location-status';
+import { t } from 'i18n-js';
 
 
 
 {/* ===================== SCREEN NAVIGATION SECTION ===================== */}
 const Tab = createMaterialTopTabNavigator();
 const TrackingStatusScreen = ({route}) => {
-
+  const { t } = useContext(route.params.localizationContext);
   const [loading, setLoading]   = React.useState(true);
   const [children, setChildren] = React.useState([]);
 
@@ -98,7 +99,7 @@ const TrackingStatusScreen = ({route}) => {
         indicatorStyle: styles.indicator,
         showIcon: true,
         activeTintColor: COLORS.STRONG_CYAN,
-        inactiveTintColor: COLORS.GREY,
+        inactiveTintColor: COLORS.GREY
       }}
       tabBarPosition="bottom"
       backBehavior="initialRoute"
@@ -106,6 +107,9 @@ const TrackingStatusScreen = ({route}) => {
       <Tab.Screen 
         name="Tracking" 
         component={TrackingStatusScreenContent}
+        options={{
+          tabBarLabel: t("navigation-tracking")
+        }}
         initialParams={{ 
           authContext: route.params.authContext, 
           localizationContext: route.params.localizationContext,
@@ -116,13 +120,20 @@ const TrackingStatusScreen = ({route}) => {
       <Tab.Screen 
         name="Tasks" 
         component={TaskScreen}
+        options={{
+          tabBarLabel: t("navigation-task")
+        }}
         initialParams={{ 
           authContext: route.params.authContext, 
           localizationContext: route.params.localizationContext
         }}
       />
-      <Tab.Screen name="Quests" 
+      <Tab.Screen 
+        name="Quests" 
         component={QuestScreen}
+        options={{
+          tabBarLabel: t("navigation-quest")
+        }}
         initialParams={{ 
           authContext: route.params.authContext, 
           localizationContext: route.params.localizationContext
@@ -130,6 +141,9 @@ const TrackingStatusScreen = ({route}) => {
       />
       <Tab.Screen name="Profile" 
         component={ProfileScreen}
+        options={{
+          tabBarLabel: t("navigation-profile")
+        }}
         initialParams={{ 
           authContext: route.params.authContext, 
           localizationContext: route.params.localizationContext

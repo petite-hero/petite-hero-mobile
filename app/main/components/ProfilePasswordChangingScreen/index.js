@@ -129,7 +129,7 @@ const ProfilePasswordChangingScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            {props.route.params.screenName}
+            {t("profile-setting-password")}
           </Text>
         </View>
         {/* end title of the screen */}
@@ -138,13 +138,13 @@ const ProfilePasswordChangingScreen = (props) => {
         {/* end View */}
       </View>
       {/* current password field */}
-      <PasswordField title="Your Current Password" value={currentPassword} setValue={setCurrentPassword} secured={currentPasswordSecured} setSecured={setCurrentPasswordSecured}/>
+      <PasswordField title={t("profile-current-password")} value={currentPassword} setValue={setCurrentPassword} secured={currentPasswordSecured} setSecured={setCurrentPasswordSecured}/>
       {/* end current password */}
       {/* new password field */}
-      <PasswordField title="Your New Password" value={newPassword} setValue={setNewPassword} secured={newPasswordSecured} setSecured={setNewPasswordSecured}/>
+      <PasswordField title={t("profile-new-password")} value={newPassword} setValue={setNewPassword} secured={newPasswordSecured} setSecured={setNewPasswordSecured}/>
       {/* end new password */}
       {/* confirm password field */}
-      <PasswordField title="Confirm New Password" value={confirmPassword} setValue={setConfirmPassword} secured={confirmPasswordSecured} setSecured={setConfirmPasswordSecured}/>
+      <PasswordField title={t("profile-confirm-password")} value={confirmPassword} setValue={setConfirmPassword} secured={confirmPasswordSecured} setSecured={setConfirmPasswordSecured}/>
       {/* end confirm password */}
       {/* button Save */}
       <TouchableOpacity style={{
@@ -164,7 +164,7 @@ const ProfilePasswordChangingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Save
+          {t("profile-setting-password-save")}
         </Text>
       </TouchableOpacity>
     </View>

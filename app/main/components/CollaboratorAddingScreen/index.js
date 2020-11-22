@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
@@ -9,6 +9,7 @@ import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 
 const CollaboratorAddingScreen = (props) => {
+  const { t }                 = useContext(props.route.params.localizationContext);
   const [name, setName]       = useState("");
   const [phone, setPhone]     = useState("");
   const [loading, setLoading] = useState(false);
@@ -77,7 +78,7 @@ const CollaboratorAddingScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            Add New Collaborator
+            {t("collaborator-add-title")}
           </Text>
         </View>
         {/* end title of the screen */}
@@ -99,7 +100,7 @@ const CollaboratorAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Collaborator's Phone Number
+          {t("collaborator-add-phone")}
         </Text>
         <TextInput
           value={phone}
@@ -128,7 +129,7 @@ const CollaboratorAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Collaborator's Name
+          {t("collaborator-add-name")}
         </Text>
         <TextInput
           value={name}
@@ -162,7 +163,7 @@ const CollaboratorAddingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Next
+          {t("collaborator-add-next")}
         </Text>
       </TouchableOpacity>
     </ScrollView>

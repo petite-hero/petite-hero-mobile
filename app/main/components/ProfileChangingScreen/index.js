@@ -74,7 +74,7 @@ const ProfileChangingScreen = (props) => {
             fontSize: 20,
             fontFamily: "AcuminBold"
           }}>
-            {props.route.params.screenName}
+            {t("profile-personal-profile-change")} {props.route.params.screenName}
           </Text>
         </View>
         {/* end title of the screen */}
@@ -95,7 +95,7 @@ const ProfileChangingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          Change {props.route.params.screenName}
+          {props.route.params.screenName}
         </Text>
           <TextInput
             value={value[Object.keys(value)[0]]}
@@ -129,7 +129,7 @@ const ProfileChangingScreen = (props) => {
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          Save
+          {t("profile-personal-profile-save")}
         </Text>
       </TouchableOpacity>
     </View>
