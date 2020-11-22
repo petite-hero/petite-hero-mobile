@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
     width: wp('55%'),
     height: hp('7%'),
     borderRadius: hp('3.5%'),
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: COLORS.STRONG_CYAN,
     justifyContent: "center",
     alignItems: "center",
   },
   textButton : {
     fontSize: 16,
     fontFamily: "Acumin",
-    color: COLORS.STRONG_CYAN
+    color: COLORS.WHITE
   },
   title : {
     fontSize: 52,

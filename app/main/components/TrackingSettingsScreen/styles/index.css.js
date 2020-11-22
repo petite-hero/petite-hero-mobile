@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     left: wp('5%'),
     right: wp('5%'),
     // height: hp('45%'),
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: hp('4%'),  // same as nav bar
     backgroundColor: "white"
   },
@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 28,
     borderColor: "rgb(210, 210, 210)",
-    shadowOpacity: 0.2,
     elevation: 5
   },
   searchBackBtn: {
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
   },
   locationContainer: {
     marginTop: 10,
-    marginLeft: 20
+    marginLeft: 10
   },
   locationName: {
     fontSize: 19,
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
   typeIcon: {
     position: "absolute",
     left: 0,
-    top: 3,
+    top: 5,
     bottom: 0,
     height: 40,
     width: 40,
@@ -257,17 +256,18 @@ const styles = StyleSheet.create({
   },
 
   // loc setting panel
+  txtInputNameContainer: {
+    marginTop: 40,
+    borderRadius: 24,
+  },
   txtInputLocName: {
     paddingLeft: 14,
     paddingTop: 6,
     paddingBottom: 6,
-    marginTop: 40,
     borderRadius: 24,
     backgroundColor: "white",
     fontFamily: "Acumin",
-    fontSize: 16,
-    shadowOpacity: 0.2,
-    elevation: 5
+    fontSize: 16
   },
   txtTypeContainer: {
     flexDirection: "row",
@@ -276,32 +276,41 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   txtRepeatDayContainer: {
-    flexDirection: "row",
-    paddingTop: 5,
-    paddingBottom: 5,
+    width: 65,
+    paddingVertical: 7,
+    marginLeft: 4,
+    marginRight: 4,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: COLORS.MEDIUM_GREY,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   saveLocBtnsContainer: {
     flexDirection: "row",
     position: "absolute",
     top: "auto",
-    bottom: hp('45%')+15-wp("13.33%")/2,
+    bottom: hp('38%')+15-wp("13.33%")/2,
     left: "auto",
     right: wp('5%')+20,
     height: 44,
     backgroundColor: 'rgba(0, 0, 0, 0)',
     justifyContent: "center"
   },
+  btnSaveLocContainer: {
+    marginLeft: 7,
+    marginRight: 7,
+    width: wp("13.33%"),
+    height: wp("13.33%"),
+    borderRadius: wp("13.33%"),
+  },
   btnSaveLoc : {
     width: wp("13.33%"),
     height: wp("13.33%"),
     borderRadius: wp("13.33%"),
-    marginLeft: 7,
-    marginRight: 7,
     justifyContent: "center",
-    alignItems: "center",
-    shadowOpacity: 0.2,
-    elevation: 5
+    alignItems: "center"
   },
   btnSaveLocCheck: {
     backgroundColor: COLORS.STRONG_CYAN,
@@ -311,7 +320,6 @@ const styles = StyleSheet.create({
   },
   btnSaveLocDelete: {
     backgroundColor: 'red',
-    marginRight: wp("90%") - 20*2-44*3-7*5
   }
 
 });

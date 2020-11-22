@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
@@ -9,6 +9,7 @@ import styles from './styles/index.css';
 const TrackingSettingControlPanel = (props) => {
 
   const TYPE_ICON = {"Home": {name: "home", color: "#fbc424"}, "Education" : {name: "school", color: "#00ade8"}};
+  const ICONS = {"Home": require("../../../../assets/icons/home.png"), "Education": require("../../../../assets/icons/school.png"), "Others": require("../../../../assets/icons/others.png")};
 
   return (
 
@@ -44,10 +45,14 @@ const TrackingSettingControlPanel = (props) => {
             return (
             <TouchableOpacity key={index} style={styles.locationContainer} onPress={() => props.onLocationItemPress(loc, index)}>
               {loc.type === "Home" || loc.type === "Education" ?
-                <View style={[styles.typeIcon, {backgroundColor: TYPE_ICON[loc.type].color}]}>
-                  <Icon name={TYPE_ICON[loc.type].name} type='material' color="white"/>
+                <View style={styles.typeIcon}>
+                  <Image source={ICONS[loc.type]} style={{width: 40, height: 40}} />
                 </View>
-              : null}
+                :
+                <View style={styles.typeIcon}>
+                  <Image source={ICONS["Others"]} style={{width: 40, height: 40}} />
+                </View>
+              }
               <Text style={styles.locationName}>{loc.name} </Text>
               <Text style={styles.locationTime}>{loc.type === "Home" ? "All day" : "From "+loc.fromTime.slice(0, -3)+" to "+loc.toTime.slice(0, -3)}</Text>
               <View style={styles.rightIcon}><Icon name='keyboard-arrow-right' type='material'/></View>

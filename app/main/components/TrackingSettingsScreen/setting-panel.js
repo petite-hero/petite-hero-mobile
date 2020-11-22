@@ -23,11 +23,13 @@ const TrackingSettingLocation = (props) => {
     <Animated.View style={[styles.locSettingPanel, {opacity: props.animOpac, left: props.animLeft}]}>
 
       {/* field: name */}
-      <TextInput
-        onChangeText={props.onNameChange}
-        defaultValue={props.name}
-        style={styles.txtInputLocName}
-      />
+      <Animated.View style={[styles.txtInputNameContainer, {elevation: props.animElevation}]}>
+        <TextInput
+          onChangeText={props.onNameChange}
+          defaultValue={props.name}
+          style={styles.txtInputLocName}
+        />
+      </Animated.View>
 
       {/* field: type */}
       <View style={{flexDirection: "row", marginTop: 15}}>

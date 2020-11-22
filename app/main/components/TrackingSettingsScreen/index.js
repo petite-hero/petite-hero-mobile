@@ -60,7 +60,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const animSettingLocProps = React.useRef(new Animated.Value(0)).current;
   const animSettingLocPropsLeft = animSettingLocProps.interpolate({inputRange: [0, 1], outputRange: [wp("100%"), 0]});
 
+  // const animSettingLocOpacMain = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [1, 0]});
   const [animSettingLocHeight, setAnimSettingLocHeight] = React.useState(null);
+  const animSettingLocElevation = animSettingLoc.interpolate({inputRange: [0, 0.9, 1], outputRange: [0, 0, 5]});
 
   {/* ===================== END OF VARIABLE SECTION ===================== */}
 
@@ -139,7 +141,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     (async () => {
       setLoading(true);
       await fetchLocList();
-      setAnimSettingLocHeight(animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [Util.calLocSettingContainerHeight(locList.length), hp('45%')]}));
+      setAnimSettingLocHeight(animSettingLoc.interpolate(
+        {inputRange: [0, 1], outputRange: [Util.calLocSettingContainerHeight(locList.length), hp('38%')]}
+      ));
       setLoading(false);
     })();
   }, []);
@@ -227,7 +231,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             setLIndex(index);
             setStatus("SETTING_LOC");
             animSettingLoc.setValue(0);
-            Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION*10, easing: Easing.linear, useNativeDriver: false}).start();
+            Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION, easing: Easing.ease, useNativeDriver: false}).start();
           }}
 
         />
@@ -237,6 +241,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
           animOpac={animSettingLoc}
           animLeft={animSettingLocLeft}
+          animElevation={animSettingLocElevation}
 
           settingLoc={settingLocDetail}
           name={lName}
@@ -305,6 +310,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             newLRepeat.map((day, index) => {newLRepeat[index] = !lRepeatAll});
             setLRepeatTmp(newLRepeat);
             setLRepeatAll(!lRepeatAll);
+            console.log("test");
           }}
 
         />
@@ -315,7 +321,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       <TrackingSettingButtons
 
         status={status}
+        substatus={substatus}
         animOpac={animSettingLoc}
+        animElevation={animSettingLocElevation}
 
         onPinningCancel={() => {
           setStatus("VIEWING");

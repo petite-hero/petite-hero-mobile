@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
 const TrackingSettingButtons = (props) => {
@@ -25,17 +26,26 @@ const TrackingSettingButtons = (props) => {
     // DELETE SAVE CANCEL BUTTONS
     props.status === "SETTING_LOC_NEW" || props.status === "SETTING_LOC" ?
       <Animated.View key={1} style={[styles.saveLocBtnsContainer, {opacity: props.animOpac}]}>
-        {props.status === "SETTING_LOC" ?
-          <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocDelete]} onPress={props.onSettingDelete}>
-            <Icon name='delete' type='material' color="white"/>
-          </TouchableOpacity>
+        {/* delete button */}
+        {props.status === "SETTING_LOC" && props.substatus === "" ?
+          <Animated.View style={[styles.btnSaveLocContainer, {marginRight: wp("90%") - 20*2-44*3-7*5, elevation: props.animElevation}]}>
+            <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocDelete]} onPress={props.onSettingDelete}>
+              <Icon name='delete' type='material' color="white"/>
+            </TouchableOpacity>
+          </Animated.View>
         : null}
-        <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCancel]} onPress={props.onSettingCancel}>
-          <Icon name='clear' type='material' color={COLORS.STRONG_CYAN}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCheck]} onPress={props.onSettingSave}>
-          <Icon name='check' type='material' color='white'/>
-        </TouchableOpacity>
+        {/* cancel button */}
+        <Animated.View style={[styles.btnSaveLocContainer, {elevation: props.animElevation}]}>
+          <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCancel]} onPress={props.onSettingCancel}>
+            <Icon name='clear' type='material' color={COLORS.STRONG_CYAN}/>
+          </TouchableOpacity>
+        </Animated.View>
+        {/* check button */}
+        <Animated.View style={[styles.btnSaveLocContainer, {elevation: props.animElevation}]}>
+          <TouchableOpacity style={[styles.btnSaveLoc, styles.btnSaveLocCheck]} onPress={props.onSettingSave}>
+            <Icon name='check' type='material' color='white'/>
+          </TouchableOpacity>
+        </Animated.View>
       </Animated.View>
     : null
 

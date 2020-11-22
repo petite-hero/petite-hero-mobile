@@ -199,7 +199,7 @@ const QuestCreatingScreen = (props) => {
       </View>
       {/* end quest details */}
       {/* quest title */}
-      <View style={{
+      {/* <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
         marginTop: 15,
@@ -223,7 +223,7 @@ const QuestCreatingScreen = (props) => {
             borderColor: COLORS.GREY
           }}
         />
-      </View>
+      </View> */}
       {/* end quest title */}
       {/* button Save */}
       <TouchableOpacity style={{

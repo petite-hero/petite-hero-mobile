@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingTop: hp("20%"),
+    paddingTop: hp("18%"),
     paddingLeft: wp("5%"),
     paddingRight: wp("5%"),
     borderWidth: 1,

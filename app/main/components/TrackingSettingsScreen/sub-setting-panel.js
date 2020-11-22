@@ -1,27 +1,31 @@
 import React from 'react';
-import { Text, TouchableOpacity, Animated } from 'react-native';
+import { Text, TouchableOpacity, Animated, Image, View, Switch } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
 
+import Util from './util';
+
 
 const TrackingSettingLocationSubProps = (props) => {
   
-  const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const ICONS = [require("../../../../assets/icons/home.png"), require("../../../../assets/icons/school.png")];
+  const TYPE_COLORS = [COLORS.YELLOW, COLORS.STRONG_CYAN];
 
   return ([
 
     // SETTING LOCATION TYPE
     props.substatus === "TYPE" ?
       <Animated.View key={0} style={[styles.locSettingPanel, {left: props.animLeft}]}>
-        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>Marked as</Text>
+        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", fontSize: 15}}>Mark as</Text>
         {["Home", "Education"].map((type, index) => {
           return (
             <TouchableOpacity key={index} style={styles.txtTypeContainer} onPress={() => props.onTypeEntrySelected(type)}>
-              <Text style={{flex: 8, fontWeight: props.lTypeTmp === type ? "bold" : "normal", color: props.lTypeTmp === type ? COLORS.STRONG_CYAN : "black"}}>{type}</Text>
+              <Image source={ICONS[index]} style={{width: 30, height: 25}} />
+              <Text style={{flex: 8, fontFamily: "Acumin", fontSize: 16, color: COLORS.STRONG_GREY}}>{type}</Text>
               {props.lTypeTmp === type ?
-                <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_CYAN}/>
+                <Icon style={{flex: 1}} name='check' type='material' color={TYPE_COLORS[index]}/>
               : null}
             </TouchableOpacity>
           )
@@ -32,25 +36,43 @@ const TrackingSettingLocationSubProps = (props) => {
     // SETTING LOCATION REPEAT DAYS
     props.substatus === "REPEAT" ?
       <Animated.View key={1} style={[styles.locSettingPanel, {left: props.animLeft}]}>
-        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontWeight: "bold", fontSize: 16}}>Repeat on</Text>
-        <TouchableOpacity style={styles.txtRepeatDayContainer} onPress={props.onRepeatEntryAllSelected}>
-          <Text style={{flex: 8, fontWeight: props.lRepeatAll ? "bold" : "normal", color: props.lRepeatAll ? COLORS.STRONG_CYAN : "black"}}>All</Text>
-          {props.lRepeatAll ?
-            <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_CYAN}/>
-          : null}
-        </TouchableOpacity>
-        {WEEKDAYS.map((day, index) => {
-          return (
-            <TouchableOpacity key={index} style={styles.txtRepeatDayContainer} onPress={() => props.onRepeatEntrySelected(index)}>
-              <Text style={{flex: 8, fontWeight: props.lRepeatTmp[index] ? "bold" : "normal", color: props.lRepeatTmp[index] ? COLORS.STRONG_CYAN : "black"}}>
-                Every {day}
-              </Text>
-              {props.lRepeatTmp[index] ?
-                <Icon style={{flex: 1}} name='check' type='material' color={COLORS.STRONG_CYAN}/>
-              : null}
-            </TouchableOpacity>
-          )
-        })}
+        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", fontSize: 15}}>Repeat on</Text>
+        <View style={{flexDirection: "row"}} onPress={props.onRepeatEntryAllSelected}>
+          <Text style={{flex: 8, fontFamily: "Acumin", fontSize: 16, color: COLORS.STRONG_GREY, marginLeft: 10}}>All week</Text>
+          <Switch
+            trackColor={{ false: COLORS.GREY, true: COLORS.LIGHT_CYAN }}
+            thumbColor={props.lRepeatAll ? COLORS.STRONG_CYAN : COLORS.STRONG_GREY}
+            onValueChange={props.onRepeatEntryAllSelected}
+            value={props.lRepeatAll}
+            style={{
+              flex: 3,
+              transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+              marginRight: 5
+            }}
+          />
+        </View>
+        <View style={{flexDirection: "row", justifyContent: "center", marginTop: 15}}>
+          {Util.WEEKDAYS_ABB.map((day, index) => {
+            if (index <= 2)
+              return (
+                <TouchableOpacity key={index} style={[styles.txtRepeatDayContainer, {borderColor: props.lRepeatTmp[index] ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}]}
+                                  onPress={() => props.onRepeatEntrySelected(index)}>
+                  <Text style={{fontFamily: "AcuminBold", fontSize: 16, color: props.lRepeatTmp[index] ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}}>{day}</Text>
+                </TouchableOpacity>
+              )
+          })}
+        </View>
+        <View style={{flexDirection: "row", justifyContent: "center", marginTop: 10}}>
+          {Util.WEEKDAYS_ABB.map((day, index) => {
+            if (index > 2)
+              return (
+                <TouchableOpacity key={index} style={[styles.txtRepeatDayContainer, {borderColor: props.lRepeatTmp[index] ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}]}
+                                  onPress={() => props.onRepeatEntrySelected(index)}>
+                  <Text style={{fontFamily: "AcuminBold", fontSize: 16, color: props.lRepeatTmp[index] ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}}>{day}</Text>
+                </TouchableOpacity>
+              )
+          })}
+        </View>
       </Animated.View>
     : null,
 

@@ -89,7 +89,7 @@ const TrackingStatusScreen = ({route}) => {
       tabBarOptions={{
         labelStyle: {
           fontSize: 10,
-          bottom: 2,
+          bottom: 4,
           fontWeight: "bold",
           textTransform: "none"
         },
@@ -344,8 +344,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               }
             }}
           >
-            <Icon name={children[childIndex].status === "INACTIVE" ? "explore" : "explore"} type="material" size={24}
-                  color={children[childIndex].status === "INACTIVE" ? "#d6d6d6" : "white"}/>
+            <Image source={children[childIndex].status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
+                   style={{width: 30, height: 30}}/>
           </TouchableOpacity>
         </Animated.View>
 
@@ -368,7 +368,6 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               setFlied(false);
             }}>
             <Image source={require("../../../../assets/icons/tomorrow.png")} style={{width: 30, height: 30}} />
-            {/* <Image source={require("../../../../assets/icons/Tomorrow.png")} style={{width: 30, height: 30}} tintColor="red"/> */}
           </TouchableOpacity>
         </Animated.View>
 
@@ -385,14 +384,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           }
           setFlied(!flied);
         }}>
-          <Icon name="add-location" type="material" size={24} color="white"/>
+          <Image source={require("../../../../assets/icons/add-location.png")} style={{width: 30, height: 30}} />
         </TouchableOpacity>
 
         {/* explaination texts */}
-        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 68, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 78, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Selected Day</Text>
         </Animated.View>
-        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 125, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
+        <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 135, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
           <Text style={styles.txtSettingBtnGuide}>Safe Zone for Tomorrow</Text>
         </Animated.View>
 
