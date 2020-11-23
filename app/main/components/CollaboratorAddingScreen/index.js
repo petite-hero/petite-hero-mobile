@@ -9,44 +9,54 @@ import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 
 const CollaboratorAddingScreen = (props) => {
-  const { t }                 = useContext(props.route.params.localizationContext);
-  const [name, setName]       = useState("");
-  const [phone, setPhone]     = useState("");
-  const [loading, setLoading] = useState(false);
+  const { t }                       = useContext(props.route.params.localizationContext);
+  const [name, setName]             = useState("");
+  const [phone, setPhone]           = useState("");
+  const [validPhone, setValidPhone] = useState(true);
+  const [loading, setLoading]       = useState(false);
 
-  // const addCollab = async() => {
-  //   try {
-  //     const ip = await AsyncStorage.getItem('IP');
-  //     const id = await AsyncStorage.getItem('user_id');
-  //     const gender = genders.find(gender => gender.active).title;
-  //     const data = new FormData();
-  //     data.append("name", name);
-  //     data.append("nickName", nickName);
-  //     data.append("language", language);
-  //     data.append("gender", gender);
-  //     data.append("childAvatar", photo);
-  //     data.append("yob", yob);
-  //     const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/children", {
-  //       method: "POST",
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data;'
-  //       },
-  //       body: data
-  //     });
-  //     const result = await response.json();
-  //     if (result.code === 200 && result.msg === "OK") {
-  //       const childId = result.data.childId.toString();
-  //       props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
-  //       // props.navigation.navigate("ChildAddingShowingQr", {qr: "Hello"});
-  //     } else {
-  //       handleError(result.msg);
-  //     }
-  //   } catch (error) {
-  //     handleError(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
+  const validate = () => {
+    let isValidated = true;
+    if (phone.length === 0) {setValidPhone(false); isValidated = false};
+    return isValidated;
+  }
+
+  const findCollab = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + phone);
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+        setName(result.data)
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const addCollab = async() => {
+    if (!validate()) {
+      setLoading(false);
+      return null;
+    }
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -105,6 +115,7 @@ const CollaboratorAddingScreen = (props) => {
         <TextInput
           value={phone}
           onChangeText={(text) => {setPhone(text)}}
+          keyboardType="numeric"
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -114,9 +125,19 @@ const CollaboratorAddingScreen = (props) => {
             width: "100%",
           }}
         />
+        { !validPhone &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("collaborator-add-phone-empty")}
+          </Text>
+        }
       </View>
       {/* end collab phone */}
       {/* collab name */}
+      { name.length > 0 &&
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
@@ -131,21 +152,20 @@ const CollaboratorAddingScreen = (props) => {
         }}>
           {t("collaborator-add-name")}
         </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
+        <Text style={{
+          fontSize: 16,
+          fontFamily: "Acumin",
+          backgroundColor: COLORS.WHITE,
+          borderBottomWidth: 2,
+          borderColor: COLORS.GREY,
+          width: "100%",
+        }}>
+          {name}
+        </Text>
       </View>
+      }
       {/* end collab name */}
-      {/* button Save */}
+      {/* button Confirm */}
       <TouchableOpacity style={{
         marginLeft: "10%",
         marginRight: "10%",
@@ -156,14 +176,14 @@ const CollaboratorAddingScreen = (props) => {
         height: heightPercentageToDP("5%"),
         backgroundColor: COLORS.YELLOW
       }}
-        // onPress={() => {setLoading(true); addCollab()}}
+        onPress={() => {setLoading(true); findCollab()}}
       >
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 16,
           color: COLORS.BLACK
         }}>
-          {t("collaborator-add-next")}
+          {t("collaborator-add-confirm")}
         </Text>
       </TouchableOpacity>
     </ScrollView>

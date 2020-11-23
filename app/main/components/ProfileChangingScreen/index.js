@@ -11,7 +11,28 @@ import styles from "./styles/index.css";
 const ProfileChangingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [value, setValue] = useState(props.route.params.value);
+  const [validValue, setValidValue] = useState(true);
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const validate = (type) => {
+    let isValidated = true;
+    if (type === "email") {
+      if (value[Object.keys(value)[0]].length === 0) {
+        setValidValue(false);
+        setMessage(t("profile-personal-profile-email-empty"));
+        isValidated = false;
+      } else {
+        const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if(!value[Object.keys(value)[0]].match(mailformat)) {
+          setValidValue(false);
+          setMessage(t("profile-personal-profile-email-invalid"));
+          isValidated = false;
+        }
+      }
+    }
+    return isValidated;
+  }
 
   const changeValue = (newValue) => {
     const key = Object.keys(value)[0];
@@ -21,6 +42,10 @@ const ProfileChangingScreen = (props) => {
   }
 
   const changeProfile = async() => {
+    if (!validate("email")) {
+      setLoading(false);
+      return null;
+    }
     try {
       const ip = await AsyncStorage.getItem("IP");
       const id = await AsyncStorage.getItem("user_id");
@@ -37,10 +62,12 @@ const ProfileChangingScreen = (props) => {
         props.route.params.goBack();
         props.navigation.goBack();
       } else {
-        handleError(error.msg);
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -97,18 +124,27 @@ const ProfileChangingScreen = (props) => {
         }}>
           {props.route.params.screenName}
         </Text>
-          <TextInput
-            value={value[Object.keys(value)[0]]}
-            onChangeText={(text) => {changeValue(text)}}
-            style={{
-              fontSize: 16,
-              fontFamily: "Acumin",
-              backgroundColor: COLORS.WHITE,
-              borderBottomWidth: 2,
-              borderColor: COLORS.GREY,
-              width: "100%",
-            }}
-          />
+        <TextInput
+          value={value[Object.keys(value)[0]]}
+          onChangeText={(text) => {changeValue(text); setValidValue(true)}}
+          style={{
+            fontSize: 16,
+            fontFamily: "Acumin",
+            backgroundColor: COLORS.WHITE,
+            borderBottomWidth: 2,
+            borderColor: COLORS.GREY,
+            width: "100%",
+          }}
+        />
+        { !validValue &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {message}
+          </Text>
+        }
       </View>
       {/* end changed field */}
       {/* button Save */}
@@ -122,7 +158,7 @@ const ProfileChangingScreen = (props) => {
         height: heightPercentageToDP("5%"),
         backgroundColor: COLORS.YELLOW
       }}
-        onPress={() => {changeProfile()}}
+        onPress={() => {setLoading(true); changeProfile()}}
       >
         <Text style={{
           fontFamily: "AcuminBold",

@@ -129,7 +129,7 @@ const QuestDetailsScreen = (props) => {
           fontSize: 16,
           marginTop: "5%"
         }}>
-          Reward Details
+          {t("quest-details-reward-details")}
         </Text>
         <Text style={{
           fontFamily: "Acumin",
@@ -183,7 +183,7 @@ const QuestDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Fail
+                {t("quest-details-fail")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={{
@@ -202,7 +202,7 @@ const QuestDetailsScreen = (props) => {
                 fontFamily: "Acumin",
                 fontSize: 16
               }}>
-                Done
+                {t("quest-details-done")}
               </Text>
             </TouchableOpacity>
           </View>
