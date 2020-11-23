@@ -8,6 +8,7 @@ import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
 
 import Util from './util';
+import { ConfirmationModal } from "../../../utils/modal";
 
 
 const TrackingSettingLocation = (props) => {
@@ -97,6 +98,20 @@ const TrackingSettingLocation = (props) => {
           <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
         </View>
       }
+
+      <ConfirmationModal 
+        visible={props.isValidation} 
+        message={"rere"}
+        option="info"
+        onConfirm={async() => {
+          // hideModal();
+          // locale === "en" ? setLocale("vi") : setLocale("en");
+          // await AsyncStorage.removeItem("child_id");
+          // await AsyncStorage.removeItem("user_id");
+          // signOut();
+          props.setIsValidation(false);
+        }}
+      />
 
     </Animated.View>
 

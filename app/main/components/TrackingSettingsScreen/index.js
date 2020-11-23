@@ -51,6 +51,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   const [lRepeatAll, setLRepeatAll] = React.useState(false);
   const [searchBar, setSearchBar] = React.useState(null);
+  const [isValidation, setIsValidation] = React.useState(false);
 
   // animation
   const MAP_DURATION = 700;
@@ -310,7 +311,6 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             newLRepeat.map((day, index) => {newLRepeat[index] = !lRepeatAll});
             setLRepeatTmp(newLRepeat);
             setLRepeatAll(!lRepeatAll);
-            console.log("test");
           }}
 
         />
@@ -322,6 +322,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
         status={status}
         substatus={substatus}
+        isValidation={isValidation}
+        setIsValidation={setIsValidation}
         animOpac={animSettingLoc}
         animElevation={animSettingLocElevation}
 
@@ -368,7 +370,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
               else if (lFromTime >= lToTime) validation = "'From' time shall be before 'To'";
             }
             if (validation != ""){
-              Alert.alert(null, validation, [{text: 'OK'}], {cancelable: true});
+              setIsValidation(true);
+              // Alert.alert(null, validation, [{text: 'OK'}], {cancelable: true});
               return;
             }
             // save & load loc list
