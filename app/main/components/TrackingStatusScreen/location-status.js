@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Animated, Easing } from 'react-native';
 
 import styles from './styles/index.css';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const LocationStatus = (props) => {
@@ -42,7 +42,8 @@ const LocationStatus = (props) => {
 
   return (
 
-    <View style={[styles.statusItemContainer, {width: props.diameter, height: props.diameter, marginRight: props.margin}]}>
+    <TouchableOpacity style={[styles.statusItemContainer, {width: props.diameter, height: props.diameter, marginRight: props.margin}]}
+                      onPress={props.onPress}>
       {animTrackingStatusScales.map((animScale, index) => {
         return (
           <Animated.View key={index} style={[styles.statusWave, {backgroundColor: STATUS_COLORS[props.trackingStatus],
@@ -56,7 +57,7 @@ const LocationStatus = (props) => {
         source={{uri: "data:image/png;base64," + props.photo}}
         style={{width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO, borderRadius: DIAMETER}}
       />
-    </View>
+    </TouchableOpacity>
 
   )
 }

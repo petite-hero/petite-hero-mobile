@@ -55,6 +55,15 @@ class Util{
     return result;
   }
 
+  static repeatArrToStr = (repeatArr) => {
+    let result = "";
+    repeatArr.map((isRepeat, index) => {
+      result += isRepeat ? "1" : "0";
+    });
+    // return result;
+    return "";
+  }
+
   // get user location
   // navigator.geolocation.getCurrentPosition(
   //     (data) => {

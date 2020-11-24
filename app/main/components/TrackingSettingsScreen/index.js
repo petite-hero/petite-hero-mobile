@@ -101,7 +101,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
-      repeatOn: "",
+      repeatOn: Util.repeatArrToStr(lRepeat),
       toTime: lToTimeDate,
       type: lType
     });
@@ -126,7 +126,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
-      repeatOn: "",
+      repeatOn: Util.repeatArrToStr(lRepeat),
       toTime: lToTimeDate,
       type: lType
     });
@@ -388,6 +388,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
               else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
               else if (lFromTime >= lToTime) validation = "'To' time should be after 'From'";
             }
+            console.log(locList[0]);
             if (validation != ""){
               setValidationStr(validation);
               setIsValidation(true);

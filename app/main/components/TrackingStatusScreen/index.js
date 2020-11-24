@@ -254,7 +254,6 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/toggle/' + childId + '/' + isTracking);
-    // const response = await fetch('http://192.168.1.1' + PORT + '/location/toggle/' + childId + '/' + isTracking);
     const result = await response.json();
     if (result.code !== 200){
       console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
@@ -328,7 +327,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                 diameter={wp("16%")}
                 margin={10}
                 trackingStatus={child.status}
-                photo={child.photo}/>
+                photo={child.photo}
+                onPress={() => {
+                  let tmpChildren = [...children];
+                  let tmpChild = tmpChildren[0];
+                  tmpChildren[0] = tmpChildren[index];
+                  tmpChildren[index] = tmpChild;
+                  setChildrenRef(tmpChildren);
+                }}/>
             )
         })}
       </View>
