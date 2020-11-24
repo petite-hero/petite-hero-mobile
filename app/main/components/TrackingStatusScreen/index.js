@@ -1,6 +1,5 @@
 import React, { Children, useContext } from 'react';
 import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Notifications from 'expo-notifications';
@@ -16,6 +15,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 import LocationStatus from './location-status';
+import { ConfirmationModal } from "../../../utils/modal";
 import { t } from 'i18n-js';
 
 
@@ -174,6 +174,9 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   // date picker for setting zone
   const [isPickingDate, setIsPickingDate] = React.useState(false);
+  
+  // validation popup
+  const [isValidation, setIsValidation] = React.useState(false);
 
   // set safe zone animation
   const FLY_TIME = 400;
@@ -197,7 +200,6 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
       if (notification.request.content.title === NOTI.SILENT_NOTI){
-        console.log(notification.request.content);
         const notiData = notification.request.content.data;
         let currentChildIndex = -1;
         childrenRef.current.map((child, index) => {
@@ -252,8 +254,11 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/toggle/' + childId + '/' + isTracking);
+    // const response = await fetch('http://192.168.1.1' + PORT + '/location/toggle/' + childId + '/' + isTracking);
     const result = await response.json();
-    if (result.code !== 200) console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
+    if (result.code !== 200){
+      console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
+    }
   }
 
   // start on screen load
@@ -299,7 +304,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* emergency button */}
       <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
-        <Icon name='priority-high' type='material' color='white' size={20}/>
+        <Image source={require("../../../../assets/icons/exclamation-mark.png")} style={{width: 30, height: 30}} />
       </TouchableOpacity>
 
       {/* ===================== END OF AVATAR & EMERGENCY BUTTON SECTION ===================== */}
@@ -365,6 +370,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
         {/* choose date for setting button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
+        {/* <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: 0}]}> */}
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => setIsPickingDate(true)}>
             <Image source={require("../../../../assets/icons/calendar.png")} style={{width: 30, height: 30}} />
           </TouchableOpacity>
@@ -418,6 +424,13 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
             minDate={new Date()}
             onDayPress={(day) => {
               setIsPickingDate(false);
+              // check if the selected day is today
+              const today = new Date().setHours(0, 0, 0, 0);
+              const checkDay = new Date(day.timestamp).setHours(0, 0, 0, 0);
+              if (today === checkDay && children[0].status !== "INACTIVE"){
+                setIsValidation(true);
+                return;
+              }
               navigation.navigate("TrackingSettings", {children: children, date: new Date(day.timestamp)});
               animSetZoneBtn.setValue(0);
               setFlied(false);
@@ -427,6 +440,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       : null}
+
+      {/* validation popup */}
+      <ConfirmationModal 
+        visible={isValidation} 
+        message={"Location tracking shall be turned off."}
+        option="info"
+        onConfirm={() => setIsValidation(false)}
+      />
 
       {/* ===================== END OF SETTING BUTTONS SECTION ===================== */}
 

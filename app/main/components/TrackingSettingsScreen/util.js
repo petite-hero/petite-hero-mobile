@@ -46,9 +46,10 @@ class Util{
   }
 
   static calLocSettingContainerHeight = (itemNum) => {
-    const MIN = 74 + 2*60;
-    const MAX = 74 + 4*60;
-    let result = 74 + itemNum*60;
+    const ITEM_HEIGHT = 56;
+    const MIN = 74 + 2*ITEM_HEIGHT;
+    const MAX = 74 + 4*ITEM_HEIGHT;
+    let result = 74 + itemNum*ITEM_HEIGHT;
     if (result < MIN) return MIN;
     if (result > MAX) return MAX;
     return result;

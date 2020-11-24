@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   settingBtnAnimatedContainer: {
     position: "relative",
     borderRadius: wp("13.33%"),
-    shadowOpacity: 0.2,
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: "white"
   },
   txtSettingBtnGuideContainer: {
     position: "absolute",

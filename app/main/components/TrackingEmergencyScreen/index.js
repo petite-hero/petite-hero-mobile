@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, AppState, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Dimensions, AppState, AsyncStorage, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
-import { Icon } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 
 import styles from './styles/index.css';
 import { PORT, COLORS, changeOpac } from '../../../const/const';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import { Loader } from '../../../utils/loader';
 import AvatarContainer from '../AvatarContainer';
@@ -176,12 +174,9 @@ const TrackingEmergencyScreen = (props) => {
       <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
 
       {/* back btn */}
-      <View style={styles.backBtn}>
-        <Icon name='keyboard-arrow-left' type='material' size={24} color={COLORS.STRONG_CYAN}
-          onPress={() => {
-            props.navigation.goBack();
-          }}/>
-      </View>
+      <TouchableOpacity style={styles.backBtn} onPress={() => props.navigation.goBack()}>
+        <Image source={require("../../../../assets/icons/back.png")} style={{width: 30, height: 30}} />
+      </TouchableOpacity>
 
     </View>
 

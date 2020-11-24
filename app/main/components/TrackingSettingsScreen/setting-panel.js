@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Animated } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { View, Text, TextInput, Animated, Image } from 'react-native';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -28,6 +27,7 @@ const TrackingSettingLocation = (props) => {
         <TextInput
           onChangeText={props.onNameChange}
           defaultValue={props.name}
+          maxLength={50}
           style={styles.txtInputLocName}
         />
       </Animated.View>
@@ -38,7 +38,7 @@ const TrackingSettingLocation = (props) => {
         <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onTypeSelecting}>
           {props.type}
         </Text>
-        <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
+        <Image style={{flex: 1, width: 26, height: 26, position: "relative", left: 6}} source={require("../../../../assets/icons/forth.png")} tintColor={COLORS.STRONG_CYAN}/>
       </View>
 
       {/* field: radius */}
@@ -95,22 +95,25 @@ const TrackingSettingLocation = (props) => {
           <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onRepeatSelecting}>
             {Util.repeatArrToShowStr(props.repeat)}
           </Text>
-          <Icon style={{flex: 1}} containerStyle={{position: "relative", left: 6}} name='keyboard-arrow-right' type='material' color={COLORS.STRONG_CYAN}/>
+          <Image style={{flex: 1, width: 26, height: 26, position: "relative", left: 6}} source={require("../../../../assets/icons/forth.png")} tintColor={COLORS.STRONG_CYAN}/>
         </View>
       }
 
+      {/* popups */}
+      {/* validation */}
       <ConfirmationModal 
         visible={props.isValidation} 
-        message={"rere"}
+        message={props.validationStr}
         option="info"
-        onConfirm={async() => {
-          // hideModal();
-          // locale === "en" ? setLocale("vi") : setLocale("en");
-          // await AsyncStorage.removeItem("child_id");
-          // await AsyncStorage.removeItem("user_id");
-          // signOut();
-          props.setIsValidation(false);
-        }}
+        onConfirm={() => props.setIsValidation(false)}
+      />
+      {/* confirm delete */}
+      <ConfirmationModal 
+        visible={props.isConfirmDelete} 
+        message={"Delete this location?"}
+        option=""
+        onConfirm={() => {props.setIsConfirmDelete(false); props.onDelete();}}
+        onClose={() => props.setIsConfirmDelete(false)}
       />
 
     </Animated.View>

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing, Alert } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing, TouchableOpacity } from 'react-native';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -51,7 +50,11 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   const [lRepeatAll, setLRepeatAll] = React.useState(false);
   const [searchBar, setSearchBar] = React.useState(null);
+
+  // popup modals
   const [isValidation, setIsValidation] = React.useState(false);
+  const [isConfirmDelete, setIsConfirmDelete] = React.useState(false);
+  const [validationStr, setValidationStr] = React.useState("");
 
   // animation
   const MAP_DURATION = 700;
@@ -63,7 +66,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
   // const animSettingLocOpacMain = animSettingLoc.interpolate({inputRange: [0, 1], outputRange: [1, 0]});
   const [animSettingLocHeight, setAnimSettingLocHeight] = React.useState(null);
-  const animSettingLocElevation = animSettingLoc.interpolate({inputRange: [0, 0.9, 1], outputRange: [0, 0, 5]});
+  const animSettingLocElevation = animSettingLoc.interpolate({inputRange: [0, 0.8, 1], outputRange: [0, 0, 5]});
 
   {/* ===================== END OF VARIABLE SECTION ===================== */}
 
@@ -75,7 +78,12 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
     const result = await response.json();
-    if (result.code === 200) setLocList(result.data);
+    if (result.code === 200){
+      setLocList(result.data);
+      setAnimSettingLocHeight(animSettingLoc.interpolate(
+        {inputRange: [0, 1], outputRange: [Util.calLocSettingContainerHeight(result.data.length), hp('38%')]}
+      ));
+    }
     else console.log("Error while fetching tracking status. Server response: " + JSON.stringify(result));
   }
 
@@ -142,9 +150,6 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     (async () => {
       setLoading(true);
       await fetchLocList();
-      setAnimSettingLocHeight(animSettingLoc.interpolate(
-        {inputRange: [0, 1], outputRange: [Util.calLocSettingContainerHeight(locList.length), hp('38%')]}
-      ));
       setLoading(false);
     })();
   }, []);
@@ -181,9 +186,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
       {/* back button, data & avatar */}
       {substatus === "SEARCH" ? null : [
-        <View key={0} style={styles.backBtn}>
-          <Icon name='keyboard-arrow-left' type='material' size={24} onPress={() => {navigation.goBack();}}/>
-        </View>,
+        <TouchableOpacity key={0} style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Image source={require("../../../../assets/icons/back.png")} style={{width: 30, height: 30}} />
+        </TouchableOpacity>,
         <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
         <AvatarContainer key={2} children={children} setChildren={setChildren} setLoading={setLoading}/>
       ]}
@@ -240,6 +245,12 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
         {/* location setting attributes */}
         <TrackingSettingLocation
 
+          isValidation={isValidation}
+          isConfirmDelete={isConfirmDelete}
+          setIsValidation={setIsValidation}
+          setIsConfirmDelete={setIsConfirmDelete}
+          validationStr={validationStr}
+
           animOpac={animSettingLoc}
           animLeft={animSettingLocLeft}
           animElevation={animSettingLocElevation}
@@ -282,6 +293,16 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             Animated.timing(animSettingLocProps, {toValue: 1, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
           }}
 
+          onDelete={async() => {
+            setLoading(true);
+            await deleteLocation();
+            await fetchLocList();
+            setLoading(false);
+            animSettingLoc.setValue(1);
+            Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+            setStatus("VIEWING");
+          }}
+
         />
 
         {/* location setting sub-attributes */}
@@ -322,8 +343,6 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
         status={status}
         substatus={substatus}
-        isValidation={isValidation}
-        setIsValidation={setIsValidation}
         animOpac={animSettingLoc}
         animElevation={animSettingLocElevation}
 
@@ -350,7 +369,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
         onSettingCancel={() => {
           if (substatus === ""){
             animSettingLoc.setValue(1);
-            Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
+            Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.ease, useNativeDriver: false}).start();
             setStatus("VIEWING");
           }
           else if (substatus === "TYPE" || substatus === "REPEAT"){
@@ -364,14 +383,14 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             // validation
             let validation = "";
             if (lName == "") validation = "Please specify location name";
-            if (lType != "Home"){
+            else if (lType != "Home"){
               if (!lFromTime || lFromTime === "None") validation = "Please specify the time at 'From'";
               else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
-              else if (lFromTime >= lToTime) validation = "'From' time shall be before 'To'";
+              else if (lFromTime >= lToTime) validation = "'To' time should be after 'From'";
             }
             if (validation != ""){
+              setValidationStr(validation);
               setIsValidation(true);
-              // Alert.alert(null, validation, [{text: 'OK'}], {cancelable: true});
               return;
             }
             // save & load loc list
@@ -399,24 +418,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
               .start(() => setSubstatus(""));
           }
         }}
-        onSettingDelete={() => {
-          Alert.alert(null, 'Delete this location?',
-            [
-              {text: 'Cancel'},
-              {text: 'OK', onPress: async() => {
-                setLoading(true);
-                await deleteLocation();
-                await fetchLocList();
-                setLoading(false);
-                animSettingLoc.setValue(1);
-                Animated.timing(animSettingLoc, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false}).start();
-                setStatus("VIEWING");
-              }}
-            ],
-            {cancelable: true}
-          );
-        }}
-
+        onSettingDelete={() => setIsConfirmDelete(true)}
       />
       
       {/* ===================== END CONTROL PANEL SECTION ===================== */}

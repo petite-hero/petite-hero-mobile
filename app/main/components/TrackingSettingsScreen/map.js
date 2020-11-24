@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import MapView, { Marker, Circle }  from 'react-native-maps';
 import { Icon } from 'react-native-elements';
 
@@ -7,7 +7,6 @@ import styles from './styles/index.css';
 import { COLORS, changeOpac } from "../../../const/const";
 
 import Util from "./util";
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 
 const TrackingSettingMap = (props) => {
@@ -51,7 +50,8 @@ const TrackingSettingMap = (props) => {
     // fixed pin
     props.status === "PINNING" ?
       <View key={1} style={styles.fixedPin}>
-        <Icon name='location-on' type='material' color={COLORS.STRONG_CYAN} size={50}/>
+        {/* <Icon name='location-on' type='material' color={COLORS.STRONG_CYAN} size={50}/> */}
+        <Image source={require("../../../../assets/icons/pin.png")} style={{width: 50, height: 50}} />
       </View>
     : null
 

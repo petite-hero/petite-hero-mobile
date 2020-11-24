@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
-    shadowOpacity: 0.2,
     elevation: 5
   },
 
@@ -193,6 +192,13 @@ const styles = StyleSheet.create({
   panelContentFocused: {
     display: "none"
   },
+  locationPlaceholder: {
+    color: COLORS.MEDIUM_CYAN,
+    fontFamily: "Acumin",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 30
+  },
   locationContainer: {
     marginTop: 10,
     marginLeft: 10
@@ -304,6 +310,7 @@ const styles = StyleSheet.create({
     width: wp("13.33%"),
     height: wp("13.33%"),
     borderRadius: wp("13.33%"),
+    backgroundColor: "white"
   },
   btnSaveLoc : {
     width: wp("13.33%"),

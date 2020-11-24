@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import styles from './styles/index.css';
@@ -8,7 +7,6 @@ import styles from './styles/index.css';
 
 const TrackingSettingControlPanel = (props) => {
 
-  const TYPE_ICON = {"Home": {name: "home", color: "#fbc424"}, "Education" : {name: "school", color: "#00ade8"}};
   const ICONS = {"Home": require("../../../../assets/icons/home.png"), "Education": require("../../../../assets/icons/school.png"), "Others": require("../../../../assets/icons/others.png")};
 
   return (
@@ -27,20 +25,21 @@ const TrackingSettingControlPanel = (props) => {
           enablePoweredByContainer={false}
           autoFocus={false}
           onPress={props.onSearchResultPress}
-          textInputProps={{ onFocus: props.onSearchBarPress }}
+          textInputProps={{ onFocus: props.onSearchBarPress, maxLength: 100 }}
           query={{key: 'AIzaSyBvfVumttk96MLwUy-oLqaz3OqtGSIAejk', components: 'country:vn',}}
           debounce={150}
         />
       </View>
-      <View style={props.substatus === "SEARCH" ? styles.searchBackBtnFocused : styles.searchBackBtn}>
-        <Icon name='keyboard-arrow-left' type='material' size={24} onPress={props.onBackIconPress}/>
-      </View>
+      <TouchableOpacity style={props.substatus === "SEARCH" ? styles.searchBackBtnFocused : styles.searchBackBtn} onPress={props.onBackIconPress}>
+        <Image source={require("../../../../assets/icons/back.png")} style={{width: 26, height: 26}} />
+      </TouchableOpacity>
 
       {/* panel content */}
       <ScrollView style={props.substatus === "SEARCH" ? styles.panelContentFocused : styles.panelContent}>
-        <View style={{flexDirection: "row"}}>
-          {/* location list */}
-          <View style={{flex: 8}}>
+        {/* list placeholder */}
+        {props.locList.length == 0 ? <Text style={styles.locationPlaceholder}>There is no safe zone yet.</Text> : null}
+        {/* location list */}
+        <View>
           {props.status === "VIEWING" ? props.locList.map((loc, index) => {
             return (
             <TouchableOpacity key={index} style={styles.locationContainer} onPress={() => props.onLocationItemPress(loc, index)}>
@@ -55,12 +54,13 @@ const TrackingSettingControlPanel = (props) => {
               }
               <Text style={styles.locationName}>{loc.name} </Text>
               <Text style={styles.locationTime}>{loc.type === "Home" ? "All day" : "From "+loc.fromTime.slice(0, -3)+" to "+loc.toTime.slice(0, -3)}</Text>
-              <View style={styles.rightIcon}><Icon name='keyboard-arrow-right' type='material'/></View>
+              <View style={styles.rightIcon}>
+                <Image source={require("../../../../assets/icons/forth.png")} style={{width: 30, height: 30}} />
+              </View>
             </TouchableOpacity>
             )
           })
           : null}
-          </View>
         </View>
       </ScrollView>
 
