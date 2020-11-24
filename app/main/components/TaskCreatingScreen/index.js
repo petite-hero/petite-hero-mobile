@@ -79,6 +79,7 @@ const CategoryList = ({t, categories, setCategories}) => {
               >
                 <TouchableOpacity
                   onPress={() => {toggleCategory(index)}}
+                  activeOpacity={0.8}
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -124,7 +125,7 @@ const CategoryList = ({t, categories, setCategories}) => {
   )
 }
 
-const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime}) => {
+const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValidStartTime, setValidEndTime}) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
@@ -237,6 +238,7 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime}) => {
           value={startTime}
           onChange={(event, time) => {
             setShowStartTimePicker(false);
+            setValidStartTime(true);
             time ? setStartTime(new Date(time).getTime()) : null;
           }}
         />
@@ -248,6 +250,7 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime}) => {
           value={endTime}
           onChange={(event, time) => {
             setShowEndTimePicker(false);
+            setValidEndTime(true);
             time ? setEndTime(new Date(time).getTime()) : null;
           }}
         />
@@ -258,22 +261,50 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime}) => {
 
 const TaskCreatingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
-  const [name, setName] = useState("");
-  const [details, setDetails] = useState("");
-  const [category, setCategory] = useState("");
-  const [startTime, setStartTime] = useState(new Date().getTime());
-  const [endTime, setEndTime] = useState(new Date().getTime());
-  const [loading, setLoading] = useState(true);
-  const [isSelectedAll, setSelectAll] = useState(false);
-  const [repeatOn, setRepeatOn] = useState(getDateList(props.route.params.date));
-  const [categories, setCategories] = useState([
+  const [name, setName]                     = useState("");
+  const [validName, setValidName]           = useState(true);
+  const [details, setDetails]               = useState("");
+  const [validDetail, setValidDetail]       = useState(true);
+  const [startTime, setStartTime]           = useState(new Date().getTime());
+  const [validStartTime, setValidStartTime] = useState(true);
+  const [endTime, setEndTime]               = useState(new Date().getTime());
+  const [validEndTime, setValidEndTime]     = useState(true);
+  const [timeMessage, setTimeMessage]       = useState("");
+  const [loading, setLoading]               = useState(true);
+  const [isSelectedAll, setSelectAll]       = useState(false);
+  const [repeatOn, setRepeatOn]             = useState(getDateList(props.route.params.date));
+  const [categories, setCategories]         = useState([
     {title: t("task-add-category-housework"), active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
     {title: t("task-add-category-education"), active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
     {title: t("task-add-category-skills"), active: false, name: "toys", type: "material", color: COLORS.GREEN}
   ]);
   const date = new Date(props.route.params.date).toDateString().split(" ");
 
+  const validate = () => {
+    let isValidated = true;
+    if (name.length === 0) {setValidName(false); isValidated = false}
+    if (details.length === 0) {setValidDetail(false); isValidated = false}
+    if (new Date(props.route.params.date).getTime() === new Date(new Date().toDateString()).getTime()) {
+      if (startTime < new Date().getTime()) {
+        setValidStartTime(false); 
+        setTimeMessage(t("task-add-start-time-invalid"));
+        isValidated = false;
+      } else if (endTime < startTime) {
+        setValidEndTime(false);
+        setTimeMessage(t("task-add-end-time-invalid"))
+        isValidated = false
+      }
+    } else {
+      if (endTime < startTime) {setValidEndTime(false); isValidated = false}
+    }
+    return isValidated;
+  }
+
   const createTask = async() => {
+    if (!validate()) {
+      setLoading(false);
+      return null
+    };
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
@@ -349,12 +380,12 @@ const TaskCreatingScreen = (props) => {
     let newArray = [...repeatOn];
     isSelectedAll ? 
       newArray = newArray.map((date, index) => {
-        date.active = true
+        if (index !== 0) date.active = true;
         return date;
       })
     :
       newArray = newArray.map((date, index) => {
-        date.active = false
+        if (index !== 0) date.active = false;
         return date;
       })
     setRepeatOn(newArray);
@@ -410,10 +441,10 @@ const TaskCreatingScreen = (props) => {
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
-        paddingTop: "2.5%",
-        paddingLeft: "10%",
-        paddingRight: "10%",
-        paddingBottom: "2.5%"
+        marginTop: "2.5%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginBottom: "2.5%"
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
@@ -421,25 +452,47 @@ const TaskCreatingScreen = (props) => {
         }}>
           {t("task-add-name")}
         </Text>
-          <TextInput
-            value={name}
-            onChangeText={(text) => {setName(text)}}
-            style={{
-              fontSize: 16,
-              fontFamily: "Acumin",
-              backgroundColor: COLORS.WHITE,
-              borderBottomWidth: 2,
-              borderColor: COLORS.GREY,
-              width: "100%",
-            }}
-          />
+        <TextInput
+          value={name}
+          onChangeText={(text) => {setName(text); setValidName(true)}}
+          style={{
+            fontSize: 16,
+            fontFamily: "Acumin",
+            backgroundColor: COLORS.WHITE,
+            borderBottomWidth: 2,
+            borderColor: COLORS.GREY,
+            width: "100%",
+          }}
+        />
+        { !validName && 
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED,
+            marginTop: -2
+          }}>
+            {t("task-add-name-empty")}
+          </Text>
+        }
       </View>
       {/* end task name */}
       {/* category */}
       <CategoryList t={t} categories={categories} setCategories={setCategories}/>
       {/* end category */}
       {/* time picker */}
-      <TimeSettings t={t} startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime}/>
+      <TimeSettings t={t} startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} setValidStartTime={setValidStartTime} setValidEndTime={setValidEndTime}/>
+      { (!validStartTime || !validEndTime) &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED,
+            marginTop: -2,
+            marginLeft: "10%",
+            marginRight: "10%"
+          }}>
+            {timeMessage}
+          </Text>
+        }
       {/* task details */}
       <View style={{
         flexDirection: "column",
@@ -456,7 +509,7 @@ const TaskCreatingScreen = (props) => {
         </Text>
         <TextInput
           value={details}
-          onChangeText={(text) => {setDetails(text)}}
+          onChangeText={(text) => {setDetails(text); setValidDetail(true)}}
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -466,6 +519,16 @@ const TaskCreatingScreen = (props) => {
             backgroundColor: COLORS.WHITE
           }}
         />
+        { !validDetail && 
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED,
+            marginTop: -2
+          }}>
+            {t("task-add-details-empty")}
+          </Text>
+        }
       </View>
       {/* end task details */}
       {/* repeat on */}

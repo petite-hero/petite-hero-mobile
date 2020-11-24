@@ -8,14 +8,29 @@ import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
 
 const QuestCreatingScreen = (props) => {
-  const { t } = useContext(props.route.params.localizationContext);
-  const [name, setName] = useState("");
+  const { t }                             = useContext(props.route.params.localizationContext);
+  const [name, setName]                   = useState("");
+  const [validName, setValidName]         = useState(true);
   const [details, setDetails]             = useState("");
+  const [validDetail, setValidDetail]     = useState(true);
   const [loading, setLoading]             = useState(false);
   const [badge, setBadge]                 = useState("");
   const [title, setTitle]                 = useState("");
+  const [validTitle, setValidTitle]       = useState(true);
+
+  const validate = () => {
+    let isValidated = true;
+    if (name.length === 0) {setValidName(false); isValidated = false;}
+    if (details.length === 0) {setValidDetail(false); isValidated = false;}
+    if (title.length === 0) {setValidTitle(false); isValidated = false;}
+    return isValidated;
+  }
 
   const createQuest = async() => {
+    if (!validate()) {
+      setLoading(false);
+      return null;
+    }
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
@@ -98,7 +113,7 @@ const QuestCreatingScreen = (props) => {
         </Text>
         <TextInput
           value={name}
-          onChangeText={(text) => {setName(text)}}
+          onChangeText={(text) => {setName(text); setValidName(true)}}
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -107,6 +122,15 @@ const QuestCreatingScreen = (props) => {
             borderColor: COLORS.GREY
           }}
         />
+        { !validName &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("quest-add-name-empty")}
+          </Text>
+        }
       </View>
       {/* end quest name */}
       {/* choose reward */}
@@ -187,7 +211,7 @@ const QuestCreatingScreen = (props) => {
         </Text>
         <TextInput
           value={details}
-          onChangeText={(text) => {setDetails(text)}}
+          onChangeText={(text) => {setDetails(text); setValidDetail(true)}}
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -196,6 +220,15 @@ const QuestCreatingScreen = (props) => {
             borderColor: COLORS.GREY
           }}
         />
+        { !validDetail &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("quest-add-details-empty")}
+          </Text>
+        }
       </View>
       {/* end quest details */}
       {/* quest title */}
@@ -214,7 +247,7 @@ const QuestCreatingScreen = (props) => {
         </Text>
         <TextInput
           value={title}
-          onChangeText={(text) => {setTitle(text)}}
+          onChangeText={(text) => {setTitle(text); setValidTitle(true)}}
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -223,6 +256,15 @@ const QuestCreatingScreen = (props) => {
             borderColor: COLORS.GREY
           }}
         />
+        { !validTitle &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("quest-add-smartwatch-title-empty")}
+          </Text>
+        }
       </View>
       {/* end quest title */}
       {/* button Save */}

@@ -146,11 +146,13 @@ const TaskScreen = (props) => {
 
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification);
       if (notification.request.content.data) {
         getListOfTask();
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
+      console.log(notification);
       if (notification.request.content.data) {
         getListOfTask();
       }
@@ -236,7 +238,7 @@ const TaskScreen = (props) => {
   return (
     <View style={styles.container}>
       {/* CONFIRMATION MODAL */}
-      <ConfirmationModal message="Are your sure you want to delete this task?" visible={deletedTaskId} onConfirm={() => {setLoading(true); setDeletedTaskId(""); deleteTask(deletedTaskId) }} onClose={() => setDeletedTaskId("")}/>
+      <ConfirmationModal message="Are your sure you want to delete this task?" visible={deletedTaskId.length !== 0} onConfirm={() => {setLoading(true); setDeletedTaskId(""); deleteTask(deletedTaskId) }} onClose={() => setDeletedTaskId("")}/>
       {/* END CONFIRMATION MODAL */}
       {/* LOADER */}
       <Loader loading={loading}/>
@@ -359,15 +361,17 @@ const TaskScreen = (props) => {
       {/* END TASK BOARD */}
 
       {/* BUTTON ADD TASK */}
-      <TouchableOpacity
-        style={styles.btnAddTask}
-        onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
-      >
-        <Image
-          source={require("../../../../assets/icons/add.png")}
-          style={{width: 30, height: 30}}
-        />
-      </TouchableOpacity>
+      { (date >= new Date(new Date().toDateString()).getTime() && new Date(date).getDate() - new Date().getDate() <= 3) &&
+        <TouchableOpacity
+          style={styles.btnAddTask}
+          onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
+        >
+          <Image
+            source={require("../../../../assets/icons/add.png")}
+            style={{width: 30, height: 30}}
+          />
+        </TouchableOpacity>
+      }
       {/* END BUTTON ADD TASK */}
       {/* AVATAR */}
       <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>

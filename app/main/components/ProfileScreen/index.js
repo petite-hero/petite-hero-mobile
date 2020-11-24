@@ -8,7 +8,6 @@ import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import { Loader } from "../../../utils/loader";
-import { t } from "i18n-js";
 import { ConfirmationModal } from "../../../utils/modal";
 
 const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup, iconName }) => {
@@ -170,16 +169,12 @@ const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup,
 
 const ProfileScreen = (props) => {
   const { t, locale, setLocale } = useContext(props.route.params.localizationContext);
-  const { signOut } = React.useContext(props.route.params.authContext);
+  const { signOut } = useContext(props.route.params.authContext);
   const [loading, setLoading] = useState(false);
   const [parentProfile, setParentProfile] = React.useState("");
   const [listChildren, setListChildren] = React.useState("");
   const [listCollaborator, setListCollaborator] = React.useState("");
   const [showModal, setShowModal] = useState(false);
-
-  const hideModal = () => {
-    setShowModal(false);
-  }
 
   const getListChildren = async () => {
     try {
@@ -203,7 +198,7 @@ const ProfileScreen = (props) => {
           })
         );
       } else {
-        handleError(error.msg);
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error.message);
@@ -226,7 +221,7 @@ const ProfileScreen = (props) => {
           })
         );
       } else {
-        handleError(error.msg);
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error.message);
@@ -242,7 +237,7 @@ const ProfileScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         setParentProfile(result.data);
       } else {
-        handleError(error.msg);
+        handleError(result.msg);
       }
     } catch (error) {
       handleError(error.message);
@@ -256,7 +251,7 @@ const ProfileScreen = (props) => {
     getProfileDetail();
     getCollaboratorList();
   }, [loading]);
-
+  
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
@@ -416,7 +411,7 @@ const ProfileScreen = (props) => {
             }}
             iconName={{name: "keyboard-arrow-right"}}
             action={() => {
-
+              props.navigation.navigate("ProfileShowingSubscription");
             }}
           />
           <SettingItem
@@ -436,8 +431,9 @@ const ProfileScreen = (props) => {
               {
                 title: t("profile-setting-language"),
                 action: () => {
-                  // locale === "en" ? setLocale("vi") : setLocale("en");
-                  setShowModal(true);
+                  props.navigation.navigate("ProfileChangingLanguage", {
+                    language: locale
+                  });
                 },
                 iconName: "keyboard-arrow-right"
               }
@@ -468,18 +464,6 @@ const ProfileScreen = (props) => {
           />
         </View>
       </ScrollView>
-      <ConfirmationModal 
-        visible={showModal} 
-        message={t("profile-setting-language-info")}
-        option="info"
-        onConfirm={async() => {
-          hideModal();
-          locale === "en" ? setLocale("vi") : setLocale("en");
-          await AsyncStorage.removeItem("child_id");
-          await AsyncStorage.removeItem("user_id");
-          signOut();
-        }}
-      />
     </View>
   );
 };

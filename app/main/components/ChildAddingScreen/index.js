@@ -9,7 +9,6 @@ import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
-import { t } from "i18n-js";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -169,17 +168,30 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
 const ChildAddingScreen = (props) => {
   const { t }                     = useContext(props.route.params.localizationContext);
   const [name, setName]           = useState("");
+  const [validName, setValidName] = useState(true);
   const [nickName, setNickName]   = useState("");
   const [language, setLanguage]   = useState("English");
   const [photo, setPhoto]         = useState("");
   const [yob, setYob]             = useState("");
+  const [validYob, setValidYob]   = useState(true);
   const [loading, setLoading]     = useState(false);
   const [genders, setGenders] = useState([
     {title: "Boy", active: true, name: "male", type: "fontisto", color: COLORS.STRONG_CYAN},
     {title: "Girl", active: false, name: "female", type: "fontisto", color: COLORS.STRONG_CYAN}
   ]);
 
+  const validate = () => {
+    let isValidated = true;
+    if (name.length === 0) {setValidName(false); isValidated = false;}
+    if (yob.length === 0) {setValidYob(false); isValidated = false;}
+    return isValidated;
+  }
+
   const createQrCode = async() => {
+    if (!validate()) {
+      setLoading(false);
+      return null;
+    }
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
@@ -270,18 +282,27 @@ const ChildAddingScreen = (props) => {
         }}>
           {t("child-add-name")}
         </Text>
-          <TextInput
-            value={name}
-            onChangeText={(text) => {setName(text)}}
-            style={{
-              fontSize: 16,
-              fontFamily: "Acumin",
-              backgroundColor: COLORS.WHITE,
-              borderBottomWidth: 2,
-              borderColor: COLORS.GREY,
-              width: "100%",
-            }}
-          />
+        <TextInput
+          value={name}
+          onChangeText={(text) => {setName(text)}}
+          style={{
+            fontSize: 16,
+            fontFamily: "Acumin",
+            backgroundColor: COLORS.WHITE,
+            borderBottomWidth: 2,
+            borderColor: COLORS.GREY,
+            width: "100%",
+          }}
+        />
+        { !validName &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("child-add-name-empty")}
+          </Text>
+        }
       </View>
       {/* end child name */}
       {/* child nick name */}
@@ -328,18 +349,27 @@ const ChildAddingScreen = (props) => {
         }}>
           {t("child-add-yob")}
         </Text>
-          <TextInput
-            value={yob}
-            onChangeText={(text) => {setYob(text)}}
-            style={{
-              fontSize: 16,
-              fontFamily: "Acumin",
-              backgroundColor: COLORS.WHITE,
-              borderBottomWidth: 2,
-              borderColor: COLORS.GREY,
-              width: "100%",
-            }}
-          />
+        <TextInput
+          value={yob}
+          onChangeText={(text) => {setYob(text)}}
+          style={{
+            fontSize: 16,
+            fontFamily: "Acumin",
+            backgroundColor: COLORS.WHITE,
+            borderBottomWidth: 2,
+            borderColor: COLORS.GREY,
+            width: "100%",
+          }}
+        />
+        { !validYob &&
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {t("child-add-yob-empty")}
+          </Text>
+        }
       </View>
       {/* end child year of birth */}
       {/* child gender */}

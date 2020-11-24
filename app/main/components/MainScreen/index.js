@@ -14,6 +14,8 @@ import ChildAddingShowingQrScreen from '../ChildAddingShowingQrScreen';
 import ProfilePasswordChangingScreen from '../ProfilePasswordChangingScreen';
 import ChildDetailsScreen from '../ChildDetailsScreen';
 import CollaboratorAddingScreen from '../CollaboratorAddingScreen';
+import ProfileChangingLanguageScreen from '../ProfileChangingLanguageScreen';
+import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScreen';
 
 const Stack = createStackNavigator();
 
@@ -96,6 +98,16 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="CollaboratorAdding"
         component={CollaboratorAddingScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ProfileChangingLanguage"
+        component={ProfileChangingLanguageScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ProfileShowingSubscription"
+        component={ProfileShowingSubscriptionScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>

@@ -16,7 +16,7 @@ const LoginScreen = (props) => {
   const [username, setUsername] = useState("0987654321");
   const [password, setPassword] = useState("123456");
 
-  const { t } = useContext(props.route.params.localizationContext);
+  const { t, setLocale } = useContext(props.route.params.localizationContext);
   const { signIn } = React.useContext(props.route.params.authContext);
   // const [username, setUsername] = useState("");
   // const [password, setPassword] = useState("");
@@ -53,6 +53,7 @@ const LoginScreen = (props) => {
         const token = await registerForPushNotificationsAsync();
         await sendToken(username, token);
         await AsyncStorage.setItem("user_id", username);
+        setLocale(result.data.language);
         signIn({jwt: result.data.jwt});
       } else if (result.code === 404 && result.msg === "Wrong username or password. Please try again") {
         setShowInvalidMessage(true);
