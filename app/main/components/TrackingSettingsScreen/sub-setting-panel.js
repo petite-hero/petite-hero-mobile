@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, TouchableOpacity, Animated, Image, View, Switch } from 'react-native';
-import { Icon } from 'react-native-elements';
 
 import styles from './styles/index.css';
 import { COLORS } from "../../../const/const";
@@ -24,9 +23,13 @@ const TrackingSettingLocationSubProps = (props) => {
             <TouchableOpacity key={index} style={styles.txtTypeContainer} onPress={() => props.onTypeEntrySelected(type)}>
               <Image source={ICONS[index]} style={{width: 30, height: 25}} />
               <Text style={{flex: 8, fontFamily: "Acumin", fontSize: 16, color: COLORS.STRONG_GREY}}>{type}</Text>
-              {props.lTypeTmp === type ?
-                <Icon style={{flex: 1}} name='check' type='material' color={TYPE_COLORS[index]}/>
-              : null}
+              <View style={{flex: 2, alignItems: "flex-end"}}>
+                <View style={[styles.selectIcon, {borderColor: TYPE_COLORS[index]}]}>
+                  {props.lTypeTmp === type ?
+                    <View style={[styles.selectIconCenter, {backgroundColor: TYPE_COLORS[index]}]}/>
+                  : null}
+                </View>
+              </View>
             </TouchableOpacity>
           )
         })}

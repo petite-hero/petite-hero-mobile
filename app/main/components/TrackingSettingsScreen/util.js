@@ -23,6 +23,15 @@ class Util{
     return this.MONTHS[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
   }
 
+  static strToDate(str) {
+    const hour = str.slice(0, 2);
+    const minute = str.slice(3, 5);
+    let date = new Date();
+    date.setHours(hour);
+    date.setMinutes(minute);
+    return date;
+  }
+
   static repeatArrToShowStr = (repeatArr) => {
     let result = "";
     let count = 0;
@@ -62,6 +71,13 @@ class Util{
     });
     // return result;
     return "";
+  }
+
+  static isOverlap(locList, fromTime, toTime){
+    if (locList == undefined || locList.length == 0) return false;
+    locList.map((loc, index) => {
+      
+    });
   }
 
   // get user location

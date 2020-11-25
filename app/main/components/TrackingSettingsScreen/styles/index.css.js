@@ -116,6 +116,19 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     backgroundColor: "white"
   },
+  selectIcon: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  selectIconCenter: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+  },
 
   // search bar
   searchBarContainer: {

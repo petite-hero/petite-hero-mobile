@@ -51,6 +51,7 @@
     "react-native-responsive-screen": "^1.4.1",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
+    "react-native-simple-time-picker": "^0.2.0",
     "react-native-svg": "12.1.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-tab-view": "^2.15.1",
