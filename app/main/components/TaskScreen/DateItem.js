@@ -4,7 +4,7 @@ import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 // represent an item in date list
-const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, refresh) => {
+const DateItem = ({item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, setLoading}) => {
   return (
     <View>
       {
@@ -25,7 +25,7 @@ const DateItem = (item, index, currentIndex, refDateFlatlist, setCurrentIndex, s
           onPress={() => {
             refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
             setCurrentIndex(index);
-            refresh(true);
+            setLoading(true);
             const tmp = item.year + "-" + (item.monthNum + 1 >= 10 ? item.monthNum + 1 : "0" + (item.monthNum + 1)) + "-" + item.day;
             setDate(new Date((new Date(tmp).toDateString())).getTime());
           }}>

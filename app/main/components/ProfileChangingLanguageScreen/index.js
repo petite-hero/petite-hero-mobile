@@ -164,6 +164,7 @@ const ProfileChangingLanguageScreen = (props) => {
           hideModal();
           changeLanguage(language === "en" ? "english" : "vietnamese");
         }}
+        onClose={() => {}}
       />
     </View>
   );

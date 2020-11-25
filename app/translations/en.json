@@ -25,6 +25,8 @@
   "navigation-profile"                      : "Profile",
 
   "task-title"                              : "Tasks",
+  "task-empty-1"                            : "There is no",
+  "task-empty-2"                            : "tasks on this day.",
   "task-status-in-progress"                 : "In Progress",
   "task-status-finished"                    : "Finished",
   "task-status-assigned"                    : "Assigned",

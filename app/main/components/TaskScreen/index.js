@@ -133,7 +133,6 @@ const TaskScreen = (props) => {
   const [children, setChildren]             = useState([]);
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
   const [list, setList]                     = useState([]);
-  const [modalVisible, setModalVisible]     = useState(false);
   const [loading, setLoading]               = useState(false);
   const [isShowed, setShow]                 = useState(false);
   const [deletedTaskId, setDeletedTaskId]   = useState("");
@@ -204,8 +203,6 @@ const TaskScreen = (props) => {
       }
     } catch (error) {
       handleError(error.message);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -226,13 +223,12 @@ const TaskScreen = (props) => {
   }
 
   useEffect(() => {
+    getListOfChildren();
     listenChangeTaskStatus();
-    // props.navigation.addListener('focus', () => { getListOfTask(); getListOfChildren() });
   }, []);
 
   useEffect(() => {
     getListOfTask();
-    getListOfChildren();
   }, [loading]);
 
   return (
@@ -257,7 +253,7 @@ const TaskScreen = (props) => {
               const daysInMonth = getDaysInMonth(newDate.getMonth(), newDate.getFullYear());
               setDate(new Date((new Date(newDate).toDateString())).getTime());
               setCurrentIndex(getDateIndex(daysInMonth, newDate.toDateString()) + 2);
-              refDateFlatlist.current.scrollToIndex({index: getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) - 2 > 0 ? getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) : 0})
+              setTimeout(() => {refDateFlatlist.current.scrollToIndex({index: getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) - 2 > 0 ? getDateIndex(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()), newDate.toDateString()) : 0})}, 1000);
             }
           }}
         />
@@ -298,7 +294,7 @@ const TaskScreen = (props) => {
           {/* DATE FLAT LIST */}
           <FlatList
             data={dates}
-            renderItem={({item, index}) => DateItem(item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, setLoading)}
+            renderItem={({item, index}) => <DateItem item={item} index={index} currentIndex={currentIndex} refDateFlatlist={refDateFlatlist} setCurrentIndex={setCurrentIndex} setDate={setDate} setLoading={setLoading}/>}
             keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}

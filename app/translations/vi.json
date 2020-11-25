@@ -25,6 +25,8 @@
   "navigation-profile"                      : "Hồ sơ",
 
   "task-title"                              : "Công việc",
+  "task-empty-1"                            : "Không có nhiệm vụ ở trạng thái",
+  "task-empty-2"                            : "ngày hôm nay.",
   "task-status-in-progress"                 : "Đang tiến hành",
   "task-status-finished"                    : "Đã hoàn thành",
   "task-status-assigned"                    : "Đã giao",
