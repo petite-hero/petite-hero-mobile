@@ -12,9 +12,9 @@ import { translationMessages } from './app/utils/i18n';
 import WelcomeScreen from "./app/main/components/WelcomeScreen/index";
 import MainScreen from './app/main/components/MainScreen';
 import { useFonts } from 'expo-font';
-import { AppLoading } from 'expo';
 
 import * as Notifications from 'expo-notifications';
+import OpeningScreen from './app/main/components/OpeningScreen';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
@@ -89,12 +89,12 @@ const App = () => {
     }
   }
   useEffect(() => {checkApplicationSettings()}, []);
-
+  
   const testSetApplicationSettings = async () => {
     try {
       await AsyncStorage.setItem('IP', IP);
       // await AsyncStorage.setItem('user_id', '0987654321');
-      // await AsyncStorage.setItem('user_id', '0938194701');  // Duong
+      await AsyncStorage.setItem('user_id', '0938194701');  // Duong
       // await AsyncStorage.setItem('child_id', '3');
     } catch (error) {
       console.log("Error while testing application settings");
@@ -140,13 +140,19 @@ const App = () => {
               initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
             />
           </Stack.Navigator> */}
+
           {state.userToken == null ? (
             <Stack.Navigator 
-              initialRouteName="Welcome"
+              initialRouteName="Opening"
               screenOptions={{
                 headerShown: false
               }}
               >
+              <Stack.Screen
+                name="Opening"
+                component={OpeningScreen}
+                initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
+              />
               <Stack.Screen 
                 name="Welcome"
                 component={WelcomeScreen}

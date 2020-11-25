@@ -41,13 +41,13 @@ const TaskBoard = ({ t, date, list, refresh, navigation, onDelete }) => {
       <View style={styles.taskBoard}>
         { (tabs[0].active && list[0] && list[0].length == 1) || (tabs[1].active && list[1] && list[1].length == 1) ?
             <View style={{
-              width: wp("100%"),
               alignItems: "center",
               justifyContent: "center",
+              marginLeft: "10%",
               height: "80%"
             }}>
-              <Text style={[styles.fontAcumin, styles["fs-16"], {color: COLORS.MEDIUM_CYAN}]}>
-                There is no {tabs[0].active ? tabs[0].title.toLowerCase() : tabs[1].title.toLowerCase()} tasks on this day.
+              <Text style={[styles.fontAcumin, styles["fs-16"], {color: COLORS.MEDIUM_CYAN, textAlign: "center"}]}>
+                {t("task-empty-1")} {tabs[0].active ? tabs[0].title.toLowerCase() : tabs[1].title.toLowerCase()} {t("task-empty-2")}
               </Text>
             </View>
           :

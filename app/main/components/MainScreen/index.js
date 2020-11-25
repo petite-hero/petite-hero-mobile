@@ -16,6 +16,7 @@ import ChildDetailsScreen from '../ChildDetailsScreen';
 import CollaboratorAddingScreen from '../CollaboratorAddingScreen';
 import ProfileChangingLanguageScreen from '../ProfileChangingLanguageScreen';
 import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScreen';
+import OpeningScreen from '../OpeningScreen';
 
 const Stack = createStackNavigator();
 

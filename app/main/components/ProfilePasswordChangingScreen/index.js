@@ -8,8 +8,26 @@ import { handleError } from "../../../utils/handleError";
 import { Loader } from "../../../utils/loader";
 import styles from "./styles/index.css";
 
+const Message = (props) => {
+  return (
+    <View style={{
+      marginTop: -10,
+      marginLeft: "10%",
+      marginRight: "10%",
+    }}>
+      <Text style={{
+        fontFamily: "Acumin",
+        fontSize: 14,
+        color: COLORS.RED
+      }}>
+        {props.message}
+      </Text>
+    </View>
+  );
+}
+
 const PasswordField = (props) => {
-  return(
+  return (
     <View style={{
       flexDirection: "column",
       alignItems: "flex-start",
@@ -67,13 +85,30 @@ const PasswordField = (props) => {
 const ProfilePasswordChangingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [currentPassword, setCurrentPassword] = useState("");
+  const [validCurrentPassword, setValidCurrentPassword] = useState(true);
   const [currentPasswordSecured, setCurrentPasswordSecured] = useState(true);
   const [newPassword, setNewPassword] = useState("");
+  const [validNewPassword, setValidNewPassword] = useState(true);
   const [newPasswordSecured, setNewPasswordSecured] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [validConfirmPassword, setValidConfirmPassword] = useState(true);
   const [confirmPasswordSecured, setConfirmPasswordSecured] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const validate = () => {
+    let isValid = true;
+    if (!currentPassword) {setValidCurrentPassword(false); isValid = false}
+    if (!newPassword) {setValidNewPassword(false); isValid = false}
+    if (confirmPassword !== newPassword) {setConfirmPassword(false); isValid = false}
+    return isValid;
+  }
 
   const changePassword = async() => {
+    if (!validate()) {
+      setLoading(false);
+      return null;
+    }
     try {
       const ip = await AsyncStorage.getItem("IP");
       const id = await AsyncStorage.getItem("user_id");
@@ -83,6 +118,7 @@ const ProfilePasswordChangingScreen = (props) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          oldPassword: currentPassword,
           password: newPassword,
           confirmPassword: confirmPassword
         })
@@ -92,7 +128,9 @@ const ProfilePasswordChangingScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         props.route.params.goBack();
         props.navigation.goBack();
-      } else {
+      } else if (result.code == 400 && result.msg === "Your old password is not match. Please check again") {
+        setMessage("Current password is wrong. Please try again.")
+      } else {  
         handleError(result.msg);
       }
     } catch (error) {
@@ -102,6 +140,7 @@ const ProfilePasswordChangingScreen = (props) => {
   
   return (
     <View style={styles.container}>
+      <Loader loading={loading}/>
       <View style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -139,12 +178,16 @@ const ProfilePasswordChangingScreen = (props) => {
       </View>
       {/* current password field */}
       <PasswordField title={t("profile-current-password")} value={currentPassword} setValue={setCurrentPassword} secured={currentPasswordSecured} setSecured={setCurrentPasswordSecured}/>
+      { !validCurrentPassword && <Message message="Your Current Password cannot be empty."/> }
       {/* end current password */}
       {/* new password field */}
       <PasswordField title={t("profile-new-password")} value={newPassword} setValue={setNewPassword} secured={newPasswordSecured} setSecured={setNewPasswordSecured}/>
+      { !validNewPassword && <Message message="Your New Password cannot be empty."/> }
       {/* end new password */}
       {/* confirm password field */}
       <PasswordField title={t("profile-confirm-password")} value={confirmPassword} setValue={setConfirmPassword} secured={confirmPasswordSecured} setSecured={setConfirmPasswordSecured}/>
+      { !validConfirmPassword && <Message message="Confirm Password does not match with the new password."/> }
+      { message.length > 0 && <Message message={message}/> }
       {/* end confirm password */}
       {/* button Save */}
       <TouchableOpacity style={{
@@ -157,7 +200,7 @@ const ProfilePasswordChangingScreen = (props) => {
         height: heightPercentageToDP("5%"),
         backgroundColor: COLORS.YELLOW
       }}
-        onPress={() => {changePassword()}}
+        onPress={() => {setLoading(true); changePassword()}}
       >
         <Text style={{
           fontFamily: "AcuminBold",
