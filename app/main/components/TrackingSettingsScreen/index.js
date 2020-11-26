@@ -77,7 +77,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
+    console.log('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
     const result = await response.json();
+    console.log(result);
     if (result.code === 200){
       setLocList(result.data);
       setAnimSettingLocHeight(animSettingLoc.interpolate(
@@ -105,6 +107,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       toTime: lToTimeDate,
       type: lType
     });
+    console.log(body);
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
     const result = await response.json();
@@ -130,6 +133,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       toTime: lToTimeDate,
       type: lType
     });
+    console.log(body);
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: body});
     const result = await response.json();
@@ -173,6 +177,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
         locList={locList}
         
         settingLoc={settingLocMap}
+        lType={lType}
         lRadius={lRadius}
         
         setMap={setMap}
@@ -231,8 +236,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             setLName(loc.name);
             setLRadius(loc.radius);
             setLInitialRadius(loc.radius);
-            setLFromTime(loc.fromTime);
-            setLToTime(loc.toTime);
+            setLFromTime(loc.fromTime); setLFromTimeDate(Util.strToDate(loc.fromTime));
+            setLToTime(loc.toTime); setLToTimeDate(Util.strToDate(loc.toTime));
             setLType(loc.type)
             setLIndex(index);
             setStatus("SETTING_LOC");
@@ -260,6 +265,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           type={lType}
           radius={lRadius}
           fromTime={lFromTime}
+          fromTimeDate={lFromTimeDate}
+          ttoTimeDate={lToTimeDate}
           ttoTime={lToTime}
           repeat={lRepeat}
           initialRadius={lInitialRadius}
@@ -268,11 +275,15 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           onRadiusChange={(value) => setLRadius(value)}
           onFromTimeSelected={(event, time) => {
             if (time == null) return;
+            time.setSeconds(0);
+            time.setMilliseconds(0);
             setLFromTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
             setLFromTimeDate(time);
           }}
           onToTimeSelected={(event, time) => {
             if (time == null) return;
+            time.setSeconds(0);
+            time.setMilliseconds(0);
             setLToTime(Util.numberTo2Digits(time.getHours()) + ":" + Util.numberTo2Digits(time.getMinutes()) + ":00");
             setLToTimeDate(time);
           }}
@@ -356,8 +367,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             latitudeDelta: Util.MAP_ZOOM.latitudeDelta, longitudeDelta: Util.MAP_ZOOM.longitudeDelta}, 700);
           setLType("None");
           setLRadius(RADIUS_MIN);
-          setLFromTime("None");
-          setLToTime("None");
+          setLFromTime("None"); setLFromTimeDate(new Date());
+          setLToTime("None"); setLToTimeDate(new Date());
           setLRepeat([false, false, false, false, false, false, false]);
           setLInitialRadius(RADIUS_MIN);
           
@@ -388,7 +399,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
               else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
               else if (lFromTime >= lToTime) validation = "'To' time should be after 'From'";
             }
-            console.log(locList[0]);
+            if (validation == "" && Util.isOverlap(locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = "The time schedule of this location is overlapping another";
             if (validation != ""){
               setValidationStr(validation);
               setIsValidation(true);

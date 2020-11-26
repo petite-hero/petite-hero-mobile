@@ -64,7 +64,7 @@ const TrackingSettingLocation = (props) => {
             {props.fromTime == "None" || props.fromTime == null ? "None" : props.fromTime.slice(0, -3)}
           </Text>
           {showFromTimePicker ?
-            <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
+            <DateTimePicker value={props.fromTimeDate} mode={"time"} onChange={(event, time) => {
               setShowFromTimePicker(false);
               props.onFromTimeSelected(null, time);
             }}/>
@@ -80,7 +80,7 @@ const TrackingSettingLocation = (props) => {
             {props.ttoTime == "None" || props.ttoTime == null ? "None" : props.ttoTime.slice(0, -3)}
           </Text>
           {showToTimePicker ?
-            <DateTimePicker value={new Date()} mode={"time"} onChange={(event, time) => {
+            <DateTimePicker value={props.ttoTimeDate} mode={"time"} onChange={(event, time) => {
               setShowToTimePicker(false);
               props.onToTimeSelected(null, time);
             }}/>

@@ -334,6 +334,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                   tmpChildren[0] = tmpChildren[index];
                   tmpChildren[index] = tmpChild;
                   setChildrenRef(tmpChildren);
+                  AsyncStorage.setItem('child_id', tmpChildren[0].childId+"");
                 }}/>
             )
         })}
