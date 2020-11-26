@@ -21,7 +21,11 @@ export const COLORS = {
   PURPLE: "#785adf",
 };
 
+<<<<<<< Updated upstream
 export const IP = "192.168.1.7";
+=======
+export const IP = "192.168.1.108";
+>>>>>>> Stashed changes
 export const PORT = ":8080";
 
 export const NOTI = {
