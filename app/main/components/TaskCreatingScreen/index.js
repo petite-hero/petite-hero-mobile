@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, Switch, ScrollView } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
+import TimeSettings from './TimeSettings';
+import CategoryList from './CategoryList';
+import Header from '../../../base/components/Header';
+import InputField from '../../../base/components/InputField';
+import ButtonSave from '../../../base/components/ButtonSave';
 
 const getDateList = (date) => {
   const currentDate = new Date(date);
@@ -38,227 +40,6 @@ const getTime = (time) => {
   return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
 }
 
-const CategoryList = ({t, categories, setCategories}) => {
-  const toggleCategory = (categoryIndex) => {
-    let tmp = [...categories];
-    tmp.map((value, index) => {
-      index === categoryIndex ? value.active = true : value.active = false;
-    });
-    setCategories(tmp);
-  }
-
-  return (
-    <View style={{
-      flexDirection: "column",
-      alignItems: "flex-start",
-      paddingTop: "2.5%",
-      paddingLeft: "10%",
-      paddingRight: "10%",
-      paddingBottom: "2.5%"
-    }}>
-      <Text style={{
-        fontFamily: "AcuminBold",
-        fontSize: 16,
-        marginBottom: 15
-      }}>
-        {t("task-add-category")}
-      </Text>
-      <View style={{
-        flexDirection: "row"
-      }}>
-        {
-          categories.map((value, index) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  minWidth: 45,
-                  height: 45,
-                  marginRight: 10,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {toggleCategory(index)}}
-                  activeOpacity={0.8}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    height: 45,
-                    borderRadius: 22.5,
-                    backgroundColor: value.active ? value.color : COLORS.GREY,
-                  }}
-                >
-                  <Icon
-                    name={value.name}
-                    type={value.type}
-                    color={COLORS.WHITE}
-                    containerStyle={{
-                      alignSelf: "center",
-                      alignContent: "flex-start"
-                    }}
-                    iconStyle={{
-                      marginLeft: 10
-                    }}
-                  />
-                  {
-                    value.active &&
-                    <Text style={{
-                      alignSelf: "center",
-                      textAlign: "center",
-                      fontSize: 16,
-                      fontFamily: "AcuminBold",
-                      color: COLORS.WHITE,
-                      marginLeft: 10,
-                      marginRight: 10
-                    }}>
-                      {value.title}
-                    </Text>
-                  }
-                </TouchableOpacity>
-              </View>
-            )
-          }) 
-        }
-      </View>
-    </View>
-  )
-}
-
-const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValidStartTime, setValidEndTime}) => {
-  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
-  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-
-  const handleShowingHours = (hours) => {
-    const tmp = new Date(hours).getHours();
-    return tmp < 10 ?  "0" + tmp : tmp;
-  }
-
-  const handleShowingMinute = (minutes) => {
-    const tmp = new Date(minutes).getMinutes();
-    return tmp < 10 ? "0" + tmp : tmp
-  }
-
-  return (
-    <>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 10,
-        marginLeft: "10%",
-        marginRight: "10%"
-      }}>
-        <View style={{
-          width: "50%"
-        }}>
-          <Text style={{
-            fontFamily: "AcuminBold",
-            fontSize: 16,
-          }}>
-            {t("task-add-start-time")}
-          </Text>
-        </View>
-        <View style={{
-          width: "50%"
-        }}>
-          <Text style={{
-            fontFamily: "AcuminBold",
-            fontSize: 16
-          }}>
-            {t("task-add-end-time")}
-          </Text>
-        </View>
-      </View>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 10,
-        marginLeft: "10%",
-        marginRight: "10%"
-      }}>
-        <View style={{
-          width: "50%"
-        }}>
-          <TouchableOpacity style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "60%",
-            borderBottomWidth: 1,
-            borderColor: COLORS.STRONG_CYAN,
-          }}
-            onPress={() => {setShowStartTimePicker(true)}}
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: "AcuminBold",
-              color: COLORS.STRONG_CYAN
-            }}>
-              {handleShowingHours(startTime) + ":" + handleShowingMinute(startTime)}
-            </Text>
-            <Icon
-              type="material"
-              name="keyboard-arrow-down"
-              color={COLORS.STRONG_CYAN}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{
-          width: "50%"
-        }}>
-          <TouchableOpacity style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "60%",
-            borderBottomWidth: 1,
-            borderColor: COLORS.STRONG_CYAN
-          }}
-            onPress={() => {setShowEndTimePicker(true)}}
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: "AcuminBold",
-              color: COLORS.STRONG_CYAN
-            }}>
-              {handleShowingHours(endTime) + ":" + handleShowingMinute(endTime)}
-            </Text>
-            <Icon
-              type="material"
-              name="keyboard-arrow-down"
-              color={COLORS.STRONG_CYAN}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {
-        showStartTimePicker &&
-        <DateTimePicker
-          mode="time"
-          value={startTime}
-          onChange={(event, time) => {
-            setShowStartTimePicker(false);
-            setValidStartTime(true);
-            time ? setStartTime(new Date(time).getTime()) : null;
-          }}
-        />
-      }
-      {
-        showEndTimePicker &&
-        <DateTimePicker
-          mode="time"
-          value={endTime}
-          onChange={(event, time) => {
-            setShowEndTimePicker(false);
-            setValidEndTime(true);
-            time ? setEndTime(new Date(time).getTime()) : null;
-          }}
-        />
-      }
-    </>
-  )
-}
-
 const TaskCreatingScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [name, setName]                     = useState("");
@@ -274,9 +55,9 @@ const TaskCreatingScreen = (props) => {
   const [isSelectedAll, setSelectAll]       = useState(false);
   const [repeatOn, setRepeatOn]             = useState(getDateList(props.route.params.date));
   const [categories, setCategories]         = useState([
-    {title: t("task-add-category-housework"), active: true, name: "broom", type: "material-community", color: COLORS.YELLOW},
-    {title: t("task-add-category-education"), active: false, name: "school", type: "material", color: COLORS.STRONG_CYAN},
-    {title: t("task-add-category-skills"), active: false, name: "toys", type: "material", color: COLORS.GREEN}
+    {title: t("task-add-category-housework"), active: true, name: "Housework", color: COLORS.YELLOW},
+    {title: t("task-add-category-education"), active: false, name: "Education", color: COLORS.STRONG_CYAN},
+    {title: t("task-add-category-skills"), active: false, name: "Skills", color: COLORS.GREEN}
   ]);
   const date = new Date(props.route.params.date).toDateString().split(" ");
 
@@ -394,87 +175,10 @@ const TaskCreatingScreen = (props) => {
   return (
     <ScrollView style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {t("task-add-title")}
-          </Text>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "Acumin",
-            color: COLORS.LIGHT_GREY
-          }}>
-            {date[1]}, {date[2]} {date[3]}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      <Header navigation={props.navigation} title={t("task-add-title")} subTitle={date[1] + ", " + date[2] + " " + date[3]}/>
       {/* form */}
       {/* task name */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: "2.5%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "2.5%"
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("task-add-name")}
-        </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text); setValidName(true)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
-        { !validName && 
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED,
-            marginTop: -2
-          }}>
-            {t("task-add-name-empty")}
-          </Text>
-        }
-      </View>
+      <InputField title={t("task-add-name")} value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("task-add-name-empty")}/>
       {/* end task name */}
       {/* category */}
       <CategoryList t={t} categories={categories} setCategories={setCategories}/>
@@ -482,80 +186,20 @@ const TaskCreatingScreen = (props) => {
       {/* time picker */}
       <TimeSettings t={t} startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} setValidStartTime={setValidStartTime} setValidEndTime={setValidEndTime}/>
       { (!validStartTime || !validEndTime) &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED,
-            marginTop: -2,
-            marginLeft: "10%",
-            marginRight: "10%"
-          }}>
-            {timeMessage}
-          </Text>
-        }
-      {/* task details */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: 15,
-        marginLeft: "10%",
-        marginRight: "10%",
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("task-add-details")}
+        <Text style={styles.invalidTimeMessage}>
+          {timeMessage}
         </Text>
-        <TextInput
-          value={details}
-          onChangeText={(text) => {setDetails(text); setValidDetail(true)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            width: "100%",
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            backgroundColor: COLORS.WHITE
-          }}
-        />
-        { !validDetail && 
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED,
-            marginTop: -2
-          }}>
-            {t("task-add-details-empty")}
-          </Text>
-        }
-      </View>
+      }
+      {/* task details */}
+      <InputField title={t("task-add-details")} value={details} setValue={setDetails} valid={validDetail} setValid={setValidDetail} invalidMessage={t("task-add-details-empty")}/>
       {/* end task details */}
       {/* repeat on */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: 15,
-        marginLeft: "10%",
-        marginRight: "10%",
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
+      <View style={styles.repeatContainer}>
+        <Text style={styles.title}>
           {t("task-add-repeat-on")}
         </Text>
-        <View style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-          marginTop: 5
-        }}>
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 16,
-            color: COLORS.LIGHT_GREY
-          }}>
+        <View style={styles.repeatSwitchContainer}>
+          <Text style={styles.repeatText}>
             {t("task-add-repeat-on-check-all")}
           </Text>
           <Switch
@@ -569,26 +213,11 @@ const TaskCreatingScreen = (props) => {
             }}
           />
         </View>
-        <View style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginTop: 10
-        }}>
+        <View style={styles.repeatDateContainer}>
           {repeatOn.map((value, index) => {
             return (
               index > 0 &&
-              <TouchableOpacity key={index} style={{
-                width: widthPercentageToDP("10%"),
-                height: heightPercentageToDP("10%"),
-                backgroundColor: value.active ? COLORS.STRONG_CYAN : COLORS.GREY,
-                borderRadius: 20,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingLeft: "3%",
-                paddingRight: "3%",
-                marginTop: 5,
-                marginRight: 5,
-              }}
+              <TouchableOpacity key={index} style={[styles.repeatDate, {backgroundColor: value.active ? COLORS.STRONG_CYAN : COLORS.GREY}]}
                 onPressOut={() => {
                   const newArray = [...repeatOn];
                   const index = newArray.indexOf(value);
@@ -596,18 +225,10 @@ const TaskCreatingScreen = (props) => {
                   setRepeatOn(newArray);
                 }}
               >
-                <Text style={{
-                  fontSize: 10,
-                  fontFamily: "Acumin",
-                  color: COLORS.WHITE
-                }}>
+                <Text style={styles.dateText}>
                   {value.dayOfWeek}
                 </Text>
-                <Text style={{
-                  fontSize: 17,
-                  fontFamily: "AcuminBold",
-                  color: COLORS.WHITE
-                }}>
+                <Text style={styles.dateNum}>
                   {value.day}
                 </Text>
               </TouchableOpacity>
@@ -617,26 +238,7 @@ const TaskCreatingScreen = (props) => {
       </View>
       {/* end repeat on */}
       {/* button Save */}
-      <TouchableOpacity style={{
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginTop: "10%",
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        height: heightPercentageToDP("5%"),
-        backgroundColor: COLORS.YELLOW
-      }}
-        onPress={() => {setLoading(true); createTask()}}
-      >
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.BLACK
-        }}>
-          {t("task-add-save")}
-        </Text>
-      </TouchableOpacity>
+      <ButtonSave title={t("task-add-save")} action={() => {setLoading(true); createTask()}}/>
       {/* end button Save */}
       {/* end form */}
     </ScrollView>

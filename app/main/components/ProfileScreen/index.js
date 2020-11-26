@@ -150,7 +150,7 @@ const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup,
                 )}
                 {value.iconName &&
                   <Image
-                    source={value.iconName === "keyboard-arrow-right" ? require("../../../../assets/icons/forth.png") : require("../../../../assets/icons/add.png")}
+                    source={value.iconName === "keyboard-arrow-right" ? require("../../../../assets/icons/forth.png") : require("../../../../assets/icons/add-black.png")}
                     style={{
                       marginRight: wp("4%"),
                       justifyContent: "center",

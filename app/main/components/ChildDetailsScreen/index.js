@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
+import Header from "../../../base/components/Header";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -48,6 +48,8 @@ const ImagePickerComponent = (props) => {
           width: 120,
           height: 120,
           borderRadius: 60,
+          alignItems: "center",
+          justifyContent: "center",
           backgroundColor: COLORS.MEDIUM_GREY
         }}
         activeOpacity={0.8}
@@ -72,18 +74,11 @@ const ImagePickerComponent = (props) => {
           }}
         />
       :
-        <Icon
-          name="photo-camera"
-          type="material"
-          color={COLORS.WHITE}
-          containerStyle={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-          iconStyle={{
-            transform: [{ scaleX: 2 }, { scaleY: 2 }]
+        <Image
+          source={require("../../../../assets/icons/camera.png")}
+          style={{
+            width: 70,
+            height: 70
           }}
         />
       }
@@ -133,7 +128,6 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
                 }}
               >
                 <TouchableOpacity
-                  // onPress={() => {toggleGender(index)}}
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -143,17 +137,9 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
                     backgroundColor: value.active ? value.color : COLORS.GREY,
                   }}
                 >
-                  <Icon
-                    name={value.name}
-                    type={value.type}
-                    color={COLORS.WHITE}
-                    containerStyle={{
-                      alignSelf: "center",
-                      alignContent: "flex-start"
-                    }}
-                    iconStyle={{
-                      marginLeft: 10
-                    }}
+                  <Image
+                    source={value.title === "Boy" ? require("../../../../assets/icons/boy.png") : require("../../../../assets/icons/girl.png")}
+                    style={{width: 25, height: 25, marginLeft: 10}}
                   />
                   {
                     value.active &&
@@ -267,41 +253,7 @@ const ChildDetailsScreen = (props) => {
     :
     <ScrollView style={styles.container}>
       {/* <Loader loading={loading}/> */}
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {props.route.params.screenName}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      <Header navigation={props.navigation} title={props.route.params.screenName}/>
       {/* form */}
       {/* child image */}
       <ImagePickerComponent photo={photo} currentPhoto={currentPhoto} setPhoto={setPhoto}/>

@@ -7,6 +7,7 @@ import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
+import DetailShowingComponent from './DetailShowingComponent';
 
 const handleShowHourAndMinute = (time) => {
   return time < 10 ?  "0" + time : time;
@@ -26,26 +27,15 @@ const handleShowDate = (date) => {
   return tmp[0] + " " + tmp[1] + " " + tmp[2];
 }
 
-const getTime = (time) => {
-  const tmp = time.split(":");
-  return [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
-}
-
-const isLate = (date, submitTime, time) => {
-  const tmp = getTime(time);
-  const toTime = new Date(new Date(date).setHours(tmp[0], tmp[1], tmp[2])).getTime();
-  return submitTime - toTime > 0;
-}
-
 const TaskDetailsScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [details, setDetails] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const categories = [
-    {title: t("task-add-category-housework"), name: "broom", type: "material-community", color: COLORS.YELLOW},
-    {title: t("task-add-category-education"), name: "school", type: "material", color: COLORS.STRONG_CYAN},
-    {title: t("task-add-category-skills"), name: "toys", type: "material", color: COLORS.GREEN}
+    {title: t("task-add-category-housework"), name: "Housework", color: COLORS.YELLOW},
+    {title: t("task-add-category-education"), name: "Education", color: COLORS.STRONG_CYAN},
+    {title: t("task-add-category-skills"), name: "Skills", color: COLORS.GREEN}
   ];
 
   useEffect(() => {
@@ -94,59 +84,33 @@ const TaskDetailsScreen = (props) => {
     <Loader loading={loading}/>
     :
     <View style={styles.container}>
-      <View style={{
-        width: "100%",
-        height: widthPercentageToDP("100%"),
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-        overflow: "hidden"
-      }}>
+      <View style={styles.header}>
         <Image
           source={details.proofPhoto ? {uri: "data:image/png;base64," + details.proofPhoto} : require("../../../../assets/task-background/1.png")}
           style={{height: "100%", width: "100%"}}
         />
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          containerStyle={{
-            position: "absolute",
-            left: "10%",
-            top: "15%",
-            width: widthPercentageToDP("10%"),
-            height: widthPercentageToDP("10%"),
-            borderRadius: widthPercentageToDP("5%"),
-            backgroundColor: COLORS.WHITE,
-            alignItems: "center",
-            justifyContent: "center",
-            elevation: 10
-          }}
+        <TouchableOpacity 
+          style={styles.backContainer}
           onPress={() => {props.navigation.goBack()}}
+        >
+          <Image
+            source={require("../../../../assets/icons/back.png")}
+            style={{
+              width: 30,
+              height: 30
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={[styles.categoryContainer, {backgroundColor: category.color}]}>
+        <Image
+          source={category.name === "Housework" ? require("../../../../assets/icons/housework.png")
+                : category.name === "Education" ? require("../../../../assets/icons/education.png")
+                : require("../../../../assets/icons/skills.png")}
+          style={{width: 45, height: 45}}
         />
       </View>
-      <View style={{
-        position: "absolute",
-        right: "10%",
-        top: widthPercentageToDP("92%"),
-        width: "15%",
-        height: widthPercentageToDP("15%"),
-        backgroundColor: "black",
-        borderRadius: widthPercentageToDP("7.5%"),
-        alignItems: "center",
-        justifyContent: "center",
-        elevation: 8
-      }}>
-        {/* <Icon
-          name={category.name}
-          type={category.type}
-          color={COLORS.WHITE}
-        /> */}
-      </View>
-      <View style={{
-        marginTop: "10%",
-        marginLeft: "10%",
-        marginRight: "10%",
-      }}>
+      <View style={styles.body}>
         <View style={{
           maxWidth: "50%"
         }}>
@@ -157,98 +121,23 @@ const TaskDetailsScreen = (props) => {
             {details.name}
           </Text>
         </View>
-        {
-          details.status === "DONE" || details.status === "FAILED" ?
-            <Text style={{
-              fontFamily: "Acumin",
-              color: details.status === "DONE" && COLORS.GREEN
-                  || details.status === "FAILED" && COLORS.RED,
-            }}>
-              { details.status === "DONE" ? t("task-status-done") : t("task-status-failed") }
-            </Text>
-          : details.submitDate ?
-            isLate(details.assignDate, details.submitDate, details.toTime) ?
-            <Text style={{
-              fontFamily: "Acumin",
-              color: COLORS.RED
-            }}>
-              { t("task-details-submit-late") } { handleShowTime(details.submitDate) }
-            </Text>
-            :
-            <Text style={{
-              fontFamily: "Acumin",
-              color: COLORS.GREEN
-            }}>
-              { t("task-details-submit") } { handleShowTime(details.submitDate) }
-            </Text>
-          : isLate(details.assignDate, new Date().getTime(), details.toTime) ?
-            <Text style={{
-              fontFamily: "Acumin",
-              color: COLORS.YELLOW
-            }}>
-              { t("task-status-late") }
-            </Text>
-            :
-            <Text style={{
-              fontFamily: "Acumin",
-              color: details.status === "HANDED" && COLORS.BLACK
-                  || details.status === "ASSIGNED" && COLORS.STRONG_CYAN
-            }}>
-              { t("task-status-assigned") }
-            </Text>
-        }
-        <View style={{
-          flexDirection: "row",
-          marginTop: "3%",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          backgroundColor: COLORS.WHITE
-        }}>
-          <View style={{
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "50%",
-            borderLeftWidth: 2,
-            borderColor: COLORS.LIGHT_GREY
-          }}>
-            <Icon
-              name="date-range"
-              type="material"
-              color={COLORS.BLACK}
-              style={{
-                marginLeft: 10
-              }}
+        <DetailShowingComponent t={t} details={details}/>
+        <View style={styles.dateTimeContainer}>
+          <View style={styles.dateTimeItem}>
+            <Image
+              source={require("../../../../assets/icons/calendar.png")}
+              style={{width: 30, height: 30, marginLeft: 6, marginBottom: -5}}
             />
-            <Text style={{
-              fontFamily: "Acumin",
-              fontSize: 16,
-              color: COLORS.LIGHT_GREY,
-              marginLeft: 10
-            }}>
+            <Text style={styles.date}>
               {handleShowDate(details.assignDate)}
             </Text>
           </View>
-          <View style={{
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "50%",
-            borderLeftWidth: 2,
-            borderColor: COLORS.LIGHT_GREY
-          }}>
-            <Icon
-              name="schedule"
-              type="material"
-              color={COLORS.BLACK}
-              style={{
-                marginLeft: 10
-              }}
+          <View style={styles.dateTimeItem}>
+            <Image
+              source={require("../../../../assets/icons/clock.png")}
+              style={{width: 30, height: 30, marginLeft: 6, marginBottom: -5}}
             />
-            <Text style={{
-              fontFamily: "Acumin",
-              fontSize: 16,
-              color: COLORS.LIGHT_GREY,
-              marginLeft: 10
-            }}>
+            <Text style={styles.date}>
               {t("task-details-from")} {handleShowTime(details.fromTime)} {t("task-details-to")} {handleShowTime(details.toTime)}
             </Text>
           </View>
@@ -270,22 +159,10 @@ const TaskDetailsScreen = (props) => {
         </Text>
         {
           details.status !== "HANDED" ?
-          <TouchableOpacity style={{
-            width: "100%",
-            paddingTop: "5%",
-            paddingBottom: "5%",
-            marginTop: "10%",
-            backgroundColor: COLORS.YELLOW,
-            borderRadius: heightPercentageToDP("5%"),
-            alignItems: "center",
-            justifyContent: "center"
-          }}
+          <TouchableOpacity style={styles.OKButton}
             onPress={() => {props.navigation.goBack()}}
           >
-            <Text style={{
-              fontFamily: "Acumin",
-              fontSize: 16
-            }}>
+            <Text style={styles.buttonTitle}>
               OK
             </Text>
           </TouchableOpacity>
@@ -294,43 +171,17 @@ const TaskDetailsScreen = (props) => {
             flexDirection: "row",
             justifyContent: "space-between"
           }}>
-            <TouchableOpacity style={{
-              width: "48%",
-              paddingTop: "5%",
-              paddingBottom: "5%",
-              marginTop: "10%",
-              backgroundColor: COLORS.WHITE,
-              borderWidth: 2,
-              borderRadius: heightPercentageToDP("5%"),
-              borderColor: COLORS.YELLOW,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+            <TouchableOpacity style={[styles.changeStatusButton, {backgroundColor: COLORS.WHITE}]}
               onPress={() => {setLoading(true); approveOrDeclineTask(false)}}
             >
-              <Text style={{
-                fontFamily: "Acumin",
-                fontSize: 16
-              }}>
+              <Text style={styles.buttonTitle}>
                 {t("task-details-fail")}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{
-              width: "48%",
-              paddingTop: "5%",
-              paddingBottom: "5%",
-              marginTop: "10%",
-              backgroundColor: COLORS.YELLOW,
-              borderRadius: heightPercentageToDP("5%"),
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+            <TouchableOpacity style={[styles.changeStatusButton, {backgroundColor: COLORS.YELLOW}]}
               onPress={() => {setLoading(true); approveOrDeclineTask(true)}}
             >
-              <Text style={{
-                fontFamily: "Acumin",
-                fontSize: 16
-              }}>
+              <Text style={styles.buttonTitle}>
                 {t("task-details-done")}
               </Text>
             </TouchableOpacity>

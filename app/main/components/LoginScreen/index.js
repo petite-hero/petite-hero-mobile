@@ -138,7 +138,7 @@ const LoginScreen = (props) => {
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
-              fontFamily: "MontserratBold",
+              fontFamily: "Montserrat",
               height: 50,
               backgroundColor: COLORS.WHITE,
               borderBottomWidth: 1,
@@ -165,7 +165,7 @@ const LoginScreen = (props) => {
               placeholderTextColor={COLORS.MEDIUM_CYAN}
               style={{
                 fontSize: 16,
-                fontFamily: "MontserratBold",
+                fontFamily: "Montserrat",
                 height: 50,
                 width: "80%"
               }}
