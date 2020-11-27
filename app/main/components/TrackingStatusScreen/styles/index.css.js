@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 
   // warning
-  warningBtn : {
+  warningBtnOld : {
     position: "absolute",
     width: wp("13.33%"),
     height: wp("13.33%"),
@@ -27,6 +27,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: "#ec546b",
+    shadowOpacity: 0.2,
+    elevation: 5
+  },
+  warningBtn : {
+    position: "absolute",
+    width: wp("26%"),
+    height: wp("9%"),
+    borderRadius: wp("10%"),
+    top: hp("5%"),
+    left: wp("10%"),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#ec546b",
+    shadowOpacity: 0.2,
+    elevation: 5
+  },
+  warningBtnText: {
+    color: "white",
+    fontFamily: "Acumin"
+  },
+  callBtn : {
+    position: "absolute",
+    width: wp("13.33%"),
+    height: wp("13.33%"),
+    borderRadius: wp("10%"),
+    top: hp("5%"),
+    right: wp("10%"),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.GREEN,
     shadowOpacity: 0.2,
     elevation: 5
   },

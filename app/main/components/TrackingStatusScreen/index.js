@@ -1,5 +1,6 @@
 import React, { Children, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage, Linking } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Notifications from 'expo-notifications';
@@ -162,9 +163,9 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   {/* ===================== VARIABLE SECTION ===================== */}
 
   const [loading, setLoading] = React.useState(false);
+  const [isCannotConnect, setIsCannotConnect] = React.useState(false);
 
   // child information
-  const [childIndex, setChildIndex] = React.useState(0);
   const [children, setChildren] = React.useState(route.params.children);
   const childrenRef = React.useRef(children);
   const setChildrenRef = (newChildren) => {
@@ -258,6 +259,12 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     if (result.code !== 200){
       console.log("Error while requesting smartwatch tracking '" + isTracking + "'. Server response: " + JSON.stringify(result));
     }
+    if (isTracking){
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      if (children[0].status == "LOADING"){
+        setIsCannotConnect(true);
+      }
+    }
   }
 
   // start on screen load
@@ -299,12 +306,21 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       <Loader loading={loading}/>
 
-      {/* ===================== AVATAR & EMERGENCY BUTTON SECTION ===================== */}
+      {/* ===================== EMERGENCY BUTTON SECTION ===================== */}
 
       {/* emergency button */}
-      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
+      {/* <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
         <Image source={require("../../../../assets/icons/exclamation-mark.png")} style={{width: 30, height: 30}} />
+      </TouchableOpacity> */}
+      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
+        <Text style={styles.warningBtnText}>Emergency!</Text>
       </TouchableOpacity>
+
+      {children[0].status === "NOT SAFE" ?
+        <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL(`tel:`)}>
+          <Icon name="phone-in-talk" type="material" color="white"/>
+        </TouchableOpacity>
+      : null}
 
       {/* ===================== END OF AVATAR & EMERGENCY BUTTON SECTION ===================== */}
 
@@ -315,13 +331,13 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         <LocationStatus
           diameter={wp("70%")}
           margin={0}
-          trackingStatus={children[childIndex].status}
+          trackingStatus={children[0].status}
           photo={children[0].photo}/>
       </View>
 
       <View style={styles.statusListContainer}>
         {children.map((child, index) => {
-          if (index != childIndex)
+          if (index != 0)
             return (
               <LocationStatus key={index}
                 diameter={wp("16%")}
@@ -351,26 +367,26 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
           {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer,
-                                    {backgroundColor: children[childIndex].status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
+                                    {backgroundColor: children[0].status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
             onPress={() => {
-              if (children[childIndex].status === "INACTIVE"){
+              if (children[0].status === "INACTIVE"){
                 requestSmartwatchTracking(true);
-                requestEmergencyMode(true, children[childIndex].childId);
+                requestEmergencyMode(true, children[0].childId);
                 let childrenTmp = [...childrenRef.current];
-                childrenTmp[childIndex].status = "LOADING";
-                childrenTmp[childIndex].isTrackingActive = true;
+                childrenTmp[0].status = "LOADING";
+                childrenTmp[0].isTrackingActive = true;
                 setChildrenRef(childrenTmp);
               }
               else{
                 requestSmartwatchTracking(false);
                 let childrenTmp = [...childrenRef.current];
-                childrenTmp[childIndex].status = "INACTIVE";
-                childrenTmp[childIndex].isTrackingActive = false;
+                childrenTmp[0].status = "INACTIVE";
+                childrenTmp[0].isTrackingActive = false;
                 setChildrenRef(childrenTmp);
               }
             }}
           >
-            <Image source={children[childIndex].status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
+            <Image source={children[0].status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
                    style={{width: 30, height: 30}}/>
           </TouchableOpacity>
         </Animated.View>
@@ -451,12 +467,28 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       {/* validation popup */}
       <ConfirmationModal 
         visible={isValidation} 
-        message={"Location tracking shall be turned off."}
+        message={"Location tracking should be turned off before setting for today."}
         option="info"
         onConfirm={() => setIsValidation(false)}
       />
 
       {/* ===================== END OF SETTING BUTTONS SECTION ===================== */}
+
+      {/* cannot connect child popup */}
+      <ConfirmationModal 
+        visible={isCannotConnect} 
+        message={"Cannot connect to child's device. Please try again later."}
+        option="info"
+        onConfirm={() => {
+          setIsCannotConnect(false);
+          requestSmartwatchTracking(false);
+          requestEmergencyMode(false, children[0].childId);
+          let childrenTmp = [...childrenRef.current];
+          childrenTmp[0].status = "INACTIVE";
+          childrenTmp[0].isTrackingActive = false;
+          setChildrenRef(childrenTmp);
+        }}
+      />
 
     </View>
 

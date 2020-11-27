@@ -8,6 +8,7 @@ import { PORT, COLORS, changeOpac } from '../../../const/const';
 
 import { Loader } from '../../../utils/loader';
 import AvatarContainer from '../AvatarContainer';
+import { ConfirmationModal } from "../../../utils/modal";
 
 
 const TrackingEmergencyScreen = (props) => {
@@ -18,7 +19,8 @@ const TrackingEmergencyScreen = (props) => {
   const REGION_FPT = {latitude: 10.8414846, longitude: 106.8100464, latitudeDelta: 0.032, longitudeDelta: 0.016};
   const MAP_DURATION = 200;
 
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [isNoData, setIsNoData] = React.useState(false);
 
   // children information
   const [children, setChildren] = React.useState(props.route.params.children);
@@ -85,12 +87,20 @@ const TrackingEmergencyScreen = (props) => {
     const from = to - 10*60000; 
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + from + '/' + to);
     const result = await response.json();
+    setLoading(false);
     if (result.code == 200){
+      if (result.data.length == 0){
+        setIsNoData(true);
+        return;
+      }
       setRealLocList(result.data);
       const newLoc = result.data[result.data.length - 1];
       if (mapRef.current != null) mapRef.current.animateToRegion({latitude: newLoc.latitude, longitude: newLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}, MAP_DURATION);
     }
-    else console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
+    else{
+      console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
+      props.navigation.goBack();
+    }
   }
 
   // start on screen load
@@ -177,6 +187,14 @@ const TrackingEmergencyScreen = (props) => {
       <TouchableOpacity style={styles.backBtn} onPress={() => props.navigation.goBack()}>
         <Image source={require("../../../../assets/icons/back.png")} style={{width: 30, height: 30}} />
       </TouchableOpacity>
+
+      {/* no data popup */}
+      <ConfirmationModal 
+        visible={isNoData} 
+        message={"Child has no recent reported location."}
+        option="info"
+        onConfirm={() => props.navigation.goBack()}
+      />
 
     </View>
 
