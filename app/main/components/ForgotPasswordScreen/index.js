@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { COLORS } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import styles from './styles/index.css';
 
@@ -10,6 +10,30 @@ const ForgotPasswordScreen = (props) => {
   const { t }                 = useContext(props.route.params.localizationContext);
   const [phone, setPhone]     = useState("");
   const [loading, setLoading] = useState(false);
+
+  const resetPassword = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetch("http://" + ip + PORT + "/account/reset-password", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: phone
+        })
+      });
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+        props.navigation.navigate("CodeEntering");
+      } else {
+        handleError(result.msg);
+      }
+    } catch (error) {
+      handleError(error.message);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -64,7 +88,7 @@ const ForgotPasswordScreen = (props) => {
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
-              fontFamily: "MontserratBold",
+              fontFamily: "Montserrat",
               height: 50,
               backgroundColor: COLORS.WHITE,
               borderBottomWidth: 1,
@@ -83,8 +107,7 @@ const ForgotPasswordScreen = (props) => {
           backgroundColor: COLORS.STRONG_CYAN
         }}
           onPress={() => {
-            // setLoading(true);
-            props.navigation.navigate("CodeEntering")
+            resetPassword();
           }}
         >
           <Text style={{

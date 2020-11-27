@@ -40,7 +40,9 @@ const QuestCreatingScreen = (props) => {
       data.append("creatorPhoneNumber", id);
       data.append("description", details);  
       data.append("name", name);
-      data.append("reward", badge.id);
+      if (badge !== "") {
+        data.append("reward", badge.id);
+      }
       data.append("title", title);
       const response = await fetchWithTimeout("http://" + ip + PORT + "/child/quest", {
         method: "POST",

@@ -7,6 +7,8 @@ import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
+import Header from "../../../base/components/Header";
+import InputField from "../../../base/components/InputField";
 
 const CollaboratorAddingScreen = (props) => {
   const { t }                       = useContext(props.route.params.localizationContext);
@@ -108,41 +110,7 @@ const CollaboratorAddingScreen = (props) => {
   return (
     <ScrollView style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {t("collaborator-add-title")}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      <Header navigation={props.navigation} title={t("collaborator-add-title")}/>
       {/* form */}
       {/* collab  */}
       <View style={{

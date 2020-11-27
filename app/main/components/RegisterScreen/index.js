@@ -94,7 +94,7 @@ const RegisterScreen = (props) => {
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             style={{
               fontSize: 16,
-              fontFamily: "MontserratBold",
+              fontFamily: "Montserrat",
               height: 50,
               backgroundColor: COLORS.WHITE,
               borderBottomWidth: 1,
