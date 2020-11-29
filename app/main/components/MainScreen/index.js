@@ -16,7 +16,7 @@ import ChildDetailsScreen from '../ChildDetailsScreen';
 import CollaboratorAddingScreen from '../CollaboratorAddingScreen';
 import ProfileChangingLanguageScreen from '../ProfileChangingLanguageScreen';
 import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScreen';
-import OpeningScreen from '../OpeningScreen';
+import ProfileConfirmCollaboratorScreen from '../ProfileConfirmCollaboratorScreen';
 
 const Stack = createStackNavigator();
 
@@ -109,6 +109,11 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="ProfileShowingSubscription"
         component={ProfileShowingSubscriptionScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ProfileConfirmCollaborator"
+        component={ProfileConfirmCollaboratorScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>

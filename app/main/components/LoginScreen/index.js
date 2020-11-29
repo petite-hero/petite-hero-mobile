@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, AsyncStorage, Image } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
-import { Icon } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
@@ -88,11 +87,8 @@ const LoginScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <Icon
-        name="keyboard-arrow-left"
-        type="material"
-        color={COLORS.BLACK}
-        containerStyle={{
+      <TouchableOpacity
+        style={{
           position: "absolute",
           left: "10%",
           top: "15%",
@@ -105,7 +101,12 @@ const LoginScreen = (props) => {
           elevation: 10
         }}
         onPress={() => {props.navigation.goBack()}}
-      />
+      >
+        <Image
+          source={require("../../../../assets/icons/back.png")}
+          style={{width: 30, height: 30}}
+        />
+      </TouchableOpacity>
       <View style={{
         position: "absolute",
         backgroundColor: COLORS.WHITE,
@@ -173,21 +174,31 @@ const LoginScreen = (props) => {
             <TouchableOpacity 
               style={{
                 width: "20%",
-                height: 50,
-                alignItems: "flex-end"
+                height: 40,
+                alignItems: "flex-end",
+                justifyContent: "center"
               }}
               onPress={() => {setSecureText(!secureText)}}
             >
-              <Icon
-                name={secureText ? "visibility" : "visibility-off"}
-                type="material"
-                color={COLORS.MEDIUM_CYAN}
+              {secureText ? 
+              <Image
+                source={require("../../../../assets/icons/eye-on.png")}
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  justifyContent: "center"
+                  width: 40,
+                  height: 40,
+                  justifyContent: "center",
                 }}
               />
+              :
+              <Image
+                source={require("../../../../assets/icons/eye-off.png")}
+                style={{
+                  width: 40,
+                  height: 40,
+                  justifyContent: "center",
+                }}
+              />
+              }
             </TouchableOpacity>
           </View>
           {showInvalidMessage &&

@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { View, Text, Image, AsyncStorage } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, Image, AsyncStorage, ScrollView, TouchableOpacity } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { COLORS, PORT } from "../../../const/const";
 import Animated, { Easing } from "react-native-reanimated";
@@ -8,7 +7,6 @@ import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import { Loader } from "../../../utils/loader";
-import { ConfirmationModal } from "../../../utils/modal";
 
 const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup, iconName }) => {
   const [isDropdown, setDropdown] = useState(false);
@@ -174,7 +172,6 @@ const ProfileScreen = (props) => {
   const [parentProfile, setParentProfile] = React.useState("");
   const [listChildren, setListChildren] = React.useState("");
   const [listCollaborator, setListCollaborator] = React.useState("");
-  const [showModal, setShowModal] = useState(false);
 
   const getListChildren = async () => {
     try {
@@ -186,14 +183,27 @@ const ProfileScreen = (props) => {
         setListChildren(
           result.data.map((childData, index) => {
             return {
-              title: "Child " + (index + 1),
+              title: childData.isCollaboratorChild === true && childData.isConfirm === false ?
+                     "Child " + (index + 1) + " (not yet confirmed)"
+                     : "Child " + (index + 1),
               text: childData.name,
-              action: () =>
+              action: () => {
+                childData.isCollaboratorChild === true && childData.isConfirm === false ?
+                props.navigation.navigate("ProfileConfirmCollaborator", {
+                  screenName: "Confirm Child",
+                  childId: childData.childId,
+                  goBack: () => setLoading(true)
+                })
+                :
                 props.navigation.navigate("ChildDetails", {
                   screenName: childData.name,
                   childId: childData.childId,
-                }),
-              iconName: "keyboard-arrow-right"
+                  isCollaboratorChild: childData.isCollaboratorChild,
+                  goBack: () => setLoading(true)
+                })
+              },
+              iconName: "keyboard-arrow-right",
+              confirmed: false
             };
           })
         );
@@ -354,7 +364,7 @@ const ProfileScreen = (props) => {
         }}>
           <SettingItem
             key="2"
-            title={t("profile-collaborators-title")}
+            title={t("profile-collaborators-title") + " (" + listCollaborator.length + ")"}
             image={require("../../../../assets/icons/collaborator.png")}
             subItems={[
               ...listCollaborator,
@@ -373,7 +383,7 @@ const ProfileScreen = (props) => {
           />
           <SettingItem
             key="3"
-            title={t("profile-children-title")}
+            title={t("profile-children-title") + " (" + listChildren.length + ")"}
             image={require("../../../../assets/icons/child.png")}
             subItems={[
               ...listChildren,

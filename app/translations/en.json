@@ -91,6 +91,8 @@
   "child-add-next"                          : "Next",
   "child-add-qr-scan"                       : "Scan this QR code using smartwatch to connect.",
   "child-add-qr-scan-later"                 : "Later",
+  "child-details-save"                      : "Save",
+  "child-details-delete"                    : "Delete",
 
   "collaborator-add-title"                  : "Add New Collaborator",
   "collaborator-add-name"                   : "Collaborator's Name",
@@ -112,6 +114,8 @@
   "profile-collaborators-title"             : "Collaborators",
   "profile-collaborators-collaborator"      : "Collaborator",
   "profile-collaborators-add"               : "Add collaborator",
+  "profile-collaborators-accept"            : "Accept",
+  "profile-collaborators-deny"              : "Deny",
   "profile-children-title"                  : "Children",
   "profile-children-child"                  : "Child",
   "profile-children-add"                    : "Add child",

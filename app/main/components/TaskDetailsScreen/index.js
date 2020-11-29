@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';

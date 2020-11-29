@@ -4,9 +4,9 @@ import { Loader } from '../../../utils/loader'
 import QRCode from 'react-native-qrcode-svg';
 import styles from './styles/index.css'
 import { badgesList, COLORS } from '../../../const/const';
-import { Icon } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
+import Header from '../../../base/components/Header';
 
 // silent notification for updating location
 Notifications.setNotificationHandler({
@@ -56,41 +56,9 @@ const ChildAddingShowingQrScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {t("child-add-title")}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      {/* header */}
+      <Header navigation={props.navigation} title={t("child-add-title")}/>
+      {/* end header */}
       <View style={{
         width: "100%",
         marginBottom: "10%",
