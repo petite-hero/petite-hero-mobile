@@ -42,7 +42,7 @@ const TrackingSettingLocation = (props) => {
       </View>
 
       {/* field: radius */}
-      <View style={{flexDirection: "row", marginTop: 15}}>
+      {/* <View style={{flexDirection: "row", marginTop: 15}}>
         <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>Radius</Text>
         <Slider
           style={{flex: 8, height: 20}}
@@ -54,7 +54,7 @@ const TrackingSettingLocation = (props) => {
           onValueChange={props.onRadiusChange}
         />
         <Text style={{flex: 3, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}}>{Math.round(props.radius)} m</Text>
-      </View>
+      </View> */}
 
       {/* field: from time */}
       {props.type === "Home" ? null :
