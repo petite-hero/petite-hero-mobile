@@ -77,9 +77,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
-    console.log('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
     const result = await response.json();
-    console.log(result);
     if (result.code === 200){
       setLocList(result.data);
       setAnimSettingLocHeight(animSettingLoc.interpolate(

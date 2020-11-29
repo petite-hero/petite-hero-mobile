@@ -3,7 +3,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/index.css';
 import DateItem from './DateItem';
 import TaskBoard from './TaskBoard';
-import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity, AppState } from 'react-native';
 import { PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import { handleError } from '../../../utils/handleError';
@@ -130,7 +130,12 @@ const currentDateIndex = getDateIndex(getDaysInMonth(new Date().getMonth(), new 
 */}
 const TaskScreen = (props) => {
   const { t }                               = useContext(props.route.params.localizationContext);
-  const [children, setChildren]             = useState([]);
+  const [children, setChildrenUseState]     = useState([]);
+  const childrenRef                         = useRef(children);  // use reference for listeners to use
+  const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
+  const [childId, setChildIdUseState]       = useState("");
+  const childIdRef                          = useRef(childId);  // use reference for listeners to use
+  const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
   const [list, setList]                     = useState([]);
   const [loading, setLoading]               = useState(false);
@@ -165,7 +170,7 @@ const TaskScreen = (props) => {
   const getListOfTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const childId = await AsyncStorage.getItem('child_id');
+      // const childId = await AsyncStorage.getItem('child_id');
       const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
       const result = await response.json();
       if (result.code === 200) {
@@ -185,18 +190,24 @@ const TaskScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
-      const childId = await AsyncStorage.getItem('child_id');
+      const childIdTmp = await AsyncStorage.getItem('child_id');
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
         setChildren(result.data);
-        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        if (!childIdTmp){
+          await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          setChildId(result.data[0].childId);
+        }
         else {
           let isInChildren = false;
           result.data.map((child, index) => {
             if (childId == child.childId) isInChildren = true;
           });
-          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          if (!isInChildren){
+            await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+            setChildId(result.data[0].childId);
+          }
         }
       } else {
         handleError(result.msg);
@@ -222,9 +233,25 @@ const TaskScreen = (props) => {
     }
   }
 
+  const listenChildIdChanged = () => {
+    props.navigation.addListener('focus', handleChildIdChanged);
+    AppState.addEventListener("change", (nextState) => {
+      if (nextState === "active") handleChildIdChanged();
+    });
+  }
+  const handleChildIdChanged = async () => {
+    const childIdTmp = await AsyncStorage.getItem('child_id');
+    if (childIdTmp != childIdRef.current){
+      setLoading(true);
+      setChildId(childIdTmp);
+      setChildren([...childrenRef.current]);
+    }
+  }
+
   useEffect(() => {
     getListOfChildren();
     listenChangeTaskStatus();
+    listenChildIdChanged();
   }, []);
 
   useEffect(() => {

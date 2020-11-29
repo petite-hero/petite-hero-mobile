@@ -166,11 +166,11 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   const [isCannotConnect, setIsCannotConnect] = React.useState(false);
 
   // child information
-  const [children, setChildren] = React.useState(route.params.children);
+  const [children, setChildrenUseState] = React.useState(route.params.children);
   const childrenRef = React.useRef(children);
-  const setChildrenRef = (newChildren) => {
+  const setChildren = (newChildren) => {
     childrenRef.current = newChildren;
-    setChildren(newChildren);
+    setChildrenUseState(newChildren);
   }
 
   // date picker for setting zone
@@ -210,12 +210,12 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
           let childrenTmp = [...childrenRef.current];
           childrenTmp[currentChildIndex].status = "SAFE";
-          setChildrenRef(childrenTmp);
+          setChildren(childrenTmp);
         }
         else if (!notiData.status && currentStatus !== "NOT SAFE" && currentStatus !== "INACTIVE"){
           let childrenTmp = [...childrenRef.current];
           childrenTmp[currentChildIndex].status = "NOT SAFE";
-          setChildrenRef(childrenTmp);
+          setChildren(childrenTmp);
         }
       }
     });
@@ -230,6 +230,28 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   };
 
   {/* ===================== END OF LOCATION UPDATE HANDLING SECTION ===================== */}
+
+  {/* ===================== CHILD ID CHANGE HANDLING SECTION ===================== */}
+
+  const handleChildIdChanged = async () => {
+    const childIdTmp = await AsyncStorage.getItem('child_id');
+    if (childIdTmp != children[0].childId){
+      let isFound = false;
+      children.map((child, index) => {
+        if (child.childId == childIdTmp){
+          let tmpChildren = [...children];
+          let tmpChild = tmpChildren[0];
+          tmpChildren[0] = tmpChildren[index];
+          tmpChildren[index] = tmpChild;
+          setChildren(tmpChildren);
+          isFound = true;
+        }
+      });
+      if (!isFound) await AsyncStorage.setItem('child_id', children[0].childId);
+    }
+  }
+
+  {/* ===================== END OF CHILD ID CHANGE HANDLING SECTION ===================== */}
 
   {/* ===================== API SECTION ===================== */}
 
@@ -279,17 +301,23 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         requestEmergencyMode(true, child.childId);
       }
     });
-    setChildrenRef(childrenTmp);
+    setChildren(childrenTmp);
 
     // listen to location update from server
     listenLocationUpdate();
 
     // handle screen & app states
     requestEmergencyModeList(true)
-    navigation.addListener('focus', () => { requestEmergencyModeList(true); });
+    navigation.addListener('focus', async () => {
+      requestEmergencyModeList(true);
+      handleChildIdChanged();
+    });
     navigation.addListener('blur', () => { requestEmergencyModeList(false); });
     AppState.addEventListener("change", (nextState) => {
-      if (nextState === "active") requestEmergencyModeList(true);
+      if (nextState === "active"){
+        requestEmergencyModeList(true);
+        handleChildIdChanged();
+      }
       else requestEmergencyModeList(false);
     });
 
@@ -344,13 +372,13 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                 margin={10}
                 trackingStatus={child.status}
                 photo={child.photo}
-                onPress={() => {
+                onPress={async () => {
                   let tmpChildren = [...children];
                   let tmpChild = tmpChildren[0];
                   tmpChildren[0] = tmpChildren[index];
                   tmpChildren[index] = tmpChild;
-                  setChildrenRef(tmpChildren);
-                  AsyncStorage.setItem('child_id', tmpChildren[0].childId+"");
+                  setChildren(tmpChildren);
+                  await AsyncStorage.setItem('child_id', tmpChildren[0].childId+"");
                 }}/>
             )
         })}
@@ -375,14 +403,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                 let childrenTmp = [...childrenRef.current];
                 childrenTmp[0].status = "LOADING";
                 childrenTmp[0].isTrackingActive = true;
-                setChildrenRef(childrenTmp);
+                setChildren(childrenTmp);
               }
               else{
                 requestSmartwatchTracking(false);
                 let childrenTmp = [...childrenRef.current];
                 childrenTmp[0].status = "INACTIVE";
                 childrenTmp[0].isTrackingActive = false;
-                setChildrenRef(childrenTmp);
+                setChildren(childrenTmp);
               }
             }}
           >
@@ -486,7 +514,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           let childrenTmp = [...childrenRef.current];
           childrenTmp[0].status = "INACTIVE";
           childrenTmp[0].isTrackingActive = false;
-          setChildrenRef(childrenTmp);
+          setChildren(childrenTmp);
         }}
       />
 
