@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image, TextInput } from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
@@ -9,83 +9,6 @@ import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import Header from "../../../base/components/Header";
-
-const ImagePickerComponent = (props) => {
-  const getPermission = async() => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
-    }
-  }
-  
-  const pickImage = async() => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      quality: 1
-    });
-
-    if (!result.cancelled) {
-      const localUri = result.uri;
-      const fileName = localUri.split("/").pop();
-      const match = /\.(\w+)$/.exec(fileName);
-      const type = match ? `image/${match[1]}` : `image`;
-      props.setPhoto({ uri: localUri, name: fileName, type });
-    }
-  }
-
-  return (
-    <View style={{
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: "10%"
-    }}>
-      <TouchableOpacity
-        title="Choose file"
-        onPress={async() => {await getPermission(); await pickImage()}}
-        style={{
-          width: 120,
-          height: 120,
-          borderRadius: 60,
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: COLORS.MEDIUM_GREY
-        }}
-        activeOpacity={0.8}
-      >
-      {props.photo ?
-        <Image
-          source={{uri: props.photo.uri}}
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: 60
-          }}
-        />
-      :
-      props.currentPhoto ?
-        <Image
-          source={{uri: "data:image/png;base64," + props.currentPhoto}}
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: 60
-          }}
-        />
-      :
-        <Image
-          source={require("../../../../assets/icons/camera.png")}
-          style={{
-            width: 70,
-            height: 70
-          }}
-        />
-      }
-      </TouchableOpacity>
-    </View>
-  )
-};
 
 const GenderPickerComponent = ({t, genders, setGenders}) => {
   const toggleGender = (genderIndex) => {
@@ -118,7 +41,7 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
       }}>
         {
           genders.map((value, index) => {
-            return (
+            if (value.active == true) return (
               <View
                 key={index}
                 style={{
@@ -136,7 +59,6 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
                     borderRadius: 22.5,
                     backgroundColor: value.active ? value.color : COLORS.GREY,
                   }}
-                  onPress={() => toggleGender(index)}
                 >
                   <Image
                     source={value.title === "Boy" ? require("../../../../assets/icons/boy.png") : require("../../../../assets/icons/girl.png")}
@@ -166,7 +88,7 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
   )
 }
 
-const ChildDetailsScreen = (props) => {
+const ProfileConfirmCollaboratorScreen = (props) => {
   const { t }                     = useContext(props.route.params.localizationContext);
   const [name, setName]           = useState("");
   const [nickName, setNickName]   = useState("");
@@ -176,8 +98,8 @@ const ChildDetailsScreen = (props) => {
   const [yob, setYob]             = useState("");
   const [loading, setLoading]     = useState(true);
   const [genders, setGenders] = useState([
-    {title: "Boy", active: false, name: "male", color: COLORS.STRONG_CYAN},
-    {title: "Girl", active: false, name: "female", color: COLORS.STRONG_CYAN}
+    {title: "Boy", active: false, name: "male", type: "fontisto", color: COLORS.STRONG_CYAN},
+    {title: "Girl", active: false, name: "female", type: "fontisto", color: COLORS.STRONG_CYAN}
   ]);
 
   const getGender = (gender) => {
@@ -200,7 +122,7 @@ const ChildDetailsScreen = (props) => {
         setLanguage(result.data.language);
         setCurrentPhoto(result.data.photo);
         setGenders(getGender(result.data.gender));
-        setYob(new Date().getFullYear() - result.data.age + "");
+        setYob(new Date().getFullYear() - result.data.age);
       } else {
         handleError(result.msg);
       }
@@ -211,60 +133,31 @@ const ChildDetailsScreen = (props) => {
     }
   }
 
-  const updateChildProfile = async() => {
-    try {
-      const ip = await AsyncStorage.getItem('IP');
-      const gender = genders.find(gender => gender.active).name;
-      const data = new FormData();
-      data.append("name", name);
-      data.append("nickName", nickName);
-      data.append("language", language);
-      data.append("gender", gender);
-      data.append("childPhoto", photo);
-      data.append("yob", yob);
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/" + props.route.params.childId, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'multipart/form-data;'
-        },
-        body: data
-      });
-      const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        props.route.params.goBack();
-        props.navigation.goBack();
-        handleError("Child profile changed successfully!");
-      } else {
-        handleError(result.msg);
-      }
-    } catch (error) {
-      handleError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const deleteChild = async() => {
+  const confirmOrDeny = async(status) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
-      const body = props.route.params.isCollaboratorChild ? JSON.stringify({
-        collborator: id
-      }) : "";
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/" + props.route.params.childId, {
-        method: "DELETE",
-        body: body
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/collaborator/confirm", {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          collaboratorPhoneNumber: id,
+          isConfirm: status,
+          listChildId: [props.route.params.childId]
+        })
       });
       const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
+      console.log(result);
+      if (result.code === 200) {
         props.route.params.goBack();
         props.navigation.goBack();
-        handleError("Child deleted successfully!");
       } else {
         handleError(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+
     } finally {
       setLoading(false);
     }
@@ -275,16 +168,45 @@ const ChildDetailsScreen = (props) => {
   }, []);
 
   return (
-    loading ? <Loader loading={true}/>
-    :
     <ScrollView style={styles.container}>
-      {/* <Loader loading={loading}/> */}
+      <Loader loading={loading}/>
       <Header navigation={props.navigation} title={props.route.params.screenName}/>
-      {/* form */}
       {/* child image */}
-      <ImagePickerComponent photo={photo} currentPhoto={currentPhoto} setPhoto={setPhoto}/>
+      <View style={{
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: "10%"
+      }}>
+        <View style={{
+          width: 120,
+          height: 120,
+          borderRadius: 60,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: COLORS.MEDIUM_GREY
+        }}>
+          {currentPhoto ?
+            <Image
+              source={{uri: "data:image/png;base64," + currentPhoto}}
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 60
+              }}
+            />
+          :
+            <Image
+              source={require("../../../../assets/icons/camera.png")}
+              style={{
+                width: 70,
+                height: 70
+              }}
+            />
+          }
+        </View>
+      </View>
       {/* end child image */}
-      {/* child name */}
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
@@ -300,18 +222,15 @@ const ChildDetailsScreen = (props) => {
         }}>
           { t("child-add-name") }
         </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text)}}
+        <Text
           style={{
             fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
+            fontFamily: "AcuminBold",
             width: "100%",
           }}
-        />
+        >
+          {name}
+        </Text>
       </View>
       {/* end child name */}
       {/* child nick name */}
@@ -330,18 +249,15 @@ const ChildDetailsScreen = (props) => {
         }}>
           { t("child-add-nickname") }
         </Text>
-        <TextInput
-          value={nickName}
-          onChangeText={(text) => {setNickName(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
+        <Text
+        style={{
+          fontSize: 16,
+          fontFamily: "AcuminBold",
+          width: "100%",
+        }}
+        >
+          {nickName}
+        </Text>
       </View>
       {/* end child nick name */}
       {/* child year of birth */}
@@ -360,18 +276,15 @@ const ChildDetailsScreen = (props) => {
         }}>
           { t("child-add-yob") }
         </Text>
-        <TextInput
-          value={yob}
-          onChangeText={(text) => {setYob(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
+        <Text
+        style={{
+          fontSize: 16,
+          fontFamily: "AcuminBold",
+          width: "100%",
+        }}
+        >
+          {yob}
+        </Text>
       </View>
       {/* end child year of birth */}
       {/* child gender */}
@@ -379,60 +292,54 @@ const ChildDetailsScreen = (props) => {
       {/* end child gender */}
       {/* button Save */}
       <View style={{
-        marginTop: "10%",
         marginLeft: "10%",
         marginRight: "10%",
+        flexDirection: "row",
+        justifyContent: "space-between"
       }}>
-        <View style={{
-          flexDirection: "row",
-          justifyContent: "space-between"
-        }}>
-          <TouchableOpacity style={{
-            width: "48%",
-            paddingTop: "5%",
-            paddingBottom: "5%",
-            marginTop: "10%",
-            backgroundColor: COLORS.WHITE,
-            borderWidth: 2,
-            borderRadius: heightPercentageToDP("5%"),
-            borderColor: COLORS.RED,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-            onPress={() => {setLoading(true); deleteChild()}}
-          >
-            <Text style={{
-              fontFamily: "Acumin",
-              fontSize: 16,
-              color: COLORS.RED
-            }}>
-              {t("child-details-delete")}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{
-            width: "48%",
-            paddingTop: "5%",
-            paddingBottom: "5%",
-            marginTop: "10%",
-            backgroundColor: COLORS.YELLOW,
-            borderRadius: heightPercentageToDP("5%"),
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-            onPress={() => {setLoading(true); updateChildProfile()}}
-          >
-            <Text style={{
-              fontFamily: "Acumin",
-              fontSize: 16
-            }}>
-              {t("child-details-save")}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={{
+          width: "48%",
+          paddingTop: "5%",
+          paddingBottom: "5%",
+          marginTop: "10%",
+          backgroundColor: COLORS.WHITE,
+          borderWidth: 2,
+          borderRadius: heightPercentageToDP("5%"),
+          borderColor: COLORS.YELLOW,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+          onPress={() => {setLoading(true); confirmOrDeny(false)}}
+        >
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 16
+          }}>
+            {t("profile-collaborators-deny")}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          width: "48%",
+          paddingTop: "5%",
+          paddingBottom: "5%",
+          marginTop: "10%",
+          backgroundColor: COLORS.YELLOW,
+          borderRadius: heightPercentageToDP("5%"),
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+          onPress={() => {setLoading(true); confirmOrDeny(true)}}
+        >
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 16
+          }}>
+            {t("profile-collaborators-accept")}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
-  )
+  );
 }
 
-
-export default ChildDetailsScreen;
+export default ProfileConfirmCollaboratorScreen;

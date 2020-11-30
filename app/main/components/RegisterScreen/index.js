@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
-import { Icon } from 'react-native-elements';
 import styles from './styles/index.css';
 import { handleError } from '../../../utils/handleError';
 
@@ -43,11 +42,8 @@ const RegisterScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <Icon
-        name="keyboard-arrow-left"
-        type="material"
-        color={COLORS.BLACK}
-        containerStyle={{
+      <TouchableOpacity
+        style={{
           position: "absolute",
           left: "10%",
           top: "15%",
@@ -60,7 +56,12 @@ const RegisterScreen = (props) => {
           elevation: 10
         }}
         onPress={() => {props.navigation.goBack()}}
-      />
+      >
+        <Image
+          source={require("../../../../assets/icons/back.png")}
+          style={{width: 30, height: 30}}
+        />
+      </TouchableOpacity>
       <View style={{
         position: "absolute",
         backgroundColor: COLORS.WHITE,

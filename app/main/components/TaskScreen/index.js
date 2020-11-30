@@ -150,13 +150,11 @@ const TaskScreen = (props) => {
 
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
       if (notification.request.content.data) {
         getListOfTask();
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
-      console.log(notification);
       if (notification.request.content.data) {
         getListOfTask();
       }
@@ -170,7 +168,6 @@ const TaskScreen = (props) => {
   const getListOfTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      // const childId = await AsyncStorage.getItem('child_id');
       const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
       const result = await response.json();
       if (result.code === 200) {
@@ -194,7 +191,8 @@ const TaskScreen = (props) => {
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
-        setChildren(result.data);
+        const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        setChildren(tmp);
         if (!childIdTmp){
           await AsyncStorage.setItem('child_id', result.data[0].childId + "");
           setChildId(result.data[0].childId);
@@ -239,9 +237,10 @@ const TaskScreen = (props) => {
       if (nextState === "active") handleChildIdChanged();
     });
   }
+  
   const handleChildIdChanged = async () => {
     const childIdTmp = await AsyncStorage.getItem('child_id');
-    if (childIdTmp != childIdRef.current){
+    if (childIdTmp != childIdRef.current) {
       setLoading(true);
       setChildId(childIdTmp);
       setChildren([...childrenRef.current]);
@@ -397,7 +396,7 @@ const TaskScreen = (props) => {
       }
       {/* END BUTTON ADD TASK */}
       {/* AVATAR */}
-      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
+      <AvatarContainer children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
       {/* END AVATAR */}
     </View>
   );

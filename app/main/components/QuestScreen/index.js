@@ -1,28 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity, AppState } from "react-native";
 import { badgesList, COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css";
 import { Loader } from "../../../utils/loader";
 import { handleError } from "../../../utils/handleError";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import AvatarContainer from "../AvatarContainer";
-
-const categories = [
-  {
-    title: "Housework",
-    name: "broom",
-    type: "material-community",
-    color: COLORS.YELLOW,
-  },
-  {
-    title: "Education",
-    name: "school",
-    type: "material",
-    color: COLORS.STRONG_CYAN,
-  },
-  { title: "Skills", name: "toys", type: "material", color: COLORS.GREEN },
-];
 
 const QuestBoard = ({ t, list, setLoading, navigation }) => {
   const [tabs, setTabs] = useState([
@@ -179,7 +163,12 @@ const QuestItem = (item, index, setLoading, navigation) => {
 
 const QuestScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
-  const [children, setChildren] = useState([]);
+  const [children, setChildrenUseState]     = useState([]);
+  const childrenRef                         = useRef(children);  // use reference for listeners to use
+  const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
+  const [childId, setChildIdUseState]       = useState("");
+  const childIdRef                          = useRef(childId);  // use reference for listeners to use
+  const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -234,7 +223,8 @@ const QuestScreen = (props) => {
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
-        setChildren(result.data);
+        const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        setChildren(tmp);
         if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         else {
           let isInChildren = false;
@@ -253,8 +243,24 @@ const QuestScreen = (props) => {
     }
   }
 
+  const listenChildIdChanged = () => {
+    props.navigation.addListener('focus', handleChildIdChanged);
+    AppState.addEventListener("change", (nextState) => {
+      if (nextState === "active") handleChildIdChanged();
+    });
+  }
+  
+  const handleChildIdChanged = async () => {
+    const childIdTmp = await AsyncStorage.getItem('child_id');
+    if (childIdTmp != childIdRef.current) {
+      setLoading(true);
+      setChildId(childIdTmp);
+      setChildren([...childrenRef.current]);
+    }
+  }
+
   useEffect(() => {
-    // props.navigation.addListener('focus', () => { getListOfQuest(); getListOfChildren(); });
+    listenChildIdChanged();
   }, []);
 
   useEffect(() => {
@@ -292,7 +298,7 @@ const QuestScreen = (props) => {
           style={{width: 30, height: 30}}
         />
       </TouchableOpacity>
-      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
+      <AvatarContainer children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
     </View>
   );
 };

@@ -91,6 +91,8 @@
   "child-add-next"                          : "Thêm con",
   "child-add-qr-scan"                       : "Dùng smartwatch quét mã QR bên dưới để kết nối.",
   "child-add-qr-scan-later"                 : "Để sau",
+  "child-details-save"                      : "Lưu thay đổi",
+  "child-details-delete"                    : "Xóa",
 
   "collaborator-add-title"                  : "Thêm cộng tác viên",
   "collaborator-add-name"                   : "Tên cộng tác viên",
@@ -112,6 +114,8 @@
   "profile-collaborators-title"             : "Các cộng tác viên",
   "profile-collaborators-collaborator"      : "Cộng tác viên",
   "profile-collaborators-add"               : "Thêm cộng tác viên",
+  "profile-collaborators-accept"            : "Đồng ý",
+  "profile-collaborators-deny"              : "Từ chối",
   "profile-children-title"                  : "Các con",
   "profile-children-child"                  : "Con",
   "profile-children-add"                    : "Thêm con",

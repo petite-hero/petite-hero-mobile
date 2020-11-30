@@ -21,7 +21,7 @@ const AvatarContainer = (props) => {
     await AsyncStorage.setItem("child_id", childId + "");
     setDropdown(false);
     props.setLoading(true);
-    props.setChildren([...children]);
+    props.setChildren();
   }
 
   useEffect(() => {

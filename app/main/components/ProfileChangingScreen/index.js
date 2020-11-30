@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from "react-native";
 import { Icon } from "react-native-elements";
 import { heightPercentageToDP } from "react-native-responsive-screen";
+import Header from "../../../base/components/Header";
 import { COLORS, PORT } from "../../../const/const";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
@@ -74,41 +75,9 @@ const ProfileChangingScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {t("profile-personal-profile-change")} {props.route.params.screenName}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      {/* header */}
+      <Header navigation={props.navigation} title={t("profile-personal-profile-change") + " " + props.route.params.screenName}/>
+      {/* end header */}
       {/* changed field */}
       <View style={{
         flexDirection: "column",

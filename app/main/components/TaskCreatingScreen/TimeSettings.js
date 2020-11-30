@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Image } from 'react-native';
 import { COLORS } from '../../../const/const';
-import { Icon } from 'react-native-elements'
 
 const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValidStartTime, setValidEndTime}) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
@@ -75,10 +74,12 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
             }}>
               {handleShowingHours(startTime) + ":" + handleShowingMinute(startTime)}
             </Text>
-            <Icon
-              type="material"
-              name="keyboard-arrow-down"
-              color={COLORS.STRONG_CYAN}
+            <Image
+              source={require("../../../../assets/icons/down.png")}
+              style={{
+                width: 30,
+                height: 30
+              }}
             />
           </TouchableOpacity>
         </View>
@@ -102,10 +103,12 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
             }}>
               {handleShowingHours(endTime) + ":" + handleShowingMinute(endTime)}
             </Text>
-            <Icon
-              type="material"
-              name="keyboard-arrow-down"
-              color={COLORS.STRONG_CYAN}
+            <Image
+              source={require("../../../../assets/icons/down.png")}
+              style={{
+                width: 30,
+                height: 30
+              }}
             />
           </TouchableOpacity>
         </View>

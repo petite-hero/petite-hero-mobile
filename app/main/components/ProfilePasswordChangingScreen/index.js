@@ -1,7 +1,8 @@
 import React, { useContext, useRef, useState } from "react";
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from "react-native";
+import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Image } from "react-native";
 import { Icon } from "react-native-elements";
 import { heightPercentageToDP } from "react-native-responsive-screen";
+import Header from "../../../base/components/Header";
 import { COLORS, PORT } from "../../../const/const";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
@@ -50,7 +51,7 @@ const PasswordField = (props) => {
         <TextInput
           value={props.value}
           keyboardType="numeric"
-          onChangeText={(text) => {props.setValue(text)}}
+          onChangeText={(text) => {props.setValue(text); [...props.action()]}}
           style={{
             fontSize: 16,
             fontFamily: "Acumin",
@@ -61,21 +62,32 @@ const PasswordField = (props) => {
         />
         <TouchableOpacity 
           style={{
-            width: "20%",
-            height: 35
+            width: "17.5%",
+            height: 40,
+            alignItems: "flex-end",
+            justifyContent: "center"
           }}
           onPress={() => {props.setSecured(!props.secured)}}
         >
-          <Icon
-            name={props.secured ? "visibility-off" : "visibility"}
-            type="material"
-            color={COLORS.STRONG_GREY}
+          {props.secured ? 
+          <Image
+            source={require("../../../../assets/icons/eye-on.png")}
             style={{
-              width: "100%",
-              height: "100%",
-              justifyContent: "center"
+              width: 40,
+              height: 40,
+              justifyContent: "center",
             }}
           />
+          :
+          <Image
+            source={require("../../../../assets/icons/eye-off.png")}
+            style={{
+              width: 40,
+              height: 40,
+              justifyContent: "center",
+            }}
+          />
+          }
         </TouchableOpacity>
       </View>
     </View>
@@ -100,7 +112,7 @@ const ProfilePasswordChangingScreen = (props) => {
     let isValid = true;
     if (!currentPassword) {setValidCurrentPassword(false); isValid = false}
     if (!newPassword) {setValidNewPassword(false); isValid = false}
-    if (confirmPassword !== newPassword) {setConfirmPassword(false); isValid = false}
+    if (confirmPassword !== newPassword) {setValidConfirmPassword(false); isValid = false}
     return isValid;
   }
 
@@ -128,6 +140,7 @@ const ProfilePasswordChangingScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         props.route.params.goBack();
         props.navigation.goBack();
+        handleError("Password changed successfully.")
       } else if (result.code == 400 && result.msg === "Your old password is not match. Please check again") {
         setMessage("Current password is wrong. Please try again.")
       } else {  
@@ -135,57 +148,27 @@ const ProfilePasswordChangingScreen = (props) => {
       }
     } catch (error) {
       handleError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
   
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <Icon
-          name="keyboard-arrow-left"
-          type="material"
-          color={COLORS.BLACK}
-          onPress={() => {props.navigation.goBack()}}
-        />
-        {/* end icon back */}
-        {/* title of the screen */}
-        <View style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text style={{
-            fontSize: 20,
-            fontFamily: "AcuminBold"
-          }}>
-            {t("profile-setting-password")}
-          </Text>
-        </View>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      {/* header */}
+      <Header navigation={props.navigation} title={t("profile-setting-password")}/>
+      {/* end header */}
       {/* current password field */}
-      <PasswordField title={t("profile-current-password")} value={currentPassword} setValue={setCurrentPassword} secured={currentPasswordSecured} setSecured={setCurrentPasswordSecured}/>
+      <PasswordField title={t("profile-current-password")} value={currentPassword} setValue={setCurrentPassword} secured={currentPasswordSecured} setSecured={setCurrentPasswordSecured} action={() => [setMessage(""), setValidCurrentPassword(true)]}/>
       { !validCurrentPassword && <Message message="Your Current Password cannot be empty."/> }
       {/* end current password */}
       {/* new password field */}
-      <PasswordField title={t("profile-new-password")} value={newPassword} setValue={setNewPassword} secured={newPasswordSecured} setSecured={setNewPasswordSecured}/>
+      <PasswordField title={t("profile-new-password")} value={newPassword} setValue={setNewPassword} secured={newPasswordSecured} setSecured={setNewPasswordSecured} action={() => [setMessage(""), setValidNewPassword(true)]}/>
       { !validNewPassword && <Message message="Your New Password cannot be empty."/> }
       {/* end new password */}
       {/* confirm password field */}
-      <PasswordField title={t("profile-confirm-password")} value={confirmPassword} setValue={setConfirmPassword} secured={confirmPasswordSecured} setSecured={setConfirmPasswordSecured}/>
+      <PasswordField title={t("profile-confirm-password")} value={confirmPassword} setValue={setConfirmPassword} secured={confirmPasswordSecured} setSecured={setConfirmPasswordSecured} action={() => [setMessage(""), setValidConfirmPassword(true)]}/>
       { !validConfirmPassword && <Message message="Confirm Password does not match with the new password."/> }
       { message.length > 0 && <Message message={message}/> }
       {/* end confirm password */}

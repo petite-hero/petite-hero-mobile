@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 
+const handleShowHourAndMinute = (time) => {
+  return time < 10 ?  "0" + time : time;
+}
+
 const handleShowTime = (time) => {
   if (typeof(time) == "string") {
     const tmp = time ? time.split(":") : "00:00:00".split(":");

@@ -3,12 +3,10 @@ import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollVi
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { Icon } from 'react-native-elements';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import Header from "../../../base/components/Header";
-import InputField from "../../../base/components/InputField";
 
 const CollaboratorAddingScreen = (props) => {
   const { t }                       = useContext(props.route.params.localizationContext);
