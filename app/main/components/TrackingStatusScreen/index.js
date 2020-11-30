@@ -162,6 +162,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== VARIABLE SECTION ===================== */}
 
+  const WEEKDAYS_ABB = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const [loading, setLoading] = React.useState(false);
   const [isCannotConnect, setIsCannotConnect] = React.useState(false);
 
@@ -247,7 +249,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           isFound = true;
         }
       });
-      if (!isFound) await AsyncStorage.setItem('child_id', children[0].childId);
+      if (!isFound) await AsyncStorage.setItem('child_id', children[0].childId+"");
     }
   }
 
@@ -421,7 +423,6 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
         {/* choose date for setting button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
-        {/* <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopDay, opacity: animSetZoneBtn, elevation: 0}]}> */}
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => setIsPickingDate(true)}>
             <Image source={require("../../../../assets/icons/calendar.png")} style={{width: 30, height: 30}} />
           </TouchableOpacity>
@@ -471,24 +472,35 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       {/* select day calendar */}
       {isPickingDate ?
         <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
-          <Calendar
-            minDate={new Date()}
-            onDayPress={(day) => {
-              setIsPickingDate(false);
-              // check if the selected day is today
-              const today = new Date().setHours(0, 0, 0, 0);
-              const checkDay = new Date(day.timestamp).setHours(0, 0, 0, 0);
-              if (today === checkDay && children[0].status !== "INACTIVE"){
-                setIsValidation(true);
-                return;
-              }
-              navigation.navigate("TrackingSettings", {children: children, date: new Date(day.timestamp)});
-              animSetZoneBtn.setValue(0);
-              setFlied(false);
-            }}
-            // monthFormat={'yyyy MM'}  // TODO: change depending on language
-            hideExtraDays={true}
-          />
+          <View style={styles.calendar}>
+            <Text style={{fontSize: 20, fontFamily: "Acumin"}}>Select the day</Text>
+            <View style={{flexDirection: "row", marginTop: 10}}>
+              {[0, 1, 2, 3, 4, 5, 6].map((count, index) => {
+                let date = new Date();
+                date.setDate(date.getDate() + count);
+                return (
+                  <TouchableOpacity key={index} style={[styles.dateContainer, index == 0 ? {borderColor: COLORS.STRONG_CYAN} : {}]} onPress={() => {
+                    setIsPickingDate(false);
+                    // check if the selected day is today
+                    if (index === 0 && children[0].status !== "INACTIVE"){
+                      setIsValidation(true);
+                      return;
+                    }
+                    navigation.navigate("TrackingSettings", {children: children, date: date});
+                    animSetZoneBtn.setValue(0);
+                    setFlied(false);
+                  }}>
+                    <Text style={{fontFamily: "Acumin", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                      {WEEKDAYS_ABB[date.getDay()]}
+                    </Text>
+                    <Text style={{fontFamily: "AcuminBold", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                      {(date.getDate() < 10 ? "0" : "") + date.getDate()}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </View>
         </TouchableOpacity>
       : null}
 

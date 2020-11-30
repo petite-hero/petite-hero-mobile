@@ -39,12 +39,14 @@ const styles = StyleSheet.create({
     left: wp("10%"),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#ec546b",
+    borderWidth: 1,
+    borderColor: COLORS.RED,
+    backgroundColor: "white",
     shadowOpacity: 0.2,
     elevation: 5
   },
   warningBtnText: {
-    color: "white",
+    color: COLORS.RED,
     fontFamily: "Acumin"
   },
   callBtn : {
@@ -133,11 +135,28 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingTop: hp("18%"),
+    paddingTop: hp("38%"),
     paddingLeft: wp("5%"),
     paddingRight: wp("5%"),
     borderWidth: 1,
     backgroundColor: "rgba(0, 0, 0, 0.2)"
+  },
+  calendar: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    backgroundColor: "white"
+  },
+  dateContainer: {
+    marginRight: 4,
+    width: wp("11%"),
+    height: hp("8%"),
+    justifyContent: "center",
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: wp("5%"),
+    borderColor: COLORS.MEDIUM_GREY,
+    backgroundColor: COLORS.WHITE,
   },
 
   // nav bar

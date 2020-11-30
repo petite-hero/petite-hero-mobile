@@ -15,6 +15,11 @@ const TrackingSettingMap = (props) => {
 
   const [quadBorder, setQuadBorder] = React.useState([Util.LOC_FPT, Util.LOC_FPT, Util.LOC_FPT, Util.LOC_FPT, Util.LOC_FPT]);
   const [lastUpdate, setLastUpdate] = React.useState(new Date().getTime());
+  const [vertex1, setVertex1] = React.useState(Util.LOC_FPT);
+  const [vertex2, setVertex2] = React.useState(Util.LOC_FPT);
+  const [vertex3, setVertex3] = React.useState(Util.LOC_FPT);
+  const [vertex4, setVertex4] = React.useState(Util.LOC_FPT);
+  const setVertices = [setVertex1, setVertex2, setVertex3, setVertex4];
 
   const handleVertexDrag = (event, vertexIndex) => {
     const now = new Date().getTime();
@@ -28,10 +33,19 @@ const TrackingSettingMap = (props) => {
     }  
   }
 
-  const handleVertexDragFinished = (event, vertexIndex) => {
+  const handleVertexDragFinished = async (event, vertexIndex) => {
     const coor = event.nativeEvent.coordinate;
-    let tmp = [...props.lQuad]; tmp[vertexIndex] = coor; props.setLQuad(tmp);
-    let tmp2 = [...tmp]; tmp2.push(tmp2[0]); setQuadBorder(tmp2);
+    let tmp = [...props.lQuad]; tmp[vertexIndex] = coor;
+    if (!Util.isValidQuad(tmp)){
+      let oldVertex = (Object.assign({}, props.lQuad[vertexIndex]));
+      oldVertex.latitude += new Date().getMilliseconds()/100000000;
+      setVertices[vertexIndex](oldVertex);
+      let tmp2 = [...props.lQuad]; tmp2.push(tmp2[0]); setQuadBorder(tmp2);
+    }
+    else{
+      props.setLQuad(tmp);
+      let tmp2 = [...tmp]; tmp2.push(tmp2[0]); setQuadBorder(tmp2);
+    }
   }
 
   React.useEffect(() => {
@@ -39,6 +53,10 @@ const TrackingSettingMap = (props) => {
       let tmp = [...props.lQuad];
       tmp.push(tmp[0]);
       setQuadBorder(tmp);
+      setVertex1(props.lQuad[0]);
+      setVertex2(props.lQuad[1]);
+      setVertex3(props.lQuad[2]);
+      setVertex4(props.lQuad[3]);
     }
   }, [props.status]);
   
@@ -69,10 +87,10 @@ const TrackingSettingMap = (props) => {
         {props.status === "SETTING_LOC_NEW" || props.status === "SETTING_LOC" ? [
           <Polygon key={0} coordinates={props.lQuad} strokeWidth={0} fillColor={changeOpac(TYPE_COLORS[props.lType], 0.5)} />,
           <Polyline key={1} coordinates={quadBorder} strokeWidth={1} strokeColor={TYPE_COLORS[props.lType]} />,
-          <Marker key={2} coordinate={props.lQuad[0]} draggable onDrag={(event) => handleVertexDrag(event, 0)} onDragEnd={(event) => handleVertexDragFinished(event, 0)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
-          <Marker key={3} coordinate={props.lQuad[1]} draggable onDrag={(event) => handleVertexDrag(event, 1)} onDragEnd={(event) => handleVertexDragFinished(event, 1)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
-          <Marker key={4} coordinate={props.lQuad[2]} draggable onDrag={(event) => handleVertexDrag(event, 2)} onDragEnd={(event) => handleVertexDragFinished(event, 2)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
-          <Marker key={5} coordinate={props.lQuad[3]} draggable onDrag={(event) => handleVertexDrag(event, 3)} onDragEnd={(event) => handleVertexDragFinished(event, 3)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>
+          <Marker key={2} coordinate={vertex1} draggable onDrag={(event) => handleVertexDrag(event, 0)} onDragEnd={(event) => handleVertexDragFinished(event, 0)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
+          <Marker key={3} coordinate={vertex2} draggable onDrag={(event) => handleVertexDrag(event, 1)} onDragEnd={(event) => handleVertexDragFinished(event, 1)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
+          <Marker key={4} coordinate={vertex3} draggable onDrag={(event) => handleVertexDrag(event, 2)} onDragEnd={(event) => handleVertexDragFinished(event, 2)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
+          <Marker key={5} coordinate={vertex4} draggable onDrag={(event) => handleVertexDrag(event, 3)} onDragEnd={(event) => handleVertexDragFinished(event, 3)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>
         ] : null}
         {/* <Marker key={0} coordinate={{latitude: props.settingLoc.latitude, longitude: props.settingLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
           <View style={styles.safeLoc}/>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Animated, Image } from 'react-native';
+import { View, Text, TextInput, Animated, Image, Switch } from 'react-native';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -41,6 +41,24 @@ const TrackingSettingLocation = (props) => {
         <Image style={{flex: 1, width: 26, height: 26, position: "relative", left: 6}} source={require("../../../../assets/icons/forth.png")} tintColor={COLORS.STRONG_CYAN}/>
       </View>
 
+      {/* field: all time */}
+      {props.type == "Home" ?
+        <View style={{flexDirection: "row", marginTop: 15}}>
+          <Text style={{flex: 5, fontFamily: "AcuminBold", fontSize: 15}}>All time</Text>
+          <Switch
+            trackColor={{ false: COLORS.GREY, true: COLORS.LIGHT_CYAN }}
+            thumbColor={props.allTime ? COLORS.STRONG_CYAN : COLORS.STRONG_GREY}
+            onValueChange={props.onAllTimeSelected}
+            value={props.allTime}
+            style={{
+              flex: 3,
+              transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+              marginRight: 5
+            }}
+          />
+        </View>
+      : null}
+
       {/* field: radius */}
       {/* <View style={{flexDirection: "row", marginTop: 15}}>
         <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>Radius</Text>
@@ -57,7 +75,7 @@ const TrackingSettingLocation = (props) => {
       </View> */}
 
       {/* field: from time */}
-      {props.type === "Home" ? null :
+      {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 10}}>
           <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>From</Text>
           <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowFromTimePicker(true)}>
@@ -73,7 +91,7 @@ const TrackingSettingLocation = (props) => {
       }
 
       {/* field: to time */}
-      {props.type === "Home" ? null :
+      {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
           <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>To</Text>
           <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowToTimePicker(true)}>
@@ -89,7 +107,7 @@ const TrackingSettingLocation = (props) => {
       }
 
       {/* field: repeat */}
-      {props.type === "Home" ? null :
+      {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
           <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>Repeat on</Text>
           <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onRepeatSelecting}>

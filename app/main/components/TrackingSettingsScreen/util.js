@@ -79,7 +79,7 @@ class Util{
 
   // new =============
 
-  static getRectFromLoc = (lat, lng) => {
+  static getQuadFromLoc = (lat, lng) => {
     const LAT_DELTA = 0.0016;
     const LNG_DELTA = 0.001;
     let result = [];
@@ -90,15 +90,27 @@ class Util{
     return result;
   }
 
+  static quadLngLatToXY = (quad) => {
+    const midLat = (quad[0].latitude+quad[1].latitude+quad[2].latitude+quad[3].latitude)/4;
+    let result = [];
+    quad.map((vertex, index) => {
+      const xy = this.lngLatToXY(vertex.longitude, vertex.latitude, midLat);
+      result.push({x: xy[0], y: xy[1]});
+    });
+    return result;
+  }
+
   static isValidQuad = (quad) => {
 
+    const quadXY = this.quadLngLatToXY(quad);
+
     let thetas = [];
-    quad.map((vertex, index) => {
+    quadXY.map((vertex, index) => {
       let nextIndex = index + 1;
       if (nextIndex == 4) nextIndex = 0;
-      const vX = quad[nextIndex].x - quad[index].x;
-      const vY = quad[nextIndex].y - quad[index].y;
-      let theta = Math.atan2(vX, vY);
+      const vX = quadXY[nextIndex].x - quadXY[index].x;
+      const vY = quadXY[nextIndex].y - quadXY[index].y;
+      let theta = Math.atan2(vY, vX);
       if (theta < 0) theta += 2*Math.PI;
       thetas.push(theta);
     });
@@ -108,11 +120,10 @@ class Util{
       let nextIndex = index + 1;
       if (nextIndex == 4) nextIndex = 0;
       if (thetas[nextIndex] == thetas[index]) return false;
-      if (thetas[nextIndex] < thetas[index]) negCount++;
-      else negCount--;
+      if (Math.sin(thetas[index] - thetas[nextIndex] + 2*Math.PI) >= 0) negCount++;
     });
     
-    if (negCount){}
+    return negCount >= 3;
 
   }
 
@@ -137,11 +148,12 @@ class Util{
   // ===== CONVERSIONS =====
 
   static dateToHour0(date) {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    return date;
+    let result = new Date(date.getTime());
+    result.setHours(0);
+    result.setMinutes(0);
+    result.setSeconds(0);
+    result.setMilliseconds(0);
+    return result;
   }
 
   static numberTo2Digits(num) {

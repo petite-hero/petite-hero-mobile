@@ -41,12 +41,12 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const [lName, setLName] = React.useState("");
   const [lType, setLType] = React.useState("None");  // None, Home, Education
   const [lTypeTmp, setLTypeTmp] = React.useState("None");
+  const [lAllTime, setLAllTime] = React.useState(false);
   const [lRadius, setLRadius] = React.useState(0);
-  const [lQuad, setLQuad] = React.useState([]);
+  const [lQuad, setLQuad] = React.useState([Util.LOC_FPT, Util.LOC_FPT, Util.LOC_FPT, Util.LOC_FPT]);
   const [lInitialRadius, setLInitialRadius] = React.useState(0);
   const [lFromTime, setLFromTime] = React.useState("None");  const [lFromTimeDate, setLFromTimeDate] = React.useState(null);
   const [lToTime, setLToTime] = React.useState("None");  const [lToTimeDate, setLToTimeDate] = React.useState(null);
-  const [lIndex, setLIndex] = React.useState(0);
   const [lRepeat, setLRepeat] = React.useState([false, false, false, false, false, false, false]);
   const [lRepeatTmp, setLRepeatTmp] = React.useState([false, false, false, false, false, false, false]);
   const [lRepeatAll, setLRepeatAll] = React.useState(false);
@@ -93,17 +93,23 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const userId = await AsyncStorage.getItem('user_id');
+    let settingFromTimeDate = lFromTimeDate;
+    let settingToTimeDate = lToTimeDate;
+    if (lType == "Home" && lAllTime){
+      settingFromTimeDate = Util.dateToHour0(new Date());
+      settingToTimeDate = settingFromTimeDate;
+    }
     const body = JSON.stringify({
       childId: childId,
       creator: userId,
       date: CURRENT_DATE.getTime(),
-      fromTime: lFromTimeDate,
+      fromTime: settingFromTimeDate,
       latitude: settingLocDetail.latitude,
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
-      toTime: lToTimeDate,
+      toTime: settingToTimeDate,
       type: lType,
       latA: lQuad[0].latitude,
       lngA: lQuad[0].longitude,
@@ -125,18 +131,24 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const userId = await AsyncStorage.getItem('user_id');
+    let settingFromTimeDate = lFromTimeDate;
+    let settingToTimeDate = lToTimeDate;
+    if (lType == "Home" && lAllTime){
+      settingFromTimeDate = Util.dateToHour0(new Date());
+      settingToTimeDate = settingFromTimeDate;
+    }
     const body = JSON.stringify({
       childId: childId,
       creator: userId,
       date: CURRENT_DATE.getTime(),
       safezoneId: settingLocDetail.safezoneId,
-      fromTime: lFromTimeDate,
+      fromTime: settingFromTimeDate,
       latitude: settingLocDetail.latitude,
       longitude: settingLocDetail.longitude,
       name: lName,
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
-      toTime: lToTimeDate,
+      toTime: settingToTimeDate,
       type: lType,
       latA: lQuad[0].latitude,
       lngA: lQuad[0].longitude,
@@ -252,10 +264,11 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             setLRadius(loc.radius);
             setLInitialRadius(loc.radius);
             setLFromTime(loc.fromTime); setLFromTimeDate(Util.strToDate(loc.fromTime));
-            setLToTime(loc.toTime); setLToTimeDate(Util.strToDate(loc.toTime));
+            setLToTime(loc.toTime); const toTimeDate = Util.strToDate(loc.toTime); setLToTimeDate(toTimeDate);
             setLType(loc.type);
             setLQuad([{latitude: loc.latA, longitude: loc.lngA}, {latitude: loc.latB, longitude: loc.lngB}, {latitude: loc.latC, longitude: loc.lngC}, {latitude: loc.latD, longitude: loc.lngD}]);
-            setLIndex(index);
+            if (loc.type == "Home" && toTimeDate.getTime() == Util.dateToHour0(toTimeDate).getTime()) setLAllTime(true);
+            else setLAllTime(false);
             setStatus("SETTING_LOC");
             animSettingLoc.setValue(0);
             Animated.timing(animSettingLoc, {toValue: 1, duration: FLY_DURATION, easing: Easing.ease, useNativeDriver: false}).start();
@@ -279,6 +292,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           settingLoc={settingLocDetail}
           name={lName}
           type={lType}
+          allTime={lAllTime}
           radius={lRadius}
           fromTime={lFromTime}
           fromTimeDate={lFromTimeDate}
@@ -288,6 +302,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           initialRadius={lInitialRadius}
 
           onNameChange={(text) => setLName(text)}
+          onAllTimeSelected={() => setLAllTime(!lAllTime)}
           onRadiusChange={(value) => setLRadius(value)}
           onFromTimeSelected={(event, time) => {
             if (time == null) return;
@@ -389,6 +404,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           setLToTime("None"); setLToTimeDate(new Date());
           setLRepeat([false, false, false, false, false, false, false]);
           setLInitialRadius(RADIUS_MIN);
+          setLAllTime(false);
           
           setStatus("SETTING_LOC_NEW");
           searchBar.setAddressText("");
@@ -412,10 +428,10 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             // validation
             let validation = "";
             if (lName == "") validation = "Please specify location name";
-            else if (lType != "Home"){
+            else if (!(lType == "Home" && lAllTime)){
               if (!lFromTime || lFromTime === "None") validation = "Please specify the time at 'From'";
               else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
-              else if (lFromTime >= lToTime) validation = "'To' time should be after 'From'";
+              else if (lFromTimeDate >= lToTimeDate) validation = "'To' time should be after 'From'";
             }
             if (validation == "" && Util.isOverlap(locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = "The time schedule of this location is overlapping another";
             if (validation != ""){
@@ -437,6 +453,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           }
           else if (substatus === "TYPE"){
             setLType(lTypeTmp);
+            if (lTypeTmp != "Home") setLAllTime(false);
             animSettingLocProps.setValue(1);
             Animated.timing(animSettingLocProps, {toValue: 0, duration: FLY_DURATION, easing: Easing.linear, useNativeDriver: false})
               .start(() => setSubstatus(""));

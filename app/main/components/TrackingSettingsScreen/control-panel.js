@@ -53,7 +53,7 @@ const TrackingSettingControlPanel = (props) => {
                 </View>
               }
               <Text style={styles.locationName}>{loc.name} </Text>
-              <Text style={styles.locationTime}>{loc.type === "Home" ? "All day" : "From "+loc.fromTime.slice(0, -3)+" to "+loc.toTime.slice(0, -3)}</Text>
+              <Text style={styles.locationTime}>{loc.type === "Home" && loc.toTime == "00:00:00" ? "All day" : "From "+loc.fromTime.slice(0, -3)+" to "+loc.toTime.slice(0, -3)}</Text>
               <View style={styles.rightIcon}>
                 <Image source={require("../../../../assets/icons/forth.png")} style={{width: 30, height: 30}} />
               </View>

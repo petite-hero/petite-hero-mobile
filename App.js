@@ -93,8 +93,6 @@ const App = () => {
   const testSetApplicationSettings = async () => {
     try {
       await AsyncStorage.setItem('IP', IP);
-      // await AsyncStorage.setItem('user_id', '0987654321');
-      // await AsyncStorage.setItem('user_id', '0938194701');  // Duong
     } catch (error) {
       console.log("Error while testing application settings");
     }
