@@ -11,7 +11,7 @@ class Util{
   static WEEKDAYS_ABB = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 
-  // ===== CALCULATIONS =====
+  // ===== LOCATION =====
 
   static lngLatToXY(lng, lat, midLat){
     let x = lng*Math.cos(midLat*Math.PI/180);
@@ -77,6 +77,8 @@ class Util{
 
   }
 
+  // new =============
+
   static getRectFromLoc = (lat, lng) => {
     const LAT_DELTA = 0.0016;
     const LNG_DELTA = 0.001;
@@ -87,6 +89,37 @@ class Util{
     result.push({latitude: lat-LAT_DELTA, longitude: lng-LNG_DELTA});
     return result;
   }
+
+  static isValidQuad = (quad) => {
+
+    let thetas = [];
+    quad.map((vertex, index) => {
+      let nextIndex = index + 1;
+      if (nextIndex == 4) nextIndex = 0;
+      const vX = quad[nextIndex].x - quad[index].x;
+      const vY = quad[nextIndex].y - quad[index].y;
+      let theta = Math.atan2(vX, vY);
+      if (theta < 0) theta += 2*Math.PI;
+      thetas.push(theta);
+    });
+
+    let negCount = 0;
+    thetas.map((theta, index) => {
+      let nextIndex = index + 1;
+      if (nextIndex == 4) nextIndex = 0;
+      if (thetas[nextIndex] == thetas[index]) return false;
+      if (thetas[nextIndex] < thetas[index]) negCount++;
+      else negCount--;
+    });
+    
+    if (negCount){}
+
+  }
+
+  // ===== END LOCATION =====
+
+
+  // ===== CALCULATIONS =====
 
   static calLocSettingContainerHeight = (itemNum) => {
     const ITEM_HEIGHT = 56;

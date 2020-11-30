@@ -127,22 +127,10 @@ const App = () => {
     <AuthContext.Provider value={authContext}>
       <LocalizationContext.Provider value={localizationContext}>
         <NavigationContainer>
-          {/* hung - test */}
-          {/* <Stack.Navigator 
-            initialRouteName="Main"
-            screenOptions={{
-              headerShown: false
-            }}>
-            <Stack.Screen
-              name="Main"
-              component={MainScreen}
-              initialParams={{ authContext: AuthContext, localizationContext: LocalizationContext}}
-            />
-          </Stack.Navigator> */}
-
           {state.userToken == null ? (
             <Stack.Navigator 
               initialRouteName="Opening"
+              // initialRouteName="Welcome"
               screenOptions={{
                 headerShown: false
               }}

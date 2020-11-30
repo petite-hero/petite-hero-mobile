@@ -42,6 +42,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const [lType, setLType] = React.useState("None");  // None, Home, Education
   const [lTypeTmp, setLTypeTmp] = React.useState("None");
   const [lRadius, setLRadius] = React.useState(0);
+  const [lQuad, setLQuad] = React.useState([]);
   const [lInitialRadius, setLInitialRadius] = React.useState(0);
   const [lFromTime, setLFromTime] = React.useState("None");  const [lFromTimeDate, setLFromTimeDate] = React.useState(null);
   const [lToTime, setLToTime] = React.useState("None");  const [lToTimeDate, setLToTimeDate] = React.useState(null);
@@ -103,9 +104,16 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
       toTime: lToTimeDate,
-      type: lType
+      type: lType,
+      latA: lQuad[0].latitude,
+      lngA: lQuad[0].longitude,
+      latB: lQuad[1].latitude,
+      lngB: lQuad[1].longitude,
+      latC: lQuad[2].latitude,
+      lngC: lQuad[2].longitude,
+      latD: lQuad[3].latitude,
+      lngD: lQuad[3].longitude,
     });
-    console.log(body);
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
     const result = await response.json();
@@ -129,9 +137,16 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
       toTime: lToTimeDate,
-      type: lType
+      type: lType,
+      latA: lQuad[0].latitude,
+      lngA: lQuad[0].longitude,
+      latB: lQuad[1].latitude,
+      lngB: lQuad[1].longitude,
+      latC: lQuad[2].latitude,
+      lngC: lQuad[2].longitude,
+      latD: lQuad[3].latitude,
+      lngD: lQuad[3].longitude,
     });
-    console.log(body);
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: body});
     const result = await response.json();
@@ -177,8 +192,10 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
         settingLoc={settingLocMap}
         lType={lType}
         lRadius={lRadius}
+        lQuad={lQuad}
         
         setMap={setMap}
+        setLQuad={setLQuad}
         onRegionChangeComplete={(region) => {
           if (status === "PINNING") setSettingLocMap({latitude: region.latitude, longitude: region.longitude});
         }}
@@ -236,7 +253,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             setLInitialRadius(loc.radius);
             setLFromTime(loc.fromTime); setLFromTimeDate(Util.strToDate(loc.fromTime));
             setLToTime(loc.toTime); setLToTimeDate(Util.strToDate(loc.toTime));
-            setLType(loc.type)
+            setLType(loc.type);
+            setLQuad([{latitude: loc.latA, longitude: loc.lngA}, {latitude: loc.latB, longitude: loc.lngB}, {latitude: loc.latC, longitude: loc.lngC}, {latitude: loc.latD, longitude: loc.lngD}]);
             setLIndex(index);
             setStatus("SETTING_LOC");
             animSettingLoc.setValue(0);
@@ -365,6 +383,8 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
             latitudeDelta: Util.MAP_ZOOM.latitudeDelta, longitudeDelta: Util.MAP_ZOOM.longitudeDelta}, 700);
           setLType("None");
           setLRadius(RADIUS_MIN);
+          const quadCal = Util.getQuadFromLoc(settingLocMap.latitude, settingLocMap.longitude);
+          setLQuad(quadCal);
           setLFromTime("None"); setLFromTimeDate(new Date());
           setLToTime("None"); setLToTimeDate(new Date());
           setLRepeat([false, false, false, false, false, false, false]);

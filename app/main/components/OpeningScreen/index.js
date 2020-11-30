@@ -9,15 +9,15 @@ const SLIDE_WIDTH = wp("100%");
 const slides = [
   {
     id: 1,
-    image: require("../../../../assets/gif/welcome.gif")
+    image: require("../../../../assets/gif/welcome_1.gif")
   },
   {
     id: 2,
-    image: require("../../../../assets/gif/2.gif")
+    image: require("../../../../assets/gif/welcome_2.gif")
   },
   {
     id: 3,
-    image: require("../../../../assets/gif/3.gif")
+    image: require("../../../../assets/gif/welcome_3.gif")
   }
 ]
 

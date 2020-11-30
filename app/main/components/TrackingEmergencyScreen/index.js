@@ -191,7 +191,7 @@ const TrackingEmergencyScreen = (props) => {
       {/* no data popup */}
       <ConfirmationModal 
         visible={isNoData} 
-        message={"Child has no recent reported location."}
+        message={"Child has no recently reported location."}
         option="info"
         onConfirm={() => props.navigation.goBack()}
       />

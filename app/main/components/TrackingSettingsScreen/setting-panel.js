@@ -58,7 +58,7 @@ const TrackingSettingLocation = (props) => {
 
       {/* field: from time */}
       {props.type === "Home" ? null :
-        <View style={{flexDirection: "row", marginTop: 15}}>
+        <View style={{flexDirection: "row", marginTop: 10}}>
           <Text style={{flex: 3, fontFamily: "AcuminBold", fontSize: 15}}>From</Text>
           <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowFromTimePicker(true)}>
             {props.fromTime == "None" || props.fromTime == null ? "None" : props.fromTime.slice(0, -3)}

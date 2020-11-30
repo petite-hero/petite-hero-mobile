@@ -71,7 +71,7 @@ const Welcome = ({ navigation, route }) => {
   return (
     <ImageBackground 
       style={styles.container}
-      source={require("../../../../assets/gif/welcome.gif")}
+      source={require("../../../../assets/gif/welcome_1.gif")}
     >
       <Image style={styles.circle}/>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Register")} onLongPress={() => setIsScanning(true)}>
