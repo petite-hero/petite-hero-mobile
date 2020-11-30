@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, Image, ScrollView } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { fetchWithTimeout } from '../../../utils/fetch';
@@ -81,7 +81,7 @@ const TaskDetailsScreen = (props) => {
     loading ? 
     <Loader loading={loading}/>
     :
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
           source={details.proofPhoto ? {uri: "data:image/png;base64," + details.proofPhoto} : require("../../../../assets/task-background/1.png")}
@@ -167,7 +167,8 @@ const TaskDetailsScreen = (props) => {
           :
           <View style={{
             flexDirection: "row",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            marginBottom: "10%"
           }}>
             <TouchableOpacity style={[styles.changeStatusButton, {backgroundColor: COLORS.WHITE}]}
               onPress={() => {setLoading(true); approveOrDeclineTask(false)}}
@@ -186,7 +187,7 @@ const TaskDetailsScreen = (props) => {
           </View>
         }
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, AsyncStorage, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, AsyncStorage, Image, ImageBackground } from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
@@ -87,18 +87,29 @@ const LoginScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
+      <View style={{
+        width: "100%",
+        height: "30%",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <Image
+          source={require("../../../../assets/logo.png")}
+          style={{
+            width: 250,
+            height: 250
+          }}>
+        </Image>
+      </View>
       <TouchableOpacity
         style={{
           position: "absolute",
           left: "10%",
-          top: "15%",
+          top: "5%",
           width: widthPercentageToDP("10%"),
           height: widthPercentageToDP("10%"),
-          borderRadius: widthPercentageToDP("5%"),
-          backgroundColor: COLORS.WHITE,
           alignItems: "center",
-          justifyContent: "center",
-          elevation: 10
+          justifyContent: "center"
         }}
         onPress={() => {props.navigation.goBack()}}
       >
@@ -111,11 +122,9 @@ const LoginScreen = (props) => {
         position: "absolute",
         backgroundColor: COLORS.WHITE,
         width: "100%",
-        height: "74%",
+        height: "70%",
         top: "26%",
-        alignItems: "center",
-        borderTopRightRadius: 30,
-        borderTopLeftRadius:  30,
+        alignItems: "center"
       }}>
         <Text style={{
           marginTop: "10%",
@@ -137,6 +146,7 @@ const LoginScreen = (props) => {
             onChangeText={(text) => setUsername(text)}
             placeholder={t("signin-username")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
+            maxLength={11}
             style={{
               fontSize: 16,
               fontFamily: "Montserrat",
@@ -164,6 +174,7 @@ const LoginScreen = (props) => {
               onChangeText={(text) => {showInvalidMessage && setShowInvalidMessage(false); setPassword(text)}}
               placeholder={t("signin-password")}
               placeholderTextColor={COLORS.MEDIUM_CYAN}
+              maxLength={6}
               style={{
                 fontSize: 16,
                 fontFamily: "Montserrat",

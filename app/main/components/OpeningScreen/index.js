@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Image, View, TouchableOpacity, Text, FlatList } from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
+import { Image, View, TouchableOpacity, Text, FlatList, ScrollView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
@@ -34,26 +34,27 @@ const Slide = ({source}) => {
 }
 
 const OpeningScreen = (props) => {
+  const { t } = useContext(props.route.params.localizationContext);
   const refSlideContainer = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={slides}
+      <ScrollView
         ref={refSlideContainer}
-        renderItem={({item, index}) => <Slide source={item.image}/>}
-        keyExtractor={item => item.id + ""}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         pagingEnabled={true}
         scrollEnabled={true}
-        initialNumToRender={3}
         scrollEventThrottle={3}
         onMomentumScrollEnd={({nativeEvent}) => {
           setCurrentIndex(Math.round(nativeEvent.contentOffset.x / SLIDE_WIDTH));
         }}
-      />
+      >
+        {slides.map((slide, index) => 
+          <Slide key={index + ""} source={slide.image}/>
+        )}
+      </ScrollView>
       <View style={{
         position: "absolute",
         top: "90%",
@@ -71,7 +72,7 @@ const OpeningScreen = (props) => {
             fontFamily: "MontserratBold",
             fontSize: 16
           }}>
-            Skip
+            {t("opening-skip")}
           </Text>
         </TouchableOpacity>
         <View style={{
@@ -101,14 +102,14 @@ const OpeningScreen = (props) => {
           }}
             onPress={() => {
               if (currentIndex < slides.length - 1) {
-                refSlideContainer.current.scrollToIndex({index: currentIndex + 1});
+                refSlideContainer.current.scrollTo({x: SLIDE_WIDTH * (currentIndex + 1)});
                 setCurrentIndex(currentIndex + 1);
               } else {
                 props.navigation.navigate("Welcome");
               }
             }}
           >
-            Next
+            {t("opening-next")}
           </Text>
         </TouchableOpacity>
       </View>

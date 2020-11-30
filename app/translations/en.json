@@ -2,6 +2,9 @@
   "welcome-signin"                          : "Sign in",
   "welcome-signup"                          : "Create an Account",
 
+  "opening-skip"                            : "Skip",
+  "opening-next"                            : "Next",
+
   "signup-title"                            : "Sign Up",
   "signup-username"                         : "Enter Phone Number",
   "signup-next"                             : "Next",
@@ -59,6 +62,8 @@
   "task-details-submit-late"                : "Submitted late at",
 
   "quest-title"                             : "Quests",
+  "quest-empty-1"                           : "Current",
+  "quest-empty-2"                           : "quest list is empty.",
   "quest-status-in-progress"                : "In Progress",
   "quest-status-finished"                   : "Finished",
   "quest-status-assigned"                   : "Assigned",
@@ -80,6 +85,7 @@
   "quest-details-fail"                      : "Fail",
 
   "child-add-title"                         : "Add New Child",
+  "child-add-qr-scan-title"                 : "Connect devices",
   "child-add-name"                          : "Your Child's Name",
   "child-add-name-empty"                    : "Child's name cannot be empty.",
   "child-add-nickname"                      : "Nickname (Optional)",
@@ -91,15 +97,19 @@
   "child-add-next"                          : "Next",
   "child-add-qr-scan"                       : "Scan this QR code using smartwatch to connect.",
   "child-add-qr-scan-later"                 : "Later",
+  "child-details-token"                     : "Device ID",
+  "child-details-no-token"                  : "None",
   "child-details-save"                      : "Save",
   "child-details-delete"                    : "Delete",
 
   "collaborator-add-title"                  : "Add New Collaborator",
+  "collaborator-add-button-text"            : "Add Collaborator",
   "collaborator-add-name"                   : "Collaborator's Name",
   "collaborator-add-name-empty"             : "Collaborator's name cannot be empty.",
   "collaborator-add-phone"                  : "Collaborator's Phone Number",
   "collaborator-add-phone-empty"            : "Collaborator's phone cannot be empty.",
   "collaborator-add-next"                   : "Next",
+  "collaborator-add-choose-child"           : "Collaborate on",
   "collaborator-add-confirm"                : "Confirm",
 
   "profile-personal-profile-title"          : "Personal Profile",

@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Switch, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import Header from "../../../base/components/Header";
+import InputField from "../../../base/components/InputField";
+import ButtonSave from "../../../base/components/ButtonSave";
 
 const CollaboratorAddingScreen = (props) => {
   const { t }                       = useContext(props.route.params.localizationContext);
@@ -110,43 +111,12 @@ const CollaboratorAddingScreen = (props) => {
       <Loader loading={loading}/>
       <Header navigation={props.navigation} title={t("collaborator-add-title")}/>
       {/* form */}
-      {/* collab  */}
+      {/* collab phone */}
+      <InputField title={t("collaborator-add-phone")} value={phone} setValue={setPhone} valid={validPhone} setValid={setValidPhone} keyboardType="numeric" invalidMessage={t("collaborator-add-phone-empty")} maxLength={11} actionsOnTyping={() => {setName(""); setMessage("")}}/>
       <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: "2.5%",
         marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "2.5%"
+        marginRight: "10%"
       }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("collaborator-add-phone")}
-        </Text>
-        <TextInput
-          value={phone}
-          onChangeText={(text) => {setPhone(text); setValidPhone(true); setName(""); setMessage("")}}
-          keyboardType="numeric"
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
-        { !validPhone &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED
-          }}>
-            {t("collaborator-add-phone-empty")}
-          </Text>
-        }
         { message.length > 0 &&
           <Text style={{
             fontFamily: "Acumin",
@@ -161,6 +131,7 @@ const CollaboratorAddingScreen = (props) => {
       {/* collab name */}
       { name.length > 0 &&
       <>
+      <InputField title={t("collaborator-add-name")} value={name} editable={false} />
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
@@ -173,32 +144,7 @@ const CollaboratorAddingScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          {t("collaborator-add-name")}
-        </Text>
-        <Text style={{
-          fontSize: 16,
-          fontFamily: "Acumin",
-          backgroundColor: COLORS.WHITE,
-          borderBottomWidth: 2,
-          borderColor: COLORS.GREY,
-          width: "100%",
-        }}>
-          {name}
-        </Text>
-      </View>
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: "2.5%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "2.5%"
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          Collaborate on
+          {t("collaborator-add-choose-child")}
         </Text>
         <View style={{
           flexDirection: "row"
@@ -239,26 +185,12 @@ const CollaboratorAddingScreen = (props) => {
       }
       {/* end collab name */}
       {/* button Confirm */}
-      <TouchableOpacity style={{
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginTop: "10%",
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        height: heightPercentageToDP("5%"),
-        backgroundColor: COLORS.YELLOW
-      }}
-        onPress={name.length <= 0 ? () => {setLoading(true); findCollab()} : () => {setLoading(true); addCollab()}}
-      >
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.BLACK
-        }}>
-          {name.length <= 0 ? t("collaborator-add-confirm") : "Add Collaborator"}
-        </Text>
-      </TouchableOpacity>
+      <ButtonSave 
+        title={name.length <= 0 ? t("collaborator-add-confirm") : t("collaborator-add-button-text")}
+        action={name.length <= 0 ? () => {setLoading(true); findCollab()} : () => {setLoading(true); addCollab()}}
+        style={{marginBottom: 50}}
+      />
+      {/* end button Confirm */}
     </ScrollView>
   )
 }

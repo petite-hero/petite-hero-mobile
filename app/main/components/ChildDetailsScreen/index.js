@@ -4,11 +4,12 @@ import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import { handleError } from "../../../utils/handleError";
 import Header from "../../../base/components/Header";
+import InputField from "../../../base/components/InputField";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -87,7 +88,7 @@ const ImagePickerComponent = (props) => {
   )
 };
 
-const GenderPickerComponent = ({t, genders, setGenders}) => {
+const GenderPickerComponent = ({t, isCollaboratorChild, genders, setGenders}) => {
   const toggleGender = (genderIndex) => {
     let tmp = [...genders];
     tmp.map((value, index) => {
@@ -108,7 +109,7 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
       <Text style={{
         fontFamily: "AcuminBold",
         fontSize: 16,
-        color: COLORS.GREY,
+        color: COLORS.BLACK,
         marginBottom: 10
       }}>
         { t("child-add-gender") }
@@ -118,6 +119,7 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
       }}>
         {
           genders.map((value, index) => {
+            if (isCollaboratorChild && index == 1) return <View key={index + ""}></View>
             return (
               <View
                 key={index}
@@ -169,11 +171,14 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
 const ChildDetailsScreen = (props) => {
   const { t }                     = useContext(props.route.params.localizationContext);
   const [name, setName]           = useState("");
+  const [validName, setValidName] = useState(true);
   const [nickName, setNickName]   = useState("");
   const [language, setLanguage]   = useState("English");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [photo, setPhoto]         = useState("");
   const [yob, setYob]             = useState("");
+  const [validYob, setValidYob]   = useState(true);
+  const [deviceId, setDeviceId]   = useState("");
   const [loading, setLoading]     = useState(true);
   const [genders, setGenders] = useState([
     {title: "Boy", active: false, name: "male", color: COLORS.STRONG_CYAN},
@@ -201,6 +206,7 @@ const ChildDetailsScreen = (props) => {
         setCurrentPhoto(result.data.photo);
         setGenders(getGender(result.data.gender));
         setYob(new Date().getFullYear() - result.data.age + "");
+        setDeviceId(result.data.androidId);
       } else {
         handleError(result.msg);
       }
@@ -285,104 +291,79 @@ const ChildDetailsScreen = (props) => {
       <ImagePickerComponent photo={photo} currentPhoto={currentPhoto} setPhoto={setPhoto}/>
       {/* end child image */}
       {/* child name */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        paddingTop: "2.5%",
-        paddingLeft: "10%",
-        paddingRight: "10%",
-        paddingBottom: "2.5%"
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.GREY
-        }}>
-          { t("child-add-name") }
-        </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
-      </View>
+      <InputField title={ t("child-add-name") } value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("child-add-name-empty")} editable={!props.route.params.isCollaboratorChild}/>
       {/* end child name */}
       {/* child nick name */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        paddingTop: "2.5%",
-        paddingLeft: "10%",
-        paddingRight: "10%",
-        paddingBottom: "2.5%"
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.GREY
-        }}>
-          { t("child-add-nickname") }
-        </Text>
-        <TextInput
-          value={nickName}
-          onChangeText={(text) => {setNickName(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
-      </View>
+      <InputField title={t("child-add-nickname")} value={nickName} setValue={setNickName} editable={!props.route.params.isCollaboratorChild}/>
       {/* end child nick name */}
       {/* child year of birth */}
+      <InputField title={t("child-add-yob")} value={yob} setValue={setYob} valid={validYob} setValid={setValidYob} invalidMessage={t("child-add-yob-empty")} keyboardType="numeric" editable={!props.route.params.isCollaboratorChild}/>
+      {/* end child year of birth */}
+      {/* child gender */}
+      <GenderPickerComponent t={t} isCollaboratorChild={props.route.params.isCollaboratorChild} genders={genders} setGenders={setGenders}/>
+      {/* end child gender */}
+      {/* device id */}
+      {
+      !props.route.params.isCollaboratorChild &&
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
-        paddingTop: "2.5%",
-        paddingLeft: "10%",
-        paddingRight: "10%",
-        paddingBottom: "2.5%"
+        marginTop: "2.5%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginBottom: "2.5%"
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.GREY
+          fontSize: 16
         }}>
-          { t("child-add-yob") }
+          {t("child-details-token")}
         </Text>
-        <TextInput
-          value={yob}
-          onChangeText={(text) => {setYob(text)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            backgroundColor: COLORS.WHITE,
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY,
-            width: "100%",
-          }}
-        />
+        <View style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+          {
+          deviceId ?
+            <Text style={{
+              fontFamily: "AcuminBold",
+              fontSize: 14,
+              color: COLORS.STRONG_GREY
+            }}>
+              {deviceId}
+            </Text>
+          :
+            <Text style={{
+              fontFamily: "AcuminBold",
+              fontSize: 14,
+              color: COLORS.STRONG_GREY
+            }}>
+              {t("child-details-no-token")}
+            </Text>
+          }
+          <TouchableOpacity
+            onPress={() => {props.navigation.navigate("ChildAddingShowingQr", {qr: props.route.params.childId + ""})}}
+            style={{ marginRight: -10 }}
+          >
+            <Image
+              source={require("../../../../assets/icons/forth.png")}
+              style={{width: 30, height: 30}}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      {/* end child year of birth */}
-      {/* child gender */}
-      <GenderPickerComponent t={t} genders={genders} setGenders={setGenders}/>
-      {/* end child gender */}
+      }
+      {/* end device id */}
       {/* button Save */}
       <View style={{
         marginTop: "10%",
         marginLeft: "10%",
         marginRight: "10%",
       }}>
+        {
+        !props.route.params.isCollaboratorChild ?
         <View style={{
           flexDirection: "row",
           justifyContent: "space-between"
@@ -429,6 +410,30 @@ const ChildDetailsScreen = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
+        : 
+        <TouchableOpacity style={{
+          width: "100%",
+          paddingTop: "5%",
+          paddingBottom: "5%",
+          marginTop: "10%",
+          backgroundColor: COLORS.WHITE,
+          borderWidth: 2,
+          borderRadius: heightPercentageToDP("5%"),
+          borderColor: COLORS.RED,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+          onPress={() => {setLoading(true); deleteChild()}}
+        >
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 16,
+            color: COLORS.RED
+          }}>
+            {t("child-details-delete")}
+          </Text>
+        </TouchableOpacity>
+        }
       </View>
     </ScrollView>
   )

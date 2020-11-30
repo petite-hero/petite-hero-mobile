@@ -3,7 +3,7 @@ import { View, Text, TextInput } from 'react-native';
 import { COLORS } from "../../../const/const";
 import styles from "./styles/index.css"
 
-const InputField = ({title, value, setValue, valid = true, setValid, invalidMessage, keyboardType = "default"}) => {
+const InputField = ({title, value, setValue, valid = true, setValid, invalidMessage, keyboardType = "default", maxLength = 50, multiline = false, actionsOnTyping, editable = true}) => {
   return (
     <View style={styles.container}>
       <Text style={{
@@ -14,8 +14,11 @@ const InputField = ({title, value, setValue, valid = true, setValid, invalidMess
       </Text>
       <TextInput
         value={value}
-        onChangeText={(text) => {setValue(text); setValid && setValid(true)}}
+        onChangeText={(text) => {setValue(text); setValid && setValid(true); actionsOnTyping && actionsOnTyping()}}
         keyboardType={keyboardType}
+        maxLength={maxLength}
+        multiline={multiline}
+        editable={editable}
         style={{
           fontSize: 16,
           fontFamily: "Acumin",

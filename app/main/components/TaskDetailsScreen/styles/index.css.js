@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     paddingTop: "5%",
     paddingBottom: "5%",
     marginTop: "10%",
+    marginBottom: "10%",
     backgroundColor: COLORS.YELLOW,
     borderRadius: hp("5%"),
     alignItems: "center",

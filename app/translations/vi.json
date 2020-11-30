@@ -2,6 +2,9 @@
   "welcome-signin"                          : "Đăng nhập",
   "welcome-signup"                          : "Tạo tài khoản mới",
 
+  "opening-skip"                            : "Bỏ qua",
+  "opening-next"                            : "Tiếp theo",
+
   "signup-title"                            : "Đăng kí",
   "signup-username"                         : "Nhập số điện thoại",
   "signup-next"                             : "Đăng kí",
@@ -25,7 +28,7 @@
   "navigation-profile"                      : "Hồ sơ",
 
   "task-title"                              : "Công việc",
-  "task-empty-1"                            : "Không có nhiệm vụ ở trạng thái",
+  "task-empty-1"                            : "Không có công việc ở trạng thái",
   "task-empty-2"                            : "ngày hôm nay.",
   "task-status-in-progress"                 : "Đang tiến hành",
   "task-status-finished"                    : "Đã hoàn thành",
@@ -59,6 +62,8 @@
   "task-details-submit-late"                : "Nộp trễ vào lúc",
 
   "quest-title"                             : "Nhiệm vụ",
+  "quest-empty-1"                           : "Không có nhiệm vụ ở trạng thái",
+  "quest-empty-2"                           : ".",
   "quest-status-in-progress"                : "Đang tiến hành",
   "quest-status-finished"                   : "Đã hoàn thành",
   "quest-status-assigned"                   : "Đã giao",
@@ -80,6 +85,7 @@
   "quest-details-fail"                      : "Không hoàn thành",
 
   "child-add-title"                         : "Thêm con",
+  "child-add-qr-scan-title"                 : "Kết nối thiết bị",
   "child-add-name"                          : "Tên con",
   "child-add-name-empty"                    : "Tên con không thể để trống.",
   "child-add-nickname"                      : "Biệt danh",
@@ -91,15 +97,19 @@
   "child-add-next"                          : "Thêm con",
   "child-add-qr-scan"                       : "Dùng smartwatch quét mã QR bên dưới để kết nối.",
   "child-add-qr-scan-later"                 : "Để sau",
+  "child-details-token"                     : "ID thiết bị đồng hồ thông minh",
+  "child-details-no-token"                  : "Chưa liên kết",
   "child-details-save"                      : "Lưu thay đổi",
   "child-details-delete"                    : "Xóa",
 
   "collaborator-add-title"                  : "Thêm cộng tác viên",
+  "collaborator-add-button-text"            : "Thêm cộng tác viên",
   "collaborator-add-name"                   : "Tên cộng tác viên",
   "collaborator-add-name-empty"             : "Tên cộng tác viên không thể để trống.",
   "collaborator-add-phone"                  : "Số điện thoại cộng tác viên",
   "collaborator-add-phone-empty"            : "Số điện thoại cộng tác viên không thể để trống.",
   "collaborator-add-next"                   : "Thêm cộng tác viên",
+  "collaborator-add-choose-child"           : "Chọn con để mời hợp tác",
   "collaborator-add-confirm"                : "Xác nhận",
 
   "profile-personal-profile-title"          : "Thông tin cá nhân",
