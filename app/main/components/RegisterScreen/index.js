@@ -42,18 +42,29 @@ const RegisterScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
+      <View style={{
+        width: "100%",
+        height: "30%",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <Image
+          source={require("../../../../assets/logo.png")}
+          style={{
+            width: 250,
+            height: 250
+          }}>
+        </Image>
+      </View>
       <TouchableOpacity
         style={{
           position: "absolute",
           left: "10%",
-          top: "15%",
+          top: "5%",
           width: widthPercentageToDP("10%"),
           height: widthPercentageToDP("10%"),
-          borderRadius: widthPercentageToDP("5%"),
-          backgroundColor: COLORS.WHITE,
           alignItems: "center",
-          justifyContent: "center",
-          elevation: 10
+          justifyContent: "center"
         }}
         onPress={() => {props.navigation.goBack()}}
       >
@@ -93,6 +104,7 @@ const RegisterScreen = (props) => {
             onChangeText={(text) => setPhone(text)}
             placeholder={t("signup-username")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
+            maxLength={11}
             style={{
               fontSize: 16,
               fontFamily: "Montserrat",

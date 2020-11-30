@@ -29,7 +29,6 @@ Notifications.setNotificationHandler({
 const ChildAddingShowingQrScreen = (props) => {
   const { t }                 = useContext(props.route.params.localizationContext);
   const [loading, setLoading] = useState(false);
-  const logo = badgesList[0].image;
 
   // listen to smartwatch QR scanning updates
   const notificationListener = React.useRef();
@@ -57,7 +56,7 @@ const ChildAddingShowingQrScreen = (props) => {
     <View style={styles.container}>
       <Loader loading={loading}/>
       {/* header */}
-      <Header navigation={props.navigation} title={t("child-add-title")}/>
+      <Header navigation={props.navigation} title={t("child-add-qr-scan-title")}/>
       {/* end header */}
       <View style={{
         width: "100%",
@@ -83,8 +82,8 @@ const ChildAddingShowingQrScreen = (props) => {
       }}>
         <QRCode
           value={props.route.params.qr}
-          logo={logo}
-          logoSize={30}
+          logo={require("../../../../assets/logo.png")}
+          logoSize={80}
           logoBackgroundColor='transparent'
           size={200}
         />

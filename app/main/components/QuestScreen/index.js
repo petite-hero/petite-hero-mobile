@@ -64,10 +64,10 @@ const QuestBoard = ({ t, list, setLoading, navigation }) => {
               style={{
                 fontFamily: "Acumin",
                 fontSize: 16,
-                color: COLORS.STRONG_CYAN,
+                color: COLORS.MEDIUM_CYAN,
               }}
             >
-              Current quest list is empty.
+              {t("quest-empty-1")} {tabs[0].active ? t("quest-status-in-progress").toLowerCase() : t("quest-status-finished").toLowerCase()} {t("quest-empty-2")}
             </Text>
           </View>
         ) : (

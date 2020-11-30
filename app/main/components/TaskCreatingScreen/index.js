@@ -178,7 +178,7 @@ const TaskCreatingScreen = (props) => {
       <Header navigation={props.navigation} title={t("task-add-title")} subTitle={date[1] + ", " + date[2] + " " + date[3]}/>
       {/* form */}
       {/* task name */}
-      <InputField title={t("task-add-name")} value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("task-add-name-empty")}/>
+      <InputField title={t("task-add-name")} value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("task-add-name-empty")} maxLength={50}/>
       {/* end task name */}
       {/* category */}
       <CategoryList t={t} categories={categories} setCategories={setCategories}/>
@@ -191,7 +191,7 @@ const TaskCreatingScreen = (props) => {
         </Text>
       }
       {/* task details */}
-      <InputField title={t("task-add-details")} value={details} setValue={setDetails} valid={validDetail} setValid={setValidDetail} invalidMessage={t("task-add-details-empty")}/>
+      <InputField title={t("task-add-details")} value={details} setValue={setDetails} valid={validDetail} setValid={setValidDetail} invalidMessage={t("task-add-details-empty")} maxLength={255} multiline={true}/>
       {/* end task details */}
       {/* repeat on */}
       <View style={styles.repeatContainer}>
@@ -238,7 +238,7 @@ const TaskCreatingScreen = (props) => {
       </View>
       {/* end repeat on */}
       {/* button Save */}
-      <ButtonSave title={t("task-add-save")} action={() => {setLoading(true); createTask()}}/>
+      <ButtonSave title={t("task-add-save")} action={() => {setLoading(true); createTask()}} style={{marginBottom: 50}}/>
       {/* end button Save */}
       {/* end form */}
     </ScrollView>

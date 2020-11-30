@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage, Image} from 'react-native';
+import { View, TouchableOpacity, Text, AsyncStorage, Image} from 'react-native';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { handleError } from '../../../utils/handleError';
 import { Loader } from '../../../utils/loader';
+import InputField from '../../../base/components/InputField';
+import ButtonSave from '../../../base/components/ButtonSave';
+import Header from '../../../base/components/Header';
 
 const QuestCreatingScreen = (props) => {
   const { t }                             = useContext(props.route.params.localizationContext);
@@ -68,72 +71,10 @@ const QuestCreatingScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading}/>
-      <View style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "10%",
-      }}>
-        {/* icon back */}
-        <TouchableOpacity onPress={() => {props.navigation.goBack()}}>
-          <Image
-            source={require("../../../../assets/icons/back.png")}
-            style={{width: 30, height: 30}}
-          />
-        </TouchableOpacity>
-        {/* end icon back */}
-        {/* title of the screen */}
-        <Text style={{
-          fontSize: 20,
-          fontFamily: "AcuminBold"
-        }}>
-          {t("quest-add-title")}
-        </Text>
-        {/* end title of the screen */}
-        {/* create this View for center title purpose */}
-        <View style={{marginRight: "10%"}}></View>
-        {/* end View */}
-      </View>
+      <Header navigation={props.navigation} title={t("quest-add-title")}/>
       {/* form */}
       {/* quest name */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: "2.5%",
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginBottom: "2.5%"
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("quest-add-name")}
-        </Text>
-        <TextInput
-          value={name}
-          onChangeText={(text) => {setName(text); setValidName(true)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            width: "100%",
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY
-          }}
-        />
-        { !validName &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED
-          }}>
-            {t("quest-add-name-empty")}
-          </Text>
-        }
-      </View>
+      <InputField title={t("quest-add-name")} value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("quest-add-name-empty")} maxLength={50}/>
       {/* end quest name */}
       {/* choose reward */}
       <View style={{
@@ -198,98 +139,13 @@ const QuestCreatingScreen = (props) => {
       </View>
       {/* end choose reward */}
       {/* quest details */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: 15,
-        marginLeft: "10%",
-        marginRight: "10%",
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("quest-add-details")}
-        </Text>
-        <TextInput
-          value={details}
-          onChangeText={(text) => {setDetails(text); setValidDetail(true)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            width: "100%",
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY
-          }}
-        />
-        { !validDetail &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED
-          }}>
-            {t("quest-add-details-empty")}
-          </Text>
-        }
-      </View>
+      <InputField title={t("quest-add-details")} value={details} setValue={setDetails} valid={validDetail} setValid={setValidDetail} invalidMessage={t("quest-add-details-empty")} maxLength={255} multiline={true}/>
       {/* end quest details */}
       {/* quest title */}
-      <View style={{
-        flexDirection: "column",
-        alignItems: "flex-start",
-        marginTop: 15,
-        marginLeft: "10%",
-        marginRight: "10%",
-      }}>
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16
-        }}>
-          {t("quest-add-smartwatch-title")}
-        </Text>
-        <TextInput
-          value={title}
-          onChangeText={(text) => {setTitle(text); setValidTitle(true)}}
-          style={{
-            fontSize: 16,
-            fontFamily: "Acumin",
-            width: "100%",
-            borderBottomWidth: 2,
-            borderColor: COLORS.GREY
-          }}
-        />
-        { !validTitle &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED
-          }}>
-            {t("quest-add-smartwatch-title-empty")}
-          </Text>
-        }
-      </View>
+      <InputField title={t("quest-add-smartwatch-title")} value={title} setValue={setTitle} valid={validTitle} setValid={setValidTitle} invalidMessage={t("quest-add-smartwatch-title-empty")} maxLength={50}/>
       {/* end quest title */}
       {/* button Save */}
-      <TouchableOpacity style={{
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginTop: "10%",
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        height: heightPercentageToDP("5%"),
-        backgroundColor: COLORS.YELLOW
-      }}
-        onPress={() => {setLoading(true); createQuest()}}
-      >
-        <Text style={{
-          fontFamily: "AcuminBold",
-          fontSize: 16,
-          color: COLORS.BLACK
-        }}>
-          {t("quest-add-save")}
-        </Text>
-      </TouchableOpacity>
+      <ButtonSave title={t("quest-add-save")} action={() => {setLoading(true); createQuest()}} style={{marginBottom: 50}}/>
       {/* end button Save */}
       {/* end form */}
     </View>
