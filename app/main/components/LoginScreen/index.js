@@ -49,6 +49,10 @@ const LoginScreen = (props) => {
       });
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
+        if (result.data.isVerify == false) {
+          props.navigation.navigate("RegisterCodeEntering", {phone: username});
+          return null;
+        }
         const token = await registerForPushNotificationsAsync();
         await sendToken(username, token);
         await AsyncStorage.setItem("user_id", username);

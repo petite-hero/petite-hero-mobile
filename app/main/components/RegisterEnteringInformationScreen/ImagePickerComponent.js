@@ -34,7 +34,6 @@ const ImagePickerComponent = (props) => {
       width: "100%",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: -20,
       marginBottom: "10%"
     }}>
       <TouchableOpacity

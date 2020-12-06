@@ -8,6 +8,8 @@ import RegisterScreen from '../RegisterScreen';
 import styles from './styles/index.css';
 import ForgotPasswordScreen from '../ForgotPasswordScreen';
 import ForgotPasswordCodeEnteringScreen from '../ForgotPasswordCodeEnteringScreen';
+import RegisterEnteringInformationScreen from '../RegisterEnteringInformationScreen';
+import RegisterCodeEnteringScreen from '../RegisterCodeEnteringScreen';
 
 export const Stack = createStackNavigator();
 
@@ -38,6 +40,22 @@ const WelcomeScreen = (props) => {
       <Stack.Screen 
         name="Register" 
         component={RegisterScreen}
+        initialParams={{
+          authContext: props.route.params.authContext,
+          localizationContext: props.route.params.localizationContext
+        }}
+      />
+      <Stack.Screen 
+        name="RegisterEnteringInformation" 
+        component={RegisterEnteringInformationScreen}
+        initialParams={{
+          authContext: props.route.params.authContext,
+          localizationContext: props.route.params.localizationContext
+        }}
+      />
+      <Stack.Screen 
+        name="RegisterCodeEntering" 
+        component={RegisterCodeEnteringScreen}
         initialParams={{
           authContext: props.route.params.authContext,
           localizationContext: props.route.params.localizationContext
