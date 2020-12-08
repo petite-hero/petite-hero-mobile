@@ -17,6 +17,8 @@ import CollaboratorAddingScreen from '../CollaboratorAddingScreen';
 import ProfileChangingLanguageScreen from '../ProfileChangingLanguageScreen';
 import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScreen';
 import ProfileConfirmCollaboratorScreen from '../ProfileConfirmCollaboratorScreen';
+import CollaboratorDetailsScreen from '../CollaboratorDetailsScreen';
+import ProfileTransactionScreen from '../ProfileTransactionScreen';
 
 const Stack = createStackNavigator();
 
@@ -102,6 +104,11 @@ const MainScreen = ({route}) => {
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen
+        name="CollaboratorDetails"
+        component={CollaboratorDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
         name="ProfileChangingLanguage"
         component={ProfileChangingLanguageScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
@@ -114,6 +121,11 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="ProfileConfirmCollaborator"
         component={ProfileConfirmCollaboratorScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="ProfileTransaction"
+        component={ProfileTransactionScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
     </Stack.Navigator>

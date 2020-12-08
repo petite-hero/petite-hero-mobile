@@ -419,10 +419,27 @@ const ProfileScreen = (props) => {
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0
             }}
-            iconName={{name: "keyboard-arrow-right"}}
-            action={() => {
-              props.navigation.navigate("ProfileShowingSubscription");
-            }}
+            // iconName={{name: "keyboard-arrow-right"}}
+            // action={() => {
+            //   props.navigation.navigate("ProfileShowingSubscription");
+            // }}
+            subItems={[
+              {
+                title: t("profile-subscription-history"),
+                action: () =>
+                props.navigation.navigate("ProfileTransaction", {
+                  goBack: () => setLoading(true)
+                }),
+                iconName: "keyboard-arrow-right"
+              },
+              {
+                title: t("profile-subscription-packs"),
+                action: () => {
+                  props.navigation.navigate("ProfileShowingSubscription")
+                },
+                iconName: "keyboard-arrow-right"
+              }
+            ]}
           />
           <SettingItem
             key="5"
