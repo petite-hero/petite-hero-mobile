@@ -1,5 +1,5 @@
 import React, { Children, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage, Linking, Modal } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -339,9 +339,6 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       {/* ===================== EMERGENCY BUTTON SECTION ===================== */}
 
       {/* emergency button */}
-      {/* <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
-        <Image source={require("../../../../assets/icons/exclamation-mark.png")} style={{width: 30, height: 30}} />
-      </TouchableOpacity> */}
       <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
         <Text style={styles.warningBtnText}>Emergency!</Text>
       </TouchableOpacity>
@@ -471,37 +468,39 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* select day calendar */}
       {isPickingDate ?
-        <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
-          <View style={styles.calendar}>
-            <Text style={{fontSize: 20, fontFamily: "Acumin"}}>Select the day</Text>
-            <View style={{flexDirection: "row", marginTop: 10}}>
-              {[0, 1, 2, 3, 4, 5, 6].map((count, index) => {
-                let date = new Date();
-                date.setDate(date.getDate() + count);
-                return (
-                  <TouchableOpacity key={index} style={[styles.dateContainer, index == 0 ? {borderColor: COLORS.STRONG_CYAN} : {}]} onPress={() => {
-                    setIsPickingDate(false);
-                    // check if the selected day is today
-                    if (index === 0 && children[0].status !== "INACTIVE"){
-                      setIsValidation(true);
-                      return;
-                    }
-                    navigation.navigate("TrackingSettings", {children: children, date: date});
-                    animSetZoneBtn.setValue(0);
-                    setFlied(false);
-                  }}>
-                    <Text style={{fontFamily: "Acumin", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
-                      {WEEKDAYS_ABB[date.getDay()]}
-                    </Text>
-                    <Text style={{fontFamily: "AcuminBold", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
-                      {(date.getDate() < 10 ? "0" : "") + date.getDate()}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })}
+        <Modal transparent={true} visible={isPickingDate} animationType="fade">
+          <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
+            <View style={styles.calendar}>
+              <Text style={{fontSize: 20, fontFamily: "Acumin"}}>Select the day</Text>
+              <View style={{flexDirection: "row", marginTop: 10}}>
+                {[0, 1, 2, 3, 4, 5, 6].map((count, index) => {
+                  let date = new Date();
+                  date.setDate(date.getDate() + count);
+                  return (
+                    <TouchableOpacity key={index} style={[styles.dateContainer, index == 0 ? {borderColor: COLORS.STRONG_CYAN} : {}]} onPress={() => {
+                      setIsPickingDate(false);
+                      // check if the selected day is today
+                      if (index === 0 && children[0].status !== "INACTIVE"){
+                        setIsValidation(true);
+                        return;
+                      }
+                      navigation.navigate("TrackingSettings", {children: children, date: date});
+                      animSetZoneBtn.setValue(0);
+                      setFlied(false);
+                    }}>
+                      <Text style={{fontFamily: "Acumin", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                        {WEEKDAYS_ABB[date.getDay()]}
+                      </Text>
+                      <Text style={{fontFamily: "AcuminBold", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                        {(date.getDate() < 10 ? "0" : "") + date.getDate()}
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
       : null}
 
       {/* validation popup */}
