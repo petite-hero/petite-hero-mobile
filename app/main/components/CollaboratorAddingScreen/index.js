@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
 import ButtonSave from "../../../base/components/ButtonSave";
@@ -36,10 +37,10 @@ const CollaboratorAddingScreen = (props) => {
         });
         setChildren(tmp);
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -52,15 +53,15 @@ const CollaboratorAddingScreen = (props) => {
     }
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + phone);
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/account/" + phone);
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
-        setName(result.data)
+        setName(result.data.name)
       } else {
         setMessage("Cannot found any account using the inputted phone number in the system.")
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -91,12 +92,13 @@ const CollaboratorAddingScreen = (props) => {
       const result = await response.json();
       console.log(result);
       if (result.code === 200 && result.msg === "OK") {
-
+        props.route.params.goBack();
+        props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AsyncStorage, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-community/async-storage';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';

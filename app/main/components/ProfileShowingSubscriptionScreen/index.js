@@ -1,12 +1,10 @@
 import React, { useContext, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, Image } from "react-native";
-import { Icon } from "react-native-elements";
-import { RadioButton } from "react-native-paper";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { View, TouchableOpacity, Text, Image } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import Header from "../../../base/components/Header";
 import { COLORS, PORT } from "../../../const/const";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import { Loader } from "../../../utils/loader";
 import { ConfirmationModal } from "../../../utils/modal";
 import styles from "./styles/index.css";

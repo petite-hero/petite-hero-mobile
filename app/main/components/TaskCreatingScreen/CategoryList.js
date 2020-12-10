@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
-const CategoryList = ({t, categories, setCategories}) => {
+const CategoryList = ({t, navigation, categories, setCategories}) => {
   const toggleCategory = (categoryIndex) => {
     let tmp = [...categories];
     tmp.map((value, index) => {
@@ -54,6 +55,25 @@ const CategoryList = ({t, categories, setCategories}) => {
           }) 
         }
       </View>
+      <TouchableOpacity
+        onPress={() => {navigation.navigate("TaskStatistics")}}
+        activeOpacity={0.8}
+        style={[styles.categoryButton, {
+          position: "absolute",
+          top: 48,
+          right: widthPercentageToDP("10%"),
+          width: 45,
+          borderWidth: 1,
+          justifyContent: "center",
+          borderColor: COLORS.STRONG_CYAN,
+          backgroundColor: COLORS.WHITE,
+        }]}
+      >
+        <Image
+          source={require("../../../../assets/icons/info.png")}
+          style={{width: 45, height: 45}}
+        />
+      </TouchableOpacity>
     </View>
   )
 }

@@ -7,28 +7,20 @@ import { Loader } from '../../../utils/loader';
 import styles from './styles/index.css';
 import { showMessage } from '../../../utils/showMessage';
 
-const RegisterScreen = (props) => {
+const ForgotPasswordNewPasswordEnteringScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
-  const [phone, setPhone] = useState("");
-  const [validPhone, setValidPhone] = useState(true);
-  const [invalidPhoneMessage, setInvalidPhoneMessage] = useState("");
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(true);
   const [invalidPasswordMessage, setInvalidPasswordMessage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [secureText, setSecureText] = useState(true);
   const [validConfirmPassword, setValidConfirmPassword] = useState(true);
   const [invalidConfirmPasswordMessage, setInvalidConfirmPasswordMessage] = useState("");
-  const [loading, setLoading]   = useState(false);
-  const [secureText, setSecureText] = useState(true);
   const [secureTextConfirm, setSecureTextConfirm] = useState(true);
+  const [loading, setLoading]   = useState(false);
 
   const isValidated = () => {
     let result = true;
-    if (!phone) {
-      setValidPhone(false);
-      setInvalidPhoneMessage(t("signup-username-empty"));
-      result = false;
-    }
     if (!password) {
       setValidPassword(false);
       setInvalidPasswordMessage(t("signup-password-empty"));
@@ -50,30 +42,34 @@ const RegisterScreen = (props) => {
     return result;
   }
 
-  const register = async() => {
+  const resetPassword = async() => {
     if (!isValidated()) {
       setLoading(false);
       return null;
     }
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch("http://" + ip + PORT + "/account/parent/register", {
-        method: "POST",
+      const response = await fetch("http://" + ip + PORT + "/account/" + props.route.params.phone + "/reset-password", {
+        method: "PUT",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          phoneNumber: phone,
-          password: password
+          password: password,
+          confirmPassword: confirmPassword
         })
       });
       const result = await response.json();
       if (result.code === 200) {
-        props.navigation.navigate("RegisterCodeEntering", {phone: phone});
+        showMessage(t("forgot-success"));
+        props.navigation.navigate("Login");
       } else if (result.code === 400) {
         setValidPhone(false);
         setInvalidPhoneMessage(t("signup-username-existed"));
+      } else {
+        showMessage(t("forgot-fail"));
+        props.navigation.navigate("Login");
       }
     } catch (error) {
       showMessage(error.message);
@@ -109,14 +105,13 @@ const RegisterScreen = (props) => {
           alignItems: "center",
           justifyContent: "center"
         }}
-        onPress={() => {props.navigation.goBack()}}
+        onPress={() => {props.navigation.navigate("Welcome")}}
       >
         <Image
           source={require("../../../../assets/icons/back.png")}
           style={{width: 30, height: 30}}
         />
       </TouchableOpacity>
-      {/* username */}
       <View style={{
         position: "absolute",
         backgroundColor: COLORS.WHITE,
@@ -136,46 +131,8 @@ const RegisterScreen = (props) => {
           alignSelf: "baseline",
           color: COLORS.BLACK
         }}>
-          {t("signup-title")}
+          {t("forgot-new-password-title")}
         </Text>
-        <View style={{
-          width: "80%"
-        }}>
-          <TextInput
-            keyboardType="phone-pad"
-            value={phone}
-            onChangeText={(text) => {setPhone(text); setValidPhone(true); setInvalidPhoneMessage("")}}
-            placeholder={t("signup-username")}
-            placeholderTextColor={COLORS.MEDIUM_CYAN}
-            maxLength={11}
-            style={{
-              fontSize: 16,
-              fontFamily: "Montserrat",
-              height: 50,
-              backgroundColor: COLORS.WHITE,
-              borderBottomWidth: 1,
-              borderColor: COLORS.STRONG_CYAN,
-              marginBottom: "5%",
-            }}
-          />
-        </View>
-        {!validPhone &&
-          <View style={{
-            marginTop: -10,
-            marginLeft: "10%",
-            marginRight: "10%",
-            alignSelf: "flex-start"
-          }}>
-            <Text style={{
-              fontSize: 14,
-              fontFamily: "Montserrat",
-              color: COLORS.RED
-            }}>
-            {invalidPhoneMessage}
-            </Text>
-          </View>
-        }
-        {/* end username */}
         {/* password */}
         <View style={{
           width: "80%",
@@ -191,7 +148,7 @@ const RegisterScreen = (props) => {
             keyboardType="numeric"
             value={password}
             onChangeText={(text) => {setPassword(text); setValidPassword(true); setInvalidPasswordMessage("");}}
-            placeholder={t("signin-password")}
+            placeholder={t("forgot-new-password")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             maxLength={6}
             style={{
@@ -263,7 +220,7 @@ const RegisterScreen = (props) => {
             keyboardType="numeric"
             value={confirmPassword}
             onChangeText={(text) => {setConfirmPassword(text); setValidConfirmPassword(true); setInvalidConfirmPasswordMessage("");}}
-            placeholder={t("signup-password-again")}
+            placeholder={t("forgot-new-password-again")}
             placeholderTextColor={COLORS.MEDIUM_CYAN}
             maxLength={6}
             style={{
@@ -329,7 +286,7 @@ const RegisterScreen = (props) => {
           justifyContent: "center",
           backgroundColor: COLORS.STRONG_CYAN
         }}
-          onPress={() => {setLoading(true); setTimeout(() => register(phone), 200)}}
+          onPress={() => {setLoading(true); resetPassword()}}
         >
           <Text style={{
             fontSize: 16, 
@@ -345,4 +302,4 @@ const RegisterScreen = (props) => {
 };
 
 
-export default RegisterScreen;
+export default ForgotPasswordNewPasswordEnteringScreen;

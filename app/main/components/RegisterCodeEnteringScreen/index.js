@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { AsyncStorage, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
@@ -34,7 +35,7 @@ const RegisterCodeEnteringScreen = (props) => {
         props.navigation.navigate("RegisterEnteringInformation", {phone: props.route.params.phone});
       }
     } catch (error) {
-      handleError(error);
+      showMessage(error);
     } finally {
       setLoading(false);
     }

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AsyncStorage, FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles/index.css';
 import Header from "../../../base/components/Header";
 import { Loader } from '../../../utils/loader';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { COLORS, PORT } from '../../../const/const';
 import TransactionItem from './TransactionItem';
@@ -23,7 +24,7 @@ const ProfileTransactionScreen = (props) => {
         setTransactions(result.data);
       }
     } catch (error) {
-      handleError(error);
+      showMessage(error);
     } finally {
       setLoading(false);
     }

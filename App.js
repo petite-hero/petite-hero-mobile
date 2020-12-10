@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import { YellowBox, AsyncStorage } from 'react-native';
+import { YellowBox } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { IP, NOTI } from './app/const/const';
 
 import * as Localization from 'expo-localization';
@@ -15,6 +16,7 @@ import { useFonts } from 'expo-font';
 
 import * as Notifications from 'expo-notifications';
 import OpeningScreen from './app/main/components/OpeningScreen';
+import TaskStatisticsScreen from './app/main/components/TaskStatisticsScreen';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',

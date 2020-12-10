@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-community/async-storage';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 
 const GenderPickerComponent = ({t, genders, setGenders}) => {
@@ -124,10 +123,10 @@ const ProfileConfirmCollaboratorScreen = (props) => {
         setGenders(getGender(result.data.gender));
         setYob(new Date().getFullYear() - result.data.age);
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -154,7 +153,7 @@ const ProfileConfirmCollaboratorScreen = (props) => {
         props.route.params.goBack();
         props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
 

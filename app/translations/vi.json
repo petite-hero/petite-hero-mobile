@@ -12,6 +12,9 @@
   "signup-password"                         : "Nhập mật khẩu",
   "signup-password-empty"                   : "Mật khẩu không được để trống.",
   "signup-password-invalid"                 : "Mật khẩu phải chứa 6 kí tự số.",
+  "signup-password-again"                   : "Nhập lại mật khẩu",
+  "signup-password-again-empty"             : "Mật khẩu nhập lại không thể để trống.",
+  "signup-password-again-invalid"           : "Mật khẩu và mật khẩu nhập lại không khớp.",
   "signup-next"                             : "Đăng kí",
   "signup-name"                             : "Tên",
   "signup-name-placeholder"                 : "Nhập tên",
@@ -33,9 +36,16 @@
 
   "forgot-title"                            : "Thiết lập lại mật khẩu",
   "forgot-phone"                            : "Nhập vào số điện thoại",
+  "forgot-phone-empty"                      : "Số điện thoại không được để trống.",
+  "forgot-phone-invalid"                    : "Không tìm thấy số điện thoại trên trong hệ thống. \nXin vui lòng kiểm tra lại.",
   "forgot-next"                             : "Tiếp tục",
   "forgot-enter-otp-title"                  : "Nhập mã nhận được",
   "forgot-enter-otp-next"                   : "Tiếp tục",
+  "forgot-new-password-title"               : "Nhập mật khẩu mới",
+  "forgot-new-password"                     : "Nhập mật khẩu mới",
+  "forgot-new-password-again"               : "Nhập lại mật khẩu mới",
+  "forgot-success"                          : "Mật khẩu được thiết lập lại thành công.",
+  "forgot-fail"                             : "Thay đổi mật khẩu thất bại. Vui lòng thử lại sau.",
 
   "navigation-tracking"                     : "Theo dõi",
   "navigation-task"                         : "Công việc",
@@ -75,6 +85,7 @@
   "task-details-fail"                       : "Không hoàn thành",
   "task-details-submit"                     : "Nộp vào lúc",
   "task-details-submit-late"                : "Nộp trễ vào lúc",
+  "task-statistics-title"                   : "Thống kê công việc",
 
   "quest-title"                             : "Nhiệm vụ",
   "quest-empty-1"                           : "Không có nhiệm vụ ở trạng thái",
@@ -126,6 +137,12 @@
   "collaborator-add-next"                   : "Thêm cộng tác viên",
   "collaborator-add-choose-child"           : "Chọn con để mời hợp tác",
   "collaborator-add-confirm"                : "Xác nhận",
+  "collaborator-details-name"               : "Tên cộng tác viên",
+  "collaborator-details-phone"              : "Số điện thoại cộng tác viên",
+  "collaborator-details-children"           : "Danh sách con đang cộng tác",
+  "collaborator-details-delete"             : "Xóa cộng tác viên",
+  "collaborator-details-delete-invalid"     : "Chưa chọn con để xóa quyền cộng tác.",
+  "collaborator-details-delete-success"     : "Xóa thành công",
 
   "profile-personal-profile-title"          : "Thông tin cá nhân",
   "profile-personal-profile-name"           : "Tên",
@@ -156,5 +173,7 @@
   "profile-setting-password-save"           : "Đổi mật khẩu",
   "profile-setting-language"                : "Đổi ngôn ngữ",
   "profile-setting-language-info"           : "Vui lòng đăng nhập lại để thiết lập ngôn ngữ của bạn được thực thi.",
-  "profile-logout"                          : "Đăng xuất"
+  "profile-logout"                          : "Đăng xuất",
+
+  "common-error"                            : "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau."
 }

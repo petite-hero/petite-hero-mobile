@@ -1,7 +1,7 @@
 import React, { Children, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, AsyncStorage, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Linking } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
-import { Calendar } from 'react-native-calendars';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Notifications from 'expo-notifications';
 
@@ -13,7 +13,7 @@ import styles from './styles/index.css';
 import { COLORS, PORT, NOTI } from '../../../const/const';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 import LocationStatus from './location-status';
 import { ConfirmationModal } from "../../../utils/modal";
@@ -47,10 +47,10 @@ const TrackingStatusScreen = ({route}) => {
             if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
           }
         } else {
-          handleError(result.msg);
+          showMessage(result.msg);
         }
       } catch (error) {
-        handleError(error.message);
+        showMessage(error.message);
       } finally {
         setLoading(false);
       }

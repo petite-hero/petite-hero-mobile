@@ -19,6 +19,7 @@ import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScree
 import ProfileConfirmCollaboratorScreen from '../ProfileConfirmCollaboratorScreen';
 import CollaboratorDetailsScreen from '../CollaboratorDetailsScreen';
 import ProfileTransactionScreen from '../ProfileTransactionScreen';
+import TaskStatisticsScreen from '../TaskStatisticsScreen';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,11 @@ const MainScreen = ({route}) => {
       <Stack.Screen
         name="TaskDetails"
         component={TaskDetailsScreen}
+        initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
+      />
+      <Stack.Screen
+        name="TaskStatistics"
+        component={TaskStatisticsScreen}
         initialParams={{ authContext: route.params.authContext, localizationContext: route.params.localizationContext }}
       />
       <Stack.Screen

@@ -12,6 +12,9 @@
   "signup-password"                         : "Enter Password",
   "signup-password-empty"                   : "Password cannot be empty.",
   "signup-password-invalid"                 : "Password must contain 6 numbers.",
+  "signup-password-again"                   : "Enter Password Again",
+  "signup-password-again-empty"             : "Confirm password cannot be empty.",
+  "signup-password-again-invalid"           : "Password does not match with confirm password.",
   "signup-next"                             : "Next",
   "signup-name"                             : "Your Name",
   "signup-name-placeholder"                 : "Enter Your Name",
@@ -33,9 +36,16 @@
 
   "forgot-title"                            : "Forgot Password",
   "forgot-phone"                            : "Enter Phone Number",
+  "forgot-phone-empty"                      : "Phone number cannot be empty.",
+  "forgot-phone-invalid"                    : "Cannot find the inputted phone number in the system. \nPlease check again.",
   "forgot-next"                             : "Next",
   "forgot-enter-otp-title"                  : "Enter Received Code",
   "forgot-enter-otp-next"                   : "Next",
+  "forgot-new-password-title"               : "Enter New Password",
+  "forgot-new-password"                     : "Enter New Password",
+  "forgot-new-password-again"               : "Enter New Password Again",
+  "forgot-success"                          : "Password is resetted successfully.",
+  "forgot-fail"                             : "Cannot reset password. Please try again later.",
 
   "navigation-tracking"                     : "Tracking",
   "navigation-task"                         : "Task",
@@ -75,6 +85,7 @@
   "task-details-fail"                       : "Fail",
   "task-details-submit"                     : "Submitted at",
   "task-details-submit-late"                : "Submitted late at",
+  "task-statistics-title"                   : "Task Statistics",
 
   "quest-title"                             : "Quests",
   "quest-empty-1"                           : "Current",
@@ -126,6 +137,12 @@
   "collaborator-add-next"                   : "Next",
   "collaborator-add-choose-child"           : "Collaborate on",
   "collaborator-add-confirm"                : "Confirm",
+  "collaborator-details-name"               : "Collaborator's Name",
+  "collaborator-details-phone"              : "Collaborator's Phone Number",
+  "collaborator-details-children"           : "Collaborate on",
+  "collaborator-details-delete"             : "Delete collaborator",
+  "collaborator-details-delete-invalid"     : "Must choose a child to remove collaborating privilege first.",
+  "collaborator-details-delete-success"     : "Deleted successfully!",
 
   "profile-personal-profile-title"          : "Personal Profile",
   "profile-personal-profile-name"           : "Your Name",
@@ -156,5 +173,7 @@
   "profile-setting-password-save"           : "Save",
   "profile-setting-language"                : "Change Language",
   "profile-setting-language-info"           : "Please login again for your language setting to be applied.",
-  "profile-logout"                          : "Logout"
+  "profile-logout"                          : "Logout",
+
+  "common-error"                            : "Unexpected error happens. Please try again later"
 }

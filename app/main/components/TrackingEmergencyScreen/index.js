@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, AppState, AsyncStorage, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, AppState, TouchableOpacity, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
 import * as Notifications from 'expo-notifications';
 
