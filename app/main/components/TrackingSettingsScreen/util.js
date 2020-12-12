@@ -25,60 +25,6 @@ class Util{
     return [lng, lat];
   }
 
-  static getPointFromPointAngleDistDir(x0, y0, k, t, xB){
-    let x = t/Math.sqrt(k*k+1);
-    if (xB-x0 > 0) x = -x;
-    let y = k*x ;
-    return [x+x0, y+y0];
-  }
-
-  static getPointsFromPointAngleDistDir(x0, y0, k, t, yB){
-    let x = t/Math.sqrt(k*k+1);
-    if (yB-y0 > 0) x = -x;
-    let y = k*x ;
-    return  [x+x0, y+y0, -x+x0, -y+y0];
-  }
-
-  static getZoneFromLoc(latA, lngA, latB, lngB, midLat){
-
-    let result = [];
-
-    // convert to x, y
-    let [xA, yA] = this.lngLatToXY(lngA, latA, midLat);
-    let [xB, yB] = this.lngLatToXY(lngB, latB, midLat);
-    if (yB === yA) yB += 0.0001;  // special case
-    if (xB === xA) xB += 0.0001;  // special case
-
-    // calculate needed parameters
-    let lengthAB = Math.sqrt(Math.pow(xB-xA, 2)+Math.pow(yB-yA, 2));  // Pythagoras
-    let k = (yB-yA)/(xB-xA);  // tan(alpha)
-    let m = -1/k;  // tan (beta)
-    let t = lengthAB*0.2;  // top & bottom padding
-    let d = t*1;  // left & right padding
-
-    // calculate points
-    let [xA_, yA_] = this.getPointFromPointAngleDistDir(xA, yA, k, t, xB);
-    let [xB_, yB_] = this.getPointFromPointAngleDistDir(xB, yB, k, t, xA);
-    let [xC, yC, xF, yF] = this.getPointsFromPointAngleDistDir(xA_, yA_, m, d, yB);
-    let [xE, yE, xD, yD] = this.getPointsFromPointAngleDistDir(xB_, yB_, m, d, yA);
-
-    // convert to long lat
-    let [lngC, latC] = this.xYToLngLat(xC, yC, midLat);
-    let [lngF, latF] = this.xYToLngLat(xF, yF, midLat);
-    let [lngD, latD] = this.xYToLngLat(xD, yD, midLat);
-    let [lngE, latE] = this.xYToLngLat(xE, yE, midLat);
-
-    // return result
-    result.push({latitude: latC, longitude: lngC});
-    result.push({latitude: latD, longitude: lngD});
-    result.push({latitude: latE, longitude: lngE});
-    result.push({latitude: latF, longitude: lngF});
-    return result;
-
-  }
-
-  // new =============
-
   static getQuadFromLoc = (lat, lng) => {
     const LAT_DELTA = 0.0016;
     const LNG_DELTA = 0.001;
@@ -101,30 +47,19 @@ class Util{
   }
 
   static isValidQuad = (quad) => {
-
     const quadXY = this.quadLngLatToXY(quad);
-
-    let thetas = [];
+    let result = true;
     quadXY.map((vertex, index) => {
-      let nextIndex = index + 1;
-      if (nextIndex == 4) nextIndex = 0;
-      const vX = quadXY[nextIndex].x - quadXY[index].x;
-      const vY = quadXY[nextIndex].y - quadXY[index].y;
-      let theta = Math.atan2(vY, vX);
-      if (theta < 0) theta += 2*Math.PI;
-      thetas.push(theta);
+      const v1 = quadXY[index];
+      const v2 = quadXY[(index+1)%4];
+      const v3 = quadXY[(index+2)%4];
+      const exp = (v3.x-v2.x)*(v2.y-v1.y)-(v2.x-v1.x)*(v3.y-v2.y) > 0;
+      if (!exp){
+        result = false;
+        return;
+      }
     });
-
-    let negCount = 0;
-    thetas.map((theta, index) => {
-      let nextIndex = index + 1;
-      if (nextIndex == 4) nextIndex = 0;
-      if (thetas[nextIndex] == thetas[index]) return false;
-      if (Math.sin(thetas[index] - thetas[nextIndex] + 2*Math.PI) >= 0) negCount++;
-    });
-    
-    return negCount >= 3;
-
+    return result;
   }
 
   // ===== END LOCATION =====
