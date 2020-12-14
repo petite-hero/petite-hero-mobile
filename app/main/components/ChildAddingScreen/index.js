@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { AsyncStorage, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
 import ButtonSave from "../../../base/components/ButtonSave";
@@ -61,10 +62,10 @@ const ChildAddingScreen = (props) => {
         const childId = result.data.childId.toString();
         props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

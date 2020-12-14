@@ -1,22 +1,65 @@
 import React, { useContext, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { COLORS } from '../../../const/const';
+import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import styles from './styles/index.css';
+import { showMessage } from '../../../utils/showMessage';
+import AsyncStorage from '@react-native-community/async-storage';
+import { fetchWithTimeout } from '../../../utils/fetch';
 
 const CELLS = 6;
 
 const ForgotPasswordCodeEnteringScreen = (props) => {
   const { t }                              = useContext(props.route.params.localizationContext);
   const [value, setValue]                  = useState("");
+  const [message, setMessage]              = useState("");
   const [loading, setLoading]              = useState(false);
   const ref                                = useBlurOnFulfill({value, cellCount: CELLS});
   const [property, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
+
+  const isValidated = () => {
+    let isValidated = true;
+    if (!value) {
+      isValidated = false;
+      setMessage(t("forgot-phone-empty"));
+    }
+    return isValidated;
+  }
+
+  const verifyOtp = async() => {
+    try {
+      if (!isValidated()) {
+        setLoading(false);
+        return null;
+      }
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/account/verify-otp?token=" + value +"&username=" + props.route.params.phone, {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        props.navigation.navigate("NewPassword", {phone: props.route.params.phone});
+      } else if (result.code === 404) {
+        setMessage(t("forgot-phone-invalid"));
+      } else {
+        showMessage(result.msg);
+      }
+    } catch (error) {
+      showMessage(error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -94,6 +137,18 @@ const ForgotPasswordCodeEnteringScreen = (props) => {
             )}
           />
         </View>
+        { message.length > 0 &&
+          <Text style={{
+            alignSelf: "flex-start",
+            marginLeft: "10%",
+            marginRight: "10%",
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {message}
+          </Text>
+        }
         <TouchableOpacity style={{
           width: "80%",
           height: 50,
@@ -104,7 +159,7 @@ const ForgotPasswordCodeEnteringScreen = (props) => {
           backgroundColor: COLORS.STRONG_CYAN
         }}
           onPress={() => {
-            // setLoading(true)
+            setLoading(true); verifyOtp();
           }}
         >
           <Text style={{

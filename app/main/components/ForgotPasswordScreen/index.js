@@ -1,36 +1,55 @@
 import React, { useContext, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import styles from './styles/index.css';
+import { showMessage } from '../../../utils/showMessage';
+import { fetchWithTimeout } from '../../../utils/fetch';
 
 const ForgotPasswordScreen = (props) => {
   const { t }                 = useContext(props.route.params.localizationContext);
   const [phone, setPhone]     = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const resetPassword = async() => {
+  const isValidated = () => {
+    let isValidated = true;
+    if (!phone) {
+      isValidated = false;
+      setMessage(t("forgot-phone-empty"));
+    }
+    return isValidated;
+  }
+
+  const sendOtp = async() => {
     try {
+      if (!isValidated()) {
+        setLoading(false);
+        return null;
+      }
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetch("http://" + ip + PORT + "/account/reset-password", {
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/account/send-otp?username=" + phone, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: phone
-        })
+        }
       });
       const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        props.navigation.navigate("CodeEntering");
+      if (result.code === 200) {
+        props.navigation.navigate("CodeEntering", {phone: phone});
+      } else if (result.code === 404) {
+        setMessage(t("forgot-phone-invalid"));
       } else {
-        handleError(result.msg);
+        console.log(result);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -110,6 +129,18 @@ const ForgotPasswordScreen = (props) => {
             }}
           />
         </View>
+        { message.length > 0 &&
+          <Text style={{
+            alignSelf: "flex-start",
+            marginLeft: "10%",
+            marginRight: "10%",
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {message}
+          </Text>
+        }
         <TouchableOpacity style={{
           width: "80%",
           height: 50,
@@ -120,7 +151,8 @@ const ForgotPasswordScreen = (props) => {
           backgroundColor: COLORS.STRONG_CYAN
         }}
           onPress={() => {
-            resetPassword();
+            setLoading(true);
+            sendOtp();
           }}
         >
           <Text style={{

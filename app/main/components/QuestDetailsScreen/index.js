@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Image, ImageBackground } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { badgesList, COLORS, PORT, questBackgroundList } from '../../../const/const';
 import styles from './styles/index.css';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 
 const QuestDetailsScreen = (props) => {
@@ -21,10 +22,10 @@ const QuestDetailsScreen = (props) => {
         if (result.code === 200) {
           setDetails(result.data);
         } else {
-          handleError(result.msg);
+          showMessage(result.msg);
         }
       } catch (error) {
-        handleError(error.message);
+        showMessage(error.message);
       } finally {
         setLoading(false);
       }
@@ -43,10 +44,10 @@ const QuestDetailsScreen = (props) => {
         props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, AsyncStorage, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
 import ImagePickerComponent from '../ChildAddingScreen/ImagePickerComponent';
 import ButtonSave from '../../../base/components/ButtonSave';
 import InputField from './InputField';
@@ -67,7 +67,7 @@ const RegisterEnteringInformationScreen = (props) => {
         props.navigation.navigate("Login");
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

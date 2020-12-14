@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity, AppState } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, AppState } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import { badgesList, COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css";
 import { Loader } from "../../../utils/loader";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import AvatarContainer from "../AvatarContainer";
 
@@ -209,7 +210,7 @@ const QuestScreen = (props) => {
         // do something later
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -234,10 +235,10 @@ const QuestScreen = (props) => {
           if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         }
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Switch, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Switch, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 import TimeSettings from './TimeSettings';
 import CategoryList from './CategoryList';
@@ -119,10 +120,10 @@ const TaskCreatingScreen = (props) => {
         props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -146,10 +147,10 @@ const TaskCreatingScreen = (props) => {
           setStartTime(new Date(new Date().setHours(fromTime[0], fromTime[1], fromTime[2])).getTime());
           setEndTime(new Date(new Date().setHours(toTime[0], toTime[1], toTime[2])).getTime());
         } else {
-          handleError(result.msg);
+          showMessage(result.msg);
         }
       } catch (error) {
-        handleError(error.message);
+        showMessage(error.message);
       } finally {
         setLoading(false);
       }
@@ -181,7 +182,7 @@ const TaskCreatingScreen = (props) => {
       <InputField title={t("task-add-name")} value={name} setValue={setName} valid={validName} setValid={setValidName} invalidMessage={t("task-add-name-empty")} maxLength={50}/>
       {/* end task name */}
       {/* category */}
-      <CategoryList t={t} categories={categories} setCategories={setCategories}/>
+      <CategoryList navigation={props.navigation} t={t} categories={categories} setCategories={setCategories}/>
       {/* end category */}
       {/* time picker */}
       <TimeSettings t={t} startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} setValidStartTime={setValidStartTime} setValidEndTime={setValidEndTime}/>

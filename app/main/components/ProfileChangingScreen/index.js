@@ -1,11 +1,11 @@
 import React, { useContext, useRef, useState } from "react";
-import { View, TouchableOpacity, Text, TextInput, AsyncStorage } from "react-native";
-import { Icon } from "react-native-elements";
+import { View, TouchableOpacity, Text, TextInput } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import Header from "../../../base/components/Header";
 import { COLORS, PORT } from "../../../const/const";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import { Loader } from "../../../utils/loader";
 import styles from "./styles/index.css";
 
@@ -63,10 +63,10 @@ const ProfileChangingScreen = (props) => {
         props.route.params.goBack();
         props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

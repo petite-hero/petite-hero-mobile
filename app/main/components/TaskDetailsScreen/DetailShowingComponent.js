@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Image } from 'react-native';
+import { View, TouchableOpacity, Text, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 
 const handleShowHourAndMinute = (time) => {

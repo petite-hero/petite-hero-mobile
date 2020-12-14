@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, AsyncStorage, Image, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import styles from './styles/index.css';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 import DetailShowingComponent from './DetailShowingComponent';
 
@@ -46,10 +47,10 @@ const TaskDetailsScreen = (props) => {
           setDetails(result.data);
           setCategory(categories.find(category => result.data.type === category.title));
         } else {
-          handleError(result.msg);
+          showMessage(result.msg);
         }
       } catch (error) {
-        handleError(error.message);
+        showMessage(error.message);
       } finally {
         setLoading(false);
       }
@@ -68,10 +69,10 @@ const TaskDetailsScreen = (props) => {
         props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

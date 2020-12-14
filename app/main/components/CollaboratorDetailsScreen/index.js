@@ -1,100 +1,145 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
 import ButtonSave from "../../../base/components/ButtonSave";
 
 const CollaboratorDetailsScreen = (props) => {
   const { t }                       = useContext(props.route.params.localizationContext);
-  const [name, setName]             = useState("");
   const [children, setChildren]     = useState([]);
+  const [name, setName]             = useState("");
   const [phone, setPhone]           = useState("");
+  const [avatar, setAvatar]         = useState("");
   const [message, setMessage]       = useState("");
-  const [loading, setLoading]       = useState(false);
+  const [loading, setLoading]       = useState(true);
 
-  const validate = () => {
-    let isValidated = true;
-    if (phone.length === 0) {setValidPhone(false); isValidated = false};
-    return isValidated;
-  }
-
-  const getChildrenList = async() => {
+  const getCollboratingChildren = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/children");
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "?collaboratorPhone=" + props.route.params.collabId);
       const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        const tmp = result.data.filter(child => child.isCollaboratorChild === false).map((child, index) => {
-          return {...child, active: false}
-        });
+      if (result.code === 200) {
+        const tmp = result.data.childInformationList.map((child, index) => {
+          return {...child, active: false};
+        })
         setChildren(tmp);
-      } else {
-        handleError(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
+    }
+  }
+
+  const getCollboratorInfo = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/account/" + props.route.params.collabId);
+      const result = await response.json();
+      if (result.code === 200) {
+        setName(result.data.name);
+        setPhone(result.data.phoneNumber);
+        setAvatar(result.data.avatar);
+      }
+    } catch (error) {
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
   }
 
-  const findCollab = async() => {
-    if (!validate()) {
-      setLoading(false);
-      return null;
-    }
+  const getDeletedChild = () => {
+    return children.filter((child) => (child.active === true));
+  }
+
+  const deleteCollaborator = async() => {
     try {
+      let deletedChild = getDeletedChild();
+      if (deletedChild.length === 0) {
+        setLoading(false);
+        setMessage(t("collaborator-details-delete-invalid"));
+        return null;
+      }
       const ip = await AsyncStorage.getItem('IP');
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + phone);
+      const id = await AsyncStorage.getItem('user_id');
+      const listChildId = [];
+      deletedChild.forEach(child => listChildId.push(child.childId));
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/collaborator", {
+        method: "DELETE",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          collaboratorPhoneNumber: phone,
+          isConfirm: true,
+          listChildId: listChildId
+        })
+      });
       const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
-        setName(result.data)
-      } else {
-        setMessage("Cannot found any account using the inputted phone number in the system.")
+      if (result.code === 200) {
+        showMessage(t("collaborator-details-delete-success"));
+        props.route.params.goBack();
+        props.navigation.goBack()
       }
     } catch (error) {
-      handleError(error.message);
+      console.log(error);
+      showMessage(t("common-error"));
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    getChildrenList();
+    getCollboratingChildren();
+    getCollboratorInfo();
   }, [])
 
   return (
+    loading ? <Loader loading={true}/> :
     <ScrollView style={styles.container}>
-      <Loader loading={loading}/>
-      <Header navigation={props.navigation} title={t("collaborator-add-title")}/>
+      <Header navigation={props.navigation} title={name}/>
+      <View style={{
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: -20,
+        marginBottom: "10%"
+      }}>
+        <TouchableOpacity
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: 60,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: COLORS.MEDIUM_GREY
+          }}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={{uri: "data:image/png;base64," + avatar}}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 60
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       {/* form */}
       {/* collab phone */}
-      <InputField title={t("collaborator-add-phone")} value={phone} setValue={setPhone} valid={validPhone} setValid={setValidPhone} keyboardType="numeric" invalidMessage={t("collaborator-add-phone-empty")} maxLength={11} actionsOnTyping={() => {setName(""); setMessage("")}}/>
-      <View style={{
-        marginLeft: "10%",
-        marginRight: "10%"
-      }}>
-        { message.length > 0 &&
-          <Text style={{
-            fontFamily: "Acumin",
-            fontSize: 14,
-            color: COLORS.RED
-          }}>
-            {message}
-          </Text>
-        }
-      </View>
+      <InputField title={t("collaborator-details-phone")} value={phone} editable={false}/>
       {/* end collab phone */}
       {/* collab name */}
-      { name.length > 0 &&
-      <>
-      <InputField title={t("collaborator-add-name")} value={name} editable={false} />
+      <InputField title={t("collaborator-details-name")} value={name} editable={false}/>
+      {/* end collab name */}
       <View style={{
         flexDirection: "column",
         alignItems: "flex-start",
@@ -107,7 +152,7 @@ const CollaboratorDetailsScreen = (props) => {
           fontFamily: "AcuminBold",
           fontSize: 16
         }}>
-          {t("collaborator-add-choose-child")}
+          {t("collaborator-details-children")}
         </Text>
         <View style={{
           flexDirection: "row"
@@ -129,6 +174,7 @@ const CollaboratorDetailsScreen = (props) => {
                   const index = newArray.indexOf(child);
                   newArray[index].active = !newArray[index].active;
                   setChildren(newArray);
+                  setMessage("");
                 }}
               >
                 <Image
@@ -144,14 +190,33 @@ const CollaboratorDetailsScreen = (props) => {
           })}
         </View>
       </View>
-      </>
+      { message.length > 0 &&
+        <View style={{
+          marginLeft: "10%",
+          marginRight: "10%"
+        }}>
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 14,
+            color: COLORS.RED
+          }}>
+            {message}
+          </Text>
+        </View>
       }
-      {/* end collab name */}
       {/* button Confirm */}
-      <ButtonSave 
-        title={name.length <= 0 ? t("collaborator-add-confirm") : t("collaborator-add-button-text")}
-        action={name.length <= 0 ? () => {setLoading(true); findCollab()} : () => {setLoading(true); addCollab()}}
-        style={{marginBottom: 50}}
+      <ButtonSave
+        title={t("collaborator-details-delete")}
+        action={() => {setLoading(true); deleteCollaborator()}}
+        style={{
+          marginBottom: 50, 
+          backgroundColor: COLORS.WHITE,
+          borderWidth: 1,
+          borderColor: COLORS.RED
+        }}
+        textStyle={{
+          color: COLORS.RED
+        }}
       />
       {/* end button Confirm */}
     </ScrollView>

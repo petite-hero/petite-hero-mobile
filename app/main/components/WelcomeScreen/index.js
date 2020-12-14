@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { View, Text, Image, TouchableOpacity, AsyncStorage, ImageBackground } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { COLORS } from '../../../const/const';
+import AsyncStorage from '@react-native-community/async-storage';
 import LoginScreen from '../LoginScreen';
 import RegisterScreen from '../RegisterScreen';
 import styles from './styles/index.css';
@@ -10,6 +10,7 @@ import ForgotPasswordScreen from '../ForgotPasswordScreen';
 import ForgotPasswordCodeEnteringScreen from '../ForgotPasswordCodeEnteringScreen';
 import RegisterEnteringInformationScreen from '../RegisterEnteringInformationScreen';
 import RegisterCodeEnteringScreen from '../RegisterCodeEnteringScreen';
+import ForgotPasswordNewPasswordEnteringScreen from '../ForgotPasswordNewPasswordEnteringScreen';
 
 export const Stack = createStackNavigator();
 
@@ -72,6 +73,14 @@ const WelcomeScreen = (props) => {
       <Stack.Screen 
         name="CodeEntering" 
         component={ForgotPasswordCodeEnteringScreen}
+        initialParams={{
+          authContext: props.route.params.authContext,
+          localizationContext: props.route.params.localizationContext
+        }}
+      />
+      <Stack.Screen 
+        name="NewPassword" 
+        component={ForgotPasswordNewPasswordEnteringScreen}
         initialParams={{
           authContext: props.route.params.authContext,
           localizationContext: props.route.params.localizationContext

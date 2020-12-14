@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, AsyncStorage, ScrollView, Image, TextInput } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
 import * as Permissions from 'expo-permissions';
@@ -7,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { Loader } from "../../../utils/loader";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
 
@@ -208,10 +209,10 @@ const ChildDetailsScreen = (props) => {
         setYob(new Date().getFullYear() - result.data.age + "");
         setDeviceId(result.data.androidId);
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -239,12 +240,12 @@ const ChildDetailsScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         props.route.params.goBack();
         props.navigation.goBack();
-        handleError("Child profile changed successfully!");
+        showMessage("Child profile changed successfully!");
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -265,12 +266,12 @@ const ChildDetailsScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         props.route.params.goBack();
         props.navigation.goBack();
-        handleError("Child deleted successfully!");
+        showMessage("Child deleted successfully!");
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }

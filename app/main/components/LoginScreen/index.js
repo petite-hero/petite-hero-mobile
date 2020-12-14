@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, AsyncStorage, Image, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
 import { fetchWithTimeout } from '../../../utils/fetch';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 
@@ -63,7 +64,7 @@ const LoginScreen = (props) => {
         setPassword("");
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -84,7 +85,7 @@ const LoginScreen = (props) => {
         })
       });
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     }
   }
   

@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import { View, Text, Image, AsyncStorage, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { COLORS, PORT } from "../../../const/const";
 import Animated, { Easing } from "react-native-reanimated";
 import styles from "./styles/index.css";
 import { fetchWithTimeout } from "../../../utils/fetch";
-import { handleError } from "../../../utils/handleError";
+import { showMessage } from "../../../utils/showMessage";
 import { Loader } from "../../../utils/loader";
 
 const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup, iconName }) => {
@@ -208,10 +209,10 @@ const ProfileScreen = (props) => {
           })
         );
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     }
   };
 
@@ -226,15 +227,22 @@ const ProfileScreen = (props) => {
           result.data.map((collaborator, index) => {
             return {
               title: "Collaborator " + (index + 1),
-              text: collaborator.name
+              text: collaborator.name,
+              action: () => {
+                props.navigation.navigate("CollaboratorDetails", {
+                  screenName: collaborator.name,
+                  collabId: collaborator.phoneNumber,
+                  goBack: () => setLoading(true)
+                })
+              }
             };
           })
         );
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     }
   };
 
@@ -247,10 +255,10 @@ const ProfileScreen = (props) => {
       if (result.code === 200 && result.msg === "OK") {
         setParentProfile(result.data);
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -371,8 +379,9 @@ const ProfileScreen = (props) => {
               {
                 title: t("profile-collaborators-add"),
                 action: () => {
-                  props.navigation.navigate("CollaboratorAdding")
-                },
+                  props.navigation.navigate("CollaboratorAdding", {
+                    goBack: () => setLoading(true)
+                })},
                 iconName: "add"
               },
             ]}
@@ -419,10 +428,6 @@ const ProfileScreen = (props) => {
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0
             }}
-            // iconName={{name: "keyboard-arrow-right"}}
-            // action={() => {
-            //   props.navigation.navigate("ProfileShowingSubscription");
-            // }}
             subItems={[
               {
                 title: t("profile-subscription-history"),

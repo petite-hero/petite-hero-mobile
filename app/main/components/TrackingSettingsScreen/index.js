@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Keyboard, Image, Text, AsyncStorage, Animated, Easing, TouchableOpacity } from 'react-native';
+import { View, Keyboard, Image, Text, Animated, Easing, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import styles from './styles/index.css';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';

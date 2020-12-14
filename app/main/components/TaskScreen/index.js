@@ -3,10 +3,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/index.css';
 import DateItem from './DateItem';
 import TaskBoard from './TaskBoard';
-import { View, Text, Image, AsyncStorage, FlatList, TouchableOpacity, AppState } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, AppState } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
-import { handleError } from '../../../utils/handleError';
+import { showMessage } from '../../../utils/showMessage';
 import { fetchWithTimeout } from '../../../utils/fetch';
 import AvatarContainer from '../AvatarContainer';
 import * as Notifications from 'expo-notifications';
@@ -110,10 +111,10 @@ const getHandedTasks = async(date, setDates) => {
       }
       setDates(tmp);
     } else {
-      handleError(result.msg);
+      showMessage(result.msg);
     }
   } catch (error) {
-    handleError(error.message);
+    showMessage(error.message);
   }
 };
 
@@ -174,10 +175,10 @@ const TaskScreen = (props) => {
         setList(groupTasksByStatus(result.data));
         getHandedTasks(date, setDates);
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -208,10 +209,10 @@ const TaskScreen = (props) => {
           }
         }
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     }
   }
 
@@ -224,10 +225,10 @@ const TaskScreen = (props) => {
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
       } else {
-        handleError(result.msg);
+        showMessage(result.msg);
       }
     } catch (error) {
-      handleError(error.message);
+      showMessage(error.message);
     }
   }
 
