@@ -285,7 +285,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     }
     if (isTracking){
       await new Promise(resolve => setTimeout(resolve, 10000));
-      if (children[0].status == "LOADING"){
+      if (children[0]?.status == "LOADING"){
         setIsCannotConnect(true);
       }
     }
@@ -343,7 +343,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         <Text style={styles.warningBtnText}>Emergency!</Text>
       </TouchableOpacity>
 
-      {children[0].status === "NOT SAFE" ?
+      {children[0]?.status === "NOT SAFE" ?
         <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL(`tel:`)}>
           <Icon name="phone-in-talk" type="material" color="white"/>
         </TouchableOpacity>
@@ -358,7 +358,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         <LocationStatus
           diameter={wp("70%")}
           margin={0}
-          trackingStatus={children[0].status}
+          trackingStatus={children[0]?.status}
           photo={children[0].photo}/>
       </View>
 
@@ -394,9 +394,9 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
           {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer,
-                                    {backgroundColor: children[0].status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
+                                    {backgroundColor: children[0]?.status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
             onPress={() => {
-              if (children[0].status === "INACTIVE"){
+              if (children[0]?.status === "INACTIVE"){
                 requestSmartwatchTracking(true);
                 requestEmergencyMode(true, children[0].childId);
                 let childrenTmp = [...childrenRef.current];
@@ -413,7 +413,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
               }
             }}
           >
-            <Image source={children[0].status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
+            <Image source={children[0]?.status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
                    style={{width: 30, height: 30}}/>
           </TouchableOpacity>
         </Animated.View>
@@ -471,7 +471,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         <Modal transparent={true} visible={isPickingDate} animationType="fade">
           <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
             <View style={styles.calendar}>
-              <Text style={{fontSize: 20, fontFamily: "Acumin"}}>Select the day</Text>
+              <Text style={{fontSize: 20, fontFamily: "Acumin", color: COLORS.BLACK}}>Select the day</Text>
               <View style={{flexDirection: "row", marginTop: 10}}>
                 {[0, 1, 2, 3, 4, 5, 6].map((count, index) => {
                   let date = new Date();
@@ -480,7 +480,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                     <TouchableOpacity key={index} style={[styles.dateContainer, index == 0 ? {borderColor: COLORS.STRONG_CYAN} : {}]} onPress={() => {
                       setIsPickingDate(false);
                       // check if the selected day is today
-                      if (index === 0 && children[0].status !== "INACTIVE"){
+                      if (index === 0 && children[0]?.status !== "INACTIVE"){
                         setIsValidation(true);
                         return;
                       }
@@ -488,10 +488,10 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                       animSetZoneBtn.setValue(0);
                       setFlied(false);
                     }}>
-                      <Text style={{fontFamily: "Acumin", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                      <Text style={{fontFamily: "Acumin", color: index == 0 ? COLORS.STRONG_CYAN : COLORS.BLACK}}>
                         {WEEKDAYS_ABB[date.getDay()]}
                       </Text>
-                      <Text style={{fontFamily: "AcuminBold", color: index == 0 ? COLORS.STRONG_CYAN : "black"}}>
+                      <Text style={{fontFamily: "AcuminBold", color: index == 0 ? COLORS.STRONG_CYAN : COLORS.BLACK}}>
                         {(date.getDate() < 10 ? "0" : "") + date.getDate()}
                       </Text>
                     </TouchableOpacity>

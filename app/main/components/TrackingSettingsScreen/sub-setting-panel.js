@@ -17,7 +17,7 @@ const TrackingSettingLocationSubProps = (props) => {
     // SETTING LOCATION TYPE
     props.substatus === "TYPE" ?
       <Animated.View key={0} style={[styles.locSettingPanel, {left: props.animLeft}]}>
-        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", fontSize: 15}}>Mark as</Text>
+        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>Mark as</Text>
         {["Home", "Education"].map((type, index) => {
           return (
             <TouchableOpacity key={index} style={styles.txtTypeContainer} onPress={() => props.onTypeEntrySelected(type)}>
@@ -39,7 +39,7 @@ const TrackingSettingLocationSubProps = (props) => {
     // SETTING LOCATION REPEAT DAYS
     props.substatus === "REPEAT" ?
       <Animated.View key={1} style={[styles.locSettingPanel, {left: props.animLeft}]}>
-        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", fontSize: 15}}>Repeat on</Text>
+        <Text style={{marginTop: 30, marginLeft: 10, marginBottom: 10, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>Repeat on</Text>
         <View style={{flexDirection: "row"}} onPress={props.onRepeatEntryAllSelected}>
           <Text style={{flex: 8, fontFamily: "Acumin", fontSize: 16, color: COLORS.STRONG_GREY, marginLeft: 10}}>All week</Text>
           <Switch

@@ -168,9 +168,7 @@ const TaskScreen = (props) => {
   const getListOfTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
-      const start = new Date();
       const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
-      console.log("2 " + (new Date() - start));
       const result = await response.json();
       if (result.code === 200) {
         setList(groupTasksByStatus(result.data));

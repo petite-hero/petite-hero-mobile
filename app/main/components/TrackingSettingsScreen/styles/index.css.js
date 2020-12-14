@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     height: 44,
     fontFamily: "Acumin",
+    color: COLORS.BLACK,
     borderRadius: 28,
     elevation: 3
   },
@@ -220,6 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     marginLeft: 50,
     fontFamily: "AcuminBold",
+    color: COLORS.BLACK
   },
   locationTime: {
     marginLeft: 50,
