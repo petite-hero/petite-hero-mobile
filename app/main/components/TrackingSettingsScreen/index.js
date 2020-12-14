@@ -77,7 +77,9 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const fetchLocList = async () => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
+    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
+    // console.log("1 " + (new Date() - start));
     const result = await response.json();
     if (result.code === 200){
       setLocList(result.data);
@@ -120,8 +122,10 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       latD: lQuad[3].latitude,
       lngD: lQuad[3].longitude,
     });
+    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
+    // console.log("2 " + (new Date() - start));
     const result = await response.json();
     if (result.code !== 200) console.log("Error while adding location. Server response: " + JSON.stringify(result));
   }
@@ -159,8 +163,10 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
       latD: lQuad[3].latitude,
       lngD: lQuad[3].longitude,
     });
+    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: body});
+    // console.log("3 " + (new Date() - start));
     const result = await response.json();
     if (result.code !== 200) console.log("Error while updating location. Server response: " + JSON.stringify(result));
   }
