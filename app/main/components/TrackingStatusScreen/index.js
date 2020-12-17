@@ -1,5 +1,5 @@
 import React, { Children, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Animated, Easing, AppState, Linking, Modal } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

@@ -208,8 +208,6 @@ const ProfileScreen = (props) => {
             };
           })
         );
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);

@@ -7,6 +7,7 @@ import { badgesList, COLORS } from '../../../const/const';
 import * as Notifications from 'expo-notifications';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import Header from '../../../base/components/Header';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // silent notification for updating location
 Notifications.setNotificationHandler({
@@ -37,7 +38,8 @@ const ChildAddingShowingQrScreen = (props) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      if (notification.request.content.title === "Petite Hero" && notification.request.content.body === "Done setting up child device") { 
+      if (notification.request.content.title === "Petite Hero" && notification.request.content.body === "Done setting up child's device") { 
+        AsyncStorage.setItem("child_id", props.route.params.qr);
         props.navigation.navigate("Profile");
       }
     });
