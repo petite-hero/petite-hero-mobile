@@ -49,7 +49,7 @@ const TaskCreatingScreen = (props) => {
   const [validDetail, setValidDetail]       = useState(true);
   const [startTime, setStartTime]           = useState(new Date().getTime());
   const [validStartTime, setValidStartTime] = useState(true);
-  const [endTime, setEndTime]               = useState(new Date().getTime());
+  const [endTime, setEndTime]               = useState(new Date().setMinutes(new Date().getMinutes() + 30));
   const [validEndTime, setValidEndTime]     = useState(true);
   const [timeMessage, setTimeMessage]       = useState("");
   const [loading, setLoading]               = useState(true);
@@ -67,14 +67,14 @@ const TaskCreatingScreen = (props) => {
     if (name.length === 0) {setValidName(false); isValidated = false}
     if (details.length === 0) {setValidDetail(false); isValidated = false}
     if (new Date(props.route.params.date).getTime() === new Date(new Date().toDateString()).getTime()) {
-      if (startTime < new Date().getTime()) {
-        setValidStartTime(false); 
+      if (new Date().setMinutes(new Date(startTime).getMinutes() - 5) < new Date().getTime()) {
+        setValidStartTime(false);
         setTimeMessage(t("task-add-start-time-invalid"));
         isValidated = false;
       } else if (endTime < startTime) {
         setValidEndTime(false);
-        setTimeMessage(t("task-add-end-time-invalid"))
-        isValidated = false
+        setTimeMessage(t("task-add-end-time-invalid"));
+        isValidated = false;
       }
     } else {
       if (endTime < startTime) {setValidEndTime(false); isValidated = false}

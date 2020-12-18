@@ -174,8 +174,6 @@ const TaskScreen = (props) => {
       if (result.code === 200) {
         setList(groupTasksByStatus(result.data));
         getHandedTasks(date, setDates);
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);
@@ -188,31 +186,25 @@ const TaskScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
-      const childIdTmp = await AsyncStorage.getItem('child_id');
+      const childId = await AsyncStorage.getItem('child_id');
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
         const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
         setChildren(tmp);
-        if (!childIdTmp){
-          await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-          setChildId(result.data[0].childId);
-        }
+        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         else {
           let isInChildren = false;
           result.data.map((child, index) => {
             if (childId == child.childId) isInChildren = true;
           });
-          if (!isInChildren){
-            await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-            setChildId(result.data[0].childId);
-          }
+          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         }
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -240,6 +232,8 @@ const TaskScreen = (props) => {
   }
   
   const handleChildIdChanged = async () => {
+    getListOfChildren();
+    getListOfTask();
     const childIdTmp = await AsyncStorage.getItem('child_id');
     if (childIdTmp != childIdRef.current) {
       setLoading(true);
@@ -249,12 +243,12 @@ const TaskScreen = (props) => {
   }
 
   useEffect(() => {
-    getListOfChildren();
     listenChangeTaskStatus();
     listenChildIdChanged();
   }, []);
 
   useEffect(() => {
+    getListOfChildren();
     getListOfTask();
   }, [loading]);
 
@@ -377,7 +371,7 @@ const TaskScreen = (props) => {
         t={t}
         date={date}
         list={list}
-        refresh={setLoading} 
+        refresh={setLoading}
         navigation={props.navigation}
         onDelete={setDeletedTaskId}
       />
