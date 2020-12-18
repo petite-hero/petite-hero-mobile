@@ -175,5 +175,9 @@
   "profile-setting-language-info"           : "Vui lòng đăng nhập lại để thiết lập ngôn ngữ của bạn được thực thi.",
   "profile-logout"                          : "Đăng xuất",
 
-  "common-error"                            : "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau."
+  "common-error"                            : "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau.",
+
+
+  "tracking-emergency"                      : "Khẩn cấp"
+
 }

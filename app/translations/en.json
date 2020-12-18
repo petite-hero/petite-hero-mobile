@@ -175,5 +175,10 @@
   "profile-setting-language-info"           : "Please login again for your language setting to be applied.",
   "profile-logout"                          : "Logout",
 
-  "common-error"                            : "Unexpected error happens. Please try again later"
+  "common-error"                            : "Unexpected error happens. Please try again later",
+
+  
+  "tracking-emergency"                      : "Emergency"
+
+
 }

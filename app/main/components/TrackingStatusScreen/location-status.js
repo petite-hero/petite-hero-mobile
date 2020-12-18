@@ -12,6 +12,7 @@ const LocationStatus = (props) => {
   const STATUS_DURATION = 3000;
   const STATUS_COLORS = {"LOADING": "rgb(140, 140, 140)", "INACTIVE": "rgb(140, 140, 140)",
                          "SAFE": "rgb(0, 154, 34)", "NOT SAFE": "red"};
+  const CHILD_AVATARS = {"Male": require("../../../../assets/avatar-son.png"), "Female": require("../../../../assets/avatar-daughter.png")};
 
   const animTrackingStatus = React.useRef(new Animated.Value(0)).current;
   let animTrackingStatusScales = [];
@@ -43,7 +44,7 @@ const LocationStatus = (props) => {
   return (
 
     <TouchableOpacity style={[styles.statusItemContainer, {width: props.diameter, height: props.diameter, marginRight: props.margin}]}
-                      onPress={props.onPress}>
+                      onPress={props.onPress} activeOpacity={1}>
       {animTrackingStatusScales.map((animScale, index) => {
         return (
           <Animated.View key={index} style={[styles.statusWave, {backgroundColor: STATUS_COLORS[props.trackingStatus],
@@ -54,7 +55,7 @@ const LocationStatus = (props) => {
       <View style={[styles.statusWave, {backgroundColor: STATUS_COLORS[props.trackingStatus]},
                     {width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO}]}/>
       <Image
-        source={{uri: "data:image/png;base64," + props.photo}}
+        source={props.photo ? {uri: "data:image/png;base64," + props.photo} : CHILD_AVATARS[props.gender]}
         style={{width: DIAMETER*CENTER_RATIO, height: DIAMETER*CENTER_RATIO, borderRadius: DIAMETER}}
       />
     </TouchableOpacity>

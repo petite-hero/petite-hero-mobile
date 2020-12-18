@@ -134,7 +134,7 @@ const AvatarContainer = (props) => {
     : 
       <Image
         style={styles.avatar}
-        source={require("../../../../assets/kid-avatar.png")}
+        source={require("../../../../assets/avatar-son.png")}
       />
     }
     </>

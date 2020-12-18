@@ -162,6 +162,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== VARIABLE SECTION ===================== */}
 
+  const { t } = useContext(route.params.localizationContext);
   const WEEKDAYS_ABB = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const [loading, setLoading] = React.useState(false);
@@ -340,7 +341,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* emergency button */}
       <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
-        <Text style={styles.warningBtnText}>Emergency!</Text>
+        <Text style={styles.warningBtnText}>{t("tracking-emergency")}!</Text>
       </TouchableOpacity>
 
       {children[0]?.status === "NOT SAFE" ?
@@ -359,7 +360,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
           diameter={wp("70%")}
           margin={0}
           trackingStatus={children[0]?.status}
-          photo={children[0].photo}/>
+          photo={children[0]?.photo}
+          gender={children[0]?.gender}/>
       </View>
 
       <View style={styles.statusListContainer}>
@@ -371,6 +373,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                 margin={10}
                 trackingStatus={child.status}
                 photo={child.photo}
+                gender={child.gender}
                 onPress={async () => {
                   let tmpChildren = [...children];
                   let tmpChild = tmpChildren[0];
