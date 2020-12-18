@@ -60,6 +60,8 @@ const ChildAddingScreen = (props) => {
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
         const childId = result.data.childId.toString();
+        await AsyncStorage.setItem("child_id", childId);
+        props.route.params.goBack();
         props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
       } else {
         showMessage(result.msg);

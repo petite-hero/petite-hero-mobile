@@ -7,7 +7,7 @@ export const COLORS = {
   LIGHT_GREY_3: "#fcfcfc",
   MEDIUM_GREY: "#d6d6d6",
   STRONG_GREY: "#656565",
-  BLACK: "#1D1D1D",
+  BLACK: "#656565",
   STRONG_ORANGE: "#f47e3e",
   LIGHT_ORANGE: "#ffe3c1",
   STRONG_CYAN: "#00ade8",

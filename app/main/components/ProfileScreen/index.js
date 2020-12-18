@@ -236,8 +236,6 @@ const ProfileScreen = (props) => {
             };
           })
         );
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);
@@ -252,8 +250,6 @@ const ProfileScreen = (props) => {
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
         setParentProfile(result.data);
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);

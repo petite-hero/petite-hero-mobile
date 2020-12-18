@@ -234,8 +234,6 @@ const QuestScreen = (props) => {
           });
           if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
         }
-      } else {
-        showMessage(result.msg);
       }
     } catch (error) {
       showMessage(error.message);
@@ -252,6 +250,7 @@ const QuestScreen = (props) => {
   }
   
   const handleChildIdChanged = async () => {
+    getListOfChildren();
     const childIdTmp = await AsyncStorage.getItem('child_id');
     if (childIdTmp != childIdRef.current) {
       setLoading(true);
