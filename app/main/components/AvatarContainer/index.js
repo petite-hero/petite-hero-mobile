@@ -7,6 +7,7 @@ import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 const AvatarContainer = (props) => {
+  const CHILD_AVATARS = {"Male": require("../../../../assets/avatar-son.png"), "Female": require("../../../../assets/avatar-daughter.png")};
   const [dropdown, setDropdown] = useState(false);
   const [currentChild, setCurrentChild] = useState({});
   const [otherChildren, setOtherChildren] = useState([]);
@@ -88,7 +89,7 @@ const AvatarContainer = (props) => {
             changeChild(child.childId);
           }}>
             <Image
-              source={{uri: "data:image/png;base64," + child.photo}}
+              source={child.photo ? {uri: "data:image/png;base64," + child.photo} : CHILD_AVATARS[child.gender]}
               style={styles.avatar}
             />
           </TouchableOpacity>
@@ -126,7 +127,7 @@ const AvatarContainer = (props) => {
           }}
         >
           <Image
-            source={{uri: "data:image/png;base64," + currentChild.photo}}
+            source={currentChild.photo ? {uri: "data:image/png;base64," + currentChild.photo} : CHILD_AVATARS[currentChild.gender]}
             style={styles.avatar}
           />
         </TouchableOpacity>
