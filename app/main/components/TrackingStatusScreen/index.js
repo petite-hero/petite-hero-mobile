@@ -236,21 +236,62 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== CHILD ID CHANGE HANDLING SECTION ===================== */}
 
+  const getListOfChildren = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+      const result = await response.json();
+      if (result.code === 200) {
+        const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        let tmpChildren = [...tmp];
+        if (tmp.length != childrenRef.current.length){
+          tmp.map((child, index) => {
+            if (!tmpChildren[index].isTrackingActive) tmpChildren[index].status = "INACTIVE";
+            else{
+              tmpChildren[index].status = "LOADING";
+              requestEmergencyMode(true, tmpChildren[index].childId);
+            }
+            if (child.childId == childId){
+              tmpChildren[0] = child;
+              tmpChildren[index] = tmp[0];
+              setChildren(tmpChildren);
+            }
+          });
+          if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          else {
+            let isInChildren = false;
+            result.data.map((child, index) => {
+              if (childId == child.childId){
+                isInChildren = true;
+              }
+            });
+            if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+          }
+        }
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleChildIdChanged = async () => {
+    getListOfChildren();
     const childIdTmp = await AsyncStorage.getItem('child_id');
-    if (childIdTmp != children[0].childId){
-      let isFound = false;
-      children.map((child, index) => {
+    if (childIdTmp != childrenRef.current[0].childId) {
+      setLoading(true);
+      childrenRef.current.map((child, index) => {
         if (child.childId == childIdTmp){
-          let tmpChildren = [...children];
+          let tmpChildren = [...childrenRef.current];
           let tmpChild = tmpChildren[0];
           tmpChildren[0] = tmpChildren[index];
           tmpChildren[index] = tmpChild;
           setChildren(tmpChildren);
-          isFound = true;
         }
       });
-      if (!isFound) await AsyncStorage.setItem('child_id', children[0].childId+"");
     }
   }
 
@@ -538,39 +579,3 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 };
 
 export default TrackingStatusScreen;
-
-
-
-// fcmService.registerAppWithFCM();
-// fcmService.register(onRegister, onNotification, onOpenNotification);
-// localNotificationService.configure(onOpenNotification);
-
-// function onRegister(token) {
-//   console.log("[Status] onRegister: ", token);
-// }
-
-// function onNotification(notify) {
-//   console.log("[Status] onNotification: ", notify);
-//   const options = {
-//     soundName: 'default',
-//     playSound: true
-//   }
-// }
-// localNotificationService.showNotification(
-//   0,
-//   notify.title,
-//   notify.body,
-//   notify,
-//   option
-// )
-
-// function onOpenNotification(notify) {
-//   console.log("[Status] onOpenNotification: ", notify);
-//   alert("Open Notification: " + notify.body);
-// }
-
-// return () => {
-//   console.log("[Status] unRegister");
-//   fcmService.unRegister();
-//   localNotificationService.unRegister();
-// }

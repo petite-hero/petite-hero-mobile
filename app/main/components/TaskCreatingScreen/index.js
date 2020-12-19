@@ -64,6 +64,7 @@ const TaskCreatingScreen = (props) => {
 
   const validate = () => {
     let isValidated = true;
+    return true;
     if (name.length === 0) {setValidName(false); isValidated = false}
     if (details.length === 0) {setValidDetail(false); isValidated = false}
     if (new Date(props.route.params.date).getTime() === new Date(new Date().toDateString()).getTime()) {

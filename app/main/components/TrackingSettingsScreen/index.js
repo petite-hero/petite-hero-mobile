@@ -440,7 +440,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
               else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
               else if (lFromTimeDate >= lToTimeDate) validation = "'To' time should be after 'From'";
             }
-            if (validation == "" && Util.isOverlap(locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = "The time schedule of this location is overlapping another";
+            if (validation == "" && Util.isOverlap(lAllTime, locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = "The time schedule of this location is overlapping another";
             if (validation != ""){
               setValidationStr(validation);
               setIsValidation(true);

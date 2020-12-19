@@ -277,7 +277,7 @@ const ProfileScreen = (props) => {
         overflow: "hidden"
       }}>
         <Image
-          source={{uri: "data:image/png;base64," + parentProfile.avatar}}
+          source={parentProfile.avatar ? {uri: "data:image/png;base64," + parentProfile.avatar} : require("../../../../assets/avatar-parent.png")}
           style={{width: "100%", height: "100%"}}
         />
       </View>

@@ -1,7 +1,7 @@
 class Util{
 
   // map consts
-  static MAP_ZOOM = {latitudeDelta: 0.012, longitudeDelta: 0.006};
+  static MAP_ZOOM = {latitudeDelta: 0.003, longitudeDelta: 0.0015};
   static LOC_FPT = {latitude: 10.8414846, longitude: 106.8100464};
   static REGION_FPT = {latitude: 10.8414846, longitude: 106.8100464,
     latitudeDelta: this.MAP_ZOOM.latitudeDelta, longitudeDelta: this.MAP_ZOOM.longitudeDelta};
@@ -26,8 +26,8 @@ class Util{
   }
 
   static getQuadFromLoc = (lat, lng) => {
-    const LAT_DELTA = 0.0016;
-    const LNG_DELTA = 0.001;
+    const LAT_DELTA = 0.0004;
+    const LNG_DELTA = 0.00025;
     let result = [];
     result.push({latitude: lat+LAT_DELTA, longitude: lng-LNG_DELTA});
     result.push({latitude: lat+LAT_DELTA, longitude: lng+LNG_DELTA});
@@ -145,8 +145,8 @@ class Util{
 
   // ===== VALIDATIONS =====
 
-  static isOverlap(locList, fromTime, toTime, id){
-    if (locList == undefined || locList.length == 0) return false;
+  static isOverlap(lAllTime, locList, fromTime, toTime, id){
+    if (lAllTime || locList == undefined || locList.length == 0) return false;
     const from = fromTime.getTime();
     const to = toTime.getTime();
     let result = false;

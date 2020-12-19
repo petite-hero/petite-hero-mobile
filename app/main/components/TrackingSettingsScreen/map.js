@@ -92,11 +92,6 @@ const TrackingSettingMap = (props) => {
           <Marker key={4} coordinate={vertex3} draggable onDrag={(event) => handleVertexDrag(event, 2)} onDragEnd={(event) => handleVertexDragFinished(event, 2)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>,
           <Marker key={5} coordinate={vertex4} draggable onDrag={(event) => handleVertexDrag(event, 3)} onDragEnd={(event) => handleVertexDragFinished(event, 3)} anchor={{x: 0.5, y: 0.5}}><View style={[styles.safeLoc, {backgroundColor: TYPE_COLORS[props.lType]}]}/></Marker>
         ] : null}
-        {/* <Marker key={0} coordinate={{latitude: props.settingLoc.latitude, longitude: props.settingLoc.longitude}} anchor={{x: 0.5, y: 0.5}}>
-          <View style={styles.safeLoc}/>
-        </Marker> */}
-        {/* <Circle key={1} center={{latitude: props.settingLoc.latitude, longitude: props.settingLoc.longitude}}
-                    radius={props.lRadius} fillColor={changeOpac(COLORS.STRONG_BLUE, 0.317)} strokeWidth={0}/> */}
 
       </MapView>
 
