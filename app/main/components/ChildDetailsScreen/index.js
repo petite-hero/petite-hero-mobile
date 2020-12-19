@@ -11,6 +11,7 @@ import { fetchWithTimeout } from "../../../utils/fetch";
 import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
+import { ConfirmationModal } from "../../../utils/modal";
 
 const ImagePickerComponent = (props) => {
   const getPermission = async() => {
@@ -181,6 +182,7 @@ const ChildDetailsScreen = (props) => {
   const [validYob, setValidYob]   = useState(true);
   const [deviceId, setDeviceId]   = useState("");
   const [loading, setLoading]     = useState(true);
+  const [deleteAction, setDeleteAction] = useState(false);
   const [genders, setGenders] = useState([
     {title: "Boy", active: false, name: "male", color: COLORS.STRONG_CYAN},
     {title: "Girl", active: false, name: "female", color: COLORS.STRONG_CYAN}
@@ -285,6 +287,8 @@ const ChildDetailsScreen = (props) => {
     loading ? <Loader loading={true}/>
     :
     <ScrollView style={styles.container}>
+      {/* CONFIRMATION MODAL */}
+      <ConfirmationModal t={t} message={t("child-details-delete-message")} visible={deleteAction} onConfirm={() => {setLoading(true); setDeleteAction(false); deleteChild()}} onClose={() => {setDeleteAction(false)}}/>
       {/* <Loader loading={loading}/> */}
       <Header navigation={props.navigation} title={props.route.params.screenName}/>
       {/* form */}
@@ -381,7 +385,7 @@ const ChildDetailsScreen = (props) => {
             alignItems: "center",
             justifyContent: "center"
           }}
-            onPress={() => {setLoading(true); deleteChild()}}
+            onPress={() => {setDeleteAction(true)}}
           >
             <Text style={{
               fontFamily: "Acumin",

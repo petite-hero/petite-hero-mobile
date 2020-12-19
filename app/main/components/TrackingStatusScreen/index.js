@@ -549,6 +549,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* validation popup */}
       <ConfirmationModal 
+        t={t}
         visible={isValidation} 
         message={"Location tracking should be turned off before setting for today."}
         option="info"
@@ -559,6 +560,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* cannot connect child popup */}
       <ConfirmationModal 
+        t={t}
         visible={isCannotConnect} 
         message={"Cannot connect to child's device. Please try again later."}
         option="info"

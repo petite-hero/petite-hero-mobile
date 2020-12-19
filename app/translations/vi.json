@@ -55,6 +55,7 @@
   "task-title"                              : "Công việc",
   "task-empty-1"                            : "Không có công việc ở trạng thái",
   "task-empty-2"                            : "ngày hôm nay.",
+  "task-delete-message"                     : "Bạn có thực sự muốn xóa công việc này?",
   "task-status-in-progress"                 : "Đang tiến hành",
   "task-status-finished"                    : "Đã hoàn thành",
   "task-status-assigned"                    : "Đã giao",
@@ -127,6 +128,7 @@
   "child-details-no-token"                  : "Chưa liên kết",
   "child-details-save"                      : "Lưu thay đổi",
   "child-details-delete"                    : "Xóa",
+  "child-details-delete-message"            : "Bạn có thực sự muốn xóa tài khoản của con này không?",
 
   "collaborator-add-title"                  : "Thêm cộng tác viên",
   "collaborator-add-button-text"            : "Thêm cộng tác viên",
@@ -176,8 +178,10 @@
   "profile-logout"                          : "Đăng xuất",
 
   "common-error"                            : "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau.",
-
-
+  "common-button-yes"                       : "Có",
+  "common-button-no"                        : "Không",
+  
   "tracking-emergency"                      : "Khẩn cấp"
+
 
 }

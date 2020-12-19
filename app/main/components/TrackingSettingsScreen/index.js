@@ -18,6 +18,7 @@ import AvatarContainer from '../AvatarContainer';
 
 const TrackingSettingsScreen = ({ route, navigation }) => {
 
+const { t } = route.params.localizationContext;
   {/* ===================== VARIABLE SECTION ===================== */}
 
   // states
@@ -285,6 +286,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
 
         {/* location setting attributes */}
         <TrackingSettingLocation
+          t={t}
 
           isValidation={isValidation}
           isConfirmDelete={isConfirmDelete}

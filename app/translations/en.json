@@ -55,6 +55,7 @@
   "task-title"                              : "Tasks",
   "task-empty-1"                            : "There is no",
   "task-empty-2"                            : "tasks on this day.",
+  "task-delete-message"                     : "Are you sure to delete this task?",
   "task-status-in-progress"                 : "In Progress",
   "task-status-finished"                    : "Finished",
   "task-status-assigned"                    : "Assigned",
@@ -127,6 +128,7 @@
   "child-details-no-token"                  : "None",
   "child-details-save"                      : "Save",
   "child-details-delete"                    : "Delete",
+  "child-details-delete-message"            : "Are you sure you want to remove this child account?",
 
   "collaborator-add-title"                  : "Add New Collaborator",
   "collaborator-add-button-text"            : "Add Collaborator",
@@ -176,8 +178,9 @@
   "profile-logout"                          : "Logout",
 
   "common-error"                            : "Unexpected error happens. Please try again later",
+  "common-button-yes"                       : "Yes",
+  "common-button-no"                        : "No",
 
-  
   "tracking-emergency"                      : "Emergency"
 
 

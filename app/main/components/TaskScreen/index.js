@@ -255,7 +255,7 @@ const TaskScreen = (props) => {
   return (
     <View style={styles.container}>
       {/* CONFIRMATION MODAL */}
-      <ConfirmationModal message="Are your sure you want to delete this task?" visible={deletedTaskId.length !== 0} onConfirm={() => {setLoading(true); setDeletedTaskId(""); deleteTask(deletedTaskId) }} onClose={() => setDeletedTaskId("")}/>
+      <ConfirmationModal t={t} message={t("task-delete-message")} visible={deletedTaskId.length !== 0} onConfirm={() => {setLoading(true); setDeletedTaskId(""); deleteTask(deletedTaskId) }} onClose={() => setDeletedTaskId("")}/>
       {/* END CONFIRMATION MODAL */}
       {/* LOADER */}
       <Loader loading={loading}/>

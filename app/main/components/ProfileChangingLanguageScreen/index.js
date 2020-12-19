@@ -126,6 +126,7 @@ const ProfileChangingLanguageScreen = (props) => {
         </Text>
       </TouchableOpacity>
       <ConfirmationModal
+        t={t}
         visible={showModal} 
         message={t("profile-setting-language-info")}
         option="info"

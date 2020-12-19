@@ -120,6 +120,7 @@ const TrackingSettingLocation = (props) => {
       {/* popups */}
       {/* validation */}
       <ConfirmationModal 
+        t={props.t}
         visible={props.isValidation} 
         message={props.validationStr}
         option="info"
@@ -127,6 +128,7 @@ const TrackingSettingLocation = (props) => {
       />
       {/* confirm delete */}
       <ConfirmationModal 
+        t={props.t}
         visible={props.isConfirmDelete} 
         message={"Delete this location?"}
         option=""

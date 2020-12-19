@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Dimensions, AppState, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import MapView, { Marker, Polyline }  from 'react-native-maps';
@@ -13,7 +13,7 @@ import { ConfirmationModal } from "../../../utils/modal";
 
 
 const TrackingEmergencyScreen = (props) => {
-
+const { t } = useContext(props.route.params.localizationContext);
   {/* ===================== VARIABLE SECTION ===================== */}
 
   // constances
@@ -191,6 +191,7 @@ const TrackingEmergencyScreen = (props) => {
 
       {/* no data popup */}
       <ConfirmationModal 
+        t={t}
         visible={isNoData} 
         message={"Child has no recently reported location."}
         option="info"

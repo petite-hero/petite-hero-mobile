@@ -64,11 +64,10 @@ const TaskCreatingScreen = (props) => {
 
   const validate = () => {
     let isValidated = true;
-    return true;
     if (name.length === 0) {setValidName(false); isValidated = false}
     if (details.length === 0) {setValidDetail(false); isValidated = false}
     if (new Date(props.route.params.date).getTime() === new Date(new Date().toDateString()).getTime()) {
-      if (new Date().setMinutes(new Date(startTime).getMinutes() - 5) < new Date().getTime()) {
+      if (new Date().setMinutes(new Date(startTime).getMinutes() - 5) > new Date().getTime()) {
         setValidStartTime(false);
         setTimeMessage(t("task-add-start-time-invalid"));
         isValidated = false;
@@ -97,7 +96,7 @@ const TaskCreatingScreen = (props) => {
       }, "");
       const repeatOnList = repeatOn.filter(item => item.active === true);
       const dateList = repeatOnList.map(date => date.date);
-      const type = categories.find(category => category.active).title;
+      const type = categories.find(category => category.active).name;
       const response = await fetchWithTimeout('http://' + ip + PORT + '/child/task', {
         method: "POST",
         headers: {
