@@ -42,7 +42,7 @@ const ChildAddingScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
-      const gender = genders.find(gender => gender.active).title;
+      const gender = genders.find(gender => gender.active).name;
       const data = new FormData();
       data.append("name", name);
       data.append("nickName", nickName);
