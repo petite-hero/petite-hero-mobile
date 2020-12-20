@@ -43,7 +43,6 @@ const ForgotPasswordScreen = (props) => {
       } else if (result.code === 404) {
         setMessage(t("forgot-phone-invalid"));
       } else {
-        console.log(result);
         showMessage(result.msg);
       }
     } catch (error) {
@@ -65,8 +64,8 @@ const ForgotPasswordScreen = (props) => {
         <Image
           source={require("../../../../assets/logo.png")}
           style={{
-            width: 250,
-            height: 250
+            width: 164,
+            height: 164
           }}>
         </Image>
       </View>

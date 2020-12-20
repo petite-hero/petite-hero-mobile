@@ -16,11 +16,11 @@ const getDateList = (date) => {
   const currentDate = new Date(date);
   let datesArray = [];
   let newDate = new Date();
-  let tmp = newDate.toDateString().split(" ");
+  let tmp = currentDate.toDateString().split(" ");
   datesArray.push({
     dayOfWeek: tmp[0],
     day: tmp[2],
-    date: new Date(new Date(newDate).toDateString()).getTime(),
+    date: new Date(new Date(currentDate).toDateString()).getTime(),
     active: true
   })
   for (let i = 1; i <= 7; i++) {
@@ -91,9 +91,6 @@ const TaskCreatingScreen = (props) => {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
       const childId = await AsyncStorage.getItem('child_id');
-      const repeatArray = repeatOn.reduce((accumulator, currentValue) => {
-        return accumulator + +currentValue.active;
-      }, "");
       const repeatOnList = repeatOn.filter(item => item.active === true);
       const dateList = repeatOnList.map(date => date.date);
       const type = categories.find(category => category.active).name;
@@ -110,7 +107,6 @@ const TaskCreatingScreen = (props) => {
           description: details,
           fromTime: startTime,
           name: name,
-          repeatOn: repeatArray,
           toTime: endTime,
           type: type
         })
@@ -204,13 +200,12 @@ const TaskCreatingScreen = (props) => {
             {t("task-add-repeat-on-check-all")}
           </Text>
           <Switch
-            trackColor={{ false: COLORS.LIGHT_GREY, true: COLORS.LIGHT_CYAN }}
-            thumbColor={isSelectedAll ? COLORS.STRONG_CYAN : COLORS.GREY}
+            trackColor={{ false: COLORS.GREY, true: COLORS.LIGHT_CYAN }}
+            thumbColor={isSelectedAll ? COLORS.STRONG_CYAN : COLORS.STRONG_GREY}
             onValueChange={() => {setSelectAll(!isSelectedAll); selectAll(!isSelectedAll)}}
             value={isSelectedAll}
             style={{
-              transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-              elevation: 0
+              transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }]
             }}
           />
         </View>
@@ -218,7 +213,7 @@ const TaskCreatingScreen = (props) => {
           {repeatOn.map((value, index) => {
             return (
               index > 0 &&
-              <TouchableOpacity key={index} style={[styles.repeatDate, {backgroundColor: value.active ? COLORS.STRONG_CYAN : COLORS.GREY}]}
+              <TouchableOpacity key={index} style={[styles.repeatDate, {borderColor: value.active ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}]}
                 onPressOut={() => {
                   const newArray = [...repeatOn];
                   const index = newArray.indexOf(value);
@@ -226,10 +221,10 @@ const TaskCreatingScreen = (props) => {
                   setRepeatOn(newArray);
                 }}
               >
-                <Text style={styles.dateText}>
+                <Text style={[styles.dateText, {color: value.active ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}]}>
                   {value.dayOfWeek}
                 </Text>
-                <Text style={styles.dateNum}>
+                <Text style={[styles.dateNum, {color: value.active ? COLORS.STRONG_CYAN : COLORS.MEDIUM_GREY}]}>
                   {value.day}
                 </Text>
               </TouchableOpacity>

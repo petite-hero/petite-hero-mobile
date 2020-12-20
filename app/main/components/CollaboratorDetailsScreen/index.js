@@ -9,6 +9,7 @@ import { showMessage } from "../../../utils/showMessage";
 import Header from "../../../base/components/Header";
 import InputField from "../../../base/components/InputField";
 import ButtonSave from "../../../base/components/ButtonSave";
+import { ConfirmationModal } from "../../../utils/modal";
 
 const CollaboratorDetailsScreen = (props) => {
   const { t }                       = useContext(props.route.params.localizationContext);
@@ -18,6 +19,7 @@ const CollaboratorDetailsScreen = (props) => {
   const [avatar, setAvatar]         = useState("");
   const [message, setMessage]       = useState("");
   const [loading, setLoading]       = useState(true);
+  const [deleteAction, setDeleteAction] = useState(false);
 
   const getCollboratingChildren = async() => {
     try {
@@ -104,6 +106,7 @@ const CollaboratorDetailsScreen = (props) => {
   return (
     loading ? <Loader loading={true}/> :
     <ScrollView style={styles.container}>
+      <ConfirmationModal t={t} message={t("collaborator-details-delete-message")} visible={deleteAction} onConfirm={() => {setLoading(true); setDeleteAction(false); deleteCollaborator()}} onClose={() => {setDeleteAction(false)}}/>
       <Header navigation={props.navigation} title={name}/>
       <View style={{
         width: "100%",
@@ -124,7 +127,7 @@ const CollaboratorDetailsScreen = (props) => {
           activeOpacity={0.8}
         >
           <Image
-            source={{uri: "data:image/png;base64," + avatar}}
+            source={avatar ? {uri: "data:image/png;base64," + avatar} : require("../../../../assets/avatar-parent.png")}
             style={{
               width: "100%",
               height: "100%",
@@ -207,7 +210,7 @@ const CollaboratorDetailsScreen = (props) => {
       {/* button Confirm */}
       <ButtonSave
         title={t("collaborator-details-delete")}
-        action={() => {setLoading(true); deleteCollaborator()}}
+        action={() => {setDeleteAction(true)}}
         style={{
           marginBottom: 50, 
           backgroundColor: COLORS.WHITE,

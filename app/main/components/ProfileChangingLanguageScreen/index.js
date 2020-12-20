@@ -86,7 +86,7 @@ const ProfileChangingLanguageScreen = (props) => {
           alignItems: "center"
         }}
           activeOpacity={1}
-          onPress={() => {setLanguage("en-US")}}
+          onPress={() => {setLanguage("en")}}
         >
           <Image
             source={require("../../../../assets/icons/english.png")}
@@ -98,8 +98,8 @@ const ProfileChangingLanguageScreen = (props) => {
           />
           <RadioButton
             value="en"
-            status={ language === 'en-US' ? 'checked' : 'unchecked' }
-            onPress={() => {setLanguage("en-US")}}
+            status={ language === 'vi' ? 'unchecked' : 'checked' }
+            onPress={() => {setLanguage("en")}}
           />
         </TouchableOpacity>
       </View>
@@ -132,7 +132,7 @@ const ProfileChangingLanguageScreen = (props) => {
         option="info"
         onConfirm={async() => {
           hideModal();
-          changeLanguage(language === "en-US" ? "english" : "vietnamese");
+          changeLanguage(language === "en" ? "english" : "vietnamese");
         }}
         onClose={() => {}}
       />

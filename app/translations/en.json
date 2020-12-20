@@ -87,6 +87,8 @@
   "task-details-submit"                     : "Submitted at",
   "task-details-submit-late"                : "Submitted late at",
   "task-statistics-title"                   : "Task Statistics",
+  "task-statistics-7-days"                  : "Last 7 days",
+  "task-statistics-30-days"                 : "Last 30 days",
 
   "quest-title"                             : "Quests",
   "quest-empty-1"                           : "Current",
@@ -145,6 +147,7 @@
   "collaborator-details-delete"             : "Delete collaborator",
   "collaborator-details-delete-invalid"     : "Must choose a child to remove collaborating privilege first.",
   "collaborator-details-delete-success"     : "Deleted successfully!",
+  "collaborator-details-delete-message"     : "Are you sure you want to delete this collaborator?",
 
   "profile-personal-profile-title"          : "Personal Profile",
   "profile-personal-profile-name"           : "Your Name",

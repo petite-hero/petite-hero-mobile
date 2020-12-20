@@ -294,10 +294,17 @@ const ProfileScreen = (props) => {
             <View style={{
               width: wp("10%"),
               height: wp("10%"),
+              justifyContent: "center",
+              alignItems: "center",
               borderRadius: wp("5%"),
               backgroundColor: COLORS.STRONG_CYAN,
               elevation: 10
-            }}/>
+            }}>
+              <Image
+                source={require("../../../../assets/icons/status.png")}
+                style={{width: 40, height: 40}}
+              />
+            </View>
             <View style={{
               height: hp("3.5%"),
               marginLeft: -wp("5%"),

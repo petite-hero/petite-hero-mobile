@@ -148,7 +148,6 @@ const ProfileConfirmCollaboratorScreen = (props) => {
         })
       });
       const result = await response.json();
-      console.log(result);
       if (result.code === 200) {
         props.route.params.goBack();
         props.navigation.goBack();

@@ -75,7 +75,7 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
               {handleShowingHours(startTime) + ":" + handleShowingMinute(startTime)}
             </Text>
             <Image
-              source={require("../../../../assets/icons/down.png")}
+              source={require("../../../../assets/icons/down-blue.png")}
               style={{
                 width: 30,
                 height: 30
@@ -104,7 +104,7 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
               {handleShowingHours(endTime) + ":" + handleShowingMinute(endTime)}
             </Text>
             <Image
-              source={require("../../../../assets/icons/down.png")}
+              source={require("../../../../assets/icons/down-blue.png")}
               style={{
                 width: 30,
                 height: 30

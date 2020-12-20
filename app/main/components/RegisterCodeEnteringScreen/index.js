@@ -30,7 +30,6 @@ const RegisterCodeEnteringScreen = (props) => {
         body: data
       });
       const result = await response.json();
-      console.log(result);
       if (result.code === 200) {
         props.navigation.navigate("RegisterEnteringInformation", {phone: props.route.params.phone});
       }
@@ -53,8 +52,8 @@ const RegisterCodeEnteringScreen = (props) => {
         <Image
           source={require("../../../../assets/logo.png")}
           style={{
-            width: 250,
-            height: 250
+            width: 164,
+            height: 164
           }}>
         </Image>
       </View>

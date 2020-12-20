@@ -90,7 +90,6 @@ const CollaboratorAddingScreen = (props) => {
         })
       });
       const result = await response.json();
-      console.log(result);
       if (result.code === 200 && result.msg === "OK") {
         props.route.params.goBack();
         props.navigation.goBack();

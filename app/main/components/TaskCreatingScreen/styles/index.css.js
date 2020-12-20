@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "AcuminBold",
     color: COLORS.WHITE,
-    marginLeft: 10,
     marginRight: 10
   },
   invalidTimeMessage : {
@@ -63,25 +62,26 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   repeatDate : {
-    width: widthPercentageToDP("10%"),
+    width: widthPercentageToDP("11%"),
     height: heightPercentageToDP("10%"),
     borderRadius: 20,
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: "3%",
     paddingRight: "3%",
     marginTop: 5,
-    marginRight: 5,
+    marginRight: 1
   },
   dateText : {
     fontSize: 10,
     fontFamily: "Acumin",
-    color: COLORS.WHITE
+    color: COLORS.MEDIUM_GREY
   },
   dateNum : {
     fontSize: 17,
     fontFamily: "AcuminBold",
-    color: COLORS.WHITE
+    color: COLORS.MEDIUM_GREY
   },
   title : {
     fontFamily: "AcuminBold",

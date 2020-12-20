@@ -8,6 +8,7 @@ import { Loader } from "../../../utils/loader";
 import { showMessage } from "../../../utils/showMessage";
 import { fetchWithTimeout } from "../../../utils/fetch";
 import AvatarContainer from "../AvatarContainer";
+import { ImageBackground } from "react-native";
 
 const QuestBoard = ({ t, list, setLoading, navigation }) => {
   const [tabs, setTabs] = useState([
@@ -65,7 +66,7 @@ const QuestBoard = ({ t, list, setLoading, navigation }) => {
               style={{
                 fontFamily: "Acumin",
                 fontSize: 16,
-                color: COLORS.MEDIUM_CYAN,
+                color: COLORS.BLACK,
               }}
             >
               {t("quest-empty-1")} {tabs[0].active ? t("quest-status-in-progress").toLowerCase() : t("quest-status-finished").toLowerCase()} {t("quest-empty-2")}
@@ -269,7 +270,11 @@ const QuestScreen = (props) => {
   }, [loading]);
 
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
+    <ImageBackground source={require("../../../../assets/quest-background/quest.png")} style={{
+      width: "100%",
+      height: "100%"
+    }}>
       <Loader loading={loading} />
       <View style={styles.header}>
         <View style={styles.titleContainer}>
@@ -299,7 +304,8 @@ const QuestScreen = (props) => {
         />
       </TouchableOpacity>
       <AvatarContainer children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
-    </View>
+    {/* </View> */}
+    </ImageBackground>
   );
 };
 

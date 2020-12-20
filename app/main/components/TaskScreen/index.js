@@ -151,13 +151,13 @@ const TaskScreen = (props) => {
 
   const listenChangeTaskStatus = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      if (notification.request.content.data) {
-        getListOfTask();
+      if (notification.request?.content?.body?.includes("has submitted task")) {
+        setLoading(true);
       }
     });
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
-      if (notification.request.content.data) {
-        getListOfTask();
+      if (notification.request?.content?.body?.includes("has submitted task")) {
+        setLoading(true);
       }
     });
     return () => {

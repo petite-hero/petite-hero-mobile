@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   title : {
     fontSize: 30,
     fontFamily: "AcuminBold",
-    color: COLORS.STRONG_CYAN
+    color: COLORS.BLACK
   },
   btnAddQuest : {
     position: "absolute",
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
   },
   tabActive : {
     borderBottomWidth: 2, 
-    borderColor: COLORS.STRONG_CYAN
+    borderColor: COLORS.BLACK
   },
   tabText : {
-    color: COLORS.MEDIUM_CYAN,
+    color: COLORS.BLACK,
     fontSize: hp("2%"),
   },
   tabTextActive : {
-    color: COLORS.STRONG_CYAN,
+    color: COLORS.BLACK,
     paddingBottom: hp("1%")
   },
   questBoard : {

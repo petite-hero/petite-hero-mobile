@@ -111,7 +111,6 @@ const Welcome = ({ navigation, route }) => {
         <BarCodeScanner
           onBarCodeScanned={({data}) => {
             setIsScanning(false);
-            console.log(data);
             AsyncStorage.setItem('IP', data);
           }}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}

@@ -428,7 +428,7 @@ const ChildDetailsScreen = (props) => {
           alignItems: "center",
           justifyContent: "center"
         }}
-          onPress={() => {setLoading(true); deleteChild()}}
+          onPress={() => {setDeleteAction(true)}}
         >
           <Text style={{
             fontFamily: "Acumin",

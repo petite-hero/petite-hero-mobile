@@ -45,7 +45,7 @@ const TaskDetailsScreen = (props) => {
         const result = await response.json();
         if (result.code === 200) {
           setDetails(result.data);
-          setCategory(categories.find(category => result.data.type === category.title));
+          setCategory(categories.find(category => result.data.type === category.name));
         } else {
           showMessage(result.msg);
         }

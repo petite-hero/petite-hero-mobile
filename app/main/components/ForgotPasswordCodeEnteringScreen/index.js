@@ -73,8 +73,8 @@ const ForgotPasswordCodeEnteringScreen = (props) => {
         <Image
           source={require("../../../../assets/logo.png")}
           style={{
-            width: 250,
-            height: 250
+            width: 164,
+            height: 164
           }}>
         </Image>
       </View>

@@ -69,7 +69,7 @@
   "task-add-category"                       : "Chọn loại công việc",
   "task-add-category-housework"             : "Việc nhà",
   "task-add-category-education"             : "Việc học",
-  "task-add-category-skills"                : "Các Kĩ năng khác",
+  "task-add-category-skills"                : "Kĩ năng khác",
   "task-add-start-time"                     : "Thời gian bắt đầu",
   "task-add-start-time-invalid"             : "Thời gian bắt đầu phải sau thời gian hiện tại.",
   "task-add-end-time"                       : "Thời gian kết thúc",
@@ -87,6 +87,8 @@
   "task-details-submit"                     : "Nộp vào lúc",
   "task-details-submit-late"                : "Nộp trễ vào lúc",
   "task-statistics-title"                   : "Thống kê công việc",
+  "task-statistics-7-days"                  : "Trong vòng 7 ngày trước",
+  "task-statistics-30-days"                 : "Trong vòng 30 ngày trước",
 
   "quest-title"                             : "Nhiệm vụ",
   "quest-empty-1"                           : "Không có nhiệm vụ ở trạng thái",
@@ -145,6 +147,7 @@
   "collaborator-details-delete"             : "Xóa cộng tác viên",
   "collaborator-details-delete-invalid"     : "Chưa chọn con để xóa quyền cộng tác.",
   "collaborator-details-delete-success"     : "Xóa thành công",
+  "collaborator-details-delete-message"     : "Bạn có thực sự muốn xóa người cộng tác này?",
 
   "profile-personal-profile-title"          : "Thông tin cá nhân",
   "profile-personal-profile-name"           : "Tên",

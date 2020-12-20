@@ -15,7 +15,6 @@ const LoginScreen = (props) => {
   // hung - test
   // const [username, setUsername] = useState("0987654321");
   // const [password, setPassword] = useState("123456");
-  console.log("wfwe");
   const { t, setLocale } = useContext(props.route.params.localizationContext);
   const { signIn } = React.useContext(props.route.params.authContext);
   const [username, setUsername] = useState("");
@@ -101,8 +100,8 @@ const LoginScreen = (props) => {
         <Image
           source={require("../../../../assets/logo.png")}
           style={{
-            width: 250,
-            height: 250
+            width: 164,
+            height: 164
           }}>
         </Image>
       </View>
