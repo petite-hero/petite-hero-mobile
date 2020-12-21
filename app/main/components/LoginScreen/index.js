@@ -4,13 +4,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
 import styles from './styles/index.css';
 import { Linking } from 'react-native'
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
+import Constants from 'expo-constants';
 
 const LoginScreen = (props) => {
 
@@ -48,7 +48,7 @@ const LoginScreen = (props) => {
         body: JSON.stringify({
           username: username,
           password: password,
-          deviceId: Device.modelName
+          deviceId: Constants.deviceId
         })
       });
       const result = await response.json();
@@ -66,6 +66,7 @@ const LoginScreen = (props) => {
         setShowInvalidMessage(true);
         setPassword("");
         setMessage("");
+        
       } else if (result.msg.includes("Your device has changed")) {
         setMessage(t("signin-invalid-device-1"));
       } else {
