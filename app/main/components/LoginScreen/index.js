@@ -4,7 +4,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 import styles from './styles/index.css';
+import { Linking } from 'react-native'
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
@@ -19,6 +21,7 @@ const LoginScreen = (props) => {
   const { signIn } = React.useContext(props.route.params.authContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage]   = useState("");
   const [showInvalidMessage, setShowInvalidMessage] = useState(false);
   const [secureText, setSecureText] = useState(true);
   const [loading, setLoading]   = useState(false);
@@ -44,7 +47,8 @@ const LoginScreen = (props) => {
         },
         body: JSON.stringify({
           username: username,
-          password: password
+          password: password,
+          deviceId: Device.modelName
         })
       });
       const result = await response.json();
@@ -58,9 +62,15 @@ const LoginScreen = (props) => {
         await AsyncStorage.setItem("user_id", username);
         setLocale(result.data.language);
         signIn({jwt: result.data.jwt});
-      } else if (result.code === 404 && result.msg === "Wrong username or password. Please try again") {
+      } else if (result.code === 404 && result.msg.includes("Wrong username or password")) {
         setShowInvalidMessage(true);
         setPassword("");
+        setMessage("");
+      } else if (result.msg.includes("Your device has changed")) {
+        setMessage(t("signin-invalid-device-1"));
+      } else {
+        showMessage(result.msg);
+        setMessage("");
       }
     } catch (error) {
       showMessage(error.message);
@@ -175,7 +185,7 @@ const LoginScreen = (props) => {
               secureTextEntry={secureText}
               keyboardType="numeric"
               value={password}
-              onChangeText={(text) => {showInvalidMessage && setShowInvalidMessage(false); setPassword(text)}}
+              onChangeText={(text) => {showInvalidMessage && setShowInvalidMessage(false); setPassword(text);}}
               placeholder={t("signin-password")}
               placeholderTextColor={COLORS.MEDIUM_CYAN}
               maxLength={6}
@@ -226,6 +236,29 @@ const LoginScreen = (props) => {
                 color: COLORS.RED
               }}>
               {t("signin-invalid-message")}
+              </Text>
+            </View>
+          }
+          {message.length !== 0 &&
+            <View style={{
+              marginTop: -10
+            }}>
+              <Text style={{
+                fontSize: 14,
+                fontFamily: "Montserrat",
+                color: COLORS.RED
+              }}>
+                {message}
+                <Text style={{
+                  fontSize: 14,
+                  fontFamily: "MontserratBold",
+                  color: COLORS.RED,
+                  textDecorationLine: "underline"
+                }}
+                  onPress={() => (Linking.openURL(`tel:${"0332987559"}`))}
+                >
+                  {t("signin-invalid-device-2")}
+                </Text>
               </Text>
             </View>
           }

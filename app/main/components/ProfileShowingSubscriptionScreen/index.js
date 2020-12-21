@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import Header from "../../../base/components/Header";
@@ -8,76 +8,105 @@ import { showMessage } from "../../../utils/showMessage";
 import { Loader } from "../../../utils/loader";
 import { ConfirmationModal } from "../../../utils/modal";
 import styles from "./styles/index.css";
+import NumberFormat from "react-number-format";
+import * as WebBrowser from 'expo-web-browser';
 
 const ProfileShowingSubscriptionScreen = (props) => {
-  const { t } = useContext(props.route.params.localizationContext);
+  const { t, locale } = useContext(props.route.params.localizationContext);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [subscriptions, setSubscriptions] = useState([]);
+  
+  const getListOfSubscription = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/subscription/type/list");
+      const result = await response.json();
+      if (result.code === 200) {
+        const tmp = result.data.filter(subscription => subscription.subscriptionTypeId !== 1);
+        setSubscriptions(tmp);
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const createTransaction = async(subscriptionTypeId, subscriptionTypeName) => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem("user_id");
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + id + "/payment", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          subscriptionTypeId: subscriptionTypeId,
+          description: subscriptionTypeName
+        })
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        WebBrowser.openBrowserAsync(result.data);
+      }
+    } catch (error) {
+      showMessage(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    props.navigation.addListener("blur", () => {props.route.params.goBack()});
+    getListOfSubscription();
+  }, [])
 
   return (
+    loading ? <Loader loading={true}/> :
     <View style={styles.container}>
-      <Loader loading={loading}/>
       {/* header */}
       <Header navigation={props.navigation} title={t("profile-subscription-title")}/>
       {/* end header */}
       <View style={styles.subscriptionContainer}>
-        <View style={styles.column}>
-          <View style={styles.smallBox}>
-            <Text style={styles.subscriptionTitle}>
-              Standard
-            </Text>
-            <Text style={styles.subscriptionPrice}>
-              69.000/đ month
-            </Text>
+        {subscriptions.map((subscription, index) => {
+          if (index < 3) return (
+          <View key={index + ""} style={styles.column}>
+            <View style={[styles.smallBox, {backgroundColor: index === 0 && COLORS.WHITE || index === 1 && COLORS.YELLOW || index === 2 && COLORS.STRONG_CYAN || COLORS.WHITE}]}>
+              <Text style={[styles.subscriptionTitle, {color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>
+                {subscription.name.replace("Petite Hero", "")}
+              </Text>
+              <NumberFormat
+                value={subscription.price}
+                renderText={value => 
+                  <Text style={[styles.subscriptionPrice, {color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>
+                    {value}/month
+                  </Text>
+                }
+                displayType="text"
+                thousandSeparator={locale === "en" ? "," : "."}
+                decimalSeparator={locale === "en" ? "." : ","}
+                suffix="đ"
+              />
+            </View>
+            <View style={[styles.largeBox, {backgroundColor: index === 0 && COLORS.WHITE || index === 1 && COLORS.YELLOW || index === 2 && COLORS.STRONG_CYAN || COLORS.WHITE}]}>
+              <Text style={[styles.number, {marginTop: -15, color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>
+                {subscription.maxChildren}
+              </Text>
+              <Text style={[styles.text, {color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>Children</Text>
+              <Text style={[styles.number, {color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>
+                {subscription.maxCollaborator}
+              </Text>
+              <Text style={[styles.text, {color: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}>Collaborators</Text>
+              <TouchableOpacity style={[styles.buttonSelect, {backgroundColor: index === 0 && COLORS.STRONG_CYAN || index === 1 && COLORS.STRONG_GREY || index === 2 && COLORS.WHITE || COLORS.WHITE}]}
+                onPressOut={() => {setLoading(true); createTransaction(subscription.subscriptionTypeId, subscription.name)}}
+              >
+                <Text style={[styles.text, {color: index === 0 && COLORS.WHITE || index === 1 && COLORS.WHITE || index === 2 && COLORS.STRONG_CYAN || COLORS.WHITE}]}>Select</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.largeBox}>
-            <Text style={[styles.number, {marginTop: -15}]}>2</Text>
-            <Text style={styles.text}>Children</Text>
-            <Text style={styles.number}>2</Text>
-            <Text style={styles.text}>Collaborators</Text>
-            <TouchableOpacity style={styles.buttonSelect}>
-              <Text style={[styles.text, {color: COLORS.WHITE}]}>Select</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.column}>
-          <View style={[styles.smallBox, {backgroundColor: COLORS.YELLOW}]}>
-            <Text style={[styles.subscriptionTitle, {color: COLORS.STRONG_GREY}]}>
-              Gold
-            </Text>
-            <Text style={[styles.subscriptionPrice, {color: COLORS.STRONG_GREY}]}>
-              79.000/đ month
-            </Text>
-          </View>
-          <View style={[styles.largeBox, {backgroundColor: COLORS.YELLOW}]}>
-            <Text style={[styles.number, {marginTop: -15, color: COLORS.STRONG_GREY}]}>3</Text>
-            <Text style={[styles.text, {color: COLORS.STRONG_GREY}]}>Children</Text>
-            <Text style={[styles.number, {color: COLORS.STRONG_GREY}]}>2</Text>
-            <Text style={[styles.text, {color: COLORS.STRONG_GREY}]}>Collaborators</Text>
-            <TouchableOpacity style={[styles.buttonSelect, {backgroundColor: COLORS.STRONG_GREY}]}>
-              <Text style={[styles.text, {color: COLORS.WHITE}]}>Select</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.column}>
-          <View style={[styles.smallBox, {backgroundColor: COLORS.STRONG_CYAN}]}>
-            <Text style={[styles.subscriptionTitle, {color: COLORS.WHITE}]}>
-              Premium
-            </Text>
-            <Text style={[styles.subscriptionPrice, {color: COLORS.WHITE}]}>
-              99.000/đ month
-            </Text>
-          </View>
-          <View style={[styles.largeBox, {backgroundColor: COLORS.STRONG_CYAN}]}>
-            <Text style={[styles.number, {marginTop: -15, color: COLORS.WHITE}]}>5</Text>
-            <Text style={[styles.text, {color: COLORS.WHITE}]}>Children</Text>
-            <Text style={[styles.number, {color: COLORS.WHITE}]}>4</Text>
-            <Text style={[styles.text, {color: COLORS.WHITE}]}>Collaborators</Text>
-            <TouchableOpacity style={[styles.buttonSelect, {backgroundColor: COLORS.WHITE}]}>
-              <Text style={[styles.text, {color: COLORS.STRONG_CYAN}]}>Select</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        )})}
       </View>
     </View>
   );

@@ -32,6 +32,8 @@
   "signin-password"                         : "Enter Password",
   "signin-invalid-message"                  : "Wrong username or password. Try again or click \"Forgot your password?\" to reset it.",
   "signin-forgot-password"                  : "Forgot your password?",
+  "signin-invalid-device-1"                 : "For security purpose, your device cannot be used to login to this account. If you want to login using this device, please ",
+  "signin-invalid-device-2"                 : "call Petite Hero support.",
   "signin-next"                             : "Next",
 
   "forgot-title"                            : "Forgot Password",
@@ -79,6 +81,7 @@
   "task-add-repeat-on"                      : "Repeat On",
   "task-add-repeat-on-check-all"            : "All next 7 days",
   "task-add-save"                           : "Save",
+  "task-add-overlap"                        : "Task time overlaps another task on ",
   "task-details-from"                       : "From",
   "task-details-to"                         : "to",
   "task-details-details"                    : "Task Details",
@@ -126,6 +129,7 @@
   "child-add-next"                          : "Next",
   "child-add-qr-scan"                       : "Scan this QR code using smartwatch to connect.",
   "child-add-qr-scan-later"                 : "Later",
+  "profile-children-add-invalid-age"        : "Our system is only suitable for children from 4 to 11 years old.",
   "child-details-token"                     : "Device ID",
   "child-details-no-token"                  : "None",
   "child-details-save"                      : "Save",
@@ -183,6 +187,8 @@
   "common-error"                            : "Unexpected error happens. Please try again later",
   "common-button-yes"                       : "Yes",
   "common-button-no"                        : "No",
+
+  "error-timeout"                           : "Failed to connect. Please check your network settings and try again",
 
   "tracking-emergency"                      : "Emergency"
 
