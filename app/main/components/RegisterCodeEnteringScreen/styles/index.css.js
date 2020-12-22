@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     borderRadius: 15,
-    backgroundColor: COLORS.LIGHT_GREY_2
+    backgroundColor: COLORS.LIGHT_GREY_2,
+    color: COLORS.BLACK
   },
   focusCell: {
     borderWidth: 1,

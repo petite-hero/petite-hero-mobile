@@ -88,7 +88,8 @@ const QuestCreatingScreen = (props) => {
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16
+          fontSize: 16,
+          color: COLORS.BLACK
         }}>
           {t("quest-add-choose-reward")}
         </Text>

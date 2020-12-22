@@ -144,7 +144,7 @@ const TaskCreatingScreen = (props) => {
           setName(result.data.name);
           setDetails(result.data.description);
           setCategories(categories.map((value, index) => {
-            value.title === result.data.type ? value.active = true : value.active = false;
+            value.name === result.data.type ? value.active = true : value.active = false;
             return value;
           }));
           setStartTime(new Date(new Date().setHours(fromTime[0], fromTime[1], fromTime[2])).getTime());

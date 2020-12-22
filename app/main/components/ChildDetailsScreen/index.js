@@ -342,7 +342,8 @@ const ChildDetailsScreen = (props) => {
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16
+          fontSize: 16,
+          color: COLORS.BLACK
         }}>
           {t("child-details-token")}
         </Text>
@@ -452,7 +453,8 @@ const ChildDetailsScreen = (props) => {
           >
             <Text style={{
               fontFamily: "Acumin",
-              fontSize: 16
+              fontSize: 16,
+              color: COLORS.BLACK
             }}>
               {t("child-details-save")}
             </Text>

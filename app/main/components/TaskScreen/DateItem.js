@@ -4,7 +4,7 @@ import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
 
 // represent an item in date list
-const DateItem = ({item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, setLoading}) => {
+const DateItem = ({item, index, currentIndex, refDateFlatlist, setCurrentIndex, setDate, setLoading, disabled}) => {
   return (
     <View>
       {
@@ -22,6 +22,7 @@ const DateItem = ({item, index, currentIndex, refDateFlatlist, setCurrentIndex, 
       {index !== currentIndex ?
       (
         <TouchableOpacity style={styles.dateContainer}
+          disabled={disabled}
           onPress={() => {
             refDateFlatlist.current.scrollToIndex({index: index - 2 > 0 ? index - 2 : 0})
             setCurrentIndex(index);
@@ -33,7 +34,7 @@ const DateItem = ({item, index, currentIndex, refDateFlatlist, setCurrentIndex, 
           <Text style={styles.dateNum}>{item.day}</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={[styles.dateContainer, styles.dateActiveContainer]}>
+        <TouchableOpacity style={[styles.dateContainer, styles.dateActiveContainer]} disabled={disabled}>
           <Text style={[styles.dateText, styles.dateTextActive]}>{item.dayOfWeek}</Text>
           <Text style={[styles.dateNum, styles.dateTextActive]}>{item.day}</Text>
         </TouchableOpacity>

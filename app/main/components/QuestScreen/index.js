@@ -301,9 +301,9 @@ const QuestScreen = (props) => {
         setLoading={setLoading}
         navigation={props.navigation}
       />
+      { children.length !== 0 &&
       <TouchableOpacity
         style={styles.btnAddQuest}
-        disabled={list.length == 0}
         onPress={() => {
           props.navigation.navigate("QuestCreating", {
             onGoBack: () => {
@@ -317,6 +317,7 @@ const QuestScreen = (props) => {
           style={{width: 30, height: 30}}
         />
       </TouchableOpacity>
+      }
       <AvatarContainer children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
     {/* </View> */}
     </ImageBackground>

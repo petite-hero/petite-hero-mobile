@@ -41,7 +41,8 @@ const PasswordField = (props) => {
     }}>
       <Text style={{
         fontFamily: "AcuminBold",
-        fontSize: 16
+        fontSize: 16,
+        color: COLORS.BLACK
       }}>
         {props.title}
       </Text>
@@ -56,7 +57,8 @@ const PasswordField = (props) => {
             fontSize: 16,
             fontFamily: "Acumin",
             backgroundColor: COLORS.WHITE,
-            width: "85%"
+            width: "85%",
+            color: COLORS.BLACK
           }}
           secureTextEntry={props.secured}
         />

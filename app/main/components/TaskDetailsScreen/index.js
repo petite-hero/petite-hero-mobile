@@ -115,7 +115,8 @@ const TaskDetailsScreen = (props) => {
         }}>
           <Text style={{
             fontFamily: "AcuminBold",
-            fontSize: 20
+            fontSize: 20,
+            color: COLORS.BLACK
           }}>
             {details.name}
           </Text>
@@ -144,7 +145,8 @@ const TaskDetailsScreen = (props) => {
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 16,
-          marginTop: "5%"
+          marginTop: "5%",
+          color: COLORS.BLACK
         }}>
           {t("task-details-details")}
         </Text>

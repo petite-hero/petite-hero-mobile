@@ -75,7 +75,7 @@ const SettingItem = ({ title, image, action, subItems, style, isLastItemOfGroup,
             style={{
               fontSize: 20,
               fontFamily: "Acumin",
-              color: COLORS.BLACK ,
+              color: COLORS.BLACK
             }}
           >
             {title}

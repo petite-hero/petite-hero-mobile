@@ -153,7 +153,8 @@ const CollaboratorDetailsScreen = (props) => {
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16
+          fontSize: 16,
+          color: COLORS.BLACK
         }}>
           {t("collaborator-details-children")}
         </Text>

@@ -32,6 +32,7 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
           <Text style={{
             fontFamily: "AcuminBold",
             fontSize: 16,
+            color: COLORS.BLACK
           }}>
             {t("task-add-start-time")}
           </Text>
@@ -41,7 +42,8 @@ const TimeSettings = ({t, startTime, setStartTime, endTime, setEndTime, setValid
         }}>
           <Text style={{
             fontFamily: "AcuminBold",
-            fontSize: 16
+            fontSize: 16,
+            color: COLORS.BLACK
           }}>
             {t("task-add-end-time")}
           </Text>

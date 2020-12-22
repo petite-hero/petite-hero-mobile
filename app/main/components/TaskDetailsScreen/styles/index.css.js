@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
   },
   buttonTitle : {
     fontFamily: "Acumin",
-    fontSize: 16
+    fontSize: 16,
+    color: COLORS.BLACK
   },
   changeStatusButton : {
     width: "48%",

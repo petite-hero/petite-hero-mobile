@@ -115,6 +115,9 @@
   "quest-details-reward-details"            : "Reward Details",
   "quest-details-done"                      : "Done",
   "quest-details-fail"                      : "Fail",
+  "quest-details-delete"                    : "Delete",
+  "quest-details-delete-message"            : "Are you sure you want to delete this quest?",
+  "quest-details-delete-success"            : "Quest deleted successfully.",
 
   "child-add-title"                         : "Add New Child",
   "child-add-qr-scan-title"                 : "Connect devices",

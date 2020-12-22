@@ -125,6 +125,7 @@ const ForgotPasswordScreen = (props) => {
               borderBottomWidth: 1,
               borderColor: COLORS.STRONG_CYAN,
               marginBottom: "5%",
+              color: COLORS.BLACK
             }}
           />
         </View>

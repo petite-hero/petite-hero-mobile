@@ -115,6 +115,9 @@
   "quest-details-reward-details"            : "Chi tiết nhiệm vụ",
   "quest-details-done"                      : "Hoàn thành",
   "quest-details-fail"                      : "Không hoàn thành",
+  "quest-details-delete"                    : "Xóa nhiệm vụ",
+  "quest-details-delete-message"            : "Bạn có thực sự muốn xóa nhiệm vụ này?",
+  "quest-details-delete-success"            : "Nhiệm vụ đã được xóa thành công.",
 
   "child-add-title"                         : "Thêm con",
   "child-add-qr-scan-title"                 : "Kết nối thiết bị",

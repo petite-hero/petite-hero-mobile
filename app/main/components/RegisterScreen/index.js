@@ -156,6 +156,7 @@ const RegisterScreen = (props) => {
               borderBottomWidth: 1,
               borderColor: COLORS.STRONG_CYAN,
               marginBottom: "5%",
+              color: COLORS.BLACK
             }}
           />
         </View>
@@ -198,7 +199,8 @@ const RegisterScreen = (props) => {
               fontSize: 16,
               fontFamily: "Montserrat",
               height: 50,
-              width: "80%"
+              width: "80%",
+              color: COLORS.BLACK
             }}
           />
           <TouchableOpacity 
@@ -270,7 +272,8 @@ const RegisterScreen = (props) => {
               fontSize: 16,
               fontFamily: "Montserrat",
               height: 50,
-              width: "80%"
+              width: "80%",
+              color: COLORS.BLACK
             }}
           />
           <TouchableOpacity 

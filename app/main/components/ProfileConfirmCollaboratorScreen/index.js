@@ -225,6 +225,7 @@ const ProfileConfirmCollaboratorScreen = (props) => {
             fontSize: 16,
             fontFamily: "AcuminBold",
             width: "100%",
+            color: COLORS.BLACK
           }}
         >
           {name}
@@ -252,6 +253,7 @@ const ProfileConfirmCollaboratorScreen = (props) => {
           fontSize: 16,
           fontFamily: "AcuminBold",
           width: "100%",
+          color: COLORS.BLACK
         }}
         >
           {nickName}
@@ -279,6 +281,7 @@ const ProfileConfirmCollaboratorScreen = (props) => {
           fontSize: 16,
           fontFamily: "AcuminBold",
           width: "100%",
+          color: COLORS.BLACK
         }}
         >
           {yob}
@@ -311,7 +314,8 @@ const ProfileConfirmCollaboratorScreen = (props) => {
         >
           <Text style={{
             fontFamily: "Acumin",
-            fontSize: 16
+            fontSize: 16,
+            color: COLORS.BLACK
           }}>
             {t("profile-collaborators-deny")}
           </Text>
@@ -330,7 +334,8 @@ const ProfileConfirmCollaboratorScreen = (props) => {
         >
           <Text style={{
             fontFamily: "Acumin",
-            fontSize: 16
+            fontSize: 16,
+            color: COLORS.BLACK
           }}>
             {t("profile-collaborators-accept")}
           </Text>

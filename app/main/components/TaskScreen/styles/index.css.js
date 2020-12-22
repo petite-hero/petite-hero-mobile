@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   },
   tabText : {
     fontSize: hp("2%"),
+    color: COLORS.BLACK
   },
   tabTextActive : {
     color: COLORS.STRONG_CYAN,

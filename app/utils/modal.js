@@ -82,10 +82,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 25,
     marginLeft: 50,
-    marginRight: 50
+    marginRight: 50,
+    color: COLORS.BLACK
   },
   buttonText : {
     fontFamily: "Acumin",
-    fontSize: 15
+    fontSize: 15,
+    color: COLORS.BLACK
   }
 });

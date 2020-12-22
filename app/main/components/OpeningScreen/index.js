@@ -87,7 +87,8 @@ const OpeningScreen = (props) => {
         }}>
           <Text style={{
             fontFamily: "MontserratBold",
-            fontSize: 16
+            fontSize: 16,
+            color: COLORS.BLACK
           }}>
             {t("opening-skip")}
           </Text>

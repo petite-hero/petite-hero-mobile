@@ -170,6 +170,7 @@ const LoginScreen = (props) => {
               borderBottomWidth: 1,
               borderColor: COLORS.STRONG_CYAN,
               marginBottom: "5%",
+              color: COLORS.BLACK
             }}
           />
           <View style={{
@@ -194,7 +195,8 @@ const LoginScreen = (props) => {
                 fontSize: 16,
                 fontFamily: "Montserrat",
                 height: 50,
-                width: "80%"
+                width: "80%",
+                color: COLORS.BLACK
               }}
             />
             <TouchableOpacity 

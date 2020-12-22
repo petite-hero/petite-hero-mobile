@@ -8,7 +8,8 @@ const InputField = ({title, value, setValue, valid = true, setValid, invalidMess
     <View style={styles.container}>
       <Text style={{
         fontFamily: "AcuminBold",
-        fontSize: 16
+        fontSize: 16,
+        color: COLORS.BLACK
       }}>
         {title}
       </Text>
@@ -26,6 +27,7 @@ const InputField = ({title, value, setValue, valid = true, setValid, invalidMess
           borderBottomWidth: 2,
           borderColor: COLORS.GREY,
           width: "100%",
+          color: COLORS.BLACK
         }}
       />
       { !valid &&

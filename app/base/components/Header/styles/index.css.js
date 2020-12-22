@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
   },
   title : {
     fontSize: 20,
-    fontFamily: "AcuminBold"
+    fontFamily: "AcuminBold",
+    color: COLORS.BLACK
   },
   subTitle : {
     fontSize: 20,

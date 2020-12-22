@@ -298,7 +298,7 @@ const TaskScreen = (props) => {
         <View style={styles.dateTimePickerShower}>
           <TouchableOpacity 
             style={styles.monthPicker}
-            disabled={list.length == 0}
+            disabled={children.length == 0}
             onPress={() => {setShow(true)}}
           >
             <Text style={styles.dateNum}>
@@ -316,13 +316,14 @@ const TaskScreen = (props) => {
           {/* DATE FLAT LIST */}
           <FlatList
             data={dates}
-            renderItem={({item, index}) => <DateItem item={item} index={index} currentIndex={currentIndex} refDateFlatlist={refDateFlatlist} setCurrentIndex={setCurrentIndex} setDate={setDate} setLoading={setLoading}/>}
+            renderItem={({item, index}) => <DateItem item={item} index={index} currentIndex={currentIndex} refDateFlatlist={refDateFlatlist} setCurrentIndex={setCurrentIndex} setDate={setDate} setLoading={setLoading} disabled={children.length === 0}/>}
             keyExtractor={item => item.year + item.month + item.day}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={() => <Text style={styles["mr-2"]}></Text>}
             ref={refDateFlatlist}
             initialNumToRender={31}
+            scrollEnabled={children.length !== 0}
             onLayout={() => {
               refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
             }}
@@ -379,10 +380,9 @@ const TaskScreen = (props) => {
       {/* END TASK BOARD */}
 
       {/* BUTTON ADD TASK */}
-      { (date >= new Date(new Date().toDateString()).getTime() && new Date(date).getDate() - new Date().getDate() <= 3) &&
+      { (date >= new Date(new Date().toDateString()).getTime() && new Date(date).getDate() - new Date().getDate() <= 7 && children.length !== 0) &&
         <TouchableOpacity
           style={styles.btnAddTask}
-          disabled={list.length == 0}
           onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
         >
           <Image

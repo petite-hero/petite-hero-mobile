@@ -77,7 +77,8 @@ const QuestChoosingBadgeScreen = (props) => {
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 20,
-          marginTop: "5%"
+          marginTop: "5%",
+          color: COLORS.BLACK
         }}>
           {t("quest-add-choose-reward-icon")}
         </Text>

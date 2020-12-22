@@ -23,7 +23,8 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
       <Text style={{
         fontFamily: "AcuminBold",
         fontSize: 16,
-        marginBottom: 15
+        marginBottom: 15,
+        color: COLORS.BLACK
       }}>
         {t("child-add-gender")}
       </Text>

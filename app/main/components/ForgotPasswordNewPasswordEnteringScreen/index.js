@@ -155,7 +155,8 @@ const ForgotPasswordNewPasswordEnteringScreen = (props) => {
               fontSize: 16,
               fontFamily: "Montserrat",
               height: 50,
-              width: "80%"
+              width: "80%",
+              color: COLORS.BLACK
             }}
           />
           <TouchableOpacity 
@@ -227,7 +228,8 @@ const ForgotPasswordNewPasswordEnteringScreen = (props) => {
               fontSize: 16,
               fontFamily: "Montserrat",
               height: 50,
-              width: "80%"
+              width: "80%",
+              color: COLORS.BLACK
             }}
           />
           <TouchableOpacity 

@@ -143,7 +143,8 @@ const CollaboratorAddingScreen = (props) => {
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16
+          fontSize: 16,
+          color: COLORS.BLACK
         }}>
           {t("collaborator-add-choose-child")}
         </Text>

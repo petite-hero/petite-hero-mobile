@@ -89,7 +89,8 @@ const ProfileChangingScreen = (props) => {
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
-          fontSize: 16
+          fontSize: 16,
+          color: COLORS.BLACK
         }}>
           {props.route.params.screenName}
         </Text>
@@ -103,6 +104,7 @@ const ProfileChangingScreen = (props) => {
             borderBottomWidth: 2,
             borderColor: COLORS.GREY,
             width: "100%",
+            color: COLORS.BLACK
           }}
         />
         { !validValue &&

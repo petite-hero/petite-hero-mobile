@@ -288,7 +288,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "white",
     fontFamily: "Acumin",
-    fontSize: 16
+    fontSize: 16,
+    color: COLORS.BLACK
   },
   txtTypeContainer: {
     flexDirection: "row",

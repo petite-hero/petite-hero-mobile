@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
   },
   title : {
     fontFamily: "AcuminBold",
-    fontSize: 16
+    fontSize: 16,
+    color: COLORS.BLACK
   }
 })
 

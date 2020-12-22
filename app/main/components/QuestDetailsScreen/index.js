@@ -7,11 +7,13 @@ import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsi
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';
+import { ConfirmationModal } from '../../../utils/modal';
 
 const QuestDetailsScreen = (props) => {
   const { t } = useContext(props.route.params.localizationContext);
   const [details, setDetails] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deleteAction, setDeleteAction] = useState(false);
 
   useEffect(() => {
     (async() => {
@@ -53,11 +55,34 @@ const QuestDetailsScreen = (props) => {
     }
   }
 
+  const deleteQuest = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const questId = props.route.params.questId;
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/quest/" + questId, {
+        method: "DELETE"
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        props.route.params.onGoBack();
+        props.navigation.goBack();
+        showMessage(t("quest-details-delete-success"));
+      } else {
+        showMessage(result.msg);
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     loading ? 
     <Loader loading={loading}/>
     :
     <View style={styles.container}>
+      <ConfirmationModal t={t} message={t("quest-details-delete-message")} visible={deleteAction} onConfirm={() => {setLoading(true); setDeleteAction(false); deleteQuest()}} onClose={() => setDeleteAction(false)}/>
       <ImageBackground 
         source={details.status === "DONE" ? questBackgroundList[1].image
               : details.status === "FAILED" ? questBackgroundList[2].image
@@ -105,7 +130,8 @@ const QuestDetailsScreen = (props) => {
           }}>
             <Text style={{
               fontFamily: "AcuminBold",
-              fontSize: 20
+              fontSize: 20,
+              color: COLORS.BLACK
             }}>
               {details.name}
             </Text>
@@ -117,7 +143,7 @@ const QuestDetailsScreen = (props) => {
                     : details.status === "FAILED" ? COLORS.RED
                     : COLORS.STRONG_CYAN
             }}>
-            {   
+            {
               details.status === "ASSIGNED" ? t("quest-status-assigned")
             : details.status === "DONE" ? t("quest-status-done")
             : t("quest-status-failed")
@@ -128,7 +154,8 @@ const QuestDetailsScreen = (props) => {
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 16,
-          marginTop: "5%"
+          marginTop: "5%",
+          color: COLORS.BLACK
         }}>
           {t("quest-details-reward-details")}
         </Text>
@@ -156,7 +183,8 @@ const QuestDetailsScreen = (props) => {
           >
             <Text style={{
               fontFamily: "Acumin",
-              fontSize: 16
+              fontSize: 16,
+              color: COLORS.BLACK
             }}>
               OK
             </Text>
@@ -182,7 +210,8 @@ const QuestDetailsScreen = (props) => {
             >
               <Text style={{
                 fontFamily: "Acumin",
-                fontSize: 16
+                fontSize: 16,
+                color: COLORS.BLACK
               }}>
                 {t("quest-details-fail")}
               </Text>
@@ -201,13 +230,36 @@ const QuestDetailsScreen = (props) => {
             >
               <Text style={{
                 fontFamily: "Acumin",
-                fontSize: 16
+                fontSize: 16,
+                color: COLORS.BLACK
               }}>
                 {t("quest-details-done")}
               </Text>
             </TouchableOpacity>
           </View>
         }
+        <TouchableOpacity style={{
+          width: "100%",
+          paddingTop: "5%",
+          paddingBottom: "5%",
+          marginTop: "5%",
+          backgroundColor: COLORS.WHITE,
+          borderWidth: 2,
+          borderColor: COLORS.RED,
+          borderRadius: heightPercentageToDP("5%"),
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+          onPress={() => {setDeleteAction(true)}}
+        >
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 16,
+            color: COLORS.RED
+          }}>
+            {t("quest-details-delete")}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
