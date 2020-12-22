@@ -13,7 +13,7 @@ import { widthPercentageToDP } from 'react-native-responsive-screen';
 const LoginScreen = (props) => {
 
   // hung - test
-  // const [username, setUsername] = useState("0987654321");
+  // const [username, setUsername] = useState("0847641376");
   // const [password, setPassword] = useState("123456");
   const { t, setLocale } = useContext(props.route.params.localizationContext);
   const { signIn } = React.useContext(props.route.params.authContext);

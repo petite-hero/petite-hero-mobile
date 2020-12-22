@@ -184,7 +184,9 @@
   "common-button-yes"                       : "Có",
   "common-button-no"                        : "Không",
   
-  "tracking-emergency"                      : "Khẩn cấp"
 
+  "no-child-info"                           : "Bạn chưa có tài khoản nào cho con.",
+
+  "tracking-emergency"                      : "Khẩn cấp"
 
 }

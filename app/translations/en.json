@@ -184,7 +184,9 @@
   "common-button-yes"                       : "Yes",
   "common-button-no"                        : "No",
 
-  "tracking-emergency"                      : "Emergency"
 
+  "no-child-info"                           : "You don't have any child.",
+
+  "tracking-emergency"                      : "Emergency"
 
 }

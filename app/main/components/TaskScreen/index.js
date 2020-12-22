@@ -134,7 +134,7 @@ const TaskScreen = (props) => {
   const [children, setChildrenUseState]     = useState([]);
   const childrenRef                         = useRef(children);  // use reference for listeners to use
   const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
-  const [childId, setChildIdUseState]       = useState("");
+  const [childId, setChildIdUseState]       = useState(null);
   const childIdRef                          = useRef(childId);  // use reference for listeners to use
   const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
   const [date, setDate]                     = useState(new Date(new Date().toDateString()).getTime());
@@ -169,6 +169,7 @@ const TaskScreen = (props) => {
   const getListOfTask = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
+      const childId = await AsyncStorage.getItem('child_id');
       const response = await fetchWithTimeout("http://" + ip + PORT + "/task/list/" + childId + "?date=" + date);
       const result = await response.json();
       if (result.code === 200) {
@@ -190,15 +191,14 @@ const TaskScreen = (props) => {
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
-        const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
-        setChildren(tmp);
-        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-        else {
-          let isInChildren = false;
-          result.data.map((child, index) => {
-            if (childId == child.childId) isInChildren = true;
-          });
-          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        const tmp = result.data.filter( child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        if (tmp.length == 0){
+          AsyncStorage.removeItem("child_id");
+          setChildren([]);
+        }
+        else{
+          setChildren(tmp);
+          if (!childId || tmp.filter(child => child.childId == childId).length == 0) await AsyncStorage.setItem('child_id', tmp[0].childId + "");
         }
       }
     } catch (error) {
@@ -298,6 +298,7 @@ const TaskScreen = (props) => {
         <View style={styles.dateTimePickerShower}>
           <TouchableOpacity 
             style={styles.monthPicker}
+            disabled={list.length == 0}
             onPress={() => {setShow(true)}}
           >
             <Text style={styles.dateNum}>
@@ -381,6 +382,7 @@ const TaskScreen = (props) => {
       { (date >= new Date(new Date().toDateString()).getTime() && new Date(date).getDate() - new Date().getDate() <= 3) &&
         <TouchableOpacity
           style={styles.btnAddTask}
+          disabled={list.length == 0}
           onPress={() => {props.navigation.navigate("TaskCreating", {date: date, onGoBack: () => {setLoading(true)}})}}
         >
           <Image

@@ -54,7 +54,8 @@ const QuestBoard = ({ t, list, setLoading, navigation }) => {
       </View>
       <View style={styles.questBoard}>
         {(tabs[0].active && list[0] && list[0].length == 3) ||
-        (tabs[1].active && list[1] && list[1].length == 2) ? (
+        (tabs[1].active && list[1] && list[1].length == 2) ||
+        (!list || list.length == 0) ? (
           <View
             style={{
               alignItems: "center",
@@ -62,15 +63,15 @@ const QuestBoard = ({ t, list, setLoading, navigation }) => {
               height: "80%",
             }}
           >
-            <Text
-              style={{
-                fontFamily: "Acumin",
-                fontSize: 16,
-                color: COLORS.BLACK,
-              }}
-            >
-              {t("quest-empty-1")} {tabs[0].active ? t("quest-status-in-progress").toLowerCase() : t("quest-status-finished").toLowerCase()} {t("quest-empty-2")}
-            </Text>
+            {(!list || list.length == 0) ?
+              <Text style={{fontFamily: "Acumin", fontSize: 16, color: COLORS.BLACK}}>
+                {t("no-child-info")}
+              </Text>
+            :
+              <Text style={{fontFamily: "Acumin", fontSize: 16, color: COLORS.BLACK}}>
+                {t("quest-empty-1")} {tabs[0].active ? t("quest-status-in-progress").toLowerCase() : t("quest-status-finished").toLowerCase()} {t("quest-empty-2")}
+              </Text>
+            }
           </View>
         ) : (
           <FlatList
@@ -168,7 +169,7 @@ const QuestScreen = (props) => {
   const [children, setChildrenUseState]     = useState([]);
   const childrenRef                         = useRef(children);  // use reference for listeners to use
   const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
-  const [childId, setChildIdUseState]       = useState("");
+  const [childId, setChildIdUseState]       = useState(null);
   const childIdRef                          = useRef(childId);  // use reference for listeners to use
   const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
   const [list, setList] = useState([]);
@@ -226,14 +227,13 @@ const QuestScreen = (props) => {
       const result = await response.json();
       if (result.code === 200) {
         const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
-        setChildren(tmp);
-        if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-        else {
-          let isInChildren = false;
-          result.data.map((child, index) => {
-            if (childId == child.childId) isInChildren = true;
-          });
-          if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+        if (tmp.length == 0){
+          AsyncStorage.removeItem("child_id");
+          setChildren([]);
+        }
+        else{
+          setChildren(tmp);
+          if (!childId || tmp.filter(child => child.childId == childId).length == 0) await AsyncStorage.setItem('child_id', tmp[0].childId + "");
         }
       }
     } catch (error) {
@@ -290,6 +290,7 @@ const QuestScreen = (props) => {
       />
       <TouchableOpacity
         style={styles.btnAddQuest}
+        disabled={list.length == 0}
         onPress={() => {
           props.navigation.navigate("QuestCreating", {
             onGoBack: () => {

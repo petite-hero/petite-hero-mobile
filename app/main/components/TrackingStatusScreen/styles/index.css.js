@@ -72,6 +72,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  noChildInfo: {
+    marginTop: 500,
+    fontFamily: "Acumin",
+    fontSize: 16,
+    color: COLORS.MEDIUM_CYAN
+  },
   statusItemContainer: {
     justifyContent: 'center',
     alignItems: 'center'

@@ -100,7 +100,7 @@ const App = () => {
     }
   }
   useEffect(() => {
-    testSetApplicationSettings();
+    testSetApplicationSettings();  // test | comment this on production
     Notifications.setNotificationHandler({
       handleNotification: async (notification) => {
         let noti = notification.request.content;

@@ -25,41 +25,6 @@ import { t } from 'i18n-js';
 const Tab = createMaterialTopTabNavigator();
 const TrackingStatusScreen = ({route}) => {
   const { t } = useContext(route.params.localizationContext);
-  const [loading, setLoading]   = React.useState(true);
-  const [children, setChildren] = React.useState([]);
-
-  React.useEffect(() => {
-    (async() => {
-      try {
-        const ip = await AsyncStorage.getItem('IP');
-        const id = await AsyncStorage.getItem('user_id');
-        const childId = await AsyncStorage.getItem('child_id');
-        const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
-        const result = await response.json();
-        if (result.code === 200) {
-          setChildren(result.data);
-          if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-          else {
-            let isInChildren = false;
-            result.data.map((child, index) => {
-              if (childId == child.childId) isInChildren = true;
-            });
-            if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-          }
-        } else {
-          showMessage(result.msg);
-        }
-      } catch (error) {
-        showMessage(error.message);
-      } finally {
-        setLoading(false);
-      }
-    })()
-  }, [loading]);
-
-  if (loading) return (
-    <Loader loading={true}/>
-  )
 
   return (
     <Tab.Navigator
@@ -114,8 +79,6 @@ const TrackingStatusScreen = ({route}) => {
         initialParams={{ 
           authContext: route.params.authContext, 
           localizationContext: route.params.localizationContext,
-          children: children,
-          setChildren: setChildren
         }}
       />
       <Tab.Screen 
@@ -165,15 +128,21 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   const { t } = useContext(route.params.localizationContext);
   const WEEKDAYS_ABB = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [isCannotConnect, setIsCannotConnect] = React.useState(false);
 
   // child information
-  const [children, setChildrenUseState] = React.useState(route.params.children);
+  const [children, setChildrenUseState] = React.useState([]);
   const childrenRef = React.useRef(children);
   const setChildren = (newChildren) => {
     childrenRef.current = newChildren;
     setChildrenUseState(newChildren);
+  }
+  const [currentChild, setCurrentChildUseState] = React.useState(undefined);
+  const currentChildRef = React.useRef(currentChild);
+  const setCurrentChild = (newChild) => {
+    currentChildRef.current = newChild;
+    setCurrentChildUseState(newChild);
   }
 
   // date picker for setting zone
@@ -205,20 +174,18 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       // Silent noti for updating child loc
       if (notification.request.content.title === NOTI.SILENT_NOTI){
         const notiData = notification.request.content.data;
-        let currentChildIndex = -1;
-        childrenRef.current.map((child, index) => {
-          if (child.childId === notiData.child) currentChildIndex = index;
-        });
-        const currentStatus = childrenRef.current[currentChildIndex].status;
-        if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
-          let childrenTmp = [...childrenRef.current];
-          childrenTmp[currentChildIndex].status = "SAFE";
-          setChildren(childrenTmp);
-        }
-        else if (!notiData.status && currentStatus !== "NOT SAFE" && currentStatus !== "INACTIVE"){
-          let childrenTmp = [...childrenRef.current];
-          childrenTmp[currentChildIndex].status = "NOT SAFE";
-          setChildren(childrenTmp);
+        let childrenTmp = [...childrenRef.current];
+        let currentChild = childrenTmp.filter(child => child.childId == notiData.child)[0];
+        if (currentChild){
+          const currentStatus = currentChild.status;
+          if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
+            currentChild.status = "SAFE";
+            setChildren(childrenTmp);
+          }
+          else if (!notiData.status && currentStatus !== "NOT SAFE" && currentStatus !== "INACTIVE"){
+            currentChild.status = "NOT SAFE";
+            setChildren(childrenTmp);
+          }
         }
       }
     });
@@ -236,62 +203,125 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== CHILD ID CHANGE HANDLING SECTION ===================== */}
 
-  const getListOfChildren = async() => {
+  // const getListOfChildren = async() => {
+  //   try {
+  //     const ip = await AsyncStorage.getItem('IP');
+  //     const id = await AsyncStorage.getItem('user_id');
+  //     const childId = await AsyncStorage.getItem('child_id');
+  //     const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+  //     const result = await response.json();
+  //     if (result.code === 200) {
+  //       const childrenResult = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+  //       let tmpChildren = [...childrenResult];
+  //       if (childrenResult.length != childrenRef.current.length){
+  //         childrenResult.map((child, index) => {
+  //           if (!tmpChildren[index].isTrackingActive) tmpChildren[index].status = "INACTIVE";
+  //           else{
+  //             tmpChildren[index].status = "LOADING";
+  //             requestEmergencyMode(true, tmpChildren[index].childId);
+  //           }
+  //           if (child.childId == childId){
+  //             tmpChildren[0] = child;
+  //             tmpChildren[index] = tmp[0];
+  //             setChildren(tmpChildren);
+  //           }
+  //         });
+  //         if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+  //         else {
+  //           let isInChildren = false;
+  //           result.data.map((child, index) => {
+  //             if (childId == child.childId){
+  //               isInChildren = true;
+  //             }
+  //           });
+  //           if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     showMessage(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  // const handleChildIdChanged = async () => {
+  //   getListOfChildren();
+  //   const childIdTmp = await AsyncStorage.getItem('child_id');
+  //   if (childIdTmp != childrenRef.current[0].childId) {
+  //     setLoading(true);
+  //     childrenRef.current.map((child, index) => {
+  //       if (child.childId == childIdTmp){
+  //         let tmpChildren = [...childrenRef.current];
+  //         let tmpChild = tmpChildren[0];
+  //         tmpChildren[0] = tmpChildren[index];
+  //         tmpChildren[index] = tmpChild;
+  //         setChildren(tmpChildren);
+  //       }
+  //     });
+  //   }
+  // }
+
+  const handleChildIdChanged = async () => {
     try {
+
+      // check if childId changed
+      const childId = await AsyncStorage.getItem('child_id');
+      if ((childrenRef.current.length == 0 && childId != null) ||
+         (childrenRef.current.length > 0 && childId != childrenRef.current[0].childId))
+        setLoading(true);
+      
+      // get new list
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem('user_id');
-      const childId = await AsyncStorage.getItem('child_id');
       const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
       const result = await response.json();
       if (result.code === 200) {
-        const tmp = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
-        let tmpChildren = [...tmp];
-        if (tmp.length != childrenRef.current.length){
-          tmp.map((child, index) => {
-            if (!tmpChildren[index].isTrackingActive) tmpChildren[index].status = "INACTIVE";
-            else{
-              tmpChildren[index].status = "LOADING";
-              requestEmergencyMode(true, tmpChildren[index].childId);
-            }
-            if (child.childId == childId){
-              tmpChildren[0] = child;
-              tmpChildren[index] = tmp[0];
-              setChildren(tmpChildren);
-            }
-          });
-          if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-          else {
-            let isInChildren = false;
-            result.data.map((child, index) => {
-              if (childId == child.childId){
-                isInChildren = true;
+        let tmpChildren = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        // empty list
+        if (tmpChildren.length == 0){
+          if (childrenRef.current.length != 0){
+            AsyncStorage.removeItem("child_id");
+            setChildren([]);
+            setCurrentChild(undefined);
+          }
+          return;
+        }
+        else{
+          // check if child list changed
+          let isChanged = false;
+          if (tmpChildren.length != childrenRef.current.length) isChanged = true;
+          else{
+            let count = 0;
+            tmpChildren.map((child, index) => {
+              childrenRef.current.map((child2, index2) => {
+                if (child.childId == child2.childId) count++;
+              });
+            });
+            if (count == tmpChildren.length) isChanged = true;
+          }
+          // init new list & currentChild if list changed
+          if (isChanged){
+            tmpChildren.map((child, index) => {
+              if (!child.isTrackingActive) child.status = "INACTIVE";
+              else{
+                child.status = "LOADING";
+                requestEmergencyMode(true, child.childId);
               }
             });
-            if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+            if (!childId || tmpChildren.filter(child => child.childId == childId).length == 0){
+              await AsyncStorage.setItem('child_id', result.data[0].childId + "");
+              setCurrentChild(tmpChildren[0]);
+            } else setCurrentChild(tmpChildren.filter(child => child.childId == childId)[0]);
+            setChildren(tmpChildren);
           }
         }
       }
+
     } catch (error) {
       showMessage(error.message);
     } finally {
       setLoading(false);
-    }
-  }
-
-  const handleChildIdChanged = async () => {
-    getListOfChildren();
-    const childIdTmp = await AsyncStorage.getItem('child_id');
-    if (childIdTmp != childrenRef.current[0].childId) {
-      setLoading(true);
-      childrenRef.current.map((child, index) => {
-        if (child.childId == childIdTmp){
-          let tmpChildren = [...childrenRef.current];
-          let tmpChild = tmpChildren[0];
-          tmpChildren[0] = tmpChildren[index];
-          tmpChildren[index] = tmpChild;
-          setChildren(tmpChildren);
-        }
-      });
     }
   }
 
@@ -302,12 +332,14 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   // request emergency mode
   const requestEmergencyMode = async (isEmergency, childId) => {
     const ip = await AsyncStorage.getItem('IP');
-    const response = await fetch('http://' + ip + PORT + '/location/emergency/' + childId + '/' + isEmergency);
+    let trueChildId = childId;
+    if (childId == null) trueChildId = await AsyncStorage.getItem('child_id');
+    const response = await fetch('http://' + ip + PORT + '/location/emergency/' + trueChildId + '/' + isEmergency);
     const result = await response.json();
     if (result.code !== 200) console.log("Error while requesting emergency mode '" + isEmergency + "'. Server response: " + JSON.stringify(result));
   }
 
-  // request emergency mode for tracking-active child
+  // request emergency mode for tracking-active children
   const requestEmergencyModeList = (isEmergency) => {
     children.map((child, index) => {
       if (child.isTrackingActive) {
@@ -337,21 +369,25 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
   React.useEffect(() => {
 
     // handle location status list
-    let childrenTmp = [...children];
-    childrenTmp.map((child, index) => {
-      if (!child.isTrackingActive) child.status = "INACTIVE";
-      else{
-        child.status = "LOADING";
-        requestEmergencyMode(true, child.childId);
-      }
-    });
-    setChildren(childrenTmp);
+    if (!children || children.length == 0){
+      AsyncStorage.removeItem("child_id");
+      setChildren([]);
+    }
+    else{
+      let childrenTmp = [...children];
+      childrenTmp.map((child, index) => {
+        if (!child.isTrackingActive) child.status = "INACTIVE";
+        else child.status = "LOADING";
+      });
+      setChildren(childrenTmp);
+    }
 
     // listen to location update from server
     listenLocationUpdate();
 
     // handle screen & app states
-    requestEmergencyModeList(true)
+    requestEmergencyModeList(true);
+    handleChildIdChanged();
     navigation.addListener('focus', async () => {
       requestEmergencyModeList(true);
       handleChildIdChanged();
@@ -381,11 +417,12 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       {/* ===================== EMERGENCY BUTTON SECTION ===================== */}
 
       {/* emergency button */}
-      <TouchableOpacity style={styles.warningBtn} onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
+      <TouchableOpacity style={styles.warningBtn} disabled={children.length == 0}
+                        onPress={() => navigation.navigate("TrackingEmergency", {children: children})}>
         <Text style={styles.warningBtnText}>{t("tracking-emergency")}!</Text>
       </TouchableOpacity>
 
-      {children[0]?.status === "NOT SAFE" ?
+      {currentChild?.status === "NOT SAFE" ?
         <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL(`tel:`)}>
           <Icon name="phone-in-talk" type="material" color="white"/>
         </TouchableOpacity>
@@ -397,17 +434,18 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* status container */}
       <View style={styles.statusContainer}>
+        {children.length == 0 ? <Text style={styles.noChildInfo}>You don't have any child</Text> : null}
         <LocationStatus
           diameter={wp("70%")}
           margin={0}
-          trackingStatus={children[0]?.status}
-          photo={children[0]?.photo}
-          gender={children[0]?.gender}/>
+          trackingStatus={currentChild?.status}
+          photo={currentChild?.photo}
+          gender={currentChild?.gender}/>
       </View>
 
       <View style={styles.statusListContainer}>
         {children.map((child, index) => {
-          if (index != 0)
+          if (child.childId != currentChild.childId)
             return (
               <LocationStatus key={index}
                 diameter={wp("16%")}
@@ -416,12 +454,9 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                 photo={child.photo}
                 gender={child.gender}
                 onPress={async () => {
-                  let tmpChildren = [...children];
-                  let tmpChild = tmpChildren[0];
-                  tmpChildren[0] = tmpChildren[index];
-                  tmpChildren[index] = tmpChild;
-                  setChildren(tmpChildren);
-                  await AsyncStorage.setItem('child_id', tmpChildren[0].childId+"");
+                  await AsyncStorage.setItem('child_id', child.childId+"");
+                  setChildren([...children]);
+                  setCurrentChild(child);
                 }}/>
             )
         })}
@@ -438,26 +473,21 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
           {/* activate tracking button */}
           <TouchableOpacity style={[styles.settingBtnContainer,
-                                    {backgroundColor: children[0]?.status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
+                                    {backgroundColor: children.length == 0 || currentChild?.status === "INACTIVE" ? "white" : COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
+            disabled={children.length == 0}
             onPress={() => {
-              if (children[0]?.status === "INACTIVE"){
-                requestSmartwatchTracking(true);
-                requestEmergencyMode(true, children[0].childId);
-                let childrenTmp = [...childrenRef.current];
-                childrenTmp[0].status = "LOADING";
-                childrenTmp[0].isTrackingActive = true;
-                setChildren(childrenTmp);
-              }
-              else{
-                requestSmartwatchTracking(false);
-                let childrenTmp = [...childrenRef.current];
-                childrenTmp[0].status = "INACTIVE";
-                childrenTmp[0].isTrackingActive = false;
-                setChildren(childrenTmp);
-              }
+              const isTurningOn = currentChild.status === "INACTIVE";
+              requestSmartwatchTracking(isTurningOn);
+              requestEmergencyMode(isTurningOn, null);
+              let childrenTmp = [...children];
+              let newCurrentChild = childrenTmp.filter(child => child.childId == currentChild.childId)[0];
+              newCurrentChild.status = isTurningOn ? "LOADING" : "INACTIVE";
+              newCurrentChild.isTrackingActive = isTurningOn;
+              setChildren(childrenTmp);
+              setCurrentChild(newCurrentChild);
             }}
           >
-            <Image source={children[0]?.status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
+            <Image source={children.length == 0 || currentChild?.status === "INACTIVE" ? require("../../../../assets/icons/location-off.png") : require("../../../../assets/icons/location-on.png")}
                    style={{width: 30, height: 30}}/>
           </TouchableOpacity>
         </Animated.View>
@@ -486,17 +516,18 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
         {/* setting animation button */}
         <TouchableOpacity style={[styles.settingBtnContainer, {backgroundColor: COLORS.STRONG_CYAN, shadowOpacity: 0.2, elevation: 5}]}
-                          onPressIn={() => {
-          if (!flied){
-            animSetZoneBtn.setValue(0);
-            Animated.timing(animSetZoneBtn, {toValue: 1, duration: FLY_TIME, useNativeDriver: false}).start();
-          }
-          else{
-            animSetZoneBtn.setValue(1);
-            Animated.timing(animSetZoneBtn, {toValue: 0, duration: FLY_TIME, useNativeDriver: false}).start();
-          }
-          setFlied(!flied);
-        }}>
+                          disabled={children.length == 0}
+          onPressIn={() => {
+            if (!flied){
+              animSetZoneBtn.setValue(0);
+              Animated.timing(animSetZoneBtn, {toValue: 1, duration: FLY_TIME, useNativeDriver: false}).start();
+            }
+            else{
+              animSetZoneBtn.setValue(1);
+              Animated.timing(animSetZoneBtn, {toValue: 0, duration: FLY_TIME, useNativeDriver: false}).start();
+            }
+            setFlied(!flied);
+          }}>
           <Image source={require("../../../../assets/icons/add-location.png")} style={{width: 30, height: 30}} />
         </TouchableOpacity>
 
@@ -567,11 +598,13 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         onConfirm={() => {
           setIsCannotConnect(false);
           requestSmartwatchTracking(false);
-          requestEmergencyMode(false, children[0].childId);
-          let childrenTmp = [...childrenRef.current];
-          childrenTmp[0].status = "INACTIVE";
-          childrenTmp[0].isTrackingActive = false;
+          requestEmergencyMode(false, null);
+          let childrenTmp = [...children];
+          let newCurrentChild = childrenTmp.filter(child => child.childId == currentChild.childId)[0];
+          newCurrentChild.status = "INACTIVE";
+          newCurrentChild.isTrackingActive = false;
           setChildren(childrenTmp);
+          setCurrentChild(newCurrentChild);
         }}
       />
 
