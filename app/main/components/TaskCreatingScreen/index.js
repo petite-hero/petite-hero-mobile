@@ -11,6 +11,7 @@ import CategoryList from './CategoryList';
 import Header from '../../../base/components/Header';
 import InputField from '../../../base/components/InputField';
 import ButtonSave from '../../../base/components/ButtonSave';
+import { ConfirmationModal } from '../../../utils/modal';
 
 const getDateList = (date) => {
   const currentDate = new Date(date);
@@ -54,6 +55,7 @@ const TaskCreatingScreen = (props) => {
   const [timeMessage, setTimeMessage]       = useState("");
   const [loading, setLoading]               = useState(true);
   const [isSelectedAll, setSelectAll]       = useState(false);
+  const [message, setMessage]               = useState("");
   const [repeatOn, setRepeatOn]             = useState(getDateList(props.route.params.date));
   const [categories, setCategories]         = useState([
     {title: t("task-add-category-housework"), active: true, name: "Housework", color: COLORS.YELLOW},
@@ -116,7 +118,12 @@ const TaskCreatingScreen = (props) => {
         props.route.params.onGoBack();
         props.navigation.goBack();
       } else {
-        showMessage(result.msg);
+        if (result.msg.includes("overlap")) {
+          let tmp = result.msg.split(" ").slice(4, 5).toString();
+          setMessage(t("task-add-overlap") + tmp);
+        } else {
+          showMessage(result.msg);
+        }
       }
     } catch (error) {
       showMessage(error.message);
@@ -172,6 +179,7 @@ const TaskCreatingScreen = (props) => {
   return (
     <ScrollView style={styles.container}>
       <Loader loading={loading}/>
+      {message.length !== 0 && <ConfirmationModal t={t} visible={message.length !== 0} message={message} option={"info"} onConfirm={() => setMessage("")}/>}
       <Header navigation={props.navigation} title={t("task-add-title")} subTitle={date[1] + ", " + date[2] + " " + date[3]}/>
       {/* form */}
       {/* task name */}

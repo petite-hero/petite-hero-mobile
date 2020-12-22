@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
   circle : {
     backgroundColor: "transparent",
     marginTop: hp('20%'),
-    width: hp('40%'),
-    height: hp('40%'),
+    width: hp('45%'),
+    height: hp('45%'),
   }
 });
 

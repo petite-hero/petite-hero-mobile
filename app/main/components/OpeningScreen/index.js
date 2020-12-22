@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Image, View, TouchableOpacity, Text, FlatList, ScrollView } from 'react-native';
+import { Image, View, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { COLORS } from '../../../const/const';
 import styles from './styles/index.css';
@@ -9,15 +9,18 @@ const SLIDE_WIDTH = wp("100%");
 const slides = [
   {
     id: 1,
-    image: require("../../../../assets/gif/welcome_1.gif")
+    image: require("../../../../assets/gif/welcome_1.gif"),
+    text: "Approriate way to track your children's location."
   },
   {
     id: 2,
-    image: require("../../../../assets/gif/welcome_2.gif")
+    image: require("../../../../assets/gif/welcome_2.gif"),
+    text: "Simple way to deliver and manage daily tasks of your children."
   },
   {
     id: 3,
-    image: require("../../../../assets/gif/welcome_3.gif")
+    image: require("../../../../assets/gif/welcome_3.gif"),
+    text: "Inspirational way to give your children challenges and achievements."
   }
 ]
 
@@ -51,9 +54,23 @@ const OpeningScreen = (props) => {
           setCurrentIndex(Math.round(nativeEvent.contentOffset.x / SLIDE_WIDTH));
         }}
       >
-        {slides.map((slide, index) => 
-          <Slide key={index + ""} source={slide.image}/>
-        )}
+        {slides.map((slide, index) => (
+          <View key={index + ""}>
+            <Slide source={slide.image}/>
+            <Text style={{
+              position: "absolute",
+              left: "10%",
+              right: "10%",
+              top: index === 1 ? "15%" : "78%",
+              textAlign: "center",
+              fontFamily: "Montserrat",
+              color: COLORS.BLACK,
+              fontSize: 16
+            }}>
+              {slide.text}
+            </Text>
+          </View>
+        ))}
       </ScrollView>
       <View style={{
         position: "absolute",

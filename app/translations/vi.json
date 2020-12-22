@@ -32,6 +32,8 @@
   "signin-password"                         : "Nhập mật khẩu",
   "signin-invalid-message"                  : "Mật khẩu không chính xác. Hãy thử lại hoặc nhấp vào \"Bạn quên mật khẩu?\" để đặt lại mật khẩu.",
   "signin-forgot-password"                  : "Bạn quên mật khẩu?",
+  "signin-invalid-device-1"                 : "Vì mục đích bảo mật, thiết bị bạn đang sử dụng không thể dùng để đăng nhập vào tài khoản này. Nếu bạn muốn dùng thiết bị này, xin vui lòng ",
+  "signin-invalid-device-2"                 : "liên hệ tổng đài hỗ trợ Petite Hero.",
   "signin-next"                             : "Đăng nhập",
 
   "forgot-title"                            : "Thiết lập lại mật khẩu",
@@ -79,6 +81,7 @@
   "task-add-repeat-on"                      : "Lặp lại vào",
   "task-add-repeat-on-check-all"            : "Chọn tất cả 7 ngày tới",
   "task-add-save"                           : "Tạo công việc",
+  "task-add-overlap"                        : "Công việc này có thời gian trùng với một công việc khác vào ngày ",
   "task-details-from"                       : "Từ",
   "task-details-to"                         : "đến",
   "task-details-details"                    : "Chi tiết công việc",
@@ -126,10 +129,12 @@
   "child-add-next"                          : "Thêm con",
   "child-add-qr-scan"                       : "Dùng smartwatch quét mã QR bên dưới để kết nối.",
   "child-add-qr-scan-later"                 : "Để sau",
+  "child-add-invalid-age"                   : "Hệ thống chỉ thích hợp cho con từ 4 đến 11 tuổi.",
   "child-details-token"                     : "ID thiết bị đồng hồ thông minh",
   "child-details-no-token"                  : "Chưa liên kết",
   "child-details-save"                      : "Lưu thay đổi",
   "child-details-delete"                    : "Xóa",
+  "child-details-delete-device-message"     : "Bạn có thực sự muốn xóa liên kết của con bạn với thiết bị có tên: ",
   "child-details-delete-message"            : "Bạn có thực sự muốn xóa tài khoản của con này không?",
 
   "collaborator-add-title"                  : "Thêm cộng tác viên",
@@ -183,6 +188,8 @@
   "common-error"                            : "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau.",
   "common-button-yes"                       : "Có",
   "common-button-no"                        : "Không",
+
+  "error-timeout"                           : "Kết nối thất bại. Vui lòng kiểm tra lại đường truyền và thử lại sau.",
   
 
   "no-child-info"                           : "Bạn chưa có tài khoản nào cho con.",

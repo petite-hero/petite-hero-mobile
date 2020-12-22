@@ -432,16 +432,19 @@ const ProfileScreen = (props) => {
             subItems={[
               {
                 title: t("profile-subscription-history"),
-                action: () =>
-                props.navigation.navigate("ProfileTransaction", {
-                  goBack: () => setLoading(true)
-                }),
+                action: () => {
+                  props.navigation.navigate("ProfileTransaction", {
+                    goBack: () => setLoading(true)
+                  })
+                },
                 iconName: "keyboard-arrow-right"
               },
               {
                 title: t("profile-subscription-packs"),
                 action: () => {
-                  props.navigation.navigate("ProfileShowingSubscription")
+                  props.navigation.navigate("ProfileShowingSubscription", {
+                    goBack: () => setLoading(true)
+                  })
                 },
                 iconName: "keyboard-arrow-right"
               }

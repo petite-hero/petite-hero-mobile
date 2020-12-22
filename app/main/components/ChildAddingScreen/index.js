@@ -11,6 +11,7 @@ import InputField from "../../../base/components/InputField";
 import ButtonSave from "../../../base/components/ButtonSave";
 import GenderPickerComponent from "./GenderPickerComponent";
 import ImagePickerComponent from "./ImagePickerComponent";
+import { ConfirmationModal } from "../../../utils/modal";
 
 const ChildAddingScreen = (props) => {
   const { t }                     = useContext(props.route.params.localizationContext);
@@ -22,6 +23,7 @@ const ChildAddingScreen = (props) => {
   const [yob, setYob]             = useState("");
   const [validYob, setValidYob]   = useState(true);
   const [loading, setLoading]     = useState(false);
+  const [message, setMessage]     = useState("");
   const [genders, setGenders] = useState([
     {title: "Boy", active: true, name: "male", color: COLORS.STRONG_CYAN},
     {title: "Girl", active: false, name: "female", color: COLORS.STRONG_CYAN}
@@ -30,7 +32,7 @@ const ChildAddingScreen = (props) => {
   const validate = () => {
     let isValidated = true;
     if (name.length === 0) {setValidName(false); isValidated = false;}
-    if (yob.length === 0) {setValidYob(false); isValidated = false;}
+    if (yob.length === 0 || !parseInt(yob)) {setValidYob(false); isValidated = false;}
     return isValidated;
   }
 
@@ -64,7 +66,11 @@ const ChildAddingScreen = (props) => {
         props.route.params.goBack();
         props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
       } else {
-        showMessage(result.msg);
+        if (result.msg?.includes("4-11")) {
+          setMessage(t("child-add-invalid-age"));
+        } else {
+          showMessage(result.msg);
+        }
       }
     } catch (error) {
       showMessage(error.message);
@@ -75,6 +81,7 @@ const ChildAddingScreen = (props) => {
 
   return (
     <ScrollView style={styles.container}>
+      {message.length !== 0 && <ConfirmationModal t={t} visible={message.length !== 0} message={message} option={"info"} onConfirm={() => setMessage("")}/>}
       <Loader loading={loading}/>
       {/* header */}
       <Header navigation={props.navigation} title={t("child-add-title")}/>

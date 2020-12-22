@@ -183,6 +183,7 @@ const ChildDetailsScreen = (props) => {
   const [deviceId, setDeviceId]   = useState("");
   const [loading, setLoading]     = useState(true);
   const [deleteAction, setDeleteAction] = useState(false);
+  const [deleteDevice, setDeleteDevice] = useState(false);
   const [genders, setGenders] = useState([
     {title: "Boy", active: false, name: "male", color: COLORS.STRONG_CYAN},
     {title: "Girl", active: false, name: "female", color: COLORS.STRONG_CYAN}
@@ -279,9 +280,29 @@ const ChildDetailsScreen = (props) => {
     }
   }
 
+  const deleteChildDevice = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem("user_id");
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/" + props.route.params.childId + "/delete-device", {
+        method: "DELETE"
+      });
+      const result = await response.json();
+      if (result.code === 200 && result.msg === "OK") {
+        showMessage("Child's device is deleted successfully!");
+      } else {
+        showMessage(result.msg);
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     getChildDetails();
-  }, []);
+  }, [loading]);
 
   return (
     loading ? <Loader loading={true}/>
@@ -289,6 +310,7 @@ const ChildDetailsScreen = (props) => {
     <ScrollView style={styles.container}>
       {/* CONFIRMATION MODAL */}
       <ConfirmationModal t={t} message={t("child-details-delete-message")} visible={deleteAction} onConfirm={() => {setLoading(true); setDeleteAction(false); deleteChild()}} onClose={() => {setDeleteAction(false)}}/>
+      <ConfirmationModal t={t} message={t("child-details-delete-device-message") + deviceId} visible={deleteDevice} onConfirm={() => {setLoading(true); setDeleteDevice(false); deleteChildDevice()}} onClose={() => {setDeleteDevice(false)}}/>
       {/* <Loader loading={loading}/> */}
       <Header navigation={props.navigation} title={props.route.params.screenName}/>
       {/* form */}
@@ -348,6 +370,26 @@ const ChildDetailsScreen = (props) => {
               {t("child-details-no-token")}
             </Text>
           }
+          {
+          deviceId ?
+          <TouchableOpacity
+            onPress={() => {setDeleteDevice(true)}}
+            style={{ 
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              elevation: 8,
+              backgroundColor: COLORS.RED,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Image
+              source={require("../../../../assets/icons/delete.png")}
+              style={{width: 25, height: 25}}
+            />
+          </TouchableOpacity>
+          :
           <TouchableOpacity
             onPress={() => {props.navigation.navigate("ChildAddingShowingQr", {qr: props.route.params.childId + ""})}}
             style={{ marginRight: -10 }}
@@ -357,6 +399,7 @@ const ChildDetailsScreen = (props) => {
               style={{width: 30, height: 30}}
             />
           </TouchableOpacity>
+          }
         </View>
       </View>
       }
