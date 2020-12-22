@@ -26,16 +26,16 @@ export const ConfirmationModal = (props) => {
           alignItems: "center",
           justifyContent: "center"
         }}>
-          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPressOut={() => {props.onConfirm()}}>
             <Text style={styles.buttonText}>OK</Text>
           </TouchableOpacity>
         </View>
         :
         <>
-          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPress={() => {props.onConfirm()}}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPressOut={() => {props.onConfirm()}}>
               <Text style={styles.buttonText}>{props.t("common-button-yes")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPress={() => {props.onClose()}}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPressOut={() => {props.onClose()}}>
             <Text style={styles.buttonText}>{props.t("common-button-no")}</Text>
           </TouchableOpacity>
         </>

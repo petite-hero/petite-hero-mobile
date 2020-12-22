@@ -67,7 +67,7 @@ const ChildAddingScreen = (props) => {
         props.navigation.navigate("ChildAddingShowingQr", {qr: childId});
       } else {
         if (result.msg?.includes("4-11")) {
-          setMessage(t("profile-children-add-invalid-age"));
+          setMessage(t("child-add-invalid-age"));
         } else {
           showMessage(result.msg);
         }

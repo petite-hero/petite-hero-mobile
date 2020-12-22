@@ -69,8 +69,7 @@ const GenderPickerComponent = ({t, genders, setGenders}) => {
                       fontSize: 16,
                       fontFamily: "AcuminBold",
                       color: COLORS.WHITE,
-                      marginLeft: 10,
-                      marginRight: 10
+                      marginRight: 15
                     }}>
                       {value.title === "Boy" ? t("child-add-gender-boy") : t("child-add-gender-girl")}
                     </Text>

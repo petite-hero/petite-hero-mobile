@@ -121,7 +121,7 @@ const QuestItem = (item, index, setLoading, navigation) => {
             flexDirection: "row",
             justifyContent: "space-between"
           }}>
-            <View style={{maxWidth: "80%"}}>
+            <View style={{maxWidth: item.status === "ASSIGNED" ? "65%" : "80%"}}>
               <Text
                 style={{
                   fontSize: 20,
@@ -132,7 +132,7 @@ const QuestItem = (item, index, setLoading, navigation) => {
                 {item.name}
               </Text>
             </View>
-            { 
+            {
               item.status === "DONE" &&
               <Image
                 source={require("../../../../assets/icons/done.png")}
@@ -146,15 +146,28 @@ const QuestItem = (item, index, setLoading, navigation) => {
                 style={{width: 30, height: 30}}
               />
             }
+            {
+              index === 0 && item.status === "ASSIGNED" && 
+              <Image
+                source={badgesList[item.reward - 1].image}
+                style={{
+                  width: wp("33%"),
+                  height: wp("33%"),
+                  marginLeft: -wp("2%")
+                }}
+              />
+            }
           </View>
-          <Image
-            source={badgesList[item.reward - 1].image}
-            style={{
-              width: wp("21%"),
-              height: wp("21%"),
-              marginLeft: -wp("2%")
-            }}
-          />
+          {
+            (index !== 0 || item.status === "DONE" || item.status === "FAILED") && <Image
+              source={badgesList[item.reward - 1].image}
+              style={{
+                width: wp("21%"),
+                height: wp("21%"),
+                marginLeft: -wp("2%")
+              }}
+            />
+          }
         </View>
       </TouchableOpacity>
     ) : (

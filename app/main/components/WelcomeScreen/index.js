@@ -1,7 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { WebView } from 'react-native-webview';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoginScreen from '../LoginScreen';
 import RegisterScreen from '../RegisterScreen';
@@ -11,6 +12,10 @@ import ForgotPasswordCodeEnteringScreen from '../ForgotPasswordCodeEnteringScree
 import RegisterEnteringInformationScreen from '../RegisterEnteringInformationScreen';
 import RegisterCodeEnteringScreen from '../RegisterCodeEnteringScreen';
 import ForgotPasswordNewPasswordEnteringScreen from '../ForgotPasswordNewPasswordEnteringScreen';
+import { COLORS, PORT } from '../../../const/const';
+import { showMessage } from '../../../utils/showMessage';
+import { fetchWithTimeout } from '../../../utils/fetch';
+import LicenseShowingScreen from '../LicenseShowingScreen';
 
 export const Stack = createStackNavigator();
 
@@ -86,14 +91,22 @@ const WelcomeScreen = (props) => {
           localizationContext: props.route.params.localizationContext
         }}
       />
+      <Stack.Screen 
+        name="LicenseShowing" 
+        component={LicenseShowingScreen}
+        initialParams={{
+          authContext: props.route.params.authContext,
+          localizationContext: props.route.params.localizationContext
+        }}
+      />
     </Stack.Navigator>
   );
 };
 
 const Welcome = ({ navigation, route }) => {
-
   const { t } = useContext(route.params.localizationContext);
   const [isScanning, setIsScanning] = React.useState(false);
+  const [page, setPage] = React.useState("");
 
   return (
     <ImageBackground 
@@ -104,9 +117,19 @@ const Welcome = ({ navigation, route }) => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Register")} onLongPress={() => setIsScanning(true)}>
         <Text style={styles.textButton}>{t("welcome-signup")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, {marginTop: "7%"}]} onPress={() => navigation.navigate("Login")}>
+      <TouchableOpacity style={[styles.button, {marginTop: "7%", marginBottom: 15}]} onPress={() => navigation.navigate("Login")}>
         <Text style={styles.textButton}>{t("welcome-signin")}</Text>
       </TouchableOpacity>
+      <Text style={{
+        fontSize: 14,
+        fontFamily: "AcuminBold",
+        color: COLORS.STRONG_CYAN,
+        textDecorationLine: "underline"
+      }}
+        onPress={() => {navigation.navigate("LicenseShowing")}}
+      >
+        License &amp; Policy
+      </Text>
       {isScanning ?
         <BarCodeScanner
           onBarCodeScanned={({data}) => {

@@ -129,11 +129,12 @@
   "child-add-next"                          : "Thêm con",
   "child-add-qr-scan"                       : "Dùng smartwatch quét mã QR bên dưới để kết nối.",
   "child-add-qr-scan-later"                 : "Để sau",
-  "profile-children-add-invalid-age"        : "Hệ thống chỉ thích hợp cho con từ 4 đến 11 tuổi.",
+  "child-add-invalid-age"                   : "Hệ thống chỉ thích hợp cho con từ 4 đến 11 tuổi.",
   "child-details-token"                     : "ID thiết bị đồng hồ thông minh",
   "child-details-no-token"                  : "Chưa liên kết",
   "child-details-save"                      : "Lưu thay đổi",
   "child-details-delete"                    : "Xóa",
+  "child-details-delete-device-message"     : "Bạn có thực sự muốn xóa liên kết của con bạn với thiết bị có tên: ",
   "child-details-delete-message"            : "Bạn có thực sự muốn xóa tài khoản của con này không?",
 
   "collaborator-add-title"                  : "Thêm cộng tác viên",

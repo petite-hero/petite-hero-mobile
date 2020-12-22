@@ -129,11 +129,12 @@
   "child-add-next"                          : "Next",
   "child-add-qr-scan"                       : "Scan this QR code using smartwatch to connect.",
   "child-add-qr-scan-later"                 : "Later",
-  "profile-children-add-invalid-age"        : "Our system is only suitable for children from 4 to 11 years old.",
+  "child-add-invalid-age"                   : "Our system is only suitable for children from 4 to 11 years old.",
   "child-details-token"                     : "Device ID",
   "child-details-no-token"                  : "None",
   "child-details-save"                      : "Save",
   "child-details-delete"                    : "Delete",
+  "child-details-delete-device-message"     : "Are you sure you want to remove the connection between your child and the device whose name: ",
   "child-details-delete-message"            : "Are you sure you want to remove this child account?",
 
   "collaborator-add-title"                  : "Add New Collaborator",

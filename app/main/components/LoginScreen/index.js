@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
