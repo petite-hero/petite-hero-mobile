@@ -232,13 +232,14 @@ const TaskScreen = (props) => {
   }
   
   const handleChildIdChanged = async () => {
-    getListOfChildren();
-    getListOfTask();
     const childIdTmp = await AsyncStorage.getItem('child_id');
     if (childIdTmp != childIdRef.current) {
       setLoading(true);
       setChildId(childIdTmp);
       setChildren([...childrenRef.current]);
+      // setDate(currentDate);
+      // setCurrentIndex(getDateIndex(getDaysInMonth(new Date(currentDate).getMonth(), new Date(currentDate).getFullYear()), new Date(currentDate).toDateString()) + 2);
+      // refDateFlatlist.current.scrollToIndex({index: currentDateIndex - 2 > 0 ? currentDateIndex - 2 : 0});
     }
   }
 
