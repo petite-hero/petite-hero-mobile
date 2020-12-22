@@ -85,7 +85,9 @@ const { t } = useContext(props.route.params.localizationContext);
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
     const to = Date.now();
-    const from = to - 10*60000; 
+    const from = to - 10*60000;
+    // const to =   1608638191396;
+    // const from = 1608636208408;
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + from + '/' + to);
     const result = await response.json();
     setLoading(false);
@@ -193,7 +195,7 @@ const { t } = useContext(props.route.params.localizationContext);
       <ConfirmationModal 
         t={t}
         visible={isNoData} 
-        message={"Child has no recently reported location."}
+        message={t("tracking-no-reported-location")}
         option="info"
         onConfirm={() => props.navigation.goBack()}
       />
@@ -204,73 +206,3 @@ const { t } = useContext(props.route.params.localizationContext);
 };
 
 export default TrackingEmergencyScreen;
-
-
-
-  // const [expoPushToken, setExpoPushToken] = React.useState('');
-  // const [notification, setNotification] = React.useState(false);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
-  // [newLoc, setNewLoc] = React.useState(null);
-
-  // React.useEffect(() => {
-
-  //   registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-  //   // This listener is fired whenever a notification is received while the app is foregrounded
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-
-  //     setNotification(notification);
-      
-  //     if (notification.request.content.title === null && notification.request.content.body === null) { // Silent noti for updating child loc
-  //       let realLocListTmp = [...realLocList];
-  //       realLocListTmp.push(notification.request.content.data);
-  //       setRealLocList(realLocListTmp);
-  //       // setCurrentLoc(notification.request.content.data);
-  //       setMapLoc(notification.request.content.data);
-  //       console.log("Foreground noti listener: ");
-  //       console.log(notification.request.content.data)
-  //     } else {
-  //       // insert codes to handle something else here
-  //       console.log("Foreground noti listener: ");
-  //       console.log(notification.request.content.data)
-  //     }
-  //   });
-
-  //   // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => { 
-  //     console.log("Background noti listener: ");
-  //     console.log(response.request.content.data)
-  //   });
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener);
-  //     Notifications.removeNotificationSubscription(responseListener);
-  //   };
-
-  // }, []);
-
-  // async function registerForPushNotificationsAsync() {
-  //   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //   if (status !== 'granted') {
-  //     alert('You need to grant permission to receive Notifications!');
-  //     return;
-  //   }
-  //   let token = (await Notifications.getExpoPushTokenAsync()).data;
-  //   console.log("Your device token: ", token);
-
-  //   // if (Platform.OS === 'android') {
-  //   //   Notifications.createChannelAndroidAsync('sound-noti', {
-  //   //     name: 'Sound Notifcation',
-  //   //     sound: true,
-  //   //     vibrate: [0, 250, 500, 250]
-  //   //   });
-      
-  //   //   Notifications.createChannelAndroidAsync('silent-noti', {
-  //   //     name: 'Silent Notifcation',
-  //   //     vibrate: false,
-  //   //     sound: false,
-  //   //   });
-  //   // }
-  //   return token;
-  // }

@@ -18,7 +18,7 @@ import AvatarContainer from '../AvatarContainer';
 
 const TrackingSettingsScreen = ({ route, navigation }) => {
 
-const { t } = route.params.localizationContext;
+  const t = route.params.t;
   {/* ===================== VARIABLE SECTION ===================== */}
 
   // states
@@ -108,8 +108,10 @@ const { t } = route.params.localizationContext;
       creator: userId,
       date: CURRENT_DATE.getTime(),
       fromTime: settingFromTimeDate,
-      latitude: settingLocDetail.latitude,
-      longitude: settingLocDetail.longitude,
+      // latitude: settingLocDetail.latitude,
+      // longitude: settingLocDetail.longitude,
+      latitude: (lQuad[0].latitude+lQuad[1].latitude+lQuad[2].latitude+lQuad[3].latitude)/4,
+      longitude: (lQuad[0].longitude+lQuad[1].longitude+lQuad[2].longitude+lQuad[3].longitude)/4,
       name: lName,
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
@@ -124,10 +126,8 @@ const { t } = route.params.localizationContext;
       latD: lQuad[3].latitude,
       lngD: lQuad[3].longitude,
     });
-    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body});
-    // console.log("2 " + (new Date() - start));
     const result = await response.json();
     if (result.code !== 200) console.log("Error while adding location. Server response: " + JSON.stringify(result));
   }
@@ -149,8 +149,8 @@ const { t } = route.params.localizationContext;
       date: CURRENT_DATE.getTime(),
       safezoneId: settingLocDetail.safezoneId,
       fromTime: settingFromTimeDate,
-      latitude: settingLocDetail.latitude,
-      longitude: settingLocDetail.longitude,
+      latitude: (lQuad[0].latitude+lQuad[1].latitude+lQuad[2].latitude+lQuad[3].latitude)/4,
+      longitude: (lQuad[0].longitude+lQuad[1].longitude+lQuad[2].longitude+lQuad[3].longitude)/4,
       name: lName,
       radius: lRadius,
       repeatOn: Util.repeatArrToStr(lRepeat),
@@ -165,10 +165,8 @@ const { t } = route.params.localizationContext;
       latD: lQuad[3].latitude,
       lngD: lQuad[3].longitude,
     });
-    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/safezone',
       {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: body});
-    // console.log("3 " + (new Date() - start));
     const result = await response.json();
     if (result.code !== 200) console.log("Error while updating location. Server response: " + JSON.stringify(result));
   }
@@ -243,6 +241,7 @@ const { t } = route.params.localizationContext;
         {/* control panel with search bar and location list */}
         <TrackingSettingControlPanel
 
+          t={t}
           status={status}
           substatus={substatus}
           locList={locList}
@@ -286,8 +285,8 @@ const { t } = route.params.localizationContext;
 
         {/* location setting attributes */}
         <TrackingSettingLocation
-          t={t}
 
+          t={t}
           isValidation={isValidation}
           isConfirmDelete={isConfirmDelete}
           setIsValidation={setIsValidation}
@@ -359,6 +358,7 @@ const { t } = route.params.localizationContext;
         {/* location setting sub-attributes */}
         <TrackingSettingLocationSubProps
 
+          t={t}
           animLeft={animSettingLocPropsLeft}
           substatus={substatus}
 
@@ -436,13 +436,13 @@ const { t } = route.params.localizationContext;
           if (substatus === ""){
             // validation
             let validation = "";
-            if (lName == "") validation = "Please specify location name";
+            if (lName == "") validation = t("tracking-setting-validate-name");
             else if (!(lType == "Home" && lAllTime)){
-              if (!lFromTime || lFromTime === "None") validation = "Please specify the time at 'From'";
-              else if (!lToTime || lToTime === "None") validation = "Please specify the time at 'To'";
-              else if (lFromTimeDate >= lToTimeDate) validation = "'To' time should be after 'From'";
+              if (!lFromTime || lFromTime === "None") validation = t("tracking-setting-validate-from");
+              else if (!lToTime || lToTime === "None") validation = t("tracking-setting-validate-to");
+              else if (lFromTimeDate >= lToTimeDate) validation = t("tracking-setting-validate-from-to");
             }
-            if (validation == "" && Util.isOverlap(lAllTime, locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = "The time schedule of this location is overlapping another";
+            if (validation == "" && Util.isOverlap(lAllTime, locList, lFromTimeDate, lToTimeDate, settingLocDetail.safezoneId)) validation = t("tracking-setting-validate-overlap");
             if (validation != ""){
               setValidationStr(validation);
               setIsValidation(true);

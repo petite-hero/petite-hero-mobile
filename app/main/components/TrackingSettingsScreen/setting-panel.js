@@ -34,7 +34,7 @@ const TrackingSettingLocation = (props) => {
 
       {/* field: type */}
       <View style={{flexDirection: "row", marginTop: 15}}>
-        <Text style={{flex: 4, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>Mark as</Text>
+        <Text style={{flex: 4, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>{props.t("tracking-setting-label-type")}</Text>
         <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onTypeSelecting}>
           {props.type}
         </Text>
@@ -44,7 +44,7 @@ const TrackingSettingLocation = (props) => {
       {/* field: all time */}
       {props.type == "Home" ?
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 5, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>All time</Text>
+          <Text style={{flex: 5, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>{props.t("tracking-setting-label-all-time")}</Text>
           <Switch
             trackColor={{ false: COLORS.GREY, true: COLORS.LIGHT_CYAN }}
             thumbColor={props.allTime ? COLORS.STRONG_CYAN : COLORS.STRONG_GREY}
@@ -77,7 +77,7 @@ const TrackingSettingLocation = (props) => {
       {/* field: from time */}
       {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 10}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>From</Text>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>{props.t("tracking-setting-label-from")}</Text>
           <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowFromTimePicker(true)}>
             {props.fromTime == "None" || props.fromTime == null ? "None" : props.fromTime.slice(0, -3)}
           </Text>
@@ -93,7 +93,7 @@ const TrackingSettingLocation = (props) => {
       {/* field: to time */}
       {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>To</Text>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>{props.t("tracking-setting-label-to")}</Text>
           <Text style={{flex: 2, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={() => setShowToTimePicker(true)}>
             {props.ttoTime == "None" || props.ttoTime == null ? "None" : props.ttoTime.slice(0, -3)}
           </Text>
@@ -109,7 +109,7 @@ const TrackingSettingLocation = (props) => {
       {/* field: repeat */}
       {props.allTime ? null :
         <View style={{flexDirection: "row", marginTop: 15}}>
-          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>Repeat on</Text>
+          <Text style={{flex: 3, fontFamily: "AcuminBold", color: COLORS.BLACK, fontSize: 15}}>{props.t("tracking-setting-label-repeat")}</Text>
           <Text style={{flex: 7, textAlign: "right", color: COLORS.STRONG_CYAN, fontFamily: "Acumin", fontSize: 16}} onPress={props.onRepeatSelecting}>
             {Util.repeatArrToShowStr(props.repeat)}
           </Text>
@@ -130,7 +130,7 @@ const TrackingSettingLocation = (props) => {
       <ConfirmationModal 
         t={props.t}
         visible={props.isConfirmDelete} 
-        message={"Delete this location?"}
+        message={props.t("tracking-setting-delete-location")}
         option=""
         onConfirm={() => {props.setIsConfirmDelete(false); props.onDelete();}}
         onClose={() => props.setIsConfirmDelete(false)}

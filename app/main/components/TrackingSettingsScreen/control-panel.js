@@ -1,3 +1,4 @@
+import { t } from 'i18n-js';
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -20,7 +21,7 @@ const TrackingSettingControlPanel = (props) => {
           styles={props.substatus === "SEARCH" ?
             {textInputContainer: styles.textInputContainerFocused, textInput: styles.textInputFocused, listView: styles.listView, row: styles.searchRow} :
             {textInputContainer: styles.textInputContainer, textInput: styles.textInput}}
-          placeholder='Choose location...'
+          placeholder={t("tracking-setting-choose-location")}
           fetchDetails={true}
           enablePoweredByContainer={false}
           autoFocus={false}
@@ -37,7 +38,7 @@ const TrackingSettingControlPanel = (props) => {
       {/* panel content */}
       <ScrollView style={props.substatus === "SEARCH" ? styles.panelContentFocused : styles.panelContent}>
         {/* list placeholder */}
-        {props.locList.length == 0 ? <Text style={styles.locationPlaceholder}>There is no safe zone yet.</Text> : null}
+        {props.locList.length == 0 ? <Text style={styles.locationPlaceholder}>{props.t("tracking-setting-no-safezone")}</Text> : null}
         {/* location list */}
         <View>
           {props.status === "VIEWING" ? props.locList.map((loc, index) => {
@@ -53,7 +54,10 @@ const TrackingSettingControlPanel = (props) => {
                 </View>
               }
               <Text style={styles.locationName}>{loc.name}</Text>
-              <Text style={styles.locationTime}>{loc.type === "Home" && loc.toTime == "00:00:00" ? "All day" : "From "+loc.fromTime.slice(0, -3)+" to "+loc.toTime.slice(0, -3)}</Text>
+              <Text style={styles.locationTime}>
+                {loc.type === "Home" && loc.toTime == "00:00:00" ? props.t("tracking-setting-all-day") :
+                props.t("tracking-setting-time-from")+loc.fromTime.slice(0, -3)+props.t("tracking-setting-time-to")+loc.toTime.slice(0, -3)}
+              </Text>
               <View style={styles.rightIcon}>
                 <Image source={require("../../../../assets/icons/forth.png")} style={{width: 30, height: 30}} />
               </View>

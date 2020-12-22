@@ -197,6 +197,30 @@
 
   "no-child-info"                           : "Bạn chưa có tài khoản nào cho con.",
 
-  "tracking-emergency"                      : "Khẩn cấp"
+  "tracking-emergency"                      : "Khẩn cấp",
+  "tracking-setting-a-day"                  : "Tạo địa điểm cho một ngày",
+  "tracking-setting-tomorrow"               : "Tạo địa điểm cho ngày mai",
+  "tracking-select-day"                     : "Ngày tạo",
+  "tracking-setting-today-validation"       : "Vui lòng tắt chức năng định vị để thiết lập địa điểm hôm nay.",
+  "tracking-cannot-connect"                 : "Không thể kết nối đến thiết bị. Vui lòng thử lại sau.",
+  "tracking-no-reported-location"           : "Không tìm thấy vị trí gần đây nào của trẻ.",
+
+  "tracking-setting-validate-name"          : "Vui lòng nhập tên địa điểm",
+  "tracking-setting-validate-from"          : "Vui lòng chọn giờ đến",
+  "tracking-setting-validate-to"            : "Vui lòng chọn giờ đi",
+  "tracking-setting-validate-from-to"       : "Giờ đi cần sau giờ đến",
+  "tracking-setting-validate-overlap"       : "Địa điểm hiện tại đang trùng lặp thời gian với địa điểm khác",
+  "tracking-setting-no-safezone"            : "Chưa có địa điểm nào",
+  "tracking-setting-choose-location"        : "Chọn địa điểm...",
+  "tracking-setting-all-day"                : "Cả ngày",
+  "tracking-setting-time-from"              : "Từ ",
+  "tracking-setting-time-to"                : " đến ",
+  "tracking-setting-label-type"             : "Loại địa điểm",
+  "tracking-setting-label-all-time"         : "Mọi lúc",
+  "tracking-setting-label-from"             : "Giờ đến",
+  "tracking-setting-label-to"               : "Giờ đi",
+  "tracking-setting-label-repeat"           : "Lặp lại",
+  "tracking-setting-delete-location"        : "Bạn muốn xóa địa điểm này?",
+  "tracking-setting-all-week"               : "Cả tuần"
 
 }

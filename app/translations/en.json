@@ -197,6 +197,30 @@
   
   "no-child-info"                           : "You don't have any child.",
 
-  "tracking-emergency"                      : "Emergency"
+  "tracking-emergency"                      : "Emergency",
+  "tracking-setting-a-day"                  : "Set Locations for a Day",
+  "tracking-setting-tomorrow"               : "Set Locations for Tomorrow",
+  "tracking-select-day"                     : "Select the day",
+  "tracking-setting-today-validation"       : "Location tracking should be turned off before setting for today.",
+  "tracking-cannot-connect"                 : "Cannot connect to child's device. Please try again later.",
+  "tracking-no-reported-location"           : "Child has no recently reported location.",
+
+  "tracking-setting-validate-name"          : "Please specify location name",
+  "tracking-setting-validate-from"          : "Please specify the time at 'From'",
+  "tracking-setting-validate-to"            : "Please specify the time at 'To'",
+  "tracking-setting-validate-from-to"       : "'To' time should be after 'From'",
+  "tracking-setting-validate-overlap"       : "The time schedule of this location is overlapping another",
+  "tracking-setting-no-safezone"            : "There is no safe zone yet.",
+  "tracking-setting-choose-location"        : "Choose location...",
+  "tracking-setting-all-day"                : "All day",
+  "tracking-setting-time-from"              : "From ",
+  "tracking-setting-time-to"                : " to ",
+  "tracking-setting-label-type"             : "Mark as",
+  "tracking-setting-label-all-time"         : "All time",
+  "tracking-setting-label-from"             : "From",
+  "tracking-setting-label-to"               : "To",
+  "tracking-setting-label-repeat"           : "Repeat on",
+  "tracking-setting-delete-location"        : "Delete this location?",
+  "tracking-setting-all-week"               : "All week"
 
 }

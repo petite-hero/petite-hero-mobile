@@ -125,10 +125,10 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== VARIABLE SECTION ===================== */}
 
-  const { t } = useContext(route.params.localizationContext);
+  const { t } = React.useContext(route.params.localizationContext);
   const WEEKDAYS_ABB = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [isCannotConnect, setIsCannotConnect] = React.useState(false);
 
   // child information
@@ -203,72 +203,13 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   {/* ===================== CHILD ID CHANGE HANDLING SECTION ===================== */}
 
-  // const getListOfChildren = async() => {
-  //   try {
-  //     const ip = await AsyncStorage.getItem('IP');
-  //     const id = await AsyncStorage.getItem('user_id');
-  //     const childId = await AsyncStorage.getItem('child_id');
-  //     const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
-  //     const result = await response.json();
-  //     if (result.code === 200) {
-  //       const childrenResult = result.data.filter(child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
-  //       let tmpChildren = [...childrenResult];
-  //       if (childrenResult.length != childrenRef.current.length){
-  //         childrenResult.map((child, index) => {
-  //           if (!tmpChildren[index].isTrackingActive) tmpChildren[index].status = "INACTIVE";
-  //           else{
-  //             tmpChildren[index].status = "LOADING";
-  //             requestEmergencyMode(true, tmpChildren[index].childId);
-  //           }
-  //           if (child.childId == childId){
-  //             tmpChildren[0] = child;
-  //             tmpChildren[index] = tmp[0];
-  //             setChildren(tmpChildren);
-  //           }
-  //         });
-  //         if (!childId) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-  //         else {
-  //           let isInChildren = false;
-  //           result.data.map((child, index) => {
-  //             if (childId == child.childId){
-  //               isInChildren = true;
-  //             }
-  //           });
-  //           if (!isInChildren) await AsyncStorage.setItem('child_id', result.data[0].childId + "");
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     showMessage(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-  // const handleChildIdChanged = async () => {
-  //   getListOfChildren();
-  //   const childIdTmp = await AsyncStorage.getItem('child_id');
-  //   if (childIdTmp != childrenRef.current[0].childId) {
-  //     setLoading(true);
-  //     childrenRef.current.map((child, index) => {
-  //       if (child.childId == childIdTmp){
-  //         let tmpChildren = [...childrenRef.current];
-  //         let tmpChild = tmpChildren[0];
-  //         tmpChildren[0] = tmpChildren[index];
-  //         tmpChildren[index] = tmpChild;
-  //         setChildren(tmpChildren);
-  //       }
-  //     });
-  //   }
-  // }
-
   const handleChildIdChanged = async () => {
     try {
 
       // check if childId changed
       const childId = await AsyncStorage.getItem('child_id');
       if ((childrenRef.current.length == 0 && childId != null) ||
-         (childrenRef.current.length > 0 && childId != childrenRef.current[0].childId))
+         (childrenRef.current.length > 0 && childId != currentChildRef.current.childId))
         setLoading(true);
       
       // get new list
@@ -359,7 +300,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     }
     if (isTracking){
       await new Promise(resolve => setTimeout(resolve, 10000));
-      if (children[0]?.status == "LOADING"){
+      if (currentChild?.status == "LOADING"){
         setIsCannotConnect(true);
       }
     }
@@ -434,7 +375,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
       {/* status container */}
       <View style={styles.statusContainer}>
-        {children.length == 0 ? <Text style={styles.noChildInfo}>You don't have any child</Text> : null}
+        {children.length == 0 ? <Text style={styles.noChildInfo}>{t("no-child-info")}</Text> : null}
         <LocationStatus
           diameter={wp("70%")}
           margin={0}
@@ -502,7 +443,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         {/* setting for tomorrow button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => {
-              navigation.navigate("TrackingSettings", {children: children, date: (() => {
+              navigation.navigate("TrackingSettings", {t: t, children: children, date: (() => {
                 let today = new Date();
                 today.setDate(today.getDate()+1);
                 return today;
@@ -533,10 +474,10 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
         {/* explaination texts */}
         <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 78, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
-          <Text style={styles.txtSettingBtnGuide}>Safe Zone for Selected Day</Text>
+          <Text style={styles.txtSettingBtnGuide}>{t("tracking-setting-a-day")}</Text>
         </Animated.View>
         <Animated.View style={[styles.txtSettingBtnGuideContainer, {top: 135, width: animSetZoneBtnTextWidth, opacity: animSetZoneBtn}]}>
-          <Text style={styles.txtSettingBtnGuide}>Safe Zone for Tomorrow</Text>
+          <Text style={styles.txtSettingBtnGuide}>{t("tracking-setting-tomorrow")}</Text>
         </Animated.View>
 
       </View>
@@ -546,7 +487,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         <Modal transparent={true} visible={isPickingDate} animationType="fade">
           <TouchableOpacity style={styles.calendarContainer} onPress={() => setIsPickingDate(false)}>
             <View style={styles.calendar}>
-              <Text style={{fontSize: 20, fontFamily: "Acumin", color: COLORS.BLACK}}>Select the day</Text>
+              <Text style={{fontSize: 20, fontFamily: "Acumin", color: COLORS.BLACK}}>{t("tracking-select-day")}</Text>
               <View style={{flexDirection: "row", marginTop: 10}}>
                 {[0, 1, 2, 3, 4, 5, 6].map((count, index) => {
                   let date = new Date();
@@ -555,11 +496,11 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                     <TouchableOpacity key={index} style={[styles.dateContainer, index == 0 ? {borderColor: COLORS.STRONG_CYAN} : {}]} onPress={() => {
                       setIsPickingDate(false);
                       // check if the selected day is today
-                      if (index === 0 && children[0]?.status !== "INACTIVE"){
+                      if (index === 0 && currentChild?.status !== "INACTIVE"){
                         setIsValidation(true);
                         return;
                       }
-                      navigation.navigate("TrackingSettings", {children: children, date: date});
+                      navigation.navigate("TrackingSettings", {t: t, children: children, date: date});
                       animSetZoneBtn.setValue(0);
                       setFlied(false);
                     }}>
@@ -582,7 +523,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       <ConfirmationModal 
         t={t}
         visible={isValidation} 
-        message={"Location tracking should be turned off before setting for today."}
+        message={t("tracking-setting-today-validation")}
         option="info"
         onConfirm={() => setIsValidation(false)}
       />
@@ -593,7 +534,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
       <ConfirmationModal 
         t={t}
         visible={isCannotConnect} 
-        message={"Cannot connect to child's device. Please try again later."}
+        message={t("tracking-cannot-connect")}
         option="info"
         onConfirm={() => {
           setIsCannotConnect(false);
