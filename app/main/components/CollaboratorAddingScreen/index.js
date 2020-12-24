@@ -170,6 +170,7 @@ const CollaboratorAddingScreen = (props) => {
                   setChildren(newArray);
                 }}
               >
+              {child.photo ? 
                 <Image
                   source={{uri: "data:image/png;base64," + child.photo}}
                   style={{
@@ -178,6 +179,16 @@ const CollaboratorAddingScreen = (props) => {
                     borderRadius: 25
                   }}
                 />
+              :
+                <Image
+                  source={child.gender === "Male" ? require("../../../../assets/avatar-son.png") : require("../../../../assets/avatar-daughter.png")}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 25
+                  }}
+                /> 
+              }
               </TouchableOpacity>
             )
           })}

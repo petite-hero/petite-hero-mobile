@@ -180,9 +180,9 @@ const ProfileScreen = (props) => {
       const username = await AsyncStorage.getItem("user_id");
       const response = await fetchWithTimeout("http://" + ip + PORT + "/parent/" + username + "/children");
       const result = await response.json();
-      if (result.code === 200 && result.msg === "OK") {
+      if (result.code === 200) {
         setListChildren(
-          result.data.map((childData, index) => {
+          result.data?.map((childData, index) => {
             return {
               title: childData.isCollaboratorChild === true && childData.isConfirm === false ?
                      "Child " + (index + 1) + " (not yet confirmed)"
