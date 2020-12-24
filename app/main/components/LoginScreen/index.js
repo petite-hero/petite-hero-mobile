@@ -1,11 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, Linking } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from '../../../const/const';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
 import styles from './styles/index.css';
-import { Linking } from 'react-native'
 import { fetchWithTimeout } from '../../../utils/fetch';
 import { showMessage } from '../../../utils/showMessage';
 import { Loader } from '../../../utils/loader';

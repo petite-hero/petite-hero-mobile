@@ -4,7 +4,7 @@ import { COLORS } from "../../../../const/const";
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.WHITE,
   },
   textInput : {
     height: 50,

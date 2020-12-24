@@ -26,7 +26,7 @@ export const ConfirmationModal = (props) => {
           alignItems: "center",
           justifyContent: "center"
         }}>
-          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.WHITE, borderWidth: 1, borderColor: COLORS.YELLOW}]} onPressOut={() => {props.onConfirm()}}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: COLORS.YELLOW}]} onPressOut={() => {props.onConfirm()}}>
             <Text style={styles.buttonText}>OK</Text>
           </TouchableOpacity>
         </View>

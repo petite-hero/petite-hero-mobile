@@ -52,15 +52,18 @@ const ProfileTransactionScreen = (props) => {
       />
       :
       <View style={{
-        width: "100%",
+        width: "80%",
         height: "70%",
+        marginLeft: "10%",
+        marginRight: "10%",
         alignItems: "center",
         justifyContent: "center"
       }}>
         <Text style={{
           fontFamily: "AcuminBold",
           fontSize: 18,
-          color: COLORS.MEDIUM_CYAN
+          color: COLORS.MEDIUM_CYAN,
+          textAlign: "center"
         }}>
           {t("profile-subscription-none")}
         </Text>

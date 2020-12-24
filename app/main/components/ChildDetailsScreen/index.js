@@ -189,6 +189,13 @@ const ChildDetailsScreen = (props) => {
     {title: "Girl", active: false, name: "female", color: COLORS.STRONG_CYAN}
   ]);
 
+  const validate = () => {
+    let isValidated = true;
+    if (name.length === 0) {setValidName(false); isValidated = false;}
+    if (yob.length === 0 || !parseInt(yob) || parseInt(yob) != yob) {setValidYob(false); isValidated = false;}
+    return isValidated;
+  }
+
   const getGender = (gender) => {
     let newArray = [...genders];
     newArray = newArray.map((item, index) => {
@@ -223,6 +230,10 @@ const ChildDetailsScreen = (props) => {
 
   const updateChildProfile = async() => {
     try {
+      if (!validate()) {
+        setLoading(false);
+        return null;
+      }
       const ip = await AsyncStorage.getItem('IP');
       const gender = genders.find(gender => gender.active).name;
       const data = new FormData();
@@ -241,6 +252,7 @@ const ChildDetailsScreen = (props) => {
       });
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {
+        AsyncStorage.setItem("child_id", props.route.params.childId + "");
         props.route.params.goBack();
         props.navigation.goBack();
         showMessage("Child profile changed successfully!");
@@ -324,7 +336,7 @@ const ChildDetailsScreen = (props) => {
       <InputField title={t("child-add-nickname")} value={nickName} setValue={setNickName} editable={!props.route.params.isCollaboratorChild}/>
       {/* end child nick name */}
       {/* child year of birth */}
-      <InputField title={t("child-add-yob")} value={yob} setValue={setYob} valid={validYob} setValid={setValidYob} invalidMessage={t("child-add-yob-empty")} keyboardType="numeric" editable={!props.route.params.isCollaboratorChild}/>
+      <InputField title={t("child-add-yob")} value={yob} setValue={setYob} valid={validYob} setValid={setValidYob} invalidMessage={t("child-add-yob-empty")} keyboardType="numeric" editable={!props.route.params.isCollaboratorChild} dataType="integer" invalidDataTypeMessage={t("child-add-yob-invalid")}/>
       {/* end child year of birth */}
       {/* child gender */}
       <GenderPickerComponent t={t} isCollaboratorChild={props.route.params.isCollaboratorChild} genders={genders} setGenders={setGenders}/>
@@ -410,6 +422,7 @@ const ChildDetailsScreen = (props) => {
         marginTop: "10%",
         marginLeft: "10%",
         marginRight: "10%",
+        marginBottom: "10%"
       }}>
         {
         !props.route.params.isCollaboratorChild ?
