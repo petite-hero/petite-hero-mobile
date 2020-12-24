@@ -84,6 +84,7 @@ const ChildAddingShowingQrScreen = (props) => {
       }}>
         <QRCode
           value={props.route.params.qr}
+          // value={"3"}
           logo={require("../../../../assets/logo.png")}
           logoSize={80}
           logoBackgroundColor='transparent'
