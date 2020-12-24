@@ -29,7 +29,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const RADIUS_MIN = 40;
 
   // children information
-  const [children, setChildren] = React.useState(route.params.children);
+  const [children, setChildren] = React.useState([]);
 
   // map positioning & zooming
   const [map, setMap] = React.useState(null);
@@ -79,9 +79,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const fetchLocList = async () => {
     const ip = await AsyncStorage.getItem('IP');
     const childId = await AsyncStorage.getItem('child_id');
-    // const start = new Date();
     const response = await fetch('http://' + ip + PORT + '/location/list/' + childId + '/' + CURRENT_DATE.getTime());
-    // console.log("1 " + (new Date() - start));
     const result = await response.json();
     if (result.code === 200){
       setLocList(result.data);
@@ -180,14 +178,36 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     if (result.code !== 200) console.log("Error while deleting location. Server response: " + JSON.stringify(result));
   }
 
-  // load location list on screen loaded
-  React.useEffect(() => {
-    (async () => {
-      setLoading(true);
-      await fetchLocList();
+  const getListOfChildren = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+      const result = await response.json();
+      if (result.code === 200) {
+        const tmp = result.data.filter( child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        if (tmp.length == 0){
+          AsyncStorage.removeItem("child_id");
+          setChildren([]);
+        }
+        else{
+          setChildren(tmp);
+          if (!childId || tmp.filter(child => child.childId == childId).length == 0) await AsyncStorage.setItem('child_id', tmp[0].childId + "");
+        }
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
       setLoading(false);
-    })();
-  }, []);
+    }
+  }
+
+  // load children list
+  React.useEffect(() => {
+    getListOfChildren();
+    fetchLocList();
+  }, [loading]);
 
   {/* ===================== END OF API SECTION ===================== */}
   

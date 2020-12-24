@@ -55,7 +55,7 @@ const CategoryList = ({t, navigation, categories, setCategories}) => {
           }) 
         }
       </View>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {navigation.navigate("TaskStatistics")}}
         activeOpacity={0.8}
         style={[styles.categoryButton, {
@@ -73,7 +73,7 @@ const CategoryList = ({t, navigation, categories, setCategories}) => {
           source={require("../../../../assets/icons/info.png")}
           style={{width: 45, height: 45}}
         />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   )
 }

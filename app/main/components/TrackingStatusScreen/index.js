@@ -282,7 +282,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
 
   // request emergency mode for tracking-active children
   const requestEmergencyModeList = (isEmergency) => {
-    children.map((child, index) => {
+    childrenRef.current.map((child, index) => {
       if (child.isTrackingActive) {
         requestEmergencyMode(isEmergency, child.childId);
       }
@@ -418,8 +418,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
             disabled={children.length == 0}
             onPress={() => {
               const isTurningOn = currentChild.status === "INACTIVE";
-              requestSmartwatchTracking(isTurningOn);
               requestEmergencyMode(isTurningOn, null);
+              requestSmartwatchTracking(isTurningOn);
               let childrenTmp = [...children];
               let newCurrentChild = childrenTmp.filter(child => child.childId == currentChild.childId)[0];
               newCurrentChild.status = isTurningOn ? "LOADING" : "INACTIVE";
@@ -443,7 +443,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         {/* setting for tomorrow button */}
         <Animated.View style={[styles.settingBtnAnimatedContainer, {top: animSetZoneBtnTopTomorrow, opacity: animSetZoneBtn, elevation: animSetZoneBtnElevation}]}>
           <TouchableOpacity style={[styles.settingBtnContainer, {marginBottom: 0}]} onPress={() => {
-              navigation.navigate("TrackingSettings", {t: t, children: children, date: (() => {
+              navigation.navigate("TrackingSettings", {t: t, date: (() => {
                 let today = new Date();
                 today.setDate(today.getDate()+1);
                 return today;
@@ -500,7 +500,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
                         setIsValidation(true);
                         return;
                       }
-                      navigation.navigate("TrackingSettings", {t: t, children: children, date: date});
+                      navigation.navigate("TrackingSettings", {t: t, date: date});
                       animSetZoneBtn.setValue(0);
                       setFlied(false);
                     }}>
