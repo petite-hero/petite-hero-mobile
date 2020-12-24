@@ -16,7 +16,6 @@ import { useFonts } from 'expo-font';
 
 import * as Notifications from 'expo-notifications';
 import OpeningScreen from './app/main/components/OpeningScreen';
-import TaskStatisticsScreen from './app/main/components/TaskStatisticsScreen';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
