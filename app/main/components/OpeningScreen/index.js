@@ -10,7 +10,7 @@ const slides = [
   {
     id: 1,
     image: require("../../../../assets/gif/welcome_1.gif"),
-    text: "Approriate way to track your children's location."
+    text: "Appropriate way to track your children's location."
   },
   {
     id: 2,

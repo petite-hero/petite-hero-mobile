@@ -3,7 +3,7 @@ import { View, Text, TextInput } from 'react-native';
 import { COLORS } from "../../../const/const";
 import styles from "./styles/index.css"
 
-const InputField = ({title, value, setValue, valid = true, setValid, invalidMessage, keyboardType = "default", maxLength = 50, multiline = false, actionsOnTyping, editable = true}) => {
+const InputField = ({title, value, setValue, valid = true, setValid, invalidMessage, keyboardType = "default", maxLength = 50, multiline = false, actionsOnTyping, editable = true, dataType = "string", invalidDataTypeMessage = ""}) => {
   return (
     <View style={styles.container}>
       <Text style={{
@@ -30,7 +30,15 @@ const InputField = ({title, value, setValue, valid = true, setValid, invalidMess
           color: COLORS.BLACK
         }}
       />
-      { !valid &&
+      { (!valid && dataType === "integer" && parseInt(value) != value) ?
+        <Text style={{
+          fontFamily: "Acumin",
+          fontSize: 14,
+          color: COLORS.RED
+        }}>
+          {invalidDataTypeMessage}
+        </Text>
+        : (!valid) && 
         <Text style={{
           fontFamily: "Acumin",
           fontSize: 14,

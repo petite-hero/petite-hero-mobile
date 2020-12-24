@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS, PORT } from "../../../const/const";
 import styles from "./styles/index.css"
@@ -32,7 +32,7 @@ const ChildAddingScreen = (props) => {
   const validate = () => {
     let isValidated = true;
     if (name.length === 0) {setValidName(false); isValidated = false;}
-    if (yob.length === 0 || !parseInt(yob)) {setValidYob(false); isValidated = false;}
+    if (yob.length === 0 || !parseInt(yob) || parseInt(yob) != yob) {setValidYob(false); isValidated = false;}
     return isValidated;
   }
 
@@ -97,7 +97,7 @@ const ChildAddingScreen = (props) => {
       <InputField title={t("child-add-nickname")} value={nickName} setValue={setNickName}/>
       {/* end child nick name */}
       {/* child year of birth */}
-      <InputField title={t("child-add-yob")} value={yob} setValue={setYob} valid={validYob} setValid={setValidYob} invalidMessage={t("child-add-yob-empty")} keyboardType="numeric"/>
+      <InputField title={t("child-add-yob")} value={yob} setValue={setYob} valid={validYob} setValid={setValidYob} invalidMessage={t("child-add-yob-empty")} keyboardType="numeric" dataType="integer" invalidDataTypeMessage={t("child-add-yob-invalid")}/>
       {/* end child year of birth */}
       {/* child gender */}
       <GenderPickerComponent t={t} genders={genders} setGenders={setGenders}/>

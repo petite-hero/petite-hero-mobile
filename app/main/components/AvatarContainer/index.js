@@ -72,6 +72,8 @@ const AvatarContainer = (props) => {
           key={child.childId + ""}
           style={{
             position: "absolute",
+            flexDirection: "row",
+            alignItems: "center",
             top: "5%",
             right: "10%",
             elevation: 10,
@@ -79,6 +81,14 @@ const AvatarContainer = (props) => {
             transform: [{translateY: animAvatarPositions[index]}]
           }}
         >
+          <Text style={{
+            fontFamily: "Acumin",
+            fontSize: 18,
+            color: COLORS.WHITE,
+            marginRight: 10
+          }}>
+            {child.name}
+          </Text>
           <TouchableOpacity onPress={() => {
             animAvatar.setValue(0);
             Animated.timing(animAvatar, {
