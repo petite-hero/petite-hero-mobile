@@ -76,7 +76,7 @@ const LicenseShowingScreen = (props) => {
         originWhitelist={['*']}
         source={{
           baseUrl: "",
-          html: licenseVn
+          html: licenseEn
         }}
       />
     </View>

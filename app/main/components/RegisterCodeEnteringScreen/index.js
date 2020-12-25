@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
@@ -6,6 +6,7 @@ import { COLORS, PORT } from '../../../const/const';
 import { Loader } from '../../../utils/loader';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import styles from './styles/index.css';
+import { showMessage } from '../../../utils/showMessage';
 
 const CELLS = 6;
 
@@ -19,6 +20,26 @@ const RegisterCodeEnteringScreen = (props) => {
     setValue,
   });
 
+  const sendOtp = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = props.route.params.phone;
+      const response = await fetch("http://" + ip + PORT + "/account/send-otp?username=" + id, {
+        method: "POST"
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        //
+      } else {
+        showMessage(result.msg);
+      }
+    } catch (error) {
+      showMessage(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const verify = async() => {
     try {
       const ip = await AsyncStorage.getItem('IP');
@@ -31,7 +52,10 @@ const RegisterCodeEnteringScreen = (props) => {
       });
       const result = await response.json();
       if (result.code === 200) {
-        props.navigation.navigate("RegisterEnteringInformation", {phone: props.route.params.phone});
+        props.route.params.phone ? 
+          props.navigation.goBack()
+        :
+          props.navigation.navigate("RegisterEnteringInformation", {phone: props.route.params.phone});
       }
     } catch (error) {
       showMessage(error);
@@ -39,6 +63,10 @@ const RegisterCodeEnteringScreen = (props) => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    props.route.params.phone && sendOtp();
+  }, [])
 
   return (
     <View style={styles.container}>

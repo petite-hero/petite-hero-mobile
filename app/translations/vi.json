@@ -179,6 +179,7 @@
   "profile-subscription-history"            : "Lịch sử giao dịch",
   "profile-subscription-none"               : "Chưa có giao dịch nào phát sinh từ tài khoản của bạn.",
   "profile-subscription-packs"              : "Các gói đăng kí",
+  "profile-subscription-expired-message"    : "Gói đăng kí hiện tại của bạn đã hết hạn. Bạn cần gia hạn gói cũ hoặc đăng kí lại gói mới để tiếp tục sử dụng dịch vụ.",
   "profile-setting-title"                   : "Cài đặt",
   "profile-setting-password"                : "Đổi mật khẩu",
   "profile-current-password"                : "Mật khẩu hiện tại",

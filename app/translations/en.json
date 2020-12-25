@@ -46,7 +46,7 @@
   "forgot-new-password-title"               : "Enter New Password",
   "forgot-new-password"                     : "Enter New Password",
   "forgot-new-password-again"               : "Enter New Password Again",
-  "forgot-success"                          : "Password is resetted successfully.",
+  "forgot-success"                          : "Password is reset successfully.",
   "forgot-fail"                             : "Cannot reset password. Please try again later.",
 
   "navigation-tracking"                     : "Tracking",
@@ -179,6 +179,7 @@
   "profile-subscription-history"            : "Transaction History",
   "profile-subscription-none"               : "You don't have any transactions.",
   "profile-subscription-packs"              : "Subscription Packs",
+  "profile-subscription-expired-message"    : "Your current subscription has expired, you have to either extend the current subscription or buy a new one to use our services.",
   "profile-setting-title"                   : "Settings",
   "profile-setting-password"                : "Change Password",
   "profile-current-password"                : "Your Current Password",

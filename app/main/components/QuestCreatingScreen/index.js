@@ -19,9 +19,7 @@ const QuestCreatingScreen = (props) => {
   const [validDetail, setValidDetail]     = useState(true);
   const [loading, setLoading]             = useState(false);
   const [badge, setBadge]                 = useState("");
-  // const [title, setTitle]                 = useState("");
-  // for GD
-  const [title, setTitle]                 = useState("A");
+  const [title, setTitle]                 = useState("");
   const [validTitle, setValidTitle]       = useState(true);
 
   const validate = () => {
@@ -146,7 +144,7 @@ const QuestCreatingScreen = (props) => {
       <InputField title={t("quest-add-details")} value={details} setValue={setDetails} valid={validDetail} setValid={setValidDetail} invalidMessage={t("quest-add-details-empty")} maxLength={255} multiline={true}/>
       {/* end quest details */}
       {/* quest title */}
-      {/* <InputField title={t("quest-add-smartwatch-title")} value={title} setValue={setTitle} valid={validTitle} setValid={setValidTitle} invalidMessage={t("quest-add-smartwatch-title-empty")} maxLength={50}/> */}
+      <InputField title={t("quest-add-smartwatch-title")} value={title} setValue={setTitle} valid={validTitle} setValid={setValidTitle} invalidMessage={t("quest-add-smartwatch-title-empty")} maxLength={50}/>
       {/* end quest title */}
       {/* button Save */}
       <ButtonSave title={t("quest-add-save")} action={() => {setLoading(true); createQuest()}} style={{marginBottom: 50}}/>

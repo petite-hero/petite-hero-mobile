@@ -55,6 +55,13 @@ const LoginScreen = (props) => {
         if (result.data.isVerify == false) {
           props.navigation.navigate("RegisterCodeEntering", {phone: username});
           return null;
+        } else if (result.data.isExpired === true) {
+          props.navigation.navigate("ProfileShowingSubscription", {
+            phone: username, 
+            message: true,
+            goBack: () => setLoading(false)
+          });
+          return null;
         }
         const token = await registerForPushNotificationsAsync();
         await sendToken(username, token);
@@ -65,7 +72,6 @@ const LoginScreen = (props) => {
         setShowInvalidMessage(true);
         setPassword("");
         setMessage("");
-        
       } else if (result.msg.includes("Your device has changed")) {
         setMessage(t("signin-invalid-device-1"));
       } else {

@@ -108,6 +108,22 @@ const ProfileShowingSubscriptionScreen = (props) => {
           </View>
         )})}
       </View>
+      { props.route.params.message &&
+      <View style={{
+        marginTop: "10%",
+        marginLeft: "10%",
+        marginRight: "10%"
+      }}>
+        <Text style={{
+          fontSize: 16,
+          fontFamily: "Acumin",
+          color: COLORS.RED,
+          textAlign: "center"
+        }}>
+          {t("profile-subscription-expired-message")}
+        </Text>
+      </View>
+      }
     </View>
   );
 };

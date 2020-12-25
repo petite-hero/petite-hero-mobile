@@ -12,6 +12,7 @@ import ForgotPasswordCodeEnteringScreen from '../ForgotPasswordCodeEnteringScree
 import RegisterEnteringInformationScreen from '../RegisterEnteringInformationScreen';
 import RegisterCodeEnteringScreen from '../RegisterCodeEnteringScreen';
 import ForgotPasswordNewPasswordEnteringScreen from '../ForgotPasswordNewPasswordEnteringScreen';
+import ProfileShowingSubscriptionScreen from '../ProfileShowingSubscriptionScreen'
 import { COLORS, PORT } from '../../../const/const';
 import { showMessage } from '../../../utils/showMessage';
 import { fetchWithTimeout } from '../../../utils/fetch';
@@ -94,6 +95,14 @@ const WelcomeScreen = (props) => {
       <Stack.Screen 
         name="LicenseShowing" 
         component={LicenseShowingScreen}
+        initialParams={{
+          authContext: props.route.params.authContext,
+          localizationContext: props.route.params.localizationContext
+        }}
+      />
+      <Stack.Screen 
+        name="ProfileShowingSubscription" 
+        component={ProfileShowingSubscriptionScreen}
         initialParams={{
           authContext: props.route.params.authContext,
           localizationContext: props.route.params.localizationContext
