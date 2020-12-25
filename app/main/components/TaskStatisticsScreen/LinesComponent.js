@@ -6,7 +6,7 @@ import styles from './styles/index.css';
 const LinesComponent = (props) => {
   let lines = [];
   let lineValue = props.maxTasks > 8 ? 1 : (() => {
-    return Math.ceil(props.maxTasks / 5) * 5 < 8 ? 10 : 5
+    return Math.ceil(props.maxTasks / 5) * 5 < 8 ? 1 : 2
   })();
 
   for (let i = 0; i < props.numOfLines; i++) {
