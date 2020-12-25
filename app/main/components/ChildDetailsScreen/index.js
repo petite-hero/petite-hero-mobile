@@ -270,12 +270,9 @@ const ChildDetailsScreen = (props) => {
     try {
       const ip = await AsyncStorage.getItem('IP');
       const id = await AsyncStorage.getItem("user_id");
-      const body = props.route.params.isCollaboratorChild ? JSON.stringify({
-        collborator: id
-      }) : "";
-      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/" + props.route.params.childId, {
-        method: "DELETE",
-        body: body
+      const body = props.route.params.isCollaboratorChild ? id : "";
+      const response = await fetchWithTimeout("http://" + ip + PORT + "/child/" + props.route.params.childId + "?collaborator=" + body, {
+        method: "DELETE"
       });
       const result = await response.json();
       if (result.code === 200 && result.msg === "OK") {

@@ -64,7 +64,7 @@ const OpeningScreen = (props) => {
               top: index === 1 ? "15%" : "78%",
               textAlign: "center",
               fontFamily: "Montserrat",
-              color: COLORS.BLACK,
+              color: COLORS.STRONG_CYAN,
               fontSize: 16
             }}>
               {slide.text}
