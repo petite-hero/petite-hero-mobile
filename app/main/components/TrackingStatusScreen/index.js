@@ -172,7 +172,8 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       // Silent noti for updating child loc
-      if (notification.request.content.title === NOTI.SILENT_NOTI){
+      console.log('arrived')
+      if (notification.request.content.title === NOTI.SILENT_NOTI || notification.request.content.title === NOTI.PETITE_HERO){
         const notiData = notification.request.content.data;
         let childrenTmp = [...childrenRef.current];
         let currentChild = childrenTmp.filter(child => child.childId == notiData.child)[0];
