@@ -14,12 +14,12 @@ import Constants from 'expo-constants';
 const LoginScreen = (props) => {
 
   // hung - test
-  const [username, setUsername] = useState("0847641376");
-  const [password, setPassword] = useState("123456");
+  // const [username, setUsername] = useState("0847641376");
+  // const [password, setPassword] = useState("123456");
   const { t, setLocale } = useContext(props.route.params.localizationContext);
   const { signIn } = React.useContext(props.route.params.authContext);
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage]   = useState("");
   const [showInvalidMessage, setShowInvalidMessage] = useState(false);
   const [secureText, setSecureText] = useState(true);

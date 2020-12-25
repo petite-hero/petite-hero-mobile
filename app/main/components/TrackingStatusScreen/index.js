@@ -176,7 +176,7 @@ const TrackingStatusScreenContent = ({ navigation, route }) => {
         const notiData = notification.request.content.data;
         let childrenTmp = [...childrenRef.current];
         let currentChild = childrenTmp.filter(child => child.childId == notiData.child)[0];
-        if (currentChild){
+        if (currentChild?.isTrackingActive){
           const currentStatus = currentChild.status;
           if (notiData.status && currentStatus !== "SAFE" && currentStatus !== "INACTIVE"){
             currentChild.status = "SAFE";

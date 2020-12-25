@@ -29,7 +29,12 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
   const RADIUS_MIN = 40;
 
   // children information
-  const [children, setChildren] = React.useState([]);
+  const [children, setChildrenUseState]     = React.useState([]);
+  const childrenRef                         = React.useRef(children);  // use reference for listeners to use
+  const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
+  const [childId, setChildIdUseState]       = React.useState(null);
+  const childIdRef                          = React.useRef(childId);  // use reference for listeners to use
+  const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
 
   // map positioning & zooming
   const [map, setMap] = React.useState(null);
@@ -203,6 +208,15 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
     }
   }
 
+  const handleChildIdChanged = async () => {
+    const childIdTmp = await AsyncStorage.getItem('child_id');
+    if (childIdTmp != childIdRef.current) {
+      setLoading(true);
+      setChildId(childIdTmp);
+      setChildren([...childrenRef.current]);
+    }
+  }
+
   // load children list
   React.useEffect(() => {
     getListOfChildren();
@@ -248,7 +262,7 @@ const TrackingSettingsScreen = ({ route, navigation }) => {
           <Image source={require("../../../../assets/icons/back.png")} style={{width: 30, height: 30}} />
         </TouchableOpacity>,
         <Text key={1} style={styles.date}>{Util.dateToStr(route.params.date)}</Text>,
-        <AvatarContainer key={2} children={children} setChildren={setChildren} setLoading={setLoading}/>
+        <AvatarContainer key={2} children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
       ]}
       
 

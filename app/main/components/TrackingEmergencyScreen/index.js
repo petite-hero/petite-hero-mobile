@@ -24,7 +24,12 @@ const { t } = useContext(props.route.params.localizationContext);
   const [isNoData, setIsNoData] = React.useState(false);
 
   // children information
-  const [children, setChildren] = React.useState(props.route.params.children);
+  const [children, setChildrenUseState]     = React.useState([]);
+  const childrenRef                         = React.useRef(children);  // use reference for listeners to use
+  const setChildren = (newChildren) => {childrenRef.current = newChildren; setChildrenUseState(newChildren);}
+  const [childId, setChildIdUseState]       = React.useState(null);
+  const childIdRef                          = React.useRef(childId);  // use reference for listeners to use
+  const setChildId = (newChildId) => {childIdRef.current = newChildId; setChildIdUseState(newChildId);}
 
   // map positioning & zooming
   const [map, setMap] = React.useState(null);
@@ -33,8 +38,12 @@ const { t } = useContext(props.route.params.localizationContext);
     mapRef.current = mapInstance;
     setMap(mapInstance);
   }
-  const [latitudeDelta, setLatitudeDelta] = React.useState(REGION_FPT.latitudeDelta);
-  const [longitudeDelta, setLongitudeDelta] = React.useState(REGION_FPT.longitudeDelta);
+  const [latitudeDelta, setLatitudeDeltaUseState] = React.useState(REGION_FPT.latitudeDelta);
+  const latitudeDeltaRef = React.useRef(latitudeDelta);
+  const setLatitudeDelta = (newLatitudeDelta) => {latitudeDeltaRef.current = newLatitudeDelta; setLatitudeDeltaUseState(newLatitudeDelta);};
+  const [longitudeDelta, setLongitudeDeltaUseState] = React.useState(REGION_FPT.longitudeDelta);
+  const longitudeDeltaRef = React.useRef(longitudeDelta);
+  const setLongitudeDelta = (newLongitudeDelta) => {longitudeDeltaRef.current = newLongitudeDelta; setLongitudeDeltaUseState(newLongitudeDelta);};
 
   // reported location list
   const [realLocList, setRealLocList] = React.useState([]);
@@ -53,7 +62,7 @@ const { t } = useContext(props.route.params.localizationContext);
       // Silent noti for updating child loc
       const newLoc = notification.request.content.data;
       setRealLocList(realLocList => [...realLocList, newLoc]);
-      if (mapRef.current != null) mapRef.current.animateToRegion({latitude: newLoc.latitude, longitude: newLoc.longitude, latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta}, MAP_DURATION);
+      if (mapRef.current != null) mapRef.current.animateToRegion({latitude: newLoc.latitude, longitude: newLoc.longitude, latitudeDelta: latitudeDeltaRef.current, longitudeDelta: longitudeDeltaRef.current}, MAP_DURATION);
     });
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(notification => { 
@@ -106,24 +115,55 @@ const { t } = useContext(props.route.params.localizationContext);
     }
   }
 
-  // start on screen load
-  React.useEffect(() => {
+  const getListOfChildren = async() => {
+    try {
+      const ip = await AsyncStorage.getItem('IP');
+      const id = await AsyncStorage.getItem('user_id');
+      const childId = await AsyncStorage.getItem('child_id');
+      const response = await fetch("http://" + ip + PORT + "/parent/" + id + "/children");
+      const result = await response.json();
+      if (result.code === 200) {
+        const tmp = result.data.filter( child => child.isCollaboratorChild === false || (child.isCollaboratorChild === true && child.isConfirm === true));
+        if (tmp.length == 0){
+          AsyncStorage.removeItem("child_id");
+          setChildren([]);
+        }
+        else{
+          setChildren(tmp);
+          if (!childId || tmp.filter(child => child.childId == childId).length == 0) await AsyncStorage.setItem('child_id', tmp[0].childId + "");
+        }
+      }
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
+  const handleChildIdChanged = async () => {
+    const childIdTmp = await AsyncStorage.getItem('child_id');
+    if (childIdTmp != childIdRef.current) {
+      setLoading(true);
+      setChildId(childIdTmp);
+      setChildren([...childrenRef.current]);
+    }
+  }
+
+  // load children list
+  React.useEffect(() => {
+    getListOfChildren();
     // request last locations in 10 minutes
     requestLocationList();
-
     // listen to location update from server
     listenLocationUpdate();
-
     // handle screen & app states
-    props.navigation.addListener('focus', () => { requestEmergencyMode(true); });
+    props.navigation.addListener('focus', async () => { await new Promise(resolve => setTimeout(resolve, 1000)); requestEmergencyMode(true); });
     props.navigation.addListener('blur', () => { requestEmergencyMode(false); });
-    AppState.addEventListener("change", (nextState) => {
-      if (nextState === "active")  requestEmergencyMode(true);
+    AppState.addEventListener("change", async (nextState) => {
+      if (nextState === "active"){await new Promise(resolve => setTimeout(resolve, 1000)); requestEmergencyMode(true); }
       else requestEmergencyMode(false);
     });
-
-  }, []);
+  }, [loading]);
 
   {/* ===================== END OF API SECTION ===================== */}
 
@@ -184,7 +224,7 @@ const { t } = useContext(props.route.params.localizationContext);
       {/* ===================== END MAP SECTION ===================== */}
 
       {/* child avatar */}
-      <AvatarContainer children={children} setChildren={setChildren} setLoading={setLoading}/>
+      <AvatarContainer children={children} setChildren={handleChildIdChanged} setLoading={setLoading}/>
 
       {/* back btn */}
       <TouchableOpacity style={styles.backBtn} onPress={() => props.navigation.goBack()}>
