@@ -26,8 +26,8 @@ Children Management and Development Application
 # Installation Instructions
 1. Clone down this repository. You need `npm` and `expo` installed globally on your machine.
 2. If not, access and follow the instructions writen in these links below.
-	Npm installation: https://nodejs.org/en/download/
-	Expo installation: https://docs.expo.io/get-started/installation/
+	* Npm installation: https://nodejs.org/en/download/
+	* Expo installation: https://docs.expo.io/get-started/installation/
 3. Start server: `expo start`
 
 # Screenshots
