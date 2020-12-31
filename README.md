@@ -17,7 +17,7 @@ Children Management and Development Application
 
 # Functionalities
 1. Authentication
-2. Location Settings & Management
+2. Location Setting & Management
 3. Task Management
 4. Achievement Management
 5. Profile Management
