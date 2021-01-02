@@ -34,20 +34,20 @@ Children Management and Development Application
 ## 1. Authentication
 ![](screenshots/authentication.png)
 ## 2. Location Settings & Management
-Set Locations
+*Set Locations*
 ![](screenshots/tracking1.png)
-Get Location Status
+*Get Location Status*
 ![](screenshots/tracking2.png)
 ## 3. Task Management
 ![](screenshots/task.png)
 ## 4. Achievement Management
 ![](screenshots/quest.png)
 ## 5. Profile Management
-Profile & Language
+*Profile & Language*
 ![](screenshots/profile.png)
-Children Management
+*Children Management*
 ![](screenshots/profile-child.png)
-Collaborators Management
+*Collaborators Management*
 ![](screenshots/profile-collab.png)
 ## 6. Subscription Management
 ![](screenshots/profile-subscription.png)
